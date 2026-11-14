@@ -64,10 +64,18 @@ await check('공공데이터포털 · 한국관광공사 행사정보', ['DATA_G
 
 // 네이버 검색·데이터랩은 2026-06-25부터 NAVER API HUB(네이버 클라우드 플랫폼)로 옮겨짐.
 // 주소와 인증 헤더: https://api.ncloud-docs.com/docs/naver-api-hub-search-trend
-// 블로그 검색 주소는 아직 확인하지 않아 여기서는 검색어 트렌드만 검사한다.
+// 콘솔의 [인증 정보]에 나오는 Client ID → NAVER_API_KEY_ID, Client Secret → NAVER_API_KEY.
+// 블로그 검색 주소는 이관 가이드의 뉴스 검색(/search/v1/news) 형식에 맞춘 추정값이다.
 const naverHeaders = () => ({
   'X-NCP-APIGW-API-KEY-ID': env.NAVER_API_KEY_ID,
   'X-NCP-APIGW-API-KEY': env.NAVER_API_KEY,
+});
+
+await check('네이버 블로그 검색 (NAVER API HUB, 선택)', ['NAVER_API_KEY_ID', 'NAVER_API_KEY'], async () => {
+  const j = await getJson(`https://naverapihub.apigw.ntruss.com/search/v1/blog?query=${encodeURIComponent('해방촌 신흥시장')}&display=1`, {
+    headers: naverHeaders(),
+  });
+  return `블로그 글 ${j.total}건`;
 });
 
 await check('네이버 검색어 트렌드 (NAVER API HUB, 선택)', ['NAVER_API_KEY_ID', 'NAVER_API_KEY'], async () => {
