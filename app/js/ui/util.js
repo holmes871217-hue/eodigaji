@@ -89,6 +89,12 @@ export function heartBtn(type, id, on, cls = '') {
 
 /** 네이버 지도에서 가게를 찾을 말. 같은 이름의 다른 지점이 나오지 않게 주소 맨 앞의 시·군·구를 붙인다. */
 export function naverQuery(name, addr) {
-  const first = (addr || '').split(' ')[0] || '';
-  return /[시군구]$/.test(first) && !name.includes(first) ? `${first} ${name}` : name;
+  // 주소 앞쪽 세 마디 안의 시·군·구 이름("용인시", "성동구")을 붙인다. "경기 용인시 …"처럼 도 이름이 앞에 와도 찾는다.
+  const town = (addr || '').split(' ').slice(0, 3).find((t) => /[시군구]$/.test(t)) || '';
+  return town && !name.includes(town) ? `${town} ${name}` : name;
+}
+
+/** 구글 지도에서 같은 가게를 정확히 여는 주소(구글 번호 gid 가 있을 때) */
+export function googleMapUrl(name, gid) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&query_place_id=${encodeURIComponent(gid)}`;
 }

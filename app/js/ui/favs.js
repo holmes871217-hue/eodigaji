@@ -26,7 +26,7 @@ function favRow(f, i, favs, c) {
     </span>`;
   const main = openable
     ? `<button type="button" class="fav-main" data-action="open-${f.type}" data-id="${esc(f.id)}">${body}</button>`
-    : `<a class="fav-main" href="https://map.naver.com/p/search/${encodeURIComponent(naverQuery(f.name, f.addr))}" target="_blank" rel="noopener noreferrer">${body}</a>`;
+    : `<a class="fav-main" href="https://map.naver.com/p/search/${encodeURIComponent(naverQuery(f.nq || f.name, f.addr))}" target="_blank" rel="noopener noreferrer">${body}</a>`;
   return `
     <li class="fav" data-key="${esc(f.key)}">
       ${main}
