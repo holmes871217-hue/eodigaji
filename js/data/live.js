@@ -1,7 +1,7 @@
 // 실제 데이터 불러오기. tools/collect.mjs 가 만든 data/places.json, data/events.json 을 읽어
 // 연습용 숫자를 실제 값으로 바꾼다. 파일이 없거나 못 읽으면 연습용 데이터 그대로 동작한다.
 
-import { PLACES } from './places.js';
+import { PLACES, LOCAL_BASE } from './places.js';
 import { setLivePhotos } from './photos.js';
 
 async function getJson(path) {
@@ -22,11 +22,17 @@ export async function loadLive() {
       const r = rows[p.id];
       if (!r) continue;
       if (r.interest) p.interest = { ...p.interest, ...r.interest };
+      else if (p.local && typeof r.yearly === 'number') {
+        // 전국 소소한 곳: 성별·연령대 모양은 분류 기본값, 크기는 네이버 1년 인기로 맞춘다.
+        const k = r.yearly / LOCAL_BASE;
+        for (const key of Object.keys(p.interest)) p.interest[key] = Math.min(100, Math.round(p.interest[key] * k));
+      }
       if (typeof r.yearly === 'number') p.yearly = r.yearly;
       if (typeof r.trend === 'number') p.trend = r.trend;
       if (typeof r.buzz === 'number') p.buzz = r.buzz;
+      if (r.overview) p.overview = r.overview;
       if (r.photo) photos[p.id] = r.photo;
-      if (r.interest) p.sample = false;
+      if (r.interest || (p.local && typeof r.yearly === 'number')) p.sample = false;
     }
     setLivePhotos(photos);
     updatedAt = placesRes.value.updatedAt || null;

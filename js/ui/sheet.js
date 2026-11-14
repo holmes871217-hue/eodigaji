@@ -3,16 +3,29 @@ import { CATEGORIES } from '../data/places.js';
 import { photoOf } from '../data/photos.js';
 import { EVENT_TYPES } from '../data/events.js';
 import { KIND_LABEL, crowdLabel, trendPct } from '../core/scoring.js';
-import { formatMin, tripLabel } from '../core/geo.js';
+import { formatMin, tripLabel, haversineKm } from '../core/geo.js';
 import { memberLabel } from '../core/segments.js';
-import { esc, rangeText } from './util.js';
+import { esc, icon, rangeText } from './util.js';
 
-function placeSheet(r) {
+const DOW = ['일', '월', '화', '수', '목', '금', '토'];
+
+/** 가는 날 이 장소 20km 안에서 열리는 축제·공연 (가까운 순, 최대 5개) */
+function nearbyEvents(p, tripEvents) {
+  return tripEvents
+    .map((e) => ({ e, km: haversineKm(e, p) }))
+    .filter((x) => x.km <= 20)
+    .sort((a, b) => a.km - b.km)
+    .slice(0, 5);
+}
+
+function placeSheet(r, tripEvents) {
   const p = r.place;
   const cat = CATEGORIES[p.cat] || { label: '', icon: '📍' };
   const pct = trendPct(p.trend);
   const q = encodeURIComponent(p.name);
   const photo = photoOf(p.id);
+  const near = nearbyEvents(p, tripEvents);
+  const tips = (p.tip || '').split(/\s+·\s+/).map((s) => s.trim()).filter(Boolean);
 
   return `
     <div class="sheet-photo ph-${esc(p.cat)}">
@@ -25,6 +38,33 @@ function placeSheet(r) {
         <p class="card-meta">${esc(p.region)} · ${esc(cat.label)} · 검색 위치에서 ${tripLabel(r.km, r.min)} (${r.km < 10 ? r.km.toFixed(1) : Math.round(r.km)}km)</p>
       </div>
     </div>
+
+    ${tips.length || p.overview ? `
+    <section class="about" aria-label="볼거리 요약">
+      ${tips.length ? `<h3 class="h3">이런 걸 볼 수 있어요</h3>
+      <ul class="tips">${tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+      ${p.overview ? `<p class="overview">${esc(p.overview)}</p><p class="credit">소개 글: 한국관광공사</p>` : ''}
+    </section>` : ''}
+
+    ${near.length ? `
+    <h3 class="h3">가는 날 근처 축제·공연 <span class="count">${near.length}</span></h3>
+    <ul class="near-list">
+      ${near.map(({ e, km }) => {
+        const d = new Date(`${e.start}T00:00:00`);
+        return `
+        <li>
+          <button type="button" class="near-item" data-action="goto-event" data-id="${esc(e.id)}">
+            <span class="near-date type-${esc(e.type)}"><b>${d.getMonth() + 1}/${d.getDate()}</b><small>${DOW[d.getDay()]}</small></span>
+            <span class="near-body">
+              <span class="near-title">${esc(e.title)}</span>
+              <span class="card-meta">${esc(EVENT_TYPES[e.type] || '행사')} · ${esc(rangeText(e.start, e.end))} · 여기서 ${km < 10 ? km.toFixed(1) : Math.round(km)}km</span>
+            </span>
+            <span class="near-go" aria-hidden="true">${icon('chevron', 18)}</span>
+          </button>
+        </li>`;
+      }).join('')}
+    </ul>
+    <p class="muted">누르면 축제 탭에서 자세히 볼 수 있어요.</p>` : ''}
 
     <div class="stats">
       <div class="stat"><b>${Math.round(r.fam)}</b><span>우리 가족 관심도</span></div>
@@ -46,12 +86,10 @@ function placeSheet(r) {
         .join('')}
     </ul>
 
-    ${r.eventNear ? `<p class="near">가는 날 근처 행사: <b>${esc(r.eventNear.title)}</b> (${esc(rangeText(r.eventNear.start, r.eventNear.end))})</p>` : ''}
-
     <p class="muted">한 달 블로그 언급 약 ${p.buzz.toLocaleString('ko-KR')}건 · 1년 누적 인기 ${p.yearly}점</p>
     <p class="sample-note">${p.sample
       ? '연습용 숫자예요. 실제 데이터 연결 전이라 참고만 해 주세요.'
-      : `검색 인기·추세·블로그 수는 네이버 검색 데이터("${esc(p.keyword || p.name)}" 기준)예요. 혼잡 예측은 아직 예시 값이에요.`}${photo ? ` <a href="${esc(photo.page)}" target="_blank" rel="noopener noreferrer">사진 출처: ${esc(photo.label || '위키미디어 공용')}</a>` : ''}</p>
+      : `검색 인기·추세·블로그 수는 네이버 검색 데이터("${esc(p.keyword || p.name)}" 기준)예요.${p.local ? ' 사람별 점수는 1년 인기에 장소 분류별 경향을 더한 추정이에요.' : ''} 혼잡 예측은 아직 예시 값이에요.`}${photo ? ` <a href="${esc(photo.page)}" target="_blank" rel="noopener noreferrer">사진 출처: ${esc(photo.label || '위키미디어 공용')}</a>` : ''}</p>
 
     <div class="sheet-actions">
       <a class="btn-primary" href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener noreferrer">네이버 지도에서 보기</a>
@@ -94,7 +132,7 @@ export function renderSheet(state, c) {
   let inner = '';
   if (s.type === 'place') {
     const row = c.rankedAll.find((r) => r.place.id === s.id);
-    if (row) inner = placeSheet(row);
+    if (row) inner = placeSheet(row, c.tripEvents);
   } else if (s.type === 'event') {
     const ev = [...c.tripEvents, ...c.upcoming].find((e) => e.id === s.id);
     if (ev) inner = eventSheet(ev);

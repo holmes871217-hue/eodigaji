@@ -139,7 +139,7 @@ root.addEventListener('click', (ev) => {
 
   switch (action) {
     case 'tab':
-      update(() => { state.ui.tab = v; state.ui.sheet = null; state.ui.pick = null; }, { keepScroll: false });
+      update(() => { state.ui.tab = v; state.ui.sheet = null; state.ui.pick = null; state.ui.focusEvent = null; }, { keepScroll: false });
       break;
     case 'mode':
       update(() => { state.profile.mode = v === 'calm' ? 'calm' : 'hot'; });
@@ -167,6 +167,16 @@ root.addEventListener('click', (ev) => {
       break;
     case 'open-event':
       update(() => { state.ui.sheet = { type: 'event', id }; }, { persist: false });
+      break;
+    case 'goto-event':
+      // 장소 상세 창의 "근처 축제·공연"을 누르면 축제 탭으로 옮겨 그 행사를 연다.
+      update(() => {
+        state.ui.tab = 'events';
+        state.ui.evType = 'all';
+        state.ui.focusEvent = id;
+        state.ui.sheet = { type: 'event', id };
+      }, { keepScroll: false, persist: false });
+      document.querySelector(`[data-action="open-event"][data-id="${CSS.escape(id)}"]`)?.scrollIntoView({ block: 'center' });
       break;
     case 'close-sheet':
       update(() => { state.ui.sheet = null; }, { persist: false });
