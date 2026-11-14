@@ -91,6 +91,21 @@ export function renderMy(state) {
       </div>
     </div>
 
+    <form class="loc-search" data-form="loc-search" role="search">
+      <label class="sr-only" for="loc-q">장소나 주소로 찾기</label>
+      <input id="loc-q" name="q" type="search" class="input" enterkeyhint="search" autocomplete="off"
+        placeholder="장소·주소 검색 (예: 해방촌, 대구역)" value="${esc(state.ui.locQuery || '')}">
+      <button type="submit" class="btn-dark">검색</button>
+    </form>
+    ${state.ui.locMsg ? `<p class="muted" role="status">${esc(state.ui.locMsg)}</p>` : ''}
+    ${state.ui.locResults?.length ? `
+    <ul class="loc-results" aria-label="검색 결과">
+      ${state.ui.locResults.map((r, i) => `
+      <li><button type="button" class="loc-result" data-action="pick-result" data-v="${i}">
+        ${icon('pin', 18)}<span><b>${esc(r.name)}</b><small>${esc(r.addr || '')}</small></span>
+      </button></li>`).join('')}
+    </ul>` : ''}
+
     <button type="button" class="btn-accent wide" data-action="use-gps">${icon('target', 18)}현재 위치 사용</button>
     ${state.ui.geoMsg ? `<p class="muted" role="status">${esc(state.ui.geoMsg)}</p>` : ''}
 

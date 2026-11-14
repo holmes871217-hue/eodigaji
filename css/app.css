@@ -354,6 +354,22 @@ svg { flex: none; }
 .near { margin-top: 16px; padding: 12px 14px; background: #ebe1ff; color: #3a1f80; border-radius: var(--radius-sm); font-size: var(--fs-sm); }
 .desc { margin-top: 16px; }
 
+/* 마이페이지: 주요 검색 위치 글자로 찾기 */
+.loc-search { display: flex; gap: 8px; margin: 12px 0 4px; }
+.loc-search .input { flex: 1; min-width: 0; }
+.loc-search .btn-dark { flex: none; width: auto; padding: 0 18px; }
+.loc-results { list-style: none; margin: 8px 0 12px; padding: 0; display: grid; gap: 6px; }
+.loc-result {
+  width: 100%; min-height: var(--tap); display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius-sm);
+  text-align: left; color: var(--ink); font: inherit; cursor: pointer;
+}
+.loc-result:hover, .loc-result:focus-visible { border-color: var(--ink); }
+.loc-result svg { flex: none; color: var(--ink-2); }
+.loc-result span { display: grid; min-width: 0; }
+.loc-result b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.loc-result small { font-size: var(--fs-xs); color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 /* 장소 상세: 볼거리 요약 */
 .about { margin: 4px 0 18px; padding: 14px 16px 16px; background: var(--bg); border-radius: var(--radius-sm); }
 .about .h3 { margin: 0 0 8px; font-size: 18px; }
