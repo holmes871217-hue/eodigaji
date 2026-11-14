@@ -58,6 +58,12 @@ export function formatMin(min) {
   return r ? `${h}시간 ${r}분` : `${h}시간`;
 }
 
+/** 1.5km 안이면 걸어서 걸리는 시간, 그보다 멀면 차로 걸리는 시간 */
+export function tripLabel(km, min) {
+  if (km <= 1.5) return `걸어서 약 ${formatMin((km * 1.3 * 60) / 4.2)}`;
+  return `약 ${formatMin(min)}`;
+}
+
 /** 지도 가로 폭(픽셀)에 원하는 실제 거리(km)가 딱 들어오는 확대 단계(줌 레벨)를 계산한다. */
 export function zoomForKm(lat, widthPx, km = 10) {
   const metersPerPixelAtZoom0 = 156543.03392 * Math.cos((lat * Math.PI) / 180);

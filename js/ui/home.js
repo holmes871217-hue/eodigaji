@@ -2,7 +2,19 @@
 import { CATEGORIES } from '../data/places.js';
 import { photoOf } from '../data/photos.js';
 import { KIND_LABEL } from '../core/scoring.js';
-import { formatMin } from '../core/geo.js';
+import { tripLabel } from '../core/geo.js';
+import { NEAR_MAX } from '../core/scoring.js';
+
+const SCOPES = [
+  { v: 'near', label: '가까운 소소한 곳' },
+  { v: 'all', label: '전체' },
+  { v: 'big', label: '큰 나들이' },
+];
+const SCOPE_DESC = {
+  near: `시장·소품샵·공연장·작은 전시처럼 검색 위치 근처(차로 ${NEAR_MAX}분 안)에서 잠깐 들르기 좋은 곳만 보여줘요.`,
+  all: '큰 나들이 장소와 근처의 소소한 곳을 함께 보여줘요. 작은 곳은 가까울수록 위로 올라와요.',
+  big: '테마파크·동물원·바다처럼 하루를 쓰는 큰 나들이 장소만 보여줘요.',
+};
 import { fmtLong } from '../core/dates.js';
 import { NIGHT_OPTIONS } from '../core/store.js';
 import { esc, icon, summaryBar, timeChips, timeLabel, modeToggle } from './util.js';
@@ -22,7 +34,7 @@ function placeCard(r, i) {
         </span>
         <span class="pcard-body">
           <span class="pcard-title">${esc(p.name)}</span>
-          <span class="pcard-meta"><span class="badge badge-${r.kind}">${KIND_LABEL[r.kind]}</span>${esc(p.region)} · 약 ${formatMin(r.min)}</span>
+          <span class="pcard-meta"><span class="badge badge-${r.kind}">${KIND_LABEL[r.kind]}</span>${p.scale === 'small' ? `${esc(cat.label)} · ` : ''}${esc(p.region)} · ${tripLabel(r.km, r.min)}</span>
           <span class="pcard-chips">
             ${r.reasons.map((x) => `<span class="why why-${x.kind}">${esc(x.text)}</span>`).join('')}
           </span>
@@ -70,6 +82,14 @@ export function renderHome(state, c) {
       </div>` : ''}
 
     ${modeToggle(profile.mode)}
+
+    <div class="row-between tight">
+      <span class="label">어디까지 볼까요?</span>
+    </div>
+    <div class="chips" role="group" aria-label="장소 규모">
+      ${SCOPES.map((s) => `<button type="button" class="chip ${ui.scope === s.v ? 'is-on' : ''}" data-action="scope" data-v="${s.v}" aria-pressed="${ui.scope === s.v}">${s.label}</button>`).join('')}
+    </div>
+    <p class="mode-desc">${SCOPE_DESC[ui.scope] || SCOPE_DESC.all}</p>
 
     <div class="row-between tight">
       <span class="label">이동시간 <em>검색 위치에서 차로(추정)</em></span>

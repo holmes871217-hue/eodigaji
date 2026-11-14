@@ -161,6 +161,8 @@ svg { flex: none; }
 .ph-theme { background: #ffe1d6; } .ph-zoo { background: #ffecc7; } .ph-museum { background: #dfe6ff; }
 .ph-nature { background: #d9f2df; } .ph-sea { background: #d5ecfb; } .ph-culture { background: #f1e3d3; }
 .ph-cafe { background: #f5dfe9; } .ph-activity { background: #e3e0fb; }
+.ph-market { background: #ffe9c2; } .ph-shop { background: #ffe0ea; } .ph-stage { background: #e6dcff; }
+.ph-gallery { background: #dde6ff; } .ph-walk { background: #d5f5e3; }
 
 /* 일반 카드 (행사·특가) */
 .list { display: grid; gap: 12px; }
@@ -190,6 +192,7 @@ svg { flex: none; }
 .datebox.type-show { background: #d9ccff; color: #2c1a66; }
 .datebox.type-event { background: var(--ink); color: #fff; }
 .datebox.type-hands { background: var(--mint); color: #0b3d27; }
+.datebox.type-stage { background: #ffc2d6; color: #5c1030; }
 
 .badge {
   display: inline-block; margin-left: 6px; padding: 2px 9px;
