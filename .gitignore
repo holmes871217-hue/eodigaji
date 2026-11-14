@@ -5,3 +5,5 @@ node_modules/
 # API 키 보관 파일은 절대 올리지 않는다
 .env
 .env.*
+!.env.example
+qr.png
