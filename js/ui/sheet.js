@@ -6,7 +6,7 @@ import { KIND_LABEL, crowdLabel, trendPct } from '../core/scoring.js';
 import { formatMin, tripLabel, haversineKm } from '../core/geo.js';
 import { memberLabel } from '../core/segments.js';
 import { SHOP_KINDS } from '../core/nearby.js';
-import { esc, icon, rangeText, heartBtn, naverQuery } from './util.js';
+import { esc, icon, rangeText, heartBtn, naverQuery, googleMapUrl } from './util.js';
 import { favSet, favKey } from '../core/favs.js';
 
 const DOW = ['일', '월', '화', '수', '목', '금', '토'];
@@ -93,10 +93,10 @@ function shopsSheet(place, kind, data, favs) {
     <ol class="shop-list">
       ${data.items.map((s, i) => `
       <li>
-        <a class="shop" href="https://map.naver.com/p/search/${encodeURIComponent(naverQuery(s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
+        <a class="shop" href="https://map.naver.com/p/search/${encodeURIComponent(naverQuery(s.nq || s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
           <span class="shop-rank" aria-hidden="true">${i + 1}</span>
           <span class="shop-body">
-            <span class="shop-name">${esc(s.name)}</span>
+            <span class="shop-name">${esc(s.nq || s.name)}</span>
             <span class="shop-meta">
               ${s.rating != null ? `<span class="shop-star"><i aria-hidden="true">★</i> ${s.rating.toFixed(1)}</span><span>리뷰 ${s.reviews.toLocaleString('ko-KR')}</span>` : ''}
               <span>여기서 ${distText(s.km)}</span>
@@ -105,10 +105,11 @@ function shopsSheet(place, kind, data, favs) {
           </span>
         </a>
         ${heartBtn('shop', s.id, favs.has(favKey('shop', s.id)), 'on-shop')}
+        ${s.gid ? `<a class="shop-g" href="${esc(googleMapUrl(s.name, s.gid))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(s.name)} 구글 지도에서 보기">구글 지도</a>` : ''}
       </li>`).join('')}
     </ol>
     <p class="sample-note">${data.source === 'google'
-      ? '평점·리뷰 수는 Google 지도 기준이에요. 리뷰가 적은 곳은 순서에서 조금 뒤로 보내고, 멀수록 점수를 조금 깎았어요.'
+      ? '평점·리뷰 수는 Google 지도 기준이에요(네이버는 평점을 외부에 제공하지 않아요). 네이버 지도에서 가게를 못 찾으면 오른쪽 아래 "구글 지도"를 눌러 보세요. 리뷰가 적은 곳은 순서에서 조금 뒤로 보내고, 멀수록 점수를 조금 깎았어요.'
       : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
 }
 

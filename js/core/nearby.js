@@ -19,6 +19,16 @@ const FIELDS = [
   'places.location', 'places.shortFormattedAddress', 'places.primaryTypeDisplayName',
 ].join(',');
 
+/**
+ * 네이버·카카오에 등록된 이름과 맞도록 구글 이름을 다듬는다.
+ * "베테랑 칼국수 / Veteran Kalguksu" → "베테랑 칼국수", "스위스램 Swiss Lamb" → "스위스램"
+ */
+export function cleanShopName(name) {
+  let s = String(name || '').split(' / ')[0].replace(/\s*\([^)]*\)\s*$/, '').trim();
+  if (/[가-힣]/.test(s)) s = s.replace(/\s+[A-Za-z][A-Za-z0-9 .&'-]*$/, '').trim();
+  return s || String(name || '');
+}
+
 async function googleNearby(place, kind, radius, key) {
   const res = await fetch('https://places.googleapis.com/v1/places:searchNearby', {
     method: 'POST',
@@ -39,7 +49,9 @@ async function googleNearby(place, kind, radius, key) {
     .filter((r) => kind !== 'cafe' || !NOT_CAFE.test(r.displayName.text))
     .map((r) => ({
       id: `g-${r.id}`,
+      gid: r.id, // 구글 지도에서 같은 가게를 정확히 여는 번호
       name: r.displayName.text,
+      nq: cleanShopName(r.displayName.text), // 네이버 지도에서 찾을 이름(아래에서 카카오로 한 번 더 맞춘다)
       lat: r.location.latitude,
       lng: r.location.longitude,
       type: r.primaryTypeDisplayName?.text || '',
@@ -89,6 +101,7 @@ async function viaKakao(place, kind) {
     .map((d) => ({
       id: `k-${d.id}`,
       name: d.place_name,
+      nq: d.place_name,
       lat: Number(d.y),
       lng: Number(d.x),
       type: (d.category_name || '').split(' > ').slice(-1)[0],
@@ -100,6 +113,28 @@ async function viaKakao(place, kind) {
 }
 
 /**
+ * 구글이 준 가게를 같은 자리(200m 안)의 카카오 장소와 이어서, 네이버에도 등록돼 있는 이름(nq)으로 바꾼다.
+ * 구글과 네이버는 이름 표기가 달라 구글 이름으로 네이버 지도를 찾으면 "없음"이 나오는 일이 있어서다.
+ * 카카오를 못 쓰거나 못 찾은 가게는 다듬어 둔 구글 이름을 그대로 쓴다.
+ */
+async function matchNaverNames(items, kind) {
+  const kakao = await loadKakao();
+  const ps = new kakao.maps.services.Places();
+  const { Status, SortBy } = kakao.maps.services;
+  await Promise.all(items.map((s) => new Promise((resolve) => {
+    try {
+      ps.keywordSearch(s.name, (data, status) => {
+        const hit = status === Status.OK ? data.find((d) => Number(d.distance) <= 200) : null;
+        if (hit) s.nq = hit.place_name;
+        resolve();
+      }, { location: new kakao.maps.LatLng(s.lat, s.lng), radius: 200, sort: SortBy.ACCURACY, size: 3, category_group_code: SHOP_KINDS[kind].kakao });
+    } catch (e) {
+      resolve();
+    }
+  })));
+}
+
+/**
  * @param {{lat:number,lng:number}} place 기준 장소
  * @param {'food'|'cafe'} kind
  * @returns {Promise<{items: Array<{name,type,addr,rating,reviews,km}>, source: 'google'|'kakao'}>}
@@ -108,7 +143,10 @@ export async function findShops(place, kind) {
   if (!SHOP_KINDS[kind]) throw new Error('kind');
   if (GOOGLE_PLACES_KEY) {
     try {
-      return { items: await viaGoogle(place, kind), source: 'google' };
+      const items = await viaGoogle(place, kind);
+      // 이름 맞추기는 덤이라, 오래 걸리거나 실패해도 결과는 그대로 보여 준다(4초까지만 기다림).
+      await Promise.race([matchNaverNames(items, kind).catch(() => {}), new Promise((r) => setTimeout(r, 4000))]);
+      return { items, source: 'google' };
     } catch {
       // 아래 카카오로 넘어간다
     }

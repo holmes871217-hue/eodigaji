@@ -250,7 +250,7 @@ function favSnapshot(type, id) {
   if (type === 'shop') {
     for (const [key, data] of Object.entries(state.ui.shops || {})) {
       const s = data.items?.find((x) => x.id === id);
-      if (s) return { name: s.name, lat: s.lat, lng: s.lng, sub: [s.type, s.addr].filter(Boolean).join(' · '), addr: s.addr, kind: key.split('|')[1] };
+      if (s) return { name: s.name, lat: s.lat, lng: s.lng, sub: [s.type, s.addr].filter(Boolean).join(' · '), addr: s.addr, nq: s.nq || s.name, gid: s.gid || '', kind: key.split('|')[1] };
     }
   }
   return null;
