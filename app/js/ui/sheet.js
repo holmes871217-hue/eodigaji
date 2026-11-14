@@ -3,7 +3,7 @@ import { CATEGORIES } from '../data/places.js';
 import { photoOf } from '../data/photos.js';
 import { EVENT_TYPES } from '../data/events.js';
 import { KIND_LABEL, crowdLabel, trendPct } from '../core/scoring.js';
-import { formatMin } from '../core/geo.js';
+import { formatMin, tripLabel } from '../core/geo.js';
 import { memberLabel } from '../core/segments.js';
 import { esc, rangeText } from './util.js';
 
@@ -22,7 +22,7 @@ function placeSheet(r) {
     <div class="sheet-head">
       <div>
         <h2 class="sheet-title" id="sheet-title">${esc(p.name)}<span class="badge badge-${r.kind}">${KIND_LABEL[r.kind]}</span></h2>
-        <p class="card-meta">${esc(p.region)} · ${esc(cat.label)} · 검색 위치에서 약 ${formatMin(r.min)} (${Math.round(r.km)}km)</p>
+        <p class="card-meta">${esc(p.region)} · ${esc(cat.label)} · 검색 위치에서 ${tripLabel(r.km, r.min)} (${r.km < 10 ? r.km.toFixed(1) : Math.round(r.km)}km)</p>
       </div>
     </div>
 

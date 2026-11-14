@@ -49,6 +49,7 @@ function defaults() {
     ui: {
       tab: 'home', // home | events | deals | my
       maxMin: 120,
+      scope: 'all', // near(가까운 소소한 곳) | all(전체) | big(큰 나들이)
       view: 'list', // list | map
       evType: 'all',
       sheet: null,
@@ -69,6 +70,7 @@ export function loadState() {
       Object.assign(state.profile, saved.profile);
       if (typeof saved.maxMin === 'number') state.ui.maxMin = saved.maxMin;
       if (saved.hint === false) state.ui.hint = false;
+      if (['near', 'all', 'big'].includes(saved.scope)) state.ui.scope = saved.scope;
     }
   } catch (e) {
     // 저장소를 못 쓰는 환경(시크릿 모드 등)에서는 기본값으로 시작
@@ -84,7 +86,7 @@ export function saveState(state) {
   try {
     localStorage.setItem(
       KEY,
-      JSON.stringify({ profile: state.profile, maxMin: state.ui.maxMin, hint: state.ui.hint })
+      JSON.stringify({ profile: state.profile, maxMin: state.ui.maxMin, hint: state.ui.hint, scope: state.ui.scope })
     );
   } catch (e) {
     // 저장 실패는 무시 (앱은 계속 동작)

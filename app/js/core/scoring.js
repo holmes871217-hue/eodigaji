@@ -113,13 +113,19 @@ function reasonsFor(row, mode) {
  * @param tripEvents 여행 기간에 열리는 행사 (근처 행사 덧점용)
  * @param maxMin   이동시간 상한(분)
  */
-export function rankPlaces(places, profile, tripEvents, maxMin) {
+export const NEAR_MAX = 45; // "가까운 소소한 곳"에서 보여줄 최대 이동시간(분)
+const SMALL_BOOST = 1.35; // 작은 곳은 검색량 자체가 적으니, 같은 규모끼리 비교되도록 보정
+
+export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
   const { members, mode, origin } = profile;
   const rows = [];
 
   for (const place of places) {
+    const small = place.scale === 'small';
+    if (scope === 'near' && !small) continue;
+    if (scope === 'big' && small) continue;
     const { km, min } = driveEstimate(origin, place);
-    if (min > maxMin) continue;
+    if (min > (scope === 'near' ? Math.min(maxMin, NEAR_MAX) : maxMin)) continue;
 
     const fam = familyInterest(place, members);
     // 추세를 -1(크게 하락) ~ +1(크게 상승) 사이 값으로 바꾼다.
@@ -134,8 +140,13 @@ export function rankPlaces(places, profile, tripEvents, maxMin) {
       raw = fam.value * (1 + 0.5 * tu);
     }
 
-    // 가까울수록 약간 유리 (최대 12%)
-    raw *= 1 - 0.12 * Math.min(1, min / 240);
+    if (small) {
+      // 작은 곳은 가까울수록 크게 유리: 5분 거리는 덧점, 40분을 넘으면 거의 안 올라옴
+      raw *= SMALL_BOOST * clamp(1.25 - min / 40, 0.1, 1.25);
+    } else {
+      // 큰 나들이 장소는 가까울수록 약간 유리 (최대 12%)
+      raw *= 1 - 0.12 * Math.min(1, min / 240);
+    }
 
     // 가는 날 20km 안에서 행사가 열리면 덧점 8%
     const eventNear = tripEvents.find((e) => haversineKm(e, place) <= 20) || null;

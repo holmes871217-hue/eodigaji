@@ -9,6 +9,7 @@ export const EVENT_TYPES = {
   event: '행사',
   show: '전시·볼거리',
   hands: '체험',
+  stage: '공연',
 };
 
 // off: 오늘부터 며칠 뒤 시작, len: 며칠 동안
@@ -28,6 +29,9 @@ const RAW = [
   { id: 'hanok-night', title: '전주 한옥마을 야간 문화행사', type: 'event', region: '전북 전주', lat: 35.815, lng: 127.153, off: 14, len: 2, kid: false, desc: '야간 해설 투어와 전통 공연.' },
   { id: 'coffee', title: '강릉 커피축제', type: 'festival', region: '강원 강릉', lat: 37.772, lng: 128.948, off: 20, len: 4, kid: false, desc: '로스터리 부스와 바리스타 시연.' },
   { id: 'light-busan', title: '해운대 빛축제', type: 'show', region: '부산 해운대', lat: 35.159, lng: 129.16, off: 10, len: 40, kid: true, desc: '해변과 구남로 일대 야간 조명 전시.' },
+  { id: 'bluesquare-musical', title: '블루스퀘어 가족 뮤지컬', type: 'stage', region: '서울 용산 한남', lat: 37.5408, lng: 127.0026, off: -10, len: 60, kid: true, desc: '블루스퀘어 공연장의 장기 공연. 회차와 좌석은 예매처에서 확인.' },
+  { id: 'daehakro-kids', title: '대학로 어린이 연극', type: 'stage', region: '서울 종로 혜화', lat: 37.5822, lng: 127.0019, off: -5, len: 45, kid: true, desc: '소극장에서 하는 1시간 안팎의 어린이 연극.' },
+  { id: 'haebangchon-flea', title: '해방촌 신흥시장 주말 플리마켓', type: 'event', region: '서울 용산 해방촌', lat: 37.544, lng: 126.9855, off: 6, len: 2, kid: true, desc: '시장 골목에서 열리는 작은 수공예·빈티지 장터.' },
   { id: 'strawberry', title: '양평 딸기 따기 체험', type: 'hands', region: '경기 양평', lat: 37.49, lng: 127.49, off: 21, len: 60, kid: true, desc: '농장에서 직접 따서 먹는 딸기 체험. 예약제.' },
 ];
 

@@ -32,9 +32,9 @@ function compute() {
   const { start, end } = tripRange(p);
   const tripEvents = eventsForTrip(EVENTS, start, end, p.origin);
   const upcoming = upcomingEvents(EVENTS, end, p.origin);
-  const ranked = rankPlaces(PLACES, p, tripEvents, state.ui.maxMin);
+  const ranked = rankPlaces(PLACES, p, tripEvents, state.ui.maxMin, state.ui.scope);
   // 상세 창은 이동시간 필터와 상관없이 열 수 있어야 해서 전체 순위도 계산해 둔다.
-  const rankedAll = state.ui.maxMin >= 9999 ? ranked : rankPlaces(PLACES, p, tripEvents, 9999);
+  const rankedAll = state.ui.maxMin >= 9999 && state.ui.scope === 'all' ? ranked : rankPlaces(PLACES, p, tripEvents, 9999, 'all');
   return { tripEvents, upcoming, ranked, rankedAll };
 }
 
@@ -142,6 +142,9 @@ root.addEventListener('click', (ev) => {
       break;
     case 'maxmin':
       update(() => { state.ui.maxMin = Number(v); });
+      break;
+    case 'scope':
+      update(() => { state.ui.scope = ['near', 'all', 'big'].includes(v) ? v : 'all'; });
       break;
     case 'view':
       update(() => { state.ui.view = v === 'map' ? 'map' : 'list'; });
