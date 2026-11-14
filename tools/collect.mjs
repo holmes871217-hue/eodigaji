@@ -14,10 +14,18 @@ import { fileURLToPath } from 'node:url';
 import { PLACES } from '../app/js/data/places.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const env = {};
-for (const line of readFileSync(`${ROOT}.env`, 'utf8').split(/\r?\n/)) {
-  const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
-  if (m) env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+// 키는 내 컴퓨터에서는 .env 파일에서, GitHub 자동 실행에서는 GitHub 비밀 저장소(Secrets)에서 받는다.
+const env = { ...process.env };
+try {
+  for (const line of readFileSync(`${ROOT}.env`, 'utf8').split(/\r?\n/)) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
+    if (m && m[2]) env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+  }
+} catch {
+  // .env 가 없으면(자동 실행) 환경변수만 쓴다.
+}
+for (const k of ['DATA_GO_KR_KEY', 'NAVER_API_KEY_ID', 'NAVER_API_KEY']) {
+  if (!env[k]) { console.log(`키가 없어요: ${k}`); process.exit(1); }
 }
 
 const ANCHOR = '남이섬';
@@ -260,14 +268,112 @@ async function collectNaver() {
   return { yearlyScore, trendOf, interest, buzz };
 }
 
+// ── KOPIS 공연 일정 (아동 공연) ─────────────────────────────────
+// 공연 목록에는 좌표가 없어서 공연장 이름을 카카오 장소 검색으로 찾는다.
+// 찾은 공연장 좌표는 app/data/venues.json 에 모아 두고 다음부터는 다시 찾지 않는다.
+const SHORT_AREA = (a) => {
+  if (!a) return '';
+  const m = { 충청북도: '충북', 충청남도: '충남', 경상북도: '경북', 경상남도: '경남', 전라북도: '전북', 전라남도: '전남' };
+  return m[a] || a.slice(0, 2);
+};
+const xmlField = (block, tag) => {
+  const m = block.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`));
+  return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, '').trim() : '';
+};
+const dotIso = (s) => (s ? s.replace(/\./g, '-') : null);
+
+async function kakaoPlace(query, areaShort) {
+  calls.kakao = (calls.kakao || 0) + 1;
+  const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(query)}&size=5`, {
+    headers: { Authorization: `KakaoAK ${env.KAKAO_REST_KEY}` },
+  }, 'kakao-local');
+  const docs = j.documents || [];
+  const hit = docs.find((d) => !areaShort || (d.address_name || '').startsWith(areaShort)) || null;
+  return hit ? { lat: Number(hit.y), lng: Number(hit.x), addr: hit.road_address_name || hit.address_name } : null;
+}
+
+async function collectStages() {
+  if (!env.KOPIS_KEY || !env.KAKAO_REST_KEY) {
+    console.log('  KOPIS_KEY 또는 KAKAO_REST_KEY 가 없어 공연은 건너뜀');
+    return [];
+  }
+  const venuesPath = `${ROOT}app/data/venues.json`;
+  let venues = {};
+  try { venues = JSON.parse(readFileSync(venuesPath, 'utf8')).venues || {}; } catch { /* 처음 */ }
+
+  const until = new Date(today.getTime() + 60 * 86400000);
+  const rows = [];
+  for (let page = 1; page <= 15; page++) {
+    calls.kopis = (calls.kopis || 0) + 1;
+    const q = new URLSearchParams({ service: env.KOPIS_KEY, stdate: compact(today), eddate: compact(until), cpage: String(page), rows: '100', kidstate: 'Y' });
+    const res = await fetch(`https://kopis.or.kr/openApi/restful/pblprfr?${q}`);
+    const xml = await res.text();
+    if (!res.ok || !xml.includes('<dbs')) throw new Error(`KOPIS HTTP ${res.status} ${xml.slice(0, 120)}`);
+    const blocks = xml.match(/<db>[\s\S]*?<\/db>/g) || [];
+    rows.push(...blocks);
+    if (blocks.length < 100) break;
+    await sleep(150);
+  }
+
+  const out = [];
+  let newVenues = 0;
+  for (const b of rows) {
+    const venue = xmlField(b, 'fcltynm');
+    const area = xmlField(b, 'area');
+    const key = `${area}|${venue}`;
+    if (!(key in venues)) {
+      try {
+        const name = venue.replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+        venues[key] = await kakaoPlace(name, SHORT_AREA(area));
+        newVenues++;
+      } catch (e) {
+        console.log(`  공연장 찾기 실패 ${venue}: ${e.message}`);
+        continue; // 실패한 곳은 저장하지 않고 다음에 다시 시도
+      }
+      await sleep(60);
+    }
+    const v = venues[key];
+    if (!v) continue;
+    const id = xmlField(b, 'mt20id');
+    const start = dotIso(xmlField(b, 'prfpdfrom'));
+    const end = dotIso(xmlField(b, 'prfpdto')) || start;
+    if (!id || !start || end < ymd(today)) continue;
+    const poster = xmlField(b, 'poster').replace(/^https?:\/\/(www\.)?kopis\.or\.kr/, 'https://kopis.or.kr');
+    out.push({
+      id: `kopis-${id}`,
+      title: xmlField(b, 'prfnm'),
+      type: 'stage',
+      region: `${SHORT_AREA(area)} · ${venue}`,
+      lat: v.lat, lng: v.lng, start, end,
+      kid: true,
+      desc: `${xmlField(b, 'genrenm')} · ${venue}${v.addr ? ` (${v.addr})` : ''}`,
+      photo: poster || null,
+      source: 'kopis',
+      link: `https://kopis.or.kr/por/db/pblprfr/pblprfrView.do?menuId=MNU_00020&mt20Id=${id}`,
+    });
+  }
+  writeFileSync(venuesPath, JSON.stringify({ updatedAt: new Date().toISOString(), venues }));
+  console.log(`  공연 ${rows.length}건 중 위치 확인 ${out.length}건 (새로 찾은 공연장 ${newVenues}곳)`);
+  return out;
+}
+
 // ── 실행 ────────────────────────────────────────────────────
 mkdirSync(`${ROOT}app/data`, { recursive: true });
 const stamp = new Date().toISOString();
 
 console.log('· 축제·행사');
-const events = await collectEvents();
-writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스', events }));
-console.log(`  행사 ${events.length}건 저장`);
+const festivals = await collectEvents();
+console.log(`  행사 ${festivals.length}건`);
+console.log('· 공연 일정 (KOPIS)');
+let stages = [];
+try {
+  stages = await collectStages();
+} catch (e) {
+  console.log(`  공연 수집 실패: ${e.message}`);
+}
+const events = [...festivals, ...stages];
+writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망', events }));
+console.log(`  행사·공연 ${events.length}건 저장`);
 
 console.log('· 장소 사진');
 const photos = await collectPhotos();
@@ -288,4 +394,4 @@ for (const p of PLACES) {
 writeFileSync(`${ROOT}app/data/places.json`, JSON.stringify({ updatedAt: stamp, anchor: ANCHOR, places }));
 const withStats = Object.values(places).filter((r) => r.interest).length;
 console.log(`  장소 통계 ${withStats}/${PLACES.length}곳 저장`);
-console.log(`호출 수: 관광공사 ${calls.tour}회, 네이버 ${calls.naver}회`);
+console.log(`호출 수: 관광공사 ${calls.tour}회, 네이버 ${calls.naver}회, KOPIS ${calls.kopis || 0}회, 카카오 ${calls.kakao || 0}회`);

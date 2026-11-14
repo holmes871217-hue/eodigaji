@@ -80,7 +80,8 @@ GitHub Actions 워크플로 파일은 올리지 못했음. gh 토큰에 `workflo
 - 장소: 네이버 검색어 트렌드. 매 요청에 기준어 '남이섬'을 넣어 요청 간 비교. 성별 2 × 연령 묶음 4(19~29, 30대, 40대, 50+)를 앱의 연령 코드 1~11에 펼침. 1년 인기·최근 4주 추세는 주 단위(덜 찬 이번 주 제외). 블로그 수는 블로그 검색 total.
 - 사진: 관광공사 키워드 검색의 대표 이미지(좌표 5km 이내만). 60곳 중 44곳, 나머지는 위키미디어 또는 분류 그림.
 - 한 번 수집에 관광공사 약 66회, 네이버 약 195회 호출. 네이버는 종량제.
-- 자동 갱신 없음: 갱신하려면 수집 후 커밋하고 위 "게시 방법"대로 gh-pages에 올릴 것.
+- 공연: KOPIS 아동 공연(kidstate=Y) 오늘~60일, 공연장 좌표는 카카오 로컬 키워드 검색으로 찾아 `app/data/venues.json`에 캐시. type 'stage', source 'kopis'. 출처 표기 의무 있음(앱 상세 창에 표시 중). 키는 3개월 미사용 시 취소되므로 매일 갱신이 사실상 유지 역할.
+- **자동 갱신(2026-11-14 설정):** `.github/workflows/collect.yml`이 매일 한국 시간 05:00에 수집 → `app/data` 커밋 → gh-pages 게시. 키는 저장소 Secrets(DATA_GO_KR_KEY, NAVER_API_KEY_ID, NAVER_API_KEY, KOPIS_KEY, KAKAO_REST_KEY, KAKAO_JS_KEY)에 있음. Actions 화면에서 수동 실행 가능. 키를 바꾸면 `gh secret set -f .env -R holmes871217-hue/eodigaji`.
 - 아직 연습용: 혼잡 예측(crowd), 아이 단계별 적합도(kid), 작은 장소 목록(19곳 수기), 이동시간(추정).
 
 ## 그다음 할 일
