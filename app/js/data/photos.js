@@ -56,6 +56,9 @@ let LIVE = {};
 export function setLivePhotos(map) {
   LIVE = map || {};
 }
+export function addLivePhotos(map) {
+  LIVE = { ...LIVE, ...(map || {}) };
+}
 
 /** 장소 id → { src: 사진 주소, page: 출처 페이지, label: 출처 이름 } 또는 null */
 export function photoOf(id) {

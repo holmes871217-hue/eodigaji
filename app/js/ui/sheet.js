@@ -39,10 +39,12 @@ function placeSheet(r, tripEvents) {
       </div>
     </div>
 
-    ${tips.length || p.overview ? `
+    ${tips.length || p.overview || p.spot ? `
     <section class="about" aria-label="볼거리 요약">
       ${tips.length ? `<h3 class="h3">이런 걸 볼 수 있어요</h3>
       <ul class="tips">${tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+      ${p.spot ? `<h3 class="h3">어떤 곳인가요</h3>
+      <ul class="tips"><li>카카오맵 분류: ${esc(p.sub || cat.label)}</li>${p.kakaoUrl ? `<li><a href="${esc(p.kakaoUrl)}" target="_blank" rel="noopener noreferrer">카카오맵에서 사진·후기 보기</a></li>` : ''}</ul>` : ''}
       ${p.overview ? `<p class="overview">${esc(p.overview)}</p><p class="credit">소개 글: 한국관광공사</p>` : ''}
     </section>` : ''}
 
@@ -86,8 +88,10 @@ function placeSheet(r, tripEvents) {
         .join('')}
     </ul>
 
-    <p class="muted">한 달 블로그 언급 약 ${p.buzz.toLocaleString('ko-KR')}건 · 1년 누적 인기 ${p.yearly}점</p>
-    <p class="sample-note">${p.sample
+    ${p.spot ? '' : `<p class="muted">한 달 블로그 언급 약 ${p.buzz.toLocaleString('ko-KR')}건 · 1년 누적 인기 ${p.yearly}점</p>`}
+    <p class="sample-note">${p.spot
+      ? '카카오 장소 검색으로 찾은 동네 장소예요. 인기 점수는 관광공사 등록 여부와 검색 순위로 어림한 값이라 참고만 해 주세요.'
+      : p.sample
       ? '연습용 숫자예요. 실제 데이터 연결 전이라 참고만 해 주세요.'
       : `검색 인기·추세·블로그 수는 네이버 검색 데이터("${esc(p.keyword || p.name)}" 기준)예요.${p.local ? ' 사람별 점수는 1년 인기에 장소 분류별 경향을 더한 추정이에요.' : ''} 혼잡 예측은 아직 예시 값이에요.`}${photo ? ` <a href="${esc(photo.page)}" target="_blank" rel="noopener noreferrer">사진 출처: ${esc(photo.label || '위키미디어 공용')}</a>` : ''}</p>
 

@@ -409,6 +409,109 @@ async function collectStages() {
   return out;
 }
 
+// ── 카카오로 전국 동네 장소 채우기 ───────────────────────────────
+// 도시마다 아이와 갈 만한 종류(박물관·수목원·해수욕장…)를 카카오 키워드 검색으로 찾는다.
+// 카카오 결과에는 인기 순위가 없어서, 관광공사에도 등록된 곳이면 점수를 더 주고 사진·소개를 붙인다.
+// 결과는 app/data/spots.json. 카카오 검색은 7일마다, 관광공사 확인은 한 번에 최대 400곳씩(하루 한도 때문).
+const HUBS = [
+  ['서울', 37.5665, 126.978], ['서울 강남', 37.4979, 127.0276], ['서울 강서', 37.5509, 126.8495], ['서울 노원', 37.6542, 127.0568],
+  ['인천', 37.4563, 126.7052], ['수원', 37.2636, 127.0286], ['성남', 37.42, 127.1267], ['고양', 37.6584, 126.832],
+  ['용인', 37.2411, 127.1776], ['파주', 37.76, 126.78], ['남양주', 37.636, 127.2165], ['안산', 37.3219, 126.8309],
+  ['화성', 37.2, 127.07], ['평택', 36.9921, 127.1129], ['가평', 37.8315, 127.5105], ['춘천', 37.8813, 127.7298],
+  ['원주', 37.3422, 127.9202], ['강릉', 37.7519, 128.8761], ['속초', 38.207, 128.5918], ['청주', 36.6424, 127.489],
+  ['충주', 36.991, 127.926], ['천안', 36.8151, 127.1139], ['공주', 36.4465, 127.119], ['보령', 36.3333, 126.6127],
+  ['세종', 36.48, 127.289], ['대전', 36.3504, 127.3845], ['전주', 35.8242, 127.148], ['군산', 35.9676, 126.7366],
+  ['광주', 35.1595, 126.8526], ['목포', 34.8118, 126.3922], ['여수', 34.7604, 127.6622], ['순천', 34.9506, 127.4872],
+  ['대구', 35.8714, 128.6014], ['경주', 35.8562, 129.2247], ['포항', 36.019, 129.3435], ['안동', 36.5684, 128.7294],
+  ['김천', 36.1398, 128.1136], ['울산', 35.5384, 129.3114], ['부산', 35.1796, 129.0756], ['부산 해운대', 35.1631, 129.1636],
+  ['창원', 35.228, 128.6811], ['김해', 35.2285, 128.8894], ['진주', 35.18, 128.1076], ['통영', 34.8544, 128.4331],
+  ['거제', 34.8806, 128.6211], ['제주', 33.4996, 126.5312], ['서귀포', 33.2541, 126.56],
+];
+// [검색어, 앱 분류, 허용 조건(카카오 분류 그룹 또는 분류 이름에 들어갈 말)]
+const SPOT_KW = [
+  ['박물관', 'museum', /^(AT4|CT1)$/], ['과학관', 'museum', /^(AT4|CT1)$/], ['미술관', 'gallery', /^(AT4|CT1)$/],
+  ['수목원', 'nature', /^AT4$/], ['자연휴양림', 'nature', /^AT4$/], ['생태공원', 'nature', /^AT4$|공원/],
+  ['해수욕장', 'sea', /^AT4$/], ['동물원', 'zoo', /^AT4$|동물원/], ['아쿠아리움', 'zoo', /아쿠아리움|^AT4$/],
+  ['테마파크', 'theme', /테마파크|놀이공원|^AT4$/], ['케이블카', 'activity', /^AT4$|케이블카/], ['레일바이크', 'activity', /^AT4$|레일바이크/],
+  ['출렁다리', 'activity', /^AT4$/], ['키즈카페', 'kids', /^CE7$|키즈카페/], ['전통시장', 'market', /시장/], ['한옥마을', 'culture', /^AT4$/],
+];
+const SPOT_BAD = /주차장|매표소|화장실|충전소|정류장|입구|정문|후문|사무소|사무실|관리소|안내소|대학교|분소|매점|편의점|기념품|수장고|연구소/;
+
+async function collectSpots() {
+  if (!env.KAKAO_REST_KEY) { console.log('  KAKAO_REST_KEY 없음, 건너뜀'); return; }
+  const path = `${ROOT}app/data/spots.json`;
+  let prev = null;
+  try { prev = JSON.parse(readFileSync(path, 'utf8')); } catch { /* 처음 */ }
+  let spots = prev?.spots || [];
+
+  if (!prev || Date.parse(prev.searchedAt) < Date.now() - 7 * 86400000) {
+    const byId = new Map();
+    for (const [hub, y, x] of HUBS) {
+      for (const [kw, cat, ok] of SPOT_KW) {
+        try {
+          calls.kakao = (calls.kakao || 0) + 1;
+          const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(kw)}&x=${x}&y=${y}&radius=20000&sort=accuracy&size=15`, {
+            headers: { Authorization: `KakaoAK ${env.KAKAO_REST_KEY}` },
+          }, 'kakao-spot');
+          let pos = 0;
+          for (const d of j.documents || []) {
+            if (pos >= 5) break;
+            if (!(ok.test(d.category_group_code) || ok.test(d.category_name))) continue;
+            if (SPOT_BAD.test(d.place_name) || /도서관|영화관|주차장|학원/.test(d.category_name)) continue;
+            pos++;
+            const old = byId.get(d.id);
+            if (old) { old.hits++; continue; }
+            const addr = d.road_address_name || d.address_name || '';
+            byId.set(d.id, {
+              id: `k-${d.id}`, name: d.place_name, cat,
+              region: addr.split(' ').slice(0, 2).join(' ').replace(/특별자치도|특별자치시|통합특별시/, ''),
+              lat: Number(Number(d.y).toFixed(5)), lng: Number(Number(d.x).toFixed(5)),
+              sub: d.category_name.split(' > ').slice(-1)[0], url: d.place_url, pos, hits: 1,
+            });
+          }
+        } catch (e) {
+          console.log(`  카카오 검색 실패 ${hub} ${kw}: ${e.message}`);
+        }
+        await sleep(40);
+      }
+    }
+    // 지난번에 관광공사에서 확인한 결과는 이어받는다.
+    const old = new Map(spots.map((s) => [s.id, s]));
+    spots = [...byId.values()].map((s) => {
+      const o = old.get(s.id);
+      return o ? { ...s, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt } : s;
+    });
+    prev = { searchedAt: new Date().toISOString() };
+  }
+
+  // 관광공사에도 있는 곳인지 확인 (1km 안, 이름이 겹치면). 하루 호출 한도 때문에 한 번에 최대 400곳.
+  let checked = 0;
+  for (const s of spots) {
+    if (s.ktoAt || checked >= 400) continue;
+    try {
+      const { items } = await tour('searchKeyword2', { keyword: s.name.replace(/\s*\(.*?\)\s*/g, ' ').trim(), numOfRows: '3', pageNo: '1' });
+      const hit = items.find((it) => kmBetween(s, { lat: Number(it.mapy), lng: Number(it.mapx) }) <= 1);
+      s.kto = Boolean(hit);
+      if (hit?.firstimage) s.photo = https(hit.firstimage);
+      if (hit) {
+        const d = await tour('detailCommon2', { contentId: hit.contentid });
+        const ov = summarize(d.items[0]?.overview);
+        if (ov) s.overview = ov;
+      }
+      s.ktoAt = new Date().toISOString();
+      checked++;
+    } catch (e) {
+      console.log(`  관광공사 확인 실패 ${s.name}: ${e.message}`);
+      break; // 한도 초과 등은 다음 날 이어서
+    }
+    await sleep(60);
+  }
+  // 점수: 관광공사 등록 +15, 여러 도시 검색에 걸림 +, 검색 순위가 높을수록 +
+  for (const s of spots) s.base = Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
+  writeFileSync(path, JSON.stringify({ searchedAt: prev.searchedAt, updatedAt: new Date().toISOString(), source: '카카오 로컬, 한국관광공사', spots }));
+  console.log(`  동네 장소 ${spots.length}곳 (관광공사 확인 ${spots.filter((s) => s.ktoAt).length}곳, 등록 ${spots.filter((s) => s.kto).length}곳, 이번에 확인 ${checked}곳)`);
+}
+
 // ── 실행 ────────────────────────────────────────────────────
 mkdirSync(`${ROOT}app/data`, { recursive: true });
 const stamp = new Date().toISOString();
@@ -435,6 +538,9 @@ console.log(`  행사·공연 ${events.length}건 저장`);
 console.log('· 장소 사진·소개');
 const details = await collectDetails();
 console.log(`  사진 ${Object.values(details).filter((d) => d.photo).length}곳, 소개 ${Object.values(details).filter((d) => d.overview).length}곳 / ${PLACES.length}곳`);
+
+console.log('· 전국 동네 장소 (카카오)');
+await collectSpots();
 
 let prevPlaces = {};
 try { prevPlaces = JSON.parse(readFileSync(`${ROOT}app/data/places.json`, 'utf8')).places || {}; } catch { /* 처음 */ }
