@@ -392,3 +392,5 @@ svg { flex: none; }
 
 .pill-sample.is-live { background: #d5f5e3; color: #0b5b36; }
 .sheet-photo.event-photo { margin: 16px 0 0; height: 180px; border-radius: var(--radius-sm); }
+.sheet-photo.event-photo.is-poster { height: 260px; background: var(--bg); }
+.sheet-photo.event-photo.is-poster img { object-fit: contain; }

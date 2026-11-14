@@ -74,12 +74,16 @@ function eventSheet(e) {
       <div class="stat"><b>${e.kid ? '좋음' : '보통'}</b><span>아이 동반</span></div>
     </div>
     <p class="desc">${esc(e.desc)}</p>
-    ${e.photo ? `<div class="sheet-photo event-photo"><img src="${esc(e.photo)}" alt="${esc(e.title)} 사진" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : ''}
+    ${e.photo ? `<div class="sheet-photo event-photo ${e.source === 'kopis' ? 'is-poster' : ''}"><img src="${esc(e.photo)}" alt="${esc(e.title)} ${e.source === 'kopis' ? '포스터' : '사진'}" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : ''}
     <p class="sample-note">${e.sample
       ? '연습용 일정이에요. 실제 날짜와 다를 수 있으니 가기 전에 꼭 확인해 주세요.'
-      : '한국관광공사 행사 정보 기준이에요. 일정이 바뀔 수 있으니 가기 전에 꼭 확인해 주세요.'}</p>
+      : e.source === 'kopis'
+        ? '공연 정보: KOPIS(공연예술통합전산망). 회차와 예매는 공연 정보 페이지에서 확인해 주세요.'
+        : '한국관광공사 행사 정보 기준이에요. 일정이 바뀔 수 있으니 가기 전에 꼭 확인해 주세요.'}</p>
     <div class="sheet-actions">
-      <a class="btn-primary" href="https://search.naver.com/search.naver?query=${q}" target="_blank" rel="noopener noreferrer">네이버에서 일정 확인</a>
+      ${e.link
+        ? `<a class="btn-primary" href="${esc(e.link)}" target="_blank" rel="noopener noreferrer">공연 정보 보기</a>`
+        : `<a class="btn-primary" href="https://search.naver.com/search.naver?query=${q}" target="_blank" rel="noopener noreferrer">네이버에서 일정 확인</a>`}
       <a class="btn-secondary" href="https://map.kakao.com/link/to/${q},${e.lat},${e.lng}" target="_blank" rel="noopener noreferrer">카카오맵 길찾기</a>
     </div>`;
 }
