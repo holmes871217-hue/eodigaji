@@ -59,7 +59,8 @@ function destroy(map) {
 
 export function unmountMaps() {
   if (homeMap) { destroy(homeMap.map); homeMap = null; }
-  if (pickMap) { destroy(pickMap); pickMap = null; }
+  // 지도를 없앨 때 나오는 마지막 "움직임" 신호가 새로 정한 위치를 옛 핀 위치로 덮어쓰지 않게, 먼저 신호 연결을 끊는다.
+  if (pickMap) { pickMap.off(); destroy(pickMap); pickMap = null; }
 }
 
 /** 추천 지도 */
