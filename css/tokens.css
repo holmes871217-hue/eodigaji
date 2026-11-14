@@ -1,0 +1,39 @@
+/* 디자인 토큰: 색·글꼴·둥글기 같은 "디자인 규칙"을 이 파일 한 곳에 모아 둔다.
+   확정된 디자인: 3번 "소프트 플레이" (하늘색 바탕 · 남색 글자 · 노랑 포인트 · 둥글둥글한 제목 글꼴) */
+:root {
+  /* 색 */
+  --bg: #e8f1ff;
+  --surface: #ffffff;
+  --surface-2: #dbe7fb;
+  --ink: #1b2559;
+  --ink-2: #3a4a8c;
+  --line: #cddaf3;
+  --accent: #ffd23f; /* 노랑 포인트 (위에 올리는 글자는 남색) */
+  --mint: #9ee6c4;
+  --hot: #e5502b;
+  --hot-soft: #ffe0d6;
+  --hot-ink: #9c2f12;
+  --calm: #2f6be0;
+  --calm-soft: #d8e6ff;
+  --calm-ink: #1b3f9c;
+  --steady: #5b6690;
+  --steady-soft: #e6e9f5;
+  --warn-soft: #fff4c9;
+  --warn-ink: #5e4700;
+
+  /* 글꼴 */
+  --font: "Pretendard Variable", "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-display: "Jua", "Pretendard Variable", "Noto Sans KR", sans-serif; /* 제목용 둥근 글꼴 */
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-md: 16px;
+  --fs-lg: 18px;
+  --fs-xl: 30px;
+
+  /* 모양 */
+  --radius: 28px;
+  --radius-sm: 18px;
+  --shadow: 0 6px 18px rgba(27, 37, 89, 0.07);
+  --tap: 48px; /* 손가락으로 누르기 편한 최소 높이 */
+  --tabbar-h: 76px;
+}
