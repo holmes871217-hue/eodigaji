@@ -2,9 +2,12 @@
 // .env 의 키로 외부 데이터를 모아 app/data/*.json 으로 저장한다. 저장 파일에는 키가 들어가지 않는다.
 //
 //  - 축제·행사: 한국관광공사 국문 관광정보 서비스 "행사정보조회"
-//  - 장소 사진: 같은 서비스 "키워드 검색 조회"의 대표 이미지 (장소 좌표 5km 안의 결과만 사용)
+//  - 장소 사진·소개: 같은 서비스 "키워드 검색 조회"(장소 좌표 5km 안의 결과만)와 "공통정보 조회"의 개요.
+//    잘 바뀌지 않아서 app/data/details.json 에 모아 두고 30일마다 다시 받는다.
 //  - 성별·연령대별 검색 인기, 1년 인기, 최근 추세: 네이버 검색어 트렌드(NAVER API HUB)
-//  - 블로그 언급 수: 네이버 블로그 검색(NAVER API HUB)
+//  - 블로그 언급 수: 네이버 블로그 검색(NAVER API HUB). 7일마다 다시 받는다.
+//  - 전국 소소한 곳(places-local.js)은 호출 수를 아끼려고 1년 인기·추세만 받고,
+//    성별·연령대별 인기는 1년 인기에 분류별 기본 모양을 곱해 앱에서 계산한다.
 //
 // 네이버 검색어 트렌드는 한 번 요청 안에서만 비교되는 상대값(가장 높은 값 = 100)이라,
 // 매 요청에 기준 검색어(ANCHOR)를 함께 넣어 요청끼리 비교할 수 있게 맞춘다.
@@ -84,7 +87,8 @@ const KEYWORD = {
   haenggung: '행리단길',
   baedari: '배다리 헌책방골목',
 };
-const keywordOf = (p) => KEYWORD[p.id] || p.name.replace(/\s*\(.*?\)\s*/g, '').split('·')[0].trim();
+const CORE = PLACES.filter((p) => !p.local);
+const keywordOf = (p) => KEYWORD[p.id] || p.kw || p.name.replace(/\s*\(.*?\)\s*/g, '').split('·')[0].trim();
 
 // 앱의 연령대 코드(1~11)를 네이버 연령 묶음으로 대응시킨다. 12세 이하는 앱이 아이 단계로 따로 계산한다.
 const AGE_GROUPS = [
@@ -151,19 +155,54 @@ async function collectEvents() {
   return out;
 }
 
-async function collectPhotos() {
-  const photos = {};
+/** 관광공사 개요를 2~3문장(약 200자)으로 줄인다. */
+function summarize(text) {
+  const clean = (text || '')
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!clean) return '';
+  const sentences = clean.match(/[^.!?]+[.!?]+(?=\s|$)|[^.!?]+$/g) || [clean];
+  let out = '';
+  for (const s of sentences) {
+    if (out && (out.length + s.length > 230 || out.length >= 110)) break;
+    out += (out ? ' ' : '') + s.trim();
+  }
+  return out.length > 240 ? `${out.slice(0, 237)}…` : out;
+}
+
+async function collectDetails() {
+  const path = `${ROOT}app/data/details.json`;
+  let cache = {};
+  try { cache = JSON.parse(readFileSync(path, 'utf8')).places || {}; } catch { /* 처음 */ }
+  const fresh = Date.now() - 30 * 86400000;
+  let fetched = 0;
   for (const p of PLACES) {
+    const c = cache[p.id];
+    if (c && c.keyword === keywordOf(p) && Date.parse(c.at) > fresh) continue;
     try {
       const { items } = await tour('searchKeyword2', { keyword: keywordOf(p), numOfRows: '5', pageNo: '1' });
-      const hit = items.find((it) => it.firstimage && kmBetween(p, { lat: Number(it.mapy), lng: Number(it.mapx) }) <= 5);
-      if (hit) photos[p.id] = https(hit.firstimage);
+      const near = items.filter((it) => kmBetween(p, { lat: Number(it.mapy), lng: Number(it.mapx) }) <= 5);
+      const hit = near.find((it) => it.firstimage) || near[0];
+      const row = { keyword: keywordOf(p), at: new Date().toISOString() };
+      if (hit) {
+        row.cid = hit.contentid;
+        if (hit.firstimage) row.photo = https(hit.firstimage);
+        const d = await tour('detailCommon2', { contentId: hit.contentid });
+        row.overview = summarize(d.items[0]?.overview);
+      }
+      cache[p.id] = row;
+      fetched++;
     } catch (e) {
-      console.log(`  사진 실패 ${p.name}: ${e.message}`);
+      console.log(`  소개 실패 ${p.name}: ${e.message}`);
     }
     await sleep(80);
   }
-  return photos;
+  writeFileSync(path, JSON.stringify({ updatedAt: new Date().toISOString(), places: cache }));
+  console.log(`  새로 받은 곳 ${fetched}곳`);
+  return cache;
 }
 
 // ── 네이버 (NAVER API HUB) ────────────────────────────────────
@@ -183,9 +222,9 @@ async function trend(body) {
 const chunks = (arr, n) => Array.from({ length: Math.ceil(arr.length / n) }, (_, i) => arr.slice(i * n, i * n + n));
 
 /** 장소들을 기준 검색어 대비 배수로 계산: { id: { sum: 기간 합/기준 합, series: [...] } } */
-async function relative(extra, startDate, timeUnit) {
+async function relative(list, extra, startDate, timeUnit) {
   const result = {};
-  for (const group of chunks(PLACES, 4)) {
+  for (const group of chunks(list, 4)) {
     const body = {
       startDate, endDate: ymd(yesterday), timeUnit,
       keywordGroups: [
@@ -221,14 +260,14 @@ function toScores(rel) {
   return out;
 }
 
-async function collectNaver() {
+async function collectNaver(prevPlaces) {
   const yearStart = new Date(today);
   yearStart.setFullYear(yearStart.getFullYear() - 1);
   const threeMonths = new Date(today);
   threeMonths.setMonth(threeMonths.getMonth() - 3);
 
   console.log('· 1년 인기·최근 추세');
-  const yearly = await relative({}, ymd(yearStart), 'week');
+  const yearly = await relative(PLACES, {}, ymd(yearStart), 'week');
   const yearlyScore = toScores(yearly);
   const trendOf = {};
   // 주 단위 집계는 월요일부터라, 이번 주가 아직 덜 찼으면 마지막 주는 빼고 계산한다.
@@ -245,7 +284,7 @@ async function collectNaver() {
   for (const g of ['m', 'f']) {
     for (const band of AGE_GROUPS) {
       console.log(`· 성별·연령 인기 ${g === 'm' ? '남성' : '여성'} ${band.name}`);
-      const scores = toScores(await relative({ gender: g, ages: band.ages }, ymd(threeMonths), 'month'));
+      const scores = toScores(await relative(CORE, { gender: g, ages: band.ages }, ymd(threeMonths), 'month'));
       for (const [id, sc] of Object.entries(scores)) {
         interest[id] ||= {};
         for (const code of band.codes) interest[id][`${g}${code}`] = sc;
@@ -253,19 +292,25 @@ async function collectNaver() {
     }
   }
 
-  console.log('· 블로그 언급 수');
-  const buzz = {};
+  console.log('· 블로그 언급 수 (7일 지난 것만)');
+  const buzz = {}, buzzAt = {};
+  const weekAgo = Date.now() - 7 * 86400000;
   for (const p of PLACES) {
+    const prev = prevPlaces[p.id];
+    if (prev && typeof prev.buzz === 'number' && prev.keyword === keywordOf(p) && Date.parse(prev.buzzAt) > weekAgo) {
+      buzz[p.id] = prev.buzz; buzzAt[p.id] = prev.buzzAt;
+      continue;
+    }
     try {
       calls.naver++;
       const j = await getJson(`${NAVER}/search/v1/blog?query=${encodeURIComponent(keywordOf(p))}&display=1`, { headers: naverHeaders }, 'blog');
-      buzz[p.id] = j.total;
+      buzz[p.id] = j.total; buzzAt[p.id] = new Date().toISOString();
     } catch (e) {
       console.log(`  블로그 실패 ${p.name}: ${e.message}`);
     }
     await sleep(120);
   }
-  return { yearlyScore, trendOf, interest, buzz };
+  return { yearlyScore, trendOf, interest, buzz, buzzAt };
 }
 
 // ── KOPIS 공연 일정 (아동 공연) ─────────────────────────────────
@@ -288,7 +333,9 @@ async function kakaoPlace(query, areaShort) {
     headers: { Authorization: `KakaoAK ${env.KAKAO_REST_KEY}` },
   }, 'kakao-local');
   const docs = j.documents || [];
-  const hit = docs.find((d) => !areaShort || (d.address_name || '').startsWith(areaShort)) || null;
+  // 2026년 광주·전남이 통합돼 광주 주소가 "전남광주통합특별시"로 나온다.
+  const pre = areaShort === '광주' ? '전남광주' : areaShort;
+  const hit = docs.find((d) => !pre || (d.address_name || '').startsWith(pre)) || null;
   return hit ? { lat: Number(hit.y), lng: Number(hit.x), addr: hit.road_address_name || hit.address_name } : null;
 }
 
@@ -304,11 +351,16 @@ async function collectStages() {
   const until = new Date(today.getTime() + 60 * 86400000);
   const rows = [];
   for (let page = 1; page <= 15; page++) {
-    calls.kopis = (calls.kopis || 0) + 1;
     const q = new URLSearchParams({ service: env.KOPIS_KEY, stdate: compact(today), eddate: compact(until), cpage: String(page), rows: '100', kidstate: 'Y' });
-    const res = await fetch(`https://kopis.or.kr/openApi/restful/pblprfr?${q}`);
-    const xml = await res.text();
-    if (!res.ok || !xml.includes('<dbs')) throw new Error(`KOPIS HTTP ${res.status} ${xml.slice(0, 120)}`);
+    let xml = '', status = 0;
+    for (let attempt = 1; attempt <= 3; attempt++) { // KOPIS 서버가 가끔 400을 돌려줘서 몇 번 다시 시도
+      calls.kopis = (calls.kopis || 0) + 1;
+      const res = await fetch(`https://kopis.or.kr/openApi/restful/pblprfr?${q}`);
+      xml = await res.text(); status = res.status;
+      if (res.ok && xml.includes('<dbs')) break;
+      await sleep(3000 * attempt);
+    }
+    if (!xml.includes('<dbs')) throw new Error(`KOPIS HTTP ${status} ${xml.replace(/\s+/g, ' ').slice(0, 80)}`);
     const blocks = xml.match(/<db>[\s\S]*?<\/db>/g) || [];
     rows.push(...blocks);
     if (blocks.length < 100) break;
@@ -321,7 +373,7 @@ async function collectStages() {
     const venue = xmlField(b, 'fcltynm');
     const area = xmlField(b, 'area');
     const key = `${area}|${venue}`;
-    if (!(key in venues)) {
+    if (!venues[key]) { // 못 찾았던 곳도 다시 시도 (주소 체계가 바뀌는 경우가 있음)
       try {
         const name = venue.replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
         venues[key] = await kakaoPlace(name, SHORT_AREA(area));
@@ -369,29 +421,38 @@ let stages = [];
 try {
   stages = await collectStages();
 } catch (e) {
-  console.log(`  공연 수집 실패: ${e.message}`);
+  // 실패하면 지난번에 모은 공연 중 아직 안 끝난 것을 그대로 둔다.
+  try {
+    const prev = JSON.parse(readFileSync(`${ROOT}app/data/events.json`, 'utf8')).events || [];
+    stages = prev.filter((ev) => ev.source === 'kopis' && ev.end >= ymd(today));
+  } catch { /* 없음 */ }
+  console.log(`  공연 수집 실패, 지난 자료 ${stages.length}건 유지: ${e.message}`);
 }
 const events = [...festivals, ...stages];
 writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망', events }));
 console.log(`  행사·공연 ${events.length}건 저장`);
 
-console.log('· 장소 사진');
-const photos = await collectPhotos();
-console.log(`  사진 ${Object.keys(photos).length}/${PLACES.length}곳`);
+console.log('· 장소 사진·소개');
+const details = await collectDetails();
+console.log(`  사진 ${Object.values(details).filter((d) => d.photo).length}곳, 소개 ${Object.values(details).filter((d) => d.overview).length}곳 / ${PLACES.length}곳`);
 
-const nv = await collectNaver();
+let prevPlaces = {};
+try { prevPlaces = JSON.parse(readFileSync(`${ROOT}app/data/places.json`, 'utf8')).places || {}; } catch { /* 처음 */ }
+const nv = await collectNaver(prevPlaces);
 const places = {};
 for (const p of PLACES) {
   const row = {};
   if (nv.interest[p.id]) row.interest = nv.interest[p.id];
   if (nv.yearlyScore[p.id] != null) row.yearly = nv.yearlyScore[p.id];
   if (nv.trendOf[p.id] != null) row.trend = nv.trendOf[p.id];
-  if (nv.buzz[p.id] != null) row.buzz = nv.buzz[p.id];
-  if (photos[p.id]) row.photo = photos[p.id];
+  if (nv.buzz[p.id] != null) { row.buzz = nv.buzz[p.id]; row.buzzAt = nv.buzzAt[p.id]; }
+  const d = details[p.id] || {};
+  if (d.photo) row.photo = d.photo;
+  if (d.overview) row.overview = d.overview;
   row.keyword = keywordOf(p);
   places[p.id] = row;
 }
 writeFileSync(`${ROOT}app/data/places.json`, JSON.stringify({ updatedAt: stamp, anchor: ANCHOR, places }));
-const withStats = Object.values(places).filter((r) => r.interest).length;
+const withStats = Object.values(places).filter((r) => r.interest || r.yearly != null).length;
 console.log(`  장소 통계 ${withStats}/${PLACES.length}곳 저장`);
 console.log(`호출 수: 관광공사 ${calls.tour}회, 네이버 ${calls.naver}회, KOPIS ${calls.kopis || 0}회, 카카오 ${calls.kakao || 0}회`);

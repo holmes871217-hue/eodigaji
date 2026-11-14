@@ -353,6 +353,38 @@ svg { flex: none; }
 .bar i { display: block; height: 100%; background: var(--ink); border-radius: 999px; }
 .near { margin-top: 16px; padding: 12px 14px; background: #ebe1ff; color: #3a1f80; border-radius: var(--radius-sm); font-size: var(--fs-sm); }
 .desc { margin-top: 16px; }
+
+/* 장소 상세: 볼거리 요약 */
+.about { margin: 4px 0 18px; padding: 14px 16px 16px; background: var(--bg); border-radius: var(--radius-sm); }
+.about .h3 { margin: 0 0 8px; font-size: 18px; }
+.tips { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.tips li { position: relative; padding-left: 22px; font-weight: 600; }
+.tips li::before { content: ''; position: absolute; left: 4px; top: 0.55em; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--ink); }
+.overview { margin-top: 12px; font-size: var(--fs-sm); color: var(--ink-2); line-height: 1.6; }
+.about .credit { margin-top: 4px; font-size: var(--fs-xs); color: var(--ink-2); }
+
+/* 장소 상세: 근처 축제·공연 (누르면 축제 탭으로) */
+.near-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.near-item {
+  width: 100%; min-height: var(--tap); display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius-sm);
+  text-align: left; color: var(--ink); font: inherit; cursor: pointer;
+}
+.near-item:hover, .near-item:focus-visible { border-color: var(--ink); }
+.near-date { flex: none; width: 52px; padding: 6px 0; border-radius: 14px; display: grid; justify-items: center; background: var(--ink); color: #fff; }
+.near-date b { font-family: var(--font-display); font-size: 18px; font-weight: 400; line-height: 1.1; }
+.near-date small { font-size: 11px; font-weight: 600; }
+.near-date.type-festival { background: var(--accent); color: var(--ink); }
+.near-date.type-stage { background: #ffc2d6; color: #5c1030; }
+.near-date.type-show { background: #d9ccff; color: #2c1a66; }
+.near-date.type-hands { background: var(--mint); color: #0b3d27; }
+.near-body { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.near-title { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.near-go { flex: none; color: var(--ink-2); display: grid; }
+.sheet .near-list + .muted { margin-top: 6px; }
+
+/* 축제 탭: 추천 장소에서 골라 온 행사 표시 */
+.card.event.is-focus { outline: 3px solid var(--accent); outline-offset: 2px; }
 .sheet .muted { margin-top: 14px; }
 .sample-note { margin-top: 8px; font-size: var(--fs-xs); color: var(--warn-ink); background: var(--warn-soft); padding: 8px 12px; border-radius: 12px; }
 .sample-note a { text-decoration: underline; white-space: nowrap; }

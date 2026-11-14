@@ -10,6 +10,7 @@
 //   crowd  혼잡 예측 0~100          buzz   한 달 블로그 언급 수
 
 import { AGE_BANDS } from '../core/segments.js';
+import { LOCAL } from './places-local.js';
 
 export const CATEGORIES = {
   theme: { label: '테마파크', icon: '🎢' },
@@ -117,7 +118,99 @@ const SMALL = [
   ['baedari', '인천 배다리 헌책방골목', '인천 동구', 'walk', 37.4747, 126.638, 40, 40, 13, 1.05, [0.5, 0.7, 0.75], 1.02, 42, 15, 300],
 ];
 
+// 장소를 눌렀을 때 보여 줄 "볼거리 요약"
+const TIPS = {
+  'seoul-grandpark': '큰 동물원과 어린이동물원 · 리프트·코끼리열차 · 호수 둘레 산책',
+  everland: '놀이기구와 사파리 · 판다월드 · 계절 축제와 퍼레이드',
+  'folk-village': '조선 시대 마을 재현 · 마상무예 등 전통 공연 · 놀이마을',
+  'gwacheon-science': '직접 만지는 과학 체험 · 천체투영관 · 어린이탐구체험관(예약)',
+  'seoul-forest': '넓은 숲과 잔디밭 · 꽃사슴 방사장 · 성수동 카페와 연결',
+  'lotte-world': '실내 테마파크라 날씨 상관없음 · 퍼레이드 · 아이스링크',
+  'children-museum': '만지고 놀며 배우는 전시 · 미취학·초등 맞춤 · 예약 필수',
+  seongsu: '팝업스토어·카페 구경 · 수제화 거리 · 서울숲 가까움',
+  'gwangmyeong-cave': '옛 광산 동굴 탐험 · 빛 조명 공간 · 여름에도 서늘함',
+  'morning-calm': '계절 정원과 산책길 · 겨울밤 오색별빛정원전',
+  nami: '배 타고 들어가는 섬 · 메타세쿼이아길 · 자전거·짚와이어',
+  legoland: '레고 놀이기구와 미니랜드 · 미취학·초등 저학년 맞춤',
+  heyri: '작은 미술관·박물관 마을 · 공방 체험 · 카페',
+  imjingak: '넓은 잔디 언덕과 바람개비 · 곤돌라로 임진강 건너기 · 평화 전시',
+  jebudo: '물 빠지면 열리는 바닷길 · 해상 케이블카 · 갯벌',
+  dumulmeori: '두 강이 만나는 물가 풍경 · 큰 느티나무 · 새벽 물안개',
+  wolmido: '바닷가 놀이공원 · 월미바다열차 · 차이나타운 짜장면',
+  'songdo-park': '도심 속 수로 공원 · 수상택시·카약 · 고층 빌딩 야경',
+  'ganghwa-luge': '언덕을 내려오는 루지 · 곤돌라 전망 · 키 제한 확인',
+  anmok: '바다 앞 카페 거리 · 모래 해변 · 커피 축제',
+  sokcho: '시내와 가까운 해변 · 아바이마을 갯배 · 순대·오징어',
+  sheep: '언덕 위 양떼 · 건초 주기 체험 · 대관령 풍경',
+  oceanworld: '대형 워터파크 · 파도풀 · 여름 성수기 혼잡',
+  oworld: '동물원·놀이공원·꽃정원이 한곳에 · 사파리',
+  'science-museum': '전국 최대 과학관 · 자기부상열차 · 천체관',
+  danyang: '남한강 위 전망대 · 짚와이어·알파인코스터 · 단양 시내 구경',
+  kkotji: '할미·할아비 바위 낙조 · 넓은 해변 · 안면도 자연휴양림',
+  gongju: '백제 산성 성곽길 · 금강 풍경 · 무령왕릉과 가까움',
+  independence: '넓은 야외 공원 · 독립운동 전시관 · 단풍나무 숲길',
+  jeonju: '한옥 골목 · 한복 대여 · 길거리 먹거리',
+  suncheon: '나라별 정원 · 순천만 습지와 갈대밭 · 스카이큐브',
+  yeosu: '아쿠아리움 벨루가 · 동백꽃 섬 오동도 · 밤바다 야경',
+  juknokwon: '울창한 대나무 숲길 · 관방제림 · 떡갈비',
+  hwangnidan: '한옥 카페·소품샵 골목 · 대릉원 고분 · 첨성대',
+  'gyeongju-world': '스릴 놀이기구 · 어린이 존 · 보문관광단지',
+  haeundae: '대표 해수욕장 · SEA LIFE 아쿠아리움 · 동백섬 산책',
+  'songdo-cable': '바다 위 케이블카 · 송도 구름산책로 · 해수욕장',
+  eworld: '83타워 전망 · 놀이기구 · 봄 벚꽃·겨울 빛 축제',
+  jikjisa: '큰 고찰과 숲길 · 사명대사공원 · 조용한 산사',
+  tongyeong: '루지 타기 · 케이블카로 미륵산 · 다도해 전망',
+  hahoe: '강이 감싸는 옛 마을 · 하회탈 · 탈춤 공연',
+  'sinheung-market': '아케이드 시장 속 카페·식당 · 해방촌 골목과 연결',
+  'haebangchon-street': '언덕길 카페·소품샵 · 남산타워 전망',
+  'huam-alley': '108계단 경사 엘리베이터 · 옛 골목과 카페',
+  gyeongnidan: '이국적인 식당·카페 거리 · 이태원과 연결',
+  bluesquare: '뮤지컬 전용 공연장 · 키즈 공연도 자주 · 예매 필요',
+  'antique-street': '유럽 앤티크 가구·소품 가게 거리',
+  leeum: '고미술과 현대미술 · 독특한 건축 · 예약 확인',
+  'yongsan-family-park': '넓은 잔디와 연못 · 국립중앙박물관 옆',
+  'hangeul-museum': '한글 놀이 체험 · 어린이 한글놀이터(예약)',
+  'tongin-market': '엽전 도시락 · 서촌 골목 · 경복궁 가까움',
+  ikseon: '좁은 한옥 골목 속 카페·식당 · 사진 찍기',
+  gwangjang: '빈대떡·마약김밥 먹거리 · 활기찬 시장 구경',
+  daehakro: '소극장 연극·어린이 공연 · 마로니에공원',
+  mangwon: '시장 먹거리 · 망원 한강공원과 가까움',
+  yeonnam: '옛 철길 공원 산책 · 잔디 · 카페 골목',
+  'understand-ave': '컨테이너 상점 · 서울숲과 연결 · 주말 마켓',
+  mullae: '철공소와 예술 공방 골목 · 작은 전시',
+  haenggung: '수원화성 행궁 옆 카페·공방 골목',
+  baedari: '오래된 헌책방 골목 · 근대 거리 산책',
+};
+
+// 분류별 기본값 (전국 목록에는 인기·연령 정보가 없어서 분류로 대신한다)
+//          [peak, spread, fBias, kid[3]]
+const CAT_DEFAULT = {
+  theme: [33, 11, 1.05, [0.6, 0.9, 0.9]],
+  zoo: [37, 10, 1.05, [0.9, 0.9, 0.6]],
+  museum: [39, 8, 1.05, [0.6, 0.9, 0.85]],
+  nature: [40, 14, 1.15, [0.75, 0.7, 0.5]],
+  sea: [35, 13, 1.1, [0.75, 0.8, 0.65]],
+  culture: [40, 13, 1.05, [0.45, 0.75, 0.8]],
+  cafe: [30, 9, 1.25, [0.3, 0.4, 0.5]],
+  activity: [36, 11, 1.0, [0.3, 0.85, 0.95]],
+  market: [36, 12, 1.1, [0.5, 0.7, 0.7]],
+  shop: [31, 9, 1.25, [0.35, 0.45, 0.55]],
+  stage: [34, 11, 1.2, [0.5, 0.8, 0.85]],
+  gallery: [33, 11, 1.2, [0.35, 0.6, 0.75]],
+  walk: [34, 12, 1.15, [0.6, 0.6, 0.55]],
+};
+// 실제 데이터(네이버 1년 인기)를 받기 전 기본 인기값
+export const LOCAL_BASE = 50;
+
+function expandLocal([id, name, region, cat, lat, lng, tip, kw]) {
+  const [peak, spread, fBias, kid] = CAT_DEFAULT[cat] || CAT_DEFAULT.walk;
+  const row = [id, name, region, cat, lat, lng, LOCAL_BASE, peak, spread, fBias, kid, 1.0, LOCAL_BASE, 40, 0];
+  return { ...expand(row), tip, kw, scale: 'small', local: true };
+}
+
 export const PLACES = [
   ...RAW.map((r) => ({ ...expand(r), scale: 'big' })),
   ...SMALL.map((r) => ({ ...expand(r), scale: 'small' })),
+  ...LOCAL.map(expandLocal),
 ];
+for (const p of PLACES) if (!p.tip && TIPS[p.id]) p.tip = TIPS[p.id];
