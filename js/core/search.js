@@ -7,7 +7,7 @@ import { PLACES } from '../data/places.js';
 
 let loading = null;
 
-function loadKakao() {
+export function loadKakao() {
   if (window.kakao?.maps?.services) return Promise.resolve(window.kakao);
   if (loading) return loading;
   loading = new Promise((resolve, reject) => {

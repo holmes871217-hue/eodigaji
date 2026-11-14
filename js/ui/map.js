@@ -12,6 +12,7 @@ const START_KM = 10; // 처음 열었을 때 화면 가로에 보이는 실제 �
 let loading = null;
 let homeMap = null; // { map, origin, points }
 let pickMap = null;
+let favMap = null;
 
 function loadLeaflet() {
   if (window.L) return Promise.resolve();
@@ -61,6 +62,7 @@ export function unmountMaps() {
   if (homeMap) { destroy(homeMap.map); homeMap = null; }
   // 지도를 없앨 때 나오는 마지막 "움직임" 신호가 새로 정한 위치를 옛 핀 위치로 덮어쓰지 않게, 먼저 신호 연결을 끊는다.
   if (pickMap) { pickMap.off(); destroy(pickMap); pickMap = null; }
+  if (favMap) { destroy(favMap); favMap = null; }
 }
 
 /** 추천 지도 */
@@ -146,4 +148,40 @@ export async function mountPicker(el, { center, onMove }) {
 export function panPicker(lat, lng) {
   if (!pickMap) return;
   pickMap.setView([lat, lng], zoomForKm(lat, pickMap.getSize().x, START_KM), { animate: false });
+}
+
+/** 찜 지도: 검색 위치 + 찜한 곳을 번호 핀으로 찍고, 가는 순서대로 선을 잇는다. */
+export async function mountRoute(el, { origin, points }) {
+  try {
+    await loadLeaflet();
+  } catch (e) {
+    failed(el);
+    return;
+  }
+  if (!el.isConnected) return;
+
+  const L = window.L;
+  const map = baseMap(el);
+  favMap = map;
+
+  L.marker([origin.lat, origin.lng], {
+    icon: L.divIcon({ className: '', html: '<span class="pin pin-me">검색 위치</span>', iconSize: [64, 28], iconAnchor: [32, 14] }),
+    keyboard: false,
+  }).addTo(map);
+
+  const line = points.map((p) => [p.lat, p.lng]);
+  if (line.length > 1) L.polyline(line, { color: '#f0326b', weight: 4, opacity: 0.85, dashArray: '2 9', lineCap: 'round' }).addTo(map);
+  points.forEach((p, i) => {
+    const label = document.createElement('b');
+    label.textContent = `${i + 1}. ${p.name}`; // 글자로만 넣는다(이름에 기호가 있어도 안전하게)
+    L.marker([p.lat, p.lng], {
+      icon: L.divIcon({ className: '', html: `<span class="pin pin-fav">${i + 1}</span>`, iconSize: [30, 30], iconAnchor: [15, 15] }),
+      title: `${i + 1}. ${p.name}`,
+      zIndexOffset: 1000 - i,
+    }).addTo(map).bindPopup(label);
+  });
+
+  if (line.length > 1) map.fitBounds(line, { padding: [34, 34], animate: false, maxZoom: 15 });
+  else if (line.length === 1) map.setView(line[0], zoomForKm(line[0][0], map.getSize().x, START_KM), { animate: false });
+  else map.setView([origin.lat, origin.lng], zoomForKm(origin.lat, map.getSize().x, START_KM), { animate: false });
 }

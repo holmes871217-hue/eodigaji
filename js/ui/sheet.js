@@ -5,7 +5,9 @@ import { EVENT_TYPES } from '../data/events.js';
 import { KIND_LABEL, crowdLabel, trendPct } from '../core/scoring.js';
 import { formatMin, tripLabel, haversineKm } from '../core/geo.js';
 import { memberLabel } from '../core/segments.js';
-import { esc, icon, rangeText } from './util.js';
+import { SHOP_KINDS } from '../core/nearby.js';
+import { esc, icon, rangeText, heartBtn, naverQuery } from './util.js';
+import { favSet, favKey } from '../core/favs.js';
 
 const DOW = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -18,6 +20,98 @@ function nearbyEvents(p, tripEvents) {
     .slice(0, 5);
 }
 
+/** 관광공사 주차 안내 글을 읽기 좋게 다듬는다. "가능요금 (무료)" → "가능", "요금 (무료)" */
+function tidy(text) {
+  return String(text || '')
+    .replace(/(가능|불가능|불가|있음|없음)\s*(요금)/g, '$1\n$2')
+    .replace(/\s*※\s*/g, '\n※ ')
+    .replace(/(\S)\[/g, '$1\n[')
+    .replace(/(^|\s)-\s+/g, '\n')
+    .replace(/([^\s\d(~])-\s+/g, '$1\n')
+    .split('\n').map((s) => s.trim()).filter(Boolean);
+}
+
+/**
+ * 주차 안내 한 묶음.
+ * @returns {{state: 'yes'|'no'|'unknown', title: string, short: string, lines: string[]}}
+ *   short 는 추천 카드에 붙이는 짧은 말(없으면 빈 글자)
+ */
+export function parkingInfo(p) {
+  const main = tidy(p.parking);
+  const fee = tidy(p.parkingFee);
+  if (!main.length && !fee.length) {
+    return { state: 'unknown', title: '주차 안내가 등록돼 있지 않아요', short: '', lines: ['오른쪽 버튼으로 근처 주차장을 찾아보세요.'] };
+  }
+  const first = main[0] || '';
+  const no = /^(불가|없음)/.test(first);
+  const all = [...main, ...fee].join(' ');
+  const free = !no && /무료/.test(all) && !/유료|\d[\d,]*\s*원/.test(all);
+  const lines = [
+    // "가능"·"있음"만 적힌 줄은 제목과 같은 말이라 뺀다. "가능 (500대)"는 대수만 남긴다.
+    ...main.map((t) => t.replace(/^(가능|있음|불가능|불가|없음)\s*/, '').replace(/^\((.*)\)$/, '$1')).filter(Boolean),
+    ...fee.map((t, i) => (i === 0 && !/^요금/.test(t) ? `요금: ${t}` : t)),
+  ];
+  return {
+    state: no ? 'no' : 'yes',
+    title: no ? '주차 불가' : free ? '주차 가능 · 무료' : '주차 가능',
+    short: no ? '주차 불가' : free ? '주차 무료' : '주차 가능',
+    lines: lines.length ? lines : [no ? '대중교통이나 근처 주차장을 이용해 주세요.' : '요금·대수는 가기 전에 확인해 주세요.'],
+  };
+}
+
+const distText = (km) => (km < 1 ? `${Math.max(10, Math.round(km * 100) * 10)}m` : `${km.toFixed(1)}km`);
+
+/** 장소 근처 맛집·카페 5곳. 가게를 누르면 네이버 지도로 간다. */
+function shopsSheet(place, kind, data, favs) {
+  const k = SHOP_KINDS[kind];
+  const head = `
+    <div class="sheet-head">
+      <div>
+        <h2 class="sheet-title" id="sheet-title">${esc(place.name)} 근처 ${k.label}</h2>
+        <p class="card-meta">${data?.source === 'kakao' ? '가까운 순 5곳' : '가깝고 평점 높은 순 5곳'} · 누르면 네이버 지도, ♥는 찜</p>
+      </div>
+    </div>`;
+  if (!data || data.status === 'loading') {
+    return `${head}<div class="empty shop-wait" role="status"><b>${k.icon} 근처 ${k.label} 찾는 중…</b></div>`;
+  }
+  if (data.status === 'error') {
+    return `${head}
+      <div class="empty"><b>가게를 불러오지 못했어요.</b><span>인터넷 연결을 확인하고 다시 눌러 주세요.</span></div>
+      <div class="sheet-actions">
+        <button type="button" class="btn-primary" data-action="retry-shops">다시 찾기</button>
+        <a class="btn-secondary" href="https://map.naver.com/p/search/${encodeURIComponent(`${place.name} ${k.label}`)}" target="_blank" rel="noopener noreferrer">네이버 지도에서 찾기</a>
+      </div>`;
+  }
+  if (!data.items.length) {
+    return `${head}
+      <div class="empty"><b>10km 안에서는 찾지 못했어요.</b></div>
+      <div class="sheet-actions">
+        <a class="btn-primary" href="https://map.naver.com/p/search/${encodeURIComponent(`${place.name} ${k.label}`)}" target="_blank" rel="noopener noreferrer">네이버 지도에서 찾기</a>
+      </div>`;
+  }
+  return `${head}
+    <ol class="shop-list">
+      ${data.items.map((s, i) => `
+      <li>
+        <a class="shop" href="https://map.naver.com/p/search/${encodeURIComponent(naverQuery(s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
+          <span class="shop-rank" aria-hidden="true">${i + 1}</span>
+          <span class="shop-body">
+            <span class="shop-name">${esc(s.name)}</span>
+            <span class="shop-meta">
+              ${s.rating != null ? `<span class="shop-star"><i aria-hidden="true">★</i> ${s.rating.toFixed(1)}</span><span>리뷰 ${s.reviews.toLocaleString('ko-KR')}</span>` : ''}
+              <span>여기서 ${distText(s.km)}</span>
+            </span>
+            <span class="card-meta">${esc([s.type, s.addr].filter(Boolean).join(' · '))}</span>
+          </span>
+        </a>
+        ${heartBtn('shop', s.id, favs.has(favKey('shop', s.id)), 'on-shop')}
+      </li>`).join('')}
+    </ol>
+    <p class="sample-note">${data.source === 'google'
+      ? '평점·리뷰 수는 Google 지도 기준이에요. 리뷰가 적은 곳은 순서에서 조금 뒤로 보내고, 멀수록 점수를 조금 깎았어요.'
+      : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
+}
+
 function placeSheet(r, tripEvents) {
   const p = r.place;
   const cat = CATEGORIES[p.cat] || { label: '', icon: '📍' };
@@ -27,6 +121,7 @@ function placeSheet(r, tripEvents) {
   const photos = photosOf(p.id); // 옆으로 넘겨 보는 사진(최대 10장)
   const near = nearbyEvents(p, tripEvents);
   const tips = (p.tip || '').split(/\s+·\s+/).map((s) => s.trim()).filter(Boolean);
+  const park = parkingInfo(p);
 
   return `
     <div class="sheet-photo ph-${esc(p.cat)}">
@@ -44,6 +139,23 @@ function placeSheet(r, tripEvents) {
         <h2 class="sheet-title" id="sheet-title">${esc(p.name)}<span class="badge badge-${r.kind}">${KIND_LABEL[r.kind]}</span></h2>
         <p class="card-meta">${esc(p.region)} · ${esc(cat.label)} · 검색 위치에서 ${tripLabel(r.km, r.min)} (${r.km < 10 ? r.km.toFixed(1) : Math.round(r.km)}km)</p>
       </div>
+    </div>
+
+    <div class="park ${park.state === 'no' ? 'is-no' : ''}">
+      <span class="park-icon" aria-hidden="true">P</span>
+      <div class="park-body">
+        <b>${esc(park.title)}</b>
+        ${park.lines.map((t) => `<span>${esc(t)}</span>`).join('')}
+      </div>
+      <a class="park-link" href="https://map.naver.com/p/search/${encodeURIComponent(`${p.name} 주차장`)}" target="_blank" rel="noopener noreferrer">근처 주차장</a>
+    </div>
+
+    <div class="shop-btns" role="group" aria-label="근처 가게 찾기">
+      ${Object.entries(SHOP_KINDS).map(([k, s]) => `
+      <button type="button" class="shop-btn" data-action="open-shops" data-id="${esc(p.id)}" data-v="${k}">
+        <span class="shop-btn-icon" aria-hidden="true">${s.icon}</span>
+        <span><b>근처 ${s.label}</b><small>평점 높은 5곳</small></span>
+      </button>`).join('')}
     </div>
 
     ${tips.length || p.overview || p.spot ? `
@@ -147,12 +259,17 @@ export function renderSheet(state, c) {
   } else if (s.type === 'event') {
     const ev = [...c.tripEvents, ...c.upcoming].find((e) => e.id === s.id);
     if (ev) inner = eventSheet(ev);
+  } else if (s.type === 'shops' && SHOP_KINDS[s.kind]) {
+    const row = c.rankedAll.find((r) => r.place.id === s.id);
+    if (row) inner = shopsSheet(row.place, s.kind, state.ui.shops?.[`${s.id}|${s.kind}`], favSet(state));
   }
   if (!inner) return '';
+  const canFav = s.type === 'place' || s.type === 'event'; // 가게 목록 창은 줄마다 하트가 있다
   const back = state.ui.sheetDepth > 1; // 다른 상세 창 위에 열린 창이면 "뒤로"
   return `
     <div class="scrim" data-action="close-sheet"></div>
-    <section class="sheet ${s.type === 'place' ? 'has-photo' : ''}" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <section class="sheet ${s.type === 'place' ? 'has-photo' : ''} ${canFav ? 'has-fav' : ''}" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      ${canFav ? heartBtn(s.type, s.id, favSet(state).has(favKey(s.type, s.id)), 'sheet-fav') : ''}
       <button type="button" class="sheet-close" data-action="close-sheet" aria-label="${back ? '이전 화면으로' : '닫기'}">${back ? '뒤로' : '닫기'}</button>
       ${inner}
     </section>`;
