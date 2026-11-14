@@ -1,6 +1,7 @@
 // 앱의 시작점: 상태를 읽고 → 계산하고 → 화면을 그리고 → 누르는 동작을 처리한다.
 import { PLACES } from './data/places.js';
 import { getEvents } from './data/events.js';
+import { loadLive } from './data/live.js';
 import { loadState, saveState, defaultMaxMin, newId } from './core/store.js';
 import { rankPlaces, eventsForTrip, upcomingEvents } from './core/scoring.js';
 import { CITIES } from './core/geo.js';
@@ -16,7 +17,8 @@ import { mountMap, mountPicker, unmountMaps, resetMapView, fitMapAll, panPicker,
 
 const root = document.getElementById('app');
 const state = loadState();
-const EVENTS = getEvents();
+let EVENTS = getEvents();
+let liveUpdatedAt = null; // 실제 데이터를 모은 시각 (없으면 연습용 데이터)
 let installEvent = null; // 브라우저가 건네준 "설치 창 띄우기" 손잡이
 
 const TABS = [
@@ -51,7 +53,9 @@ function render() {
   root.innerHTML = `
     <header class="top">
       <div class="brand"><b>어디가지</b><span>아빠 나들이 추천</span></div>
-      <span class="pill-sample" title="실제 데이터 연결 전입니다">연습용 데이터</span>
+      ${liveUpdatedAt
+        ? `<span class="pill-sample is-live" title="네이버 검색·한국관광공사 데이터">${new Date(liveUpdatedAt).getMonth() + 1}/${new Date(liveUpdatedAt).getDate()} 기준 실제 데이터</span>`
+        : '<span class="pill-sample" title="실제 데이터 연결 전입니다">연습용 데이터</span>'}
     </header>
     <main class="view" id="view" tabindex="-1">${view}</main>
     ${renderSheet(state, c)}
@@ -282,3 +286,12 @@ if ('serviceWorker' in navigator) {
 }
 
 render();
+
+// 실제 데이터를 불러오면 다시 그린다(못 불러오면 연습용 데이터 그대로).
+loadLive()
+  .then(({ updatedAt, events }) => {
+    if (events && events.length) EVENTS = events;
+    liveUpdatedAt = updatedAt;
+    if (updatedAt) update(() => {}, { persist: false });
+  })
+  .catch(() => {});
