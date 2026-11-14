@@ -13,12 +13,12 @@ function dday(start, end) {
   return d > 0 ? `D-${d}` : '';
 }
 
-function eventCard(e, focusId) {
+function eventCard(e) {
   const d = parseISO(e.start);
   const tag = dday(e.start, e.end);
   return `
     <li>
-      <button type="button" class="card event ${e.id === focusId ? 'is-focus' : ''}" data-action="open-event" data-id="${esc(e.id)}">
+      <button type="button" class="card event" data-action="open-event" data-id="${esc(e.id)}">
         <span class="datebox type-${esc(e.type)}" aria-hidden="true">
           <small>${d.getMonth() + 1}월</small>
           <b>${d.getDate()}</b>
@@ -44,11 +44,7 @@ export function renderEvents(state, c) {
 
   const during = c.tripEvents.filter(byType).filter(within);
   const later = c.upcoming.filter(byType).filter(within);
-  const card = (e) => eventCard(e, ui.focusEvent);
-  // 추천 장소에서 골라 온 행사가 이동시간 필터 때문에 목록에 없으면 맨 위에 따로 보여 준다.
-  const picked = ui.focusEvent && ![...during, ...later].some((e) => e.id === ui.focusEvent)
-    ? [...c.tripEvents, ...c.upcoming].find((e) => e.id === ui.focusEvent)
-    : null;
+  const card = eventCard;
 
   const typeChips = `
     <div class="chips" role="group" aria-label="종류">
@@ -71,11 +67,6 @@ export function renderEvents(state, c) {
     </div>
     ${timeChips(ui.maxMin)}
     ${typeChips}
-
-    ${picked ? `
-    <h2 class="h2 mt">추천 장소 근처에서 고른 행사</h2>
-    <p class="muted">지금 고른 이동시간보다 멀어서 아래 목록에는 없어요.</p>
-    <ol class="list">${card(picked)}</ol>` : ''}
 
     <h2 class="h2 mt">가는 날 열리는 곳 <span class="count">${during.length}</span></h2>
     ${during.length

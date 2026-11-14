@@ -60,6 +60,23 @@ export function addLivePhotos(map) {
   LIVE = { ...LIVE, ...(map || {}) };
 }
 
+// 한국관광공사 사진 여러 장(대표 사진이 맨 앞, 최대 10장)
+let LIVE_LISTS = {};
+export function setLivePhotoLists(map) {
+  LIVE_LISTS = map || {};
+}
+export function addLivePhotoLists(map) {
+  LIVE_LISTS = { ...LIVE_LISTS, ...(map || {}) };
+}
+
+/** 장소 id → 옆으로 넘겨 볼 사진 주소 목록(없으면 빈 목록, 최대 10장) */
+export function photosOf(id) {
+  const list = LIVE_LISTS[id];
+  if (Array.isArray(list) && list.length) return list.slice(0, 10);
+  const one = photoOf(id);
+  return one ? [one.src] : [];
+}
+
 /** 장소 id → { src: 사진 주소, page: 출처 페이지, label: 출처 이름 } 또는 null */
 export function photoOf(id) {
   if (LIVE[id]) return { src: LIVE[id], page: 'https://api.visitkorea.or.kr', label: '한국관광공사' };

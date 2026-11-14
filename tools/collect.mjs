@@ -4,6 +4,9 @@
 //  - 축제·행사: 한국관광공사 국문 관광정보 서비스 "행사정보조회"
 //  - 장소 사진·소개: 같은 서비스 "키워드 검색 조회"(장소 좌표 5km 안의 결과만)와 "공통정보 조회"의 개요.
 //    잘 바뀌지 않아서 app/data/details.json 에 모아 두고 30일마다 다시 받는다.
+//  - 장소 사진 여러 장: 같은 서비스 "이미지정보 조회"(detailImage2). 대표 사진을 맨 앞에 두고 최대 10장.
+//    한 번 실행에 IMG_BUDGET 곳까지만 받고, 나머지는 다음 날 이어서 받는다.
+//    사진만 받으려면: node tools/collect.mjs --photos (네이버·축제는 건드리지 않는다)
 //  - 성별·연령대별 검색 인기, 1년 인기, 최근 추세: 네이버 검색어 트렌드(NAVER API HUB)
 //  - 블로그 언급 수: 네이버 블로그 검색(NAVER API HUB). 7일마다 다시 받는다.
 //  - 전국 소소한 곳(places-local.js)은 호출 수를 아끼려고 1년 인기·추세만 받고,
@@ -121,6 +124,18 @@ async function tour(op, params) {
 }
 
 const https = (u) => (u || '').replace(/^http:\/\//, 'https://');
+
+// 사진만 받는 실행인지, 그리고 한 번 실행에 사진 목록을 몇 곳까지 받을지
+const PHOTOS_ONLY = process.argv.includes('--photos');
+let imgBudget = PHOTOS_ONLY ? 900 : 300;
+
+/** 관광공사에 등록된 사진 목록. 대표 사진을 맨 앞에 두고 겹치는 것을 빼서 최대 10장. */
+async function tourPhotos(cid, first) {
+  imgBudget--;
+  const { items } = await tour('detailImage2', { contentId: cid, imageYN: 'Y', numOfRows: '10', pageNo: '1' });
+  const list = [first, ...items.map((it) => https(it.originimgurl))].filter(Boolean);
+  return [...new Set(list)].slice(0, 10);
+}
 const iso = (s) => (s && s.length === 8 ? `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}` : null);
 const kmBetween = (a, b) => {
   const R = 6371, r = (x) => (x * Math.PI) / 180;
@@ -200,8 +215,23 @@ async function collectDetails() {
     }
     await sleep(80);
   }
+  // 사진 여러 장: 관광공사에 등록된 곳(cid) 중 아직 안 받은 곳만
+  let photoFetched = 0;
+  for (const p of PLACES) {
+    const row = cache[p.id];
+    if (!row?.cid || row.photosAt || imgBudget <= 0) continue;
+    try {
+      row.photos = await tourPhotos(row.cid, row.photo);
+      row.photosAt = new Date().toISOString();
+      photoFetched++;
+    } catch (e) {
+      console.log(`  사진 목록 실패 ${p.name}: ${e.message}`);
+      break; // 한도 초과 등은 다음 날 이어서
+    }
+    await sleep(60);
+  }
   writeFileSync(path, JSON.stringify({ updatedAt: new Date().toISOString(), places: cache }));
-  console.log(`  새로 받은 곳 ${fetched}곳`);
+  console.log(`  새로 받은 곳 ${fetched}곳, 사진 목록 ${photoFetched}곳`);
   return cache;
 }
 
@@ -479,7 +509,7 @@ async function collectSpots() {
     const old = new Map(spots.map((s) => [s.id, s]));
     spots = [...byId.values()].map((s) => {
       const o = old.get(s.id);
-      return o ? { ...s, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt } : s;
+      return o ? { ...s, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt } : s;
     });
     prev = { searchedAt: new Date().toISOString() };
   }
@@ -487,13 +517,14 @@ async function collectSpots() {
   // 관광공사에도 있는 곳인지 확인 (1km 안, 이름이 겹치면). 하루 호출 한도 때문에 한 번에 최대 400곳.
   let checked = 0;
   for (const s of spots) {
-    if (s.ktoAt || checked >= 400) continue;
+    if (PHOTOS_ONLY || s.ktoAt || checked >= 400) continue;
     try {
       const { items } = await tour('searchKeyword2', { keyword: s.name.replace(/\s*\(.*?\)\s*/g, ' ').trim(), numOfRows: '3', pageNo: '1' });
       const hit = items.find((it) => kmBetween(s, { lat: Number(it.mapy), lng: Number(it.mapx) }) <= 1);
       s.kto = Boolean(hit);
       if (hit?.firstimage) s.photo = https(hit.firstimage);
       if (hit) {
+        s.cid = hit.contentid;
         const d = await tour('detailCommon2', { contentId: hit.contentid });
         const ov = summarize(d.items[0]?.overview);
         if (ov) s.overview = ov;
@@ -506,6 +537,31 @@ async function collectSpots() {
     }
     await sleep(60);
   }
+  // 사진 여러 장: 관광공사에 등록된 곳 중 아직 안 받은 곳만. 예전에 확인해서 번호(cid)가 없는 곳은 다시 찾는다(하루 150곳까지).
+  let photoFetched = 0, refound = 0;
+  for (const s of spots) {
+    if (!s.kto || s.photosAt || imgBudget <= 0) continue;
+    try {
+      if (!s.cid) {
+        if (refound >= 150) continue;
+        refound++;
+        const { items } = await tour('searchKeyword2', { keyword: s.name.replace(/\s*\(.*?\)\s*/g, ' ').trim(), numOfRows: '3', pageNo: '1' });
+        const hit = items.find((it) => kmBetween(s, { lat: Number(it.mapy), lng: Number(it.mapx) }) <= 1);
+        if (!hit) { s.photosAt = new Date().toISOString(); continue; }
+        s.cid = hit.contentid;
+        if (!s.photo && hit.firstimage) s.photo = https(hit.firstimage);
+      }
+      s.photos = await tourPhotos(s.cid, s.photo);
+      if (!s.photo && s.photos[0]) s.photo = s.photos[0];
+      s.photosAt = new Date().toISOString();
+      photoFetched++;
+    } catch (e) {
+      console.log(`  사진 목록 실패 ${s.name}: ${e.message}`);
+      break; // 한도 초과 등은 다음 날 이어서
+    }
+    await sleep(60);
+  }
+  console.log(`  사진 목록 ${photoFetched}곳 (여러 장 있는 곳 ${spots.filter((s) => s.photos?.length > 1).length}곳)`);
   // 점수: 관광공사 등록 +15, 여러 도시 검색에 걸림 +, 검색 순위가 높을수록 +
   for (const s of spots) s.base = Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
   writeFileSync(path, JSON.stringify({ searchedAt: prev.searchedAt, updatedAt: new Date().toISOString(), source: '카카오 로컬, 한국관광공사', spots }));
@@ -516,6 +572,7 @@ async function collectSpots() {
 mkdirSync(`${ROOT}app/data`, { recursive: true });
 const stamp = new Date().toISOString();
 
+if (!PHOTOS_ONLY) {
 console.log('· 축제·행사');
 const festivals = await collectEvents();
 console.log(`  행사 ${festivals.length}건`);
@@ -534,6 +591,7 @@ try {
 const events = [...festivals, ...stages];
 writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망', events }));
 console.log(`  행사·공연 ${events.length}건 저장`);
+}
 
 console.log('· 장소 사진·소개');
 const details = await collectDetails();
@@ -544,6 +602,17 @@ await collectSpots();
 
 let prevPlaces = {};
 try { prevPlaces = JSON.parse(readFileSync(`${ROOT}app/data/places.json`, 'utf8')).places || {}; } catch { /* 처음 */ }
+if (PHOTOS_ONLY) {
+  for (const p of PLACES) {
+    const d = details[p.id] || {};
+    if (prevPlaces[p.id] && d.photos?.length > 1) prevPlaces[p.id].photos = d.photos;
+  }
+  const prevFile = JSON.parse(readFileSync(`${ROOT}app/data/places.json`, 'utf8'));
+  writeFileSync(`${ROOT}app/data/places.json`, JSON.stringify({ ...prevFile, places: prevPlaces }));
+  console.log(`  사진 여러 장 있는 곳 ${Object.values(prevPlaces).filter((r) => r.photos?.length > 1).length}/${PLACES.length}곳`);
+  console.log(`호출 수: 관광공사 ${calls.tour}회`);
+  process.exit(0);
+}
 const nv = await collectNaver(prevPlaces);
 const places = {};
 for (const p of PLACES) {
@@ -554,6 +623,7 @@ for (const p of PLACES) {
   if (nv.buzz[p.id] != null) { row.buzz = nv.buzz[p.id]; row.buzzAt = nv.buzzAt[p.id]; }
   const d = details[p.id] || {};
   if (d.photo) row.photo = d.photo;
+  if (d.photos?.length > 1) row.photos = d.photos;
   if (d.overview) row.overview = d.overview;
   row.keyword = keywordOf(p);
   places[p.id] = row;

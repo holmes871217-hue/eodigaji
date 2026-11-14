@@ -50,16 +50,17 @@ function render() {
     : tab === 'my' ? renderMy(state)
     : renderHome(state, c);
 
+  const sheetHtml = renderSheet(state, c);
   unmountMaps();
   root.innerHTML = `
     <header class="top">
-      <div class="brand"><b>어디가지</b><span>아빠 나들이 추천</span></div>
+      <div class="brand"><b>놀픽</b><span>아빠 나들이 추천</span></div>
       ${liveUpdatedAt
         ? `<span class="pill-sample is-live" title="네이버 검색·한국관광공사 데이터">${new Date(liveUpdatedAt).getMonth() + 1}/${new Date(liveUpdatedAt).getDate()} 기준 실제 데이터</span>`
         : '<span class="pill-sample" title="실제 데이터 연결 전입니다">연습용 데이터</span>'}
     </header>
     <main class="view" id="view" tabindex="-1">${view}</main>
-    ${renderSheet(state, c)}
+    ${sheetHtml}
     <nav class="tabbar" aria-label="화면 이동">
       ${TABS.map(
         (t) => `
@@ -70,7 +71,9 @@ function render() {
       ).join('')}
     </nav>`;
 
-  document.body.classList.toggle('has-sheet', Boolean(state.ui.sheet));
+  document.body.classList.toggle('has-sheet', Boolean(sheetHtml));
+  const slides = document.querySelector('[data-slides]');
+  if (slides) syncSlides(slides);
 
   if (tab === 'home' && state.ui.view === 'map') {
     const el = document.getElementById('map');
@@ -78,7 +81,7 @@ function render() {
       mountMap(el, {
         origin: state.profile.origin,
         rows: c.ranked.slice(0, 20),
-        onPick: (id) => update(() => { state.ui.sheet = { type: 'place', id }; }, { persist: false }),
+        onPick: (id) => openSheet({ type: 'place', id }),
       });
     }
   }
@@ -110,6 +113,92 @@ function update(fn, { keepScroll = true, persist = true } = {}) {
   window.scrollTo(0, keepScroll ? y : 0);
 }
 
+// ── 상세 창과 뒤로 가기 ─────────────────────────────────────
+// 상세 창을 열 때마다 브라우저의 방문 기록(history)에 한 칸을 쌓는다.
+// 그래서 안드로이드 뒤로 가기를 누르면 앱이 꺼지지 않고, 방금 연 창만 닫힌다.
+// 장소 창에서 근처 축제를 열었다면 뒤로 가기 한 번에 장소 창으로 돌아온다.
+let sheets = []; // 열려 있는 상세 창을 연 순서대로 [{ type, id }]
+const sheetPos = []; // 창마다 보던 위치 { top: 세로, left: 사진 순서 }
+
+function syncSheets() {
+  state.ui.sheet = sheets[sheets.length - 1] || null;
+  state.ui.sheetDepth = sheets.length;
+}
+
+function rememberSheetPos() {
+  if (!sheets.length) return;
+  sheetPos[sheets.length - 1] = {
+    top: document.querySelector('.sheet')?.scrollTop || 0,
+    left: document.querySelector('[data-slides]')?.scrollLeft || 0,
+  };
+}
+
+function restoreSheetPos() {
+  const pos = sheetPos[sheets.length - 1];
+  if (!pos) return;
+  const sheet = document.querySelector('.sheet');
+  if (sheet) sheet.scrollTop = pos.top;
+  const slides = document.querySelector('[data-slides]');
+  if (slides) { slides.scrollLeft = pos.left; syncSlides(slides); }
+}
+
+function openSheet(sheet) {
+  rememberSheetPos();
+  sheets = [...sheets, sheet];
+  sheetPos.length = sheets.length - 1;
+  try { history.pushState({ sheets }, ''); } catch (e) { /* 기록을 못 쓰는 환경에서도 창은 열린다 */ }
+  update(syncSheets, { persist: false });
+}
+
+/** 닫기 버튼·바깥 누르기·Esc 는 모두 "뒤로 가기 한 번"과 같다. */
+function closeSheet() {
+  if (!sheets.length) return;
+  if (Array.isArray(history.state?.sheets) && history.state.sheets.length === sheets.length) {
+    history.back(); // 실제로 닫는 일은 아래 popstate 에서 한다
+  } else {
+    sheets = sheets.slice(0, -1);
+    update(syncSheets, { persist: false });
+    restoreSheetPos();
+  }
+}
+
+window.addEventListener('popstate', (ev) => {
+  const next = Array.isArray(ev.state?.sheets) ? ev.state.sheets : [];
+  const goingBack = next.length < sheets.length;
+  if (!goingBack) rememberSheetPos();
+  sheets = next;
+  update(syncSheets, { persist: false });
+  if (goingBack) restoreSheetPos();
+});
+
+// ── 사진 넘겨 보기 ──────────────────────────────────────────
+/** 지금 몇 번째 사진인지 숫자와 점을 맞춘다. */
+function syncSlides(el) {
+  const box = el.closest('.sheet-photo');
+  if (!box) return;
+  const total = el.children.length;
+  const now = Math.min(total, Math.round(el.scrollLeft / Math.max(1, el.clientWidth)) + 1);
+  const count = box.querySelector('[data-slide-count]');
+  if (count) { count.hidden = total < 2; count.textContent = `${now} / ${total}`; }
+  box.querySelectorAll('[data-action="slide"]').forEach((b) => {
+    b.hidden = total < 2 || (b.dataset.v === '-1' ? now <= 1 : now >= total);
+  });
+}
+
+// 사진을 옆으로 넘길 때(scroll 은 위로 전달되지 않아서 capture 로 받는다)
+root.addEventListener('scroll', (ev) => {
+  if (ev.target instanceof Element && ev.target.matches('[data-slides]')) syncSlides(ev.target);
+}, true);
+
+// 못 불러온 사진은 빼고 장수를 다시 센다
+root.addEventListener('error', (ev) => {
+  const img = ev.target;
+  if (!(img instanceof HTMLImageElement) || !img.matches('[data-slides] img')) return;
+  const el = img.parentElement;
+  img.remove();
+  syncSlides(el);
+}, true);
+
 function member(id) {
   return state.profile.members.find((m) => m.id === id);
 }
@@ -139,9 +228,14 @@ root.addEventListener('click', (ev) => {
   const { action, v, id } = el.dataset;
 
   switch (action) {
-    case 'tab':
-      update(() => { state.ui.tab = v; state.ui.sheet = null; state.ui.pick = null; state.ui.focusEvent = null; state.ui.locResults = []; state.ui.locMsg = ''; }, { keepScroll: false });
+    case 'tab': {
+      // 창이 열린 채 탭을 옮기면 쌓아 둔 방문 기록도 함께 되돌린다.
+      const depth = sheets.length;
+      sheets = [];
+      update(() => { state.ui.tab = v; syncSheets(); state.ui.pick = null; state.ui.locResults = []; state.ui.locMsg = ''; }, { keepScroll: false });
+      if (depth && Array.isArray(history.state?.sheets)) history.go(-depth);
       break;
+    }
     case 'mode':
       update(() => { state.profile.mode = v === 'calm' ? 'calm' : 'hot'; });
       break;
@@ -164,24 +258,20 @@ root.addEventListener('click', (ev) => {
       update(() => { state.ui.evType = v; });
       break;
     case 'open-place':
-      update(() => { state.ui.sheet = { type: 'place', id }; }, { persist: false });
+      openSheet({ type: 'place', id });
       break;
     case 'open-event':
-      update(() => { state.ui.sheet = { type: 'event', id }; }, { persist: false });
-      break;
-    case 'goto-event':
-      // 장소 상세 창의 "근처 축제·공연"을 누르면 축제 탭으로 옮겨 그 행사를 연다.
-      update(() => {
-        state.ui.tab = 'events';
-        state.ui.evType = 'all';
-        state.ui.focusEvent = id;
-        state.ui.sheet = { type: 'event', id };
-      }, { keepScroll: false, persist: false });
-      document.querySelector(`[data-action="open-event"][data-id="${CSS.escape(id)}"]`)?.scrollIntoView({ block: 'center' });
+      // 장소 상세 창의 "근처 축제·공연"도 여기로 온다. 탭은 그대로 두고 그 위에 행사 창을 연다.
+      openSheet({ type: 'event', id });
       break;
     case 'close-sheet':
-      update(() => { state.ui.sheet = null; }, { persist: false });
+      closeSheet();
       break;
+    case 'slide': {
+      const el = document.querySelector('[data-slides]');
+      if (el) el.scrollBy({ left: Number(v) * el.clientWidth, behavior: 'smooth' });
+      break;
+    }
     case 'dismiss-hint':
       update(() => { state.ui.hint = false; });
       break;
@@ -290,9 +380,7 @@ root.addEventListener('submit', async (ev) => {
 
 // 상세 창이 열려 있을 때 Esc 키로 닫기
 document.addEventListener('keydown', (ev) => {
-  if (ev.key === 'Escape' && state.ui.sheet) {
-    update(() => { state.ui.sheet = null; }, { persist: false });
-  }
+  if (ev.key === 'Escape' && state.ui.sheet) closeSheet();
 });
 
 // 검수용: 지도 가로에 보이는 실제 거리(km)를 확인할 수 있게 열어 둔다.
@@ -324,6 +412,8 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+if (Array.isArray(history.state?.sheets)) sheets = history.state.sheets;
+syncSheets();
 render();
 
 // 실제 데이터를 불러오면 다시 그린다(못 불러오면 연습용 데이터 그대로).
