@@ -371,7 +371,7 @@ svg { flex: none; }
 .park-body { flex: 1; min-width: 0; display: grid; gap: 2px; }
 .park-body b { font-weight: 700; }
 .park-body span { font-size: var(--fs-sm); color: var(--ink-2); overflow-wrap: anywhere; }
-.park-link { flex: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; background: var(--surface); font-size: var(--fs-sm); font-weight: 700; white-space: nowrap; }
+.park-link { flex: none; border: 0; font-family: inherit; color: var(--ink); min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; background: var(--surface); font-size: var(--fs-sm); font-weight: 700; white-space: nowrap; }
 .park.is-no { background: var(--steady-soft); }
 .park.is-no .park-icon { background: var(--ink-2); }
 /* 근처 맛집·카페 */
@@ -515,7 +515,8 @@ svg { flex: none; }
 .pcard-title { padding-right: 32px; }
 .card.event .card-tags, .card.event .card-title { padding-right: 32px; }
 .heart.on-shop { position: absolute; top: 6px; right: 6px; }
-.shop { padding-right: 54px; padding-bottom: 46px; align-items: flex-start; }
+.shop { padding-right: 54px; align-items: flex-start; }
+.shop.has-g { padding-bottom: 46px; }
 .shop-rank { margin-top: 2px; }
 .shop-g {
   position: absolute; right: 12px; bottom: 10px; min-height: 30px; display: inline-flex; align-items: center; padding: 0 10px;
@@ -556,6 +557,7 @@ svg { flex: none; }
 .fav-type.is-event { background: #ebe1ff; color: #4b2a99; }
 .fav-type.is-food { background: #fff1d6; color: #7a4a00; }
 .fav-type.is-cafe { background: #f5e4d7; color: #6b3d1e; }
+.fav-type.is-park { background: #dfe9ff; color: #1d3a8a; }
 .fav-handle {
   flex: none; display: grid; place-items: center; width: 44px; height: 48px; padding: 0;
   border: 0; background: none; color: var(--ink-2); touch-action: none; cursor: grab;

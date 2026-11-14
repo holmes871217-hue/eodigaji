@@ -40,7 +40,7 @@ export function parkingInfo(p) {
   const main = tidy(p.parking);
   const fee = tidy(p.parkingFee);
   if (!main.length && !fee.length) {
-    return { state: 'unknown', title: '주차 안내가 등록돼 있지 않아요', short: '', lines: ['오른쪽 버튼으로 근처 주차장을 찾아보세요.'] };
+    return { state: 'unknown', title: '주차 안내가 등록돼 있지 않아요', short: '', lines: ['오른쪽 "근처 주차장" 버튼으로 가까운 주차장을 찾아보세요.'] };
   }
   const first = main[0] || '';
   const no = /^(불가|없음)/.test(first);
@@ -76,7 +76,7 @@ function shopsSheet(place, kind, data, favs) {
   }
   if (data.status === 'error') {
     return `${head}
-      <div class="empty"><b>가게를 불러오지 못했어요.</b><span>인터넷 연결을 확인하고 다시 눌러 주세요.</span></div>
+      <div class="empty"><b>${k.label} 목록을 불러오지 못했어요.</b><span>인터넷 연결을 확인하고 다시 눌러 주세요.</span></div>
       <div class="sheet-actions">
         <button type="button" class="btn-primary" data-action="retry-shops">다시 찾기</button>
         <a class="btn-secondary" href="https://map.naver.com/p/search/${encodeURIComponent(`${place.name} ${k.label}`)}" target="_blank" rel="noopener noreferrer">네이버 지도에서 찾기</a>
@@ -93,7 +93,7 @@ function shopsSheet(place, kind, data, favs) {
     <ol class="shop-list">
       ${data.items.map((s, i) => `
       <li>
-        <a class="shop" href="https://map.naver.com/p/search/${encodeURIComponent(naverQuery(s.nq || s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
+        <a class="shop ${s.gid ? 'has-g' : ''}" href="https://map.naver.com/p/search/${encodeURIComponent(naverQuery(s.nq || s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
           <span class="shop-rank" aria-hidden="true">${i + 1}</span>
           <span class="shop-body">
             <span class="shop-name">${esc(s.nq || s.name)}</span>
@@ -110,7 +110,7 @@ function shopsSheet(place, kind, data, favs) {
     </ol>
     <p class="sample-note">${data.source === 'google'
       ? '평점·리뷰 수는 Google 지도 기준이에요(네이버는 평점을 외부에 제공하지 않아요). 네이버 지도에서 가게를 못 찾으면 오른쪽 아래 "구글 지도"를 눌러 보세요. 리뷰가 적은 곳은 순서에서 조금 뒤로 보내고, 멀수록 점수를 조금 깎았어요.'
-      : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
+      : kind === 'park' ? '카카오맵에 등록된 주차장을 가까운 순으로 보여 드려요("전용"이 붙은 곳은 뺐어요). 요금·운영시간은 가기 전에 확인해 주세요.' : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
 }
 
 function placeSheet(r, tripEvents) {
@@ -148,11 +148,11 @@ function placeSheet(r, tripEvents) {
         <b>${esc(park.title)}</b>
         ${park.lines.map((t) => `<span>${esc(t)}</span>`).join('')}
       </div>
-      <a class="park-link" href="https://map.naver.com/p/search/${encodeURIComponent(`${p.name} 주차장`)}" target="_blank" rel="noopener noreferrer">근처 주차장</a>
+      <button type="button" class="park-link" data-action="open-shops" data-id="${esc(p.id)}" data-v="park">근처 주차장</button>
     </div>
 
     <div class="shop-btns" role="group" aria-label="근처 가게 찾기">
-      ${Object.entries(SHOP_KINDS).map(([k, s]) => `
+      ${Object.entries(SHOP_KINDS).filter(([k]) => k !== 'park').map(([k, s]) => `
       <button type="button" class="shop-btn" data-action="open-shops" data-id="${esc(p.id)}" data-v="${k}">
         <span class="shop-btn-icon" aria-hidden="true">${s.icon}</span>
         <span><b>근처 ${s.label}</b><small>평점 높은 5곳</small></span>
