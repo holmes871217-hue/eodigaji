@@ -62,22 +62,18 @@ await check('공공데이터포털 · 한국관광공사 행사정보', ['DATA_G
   return `행사 ${j?.response?.body?.totalCount ?? '?'}건 조회됨`;
 });
 
+// 네이버 검색·데이터랩은 2026-06-25부터 NAVER API HUB(네이버 클라우드 플랫폼)로 옮겨짐.
+// 주소와 인증 헤더: https://api.ncloud-docs.com/docs/naver-api-hub-search-trend
+// 블로그 검색 주소는 아직 확인하지 않아 여기서는 검색어 트렌드만 검사한다.
 const naverHeaders = () => ({
-  'X-Naver-Client-Id': env.NAVER_CLIENT_ID,
-  'X-Naver-Client-Secret': env.NAVER_CLIENT_SECRET,
+  'X-NCP-APIGW-API-KEY-ID': env.NAVER_API_KEY_ID,
+  'X-NCP-APIGW-API-KEY': env.NAVER_API_KEY,
 });
 
-await check('네이버 검색(블로그)', ['NAVER_CLIENT_ID', 'NAVER_CLIENT_SECRET'], async () => {
-  const j = await getJson(`https://openapi.naver.com/v1/search/blog.json?query=${encodeURIComponent('해방촌 신흥시장')}&display=1`, {
-    headers: naverHeaders(),
-  });
-  return `블로그 글 ${j.total}건`;
-});
-
-await check('네이버 데이터랩(검색어 트렌드)', ['NAVER_CLIENT_ID', 'NAVER_CLIENT_SECRET'], async () => {
+await check('네이버 검색어 트렌드 (NAVER API HUB, 선택)', ['NAVER_API_KEY_ID', 'NAVER_API_KEY'], async () => {
   const start = new Date(today);
   start.setMonth(start.getMonth() - 3);
-  const j = await getJson('https://openapi.naver.com/v1/datalab/search', {
+  const j = await getJson('https://naverapihub.apigw.ntruss.com/search-trend/v1/search', {
     method: 'POST',
     headers: { ...naverHeaders(), 'Content-Type': 'application/json' },
     body: JSON.stringify({
