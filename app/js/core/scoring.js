@@ -68,6 +68,20 @@ export function eventsForTrip(events, tripStart, tripEnd, origin) {
     .sort((a, b) => a.min - b.min);
 }
 
+/**
+ * 가는 날 이 장소 20km 안에서 열리는 축제·공연: 가까운 순 최대 5개.
+ * 상세 창의 "가는 날 근처 축제·공연" 목록과 추천 카드의 "근처 …" 표시가 같은 결과를 쓰도록 한 곳에서 만든다.
+ * 추천 카드는 이 목록의 맨 앞(가장 가까운 1개)을 대표로 보여 준다.
+ * @returns {Array<{e: object, km: number}>}
+ */
+export function nearbyEvents(place, tripEvents) {
+  return tripEvents
+    .map((e) => ({ e, km: haversineKm(e, place) }))
+    .filter((x) => x.km <= 20)
+    .sort((a, b) => a.km - b.km || (a.e.start < b.e.start ? -1 : a.e.start > b.e.start ? 1 : 0))
+    .slice(0, 5);
+}
+
 /** 여행이 끝난 뒤 30일 안에 시작하는 행사 */
 export function upcomingEvents(events, tripEnd, origin, days = 30) {
   const limitISO = addDays(tripEnd, days);
@@ -152,7 +166,7 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
     if (place.spot) raw *= place.kto ? 0.75 : 0.5;
 
     // 가는 날 20km 안에서 행사가 열리면 덧점 8%
-    const eventNear = tripEvents.find((e) => haversineKm(e, place) <= 20) || null;
+    const eventNear = nearbyEvents(place, tripEvents)[0]?.e || null; // 상세 창 목록의 1번과 같은 행사
     if (eventNear) raw *= 1.08;
 
     rows.push({ place, km, min, fam: fam.value, parts: fam.parts, kind: classify(place), raw, eventNear });

@@ -2,8 +2,8 @@
 import { CATEGORIES } from '../data/places.js';
 import { photoOf, photosOf } from '../data/photos.js';
 import { EVENT_TYPES } from '../data/events.js';
-import { KIND_LABEL, crowdLabel, trendPct } from '../core/scoring.js';
-import { formatMin, tripLabel, haversineKm } from '../core/geo.js';
+import { KIND_LABEL, crowdLabel, trendPct, nearbyEvents } from '../core/scoring.js';
+import { formatMin, tripLabel } from '../core/geo.js';
 import { memberLabel } from '../core/segments.js';
 import { SHOP_KINDS } from '../core/nearby.js';
 import { esc, icon, rangeText, heartBtn, naverQuery, googleMapUrl } from './util.js';
@@ -12,13 +12,7 @@ import { favSet, favKey } from '../core/favs.js';
 const DOW = ['일', '월', '화', '수', '목', '금', '토'];
 
 /** 가는 날 이 장소 20km 안에서 열리는 축제·공연 (가까운 순, 최대 5개) */
-function nearbyEvents(p, tripEvents) {
-  return tripEvents
-    .map((e) => ({ e, km: haversineKm(e, p) }))
-    .filter((x) => x.km <= 20)
-    .sort((a, b) => a.km - b.km)
-    .slice(0, 5);
-}
+// 목록은 core/scoring.js 의 nearbyEvents 를 그대로 쓴다(추천 카드의 "근처 …" 표시와 같은 결과).
 
 /** 관광공사 주차 안내 글을 읽기 좋게 다듬는다. "가능요금 (무료)" → "가능", "요금 (무료)" */
 function tidy(text) {
