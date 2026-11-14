@@ -49,7 +49,9 @@ function placeSheet(r) {
     ${r.eventNear ? `<p class="near">가는 날 근처 행사: <b>${esc(r.eventNear.title)}</b> (${esc(rangeText(r.eventNear.start, r.eventNear.end))})</p>` : ''}
 
     <p class="muted">한 달 블로그 언급 약 ${p.buzz.toLocaleString('ko-KR')}건 · 1년 누적 인기 ${p.yearly}점</p>
-    <p class="sample-note">연습용 숫자예요. 실제 데이터 연결 전이라 참고만 해 주세요.${photo ? ` <a href="${esc(photo.page)}" target="_blank" rel="noopener noreferrer">사진 출처: 위키미디어 공용</a>` : ''}</p>
+    <p class="sample-note">${p.sample
+      ? '연습용 숫자예요. 실제 데이터 연결 전이라 참고만 해 주세요.'
+      : `검색 인기·추세·블로그 수는 네이버 검색 데이터("${esc(p.keyword || p.name)}" 기준)예요. 혼잡 예측은 아직 예시 값이에요.`}${photo ? ` <a href="${esc(photo.page)}" target="_blank" rel="noopener noreferrer">사진 출처: ${esc(photo.label || '위키미디어 공용')}</a>` : ''}</p>
 
     <div class="sheet-actions">
       <a class="btn-primary" href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener noreferrer">네이버 지도에서 보기</a>
@@ -72,7 +74,10 @@ function eventSheet(e) {
       <div class="stat"><b>${e.kid ? '좋음' : '보통'}</b><span>아이 동반</span></div>
     </div>
     <p class="desc">${esc(e.desc)}</p>
-    <p class="sample-note">연습용 일정이에요. 실제 날짜와 다를 수 있으니 가기 전에 꼭 확인해 주세요.</p>
+    ${e.photo ? `<div class="sheet-photo event-photo"><img src="${esc(e.photo)}" alt="${esc(e.title)} 사진" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : ''}
+    <p class="sample-note">${e.sample
+      ? '연습용 일정이에요. 실제 날짜와 다를 수 있으니 가기 전에 꼭 확인해 주세요.'
+      : '한국관광공사 행사 정보 기준이에요. 일정이 바뀔 수 있으니 가기 전에 꼭 확인해 주세요.'}</p>
     <div class="sheet-actions">
       <a class="btn-primary" href="https://search.naver.com/search.naver?query=${q}" target="_blank" rel="noopener noreferrer">네이버에서 일정 확인</a>
       <a class="btn-secondary" href="https://map.kakao.com/link/to/${q},${e.lat},${e.lng}" target="_blank" rel="noopener noreferrer">카카오맵 길찾기</a>

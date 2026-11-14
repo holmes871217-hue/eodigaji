@@ -51,8 +51,15 @@ const DIRECT = {
   },
 };
 
-/** 장소 id → { src: 사진 주소, page: 출처(저작자·라이선스) 페이지 } 또는 null */
+// 한국관광공사 대표 사진(실제 데이터)이 있으면 그것을 먼저 쓴다.
+let LIVE = {};
+export function setLivePhotos(map) {
+  LIVE = map || {};
+}
+
+/** 장소 id → { src: 사진 주소, page: 출처 페이지, label: 출처 이름 } 또는 null */
 export function photoOf(id) {
+  if (LIVE[id]) return { src: LIVE[id], page: 'https://api.visitkorea.or.kr', label: '한국관광공사' };
   if (DIRECT[id]) return DIRECT[id];
   const r = RAW[id];
   if (!r) return null;
