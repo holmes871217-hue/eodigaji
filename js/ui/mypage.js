@@ -59,7 +59,28 @@ export function renderMy(state) {
       <p>여기서 정한 내용에 맞춰 추천과 축제가 자동으로 바뀌어요.</p>
     </div>
 
-    <h2 class="h2">주요 검색 위치</h2>
+    <h2 class="h2">언제, 얼마나 다녀오세요?</h2>
+    <label class="field">
+      <span class="field-label">가는 날짜</span>
+      <input type="date" class="input" value="${esc(p.date)}" min="${todayISO()}" data-field="date">
+    </label>
+    <div class="field">
+      <span class="field-label">기간</span>
+      <div class="toggle wide" role="group" aria-label="기간">
+        ${NIGHT_OPTIONS.map(
+          (o) => `<button type="button" class="toggle-btn ${p.nights === o.v ? 'is-on' : ''}" data-action="nights" data-v="${o.v}" aria-pressed="${p.nights === o.v}">${o.label}</button>`
+        ).join('')}
+      </div>
+    </div>
+    <p class="muted">기간을 바꾸면 이동시간이 알맞게 맞춰져요(당일 2시간 · 1박 3시간 · 2박 이상 전국).</p>
+
+    <h2 class="h2 mt">어떤 곳이 좋으세요?</h2>
+    ${modeToggle(p.mode)}
+    <p class="mode-desc">${p.mode === 'hot'
+      ? '요즘 검색이 늘고 있는 곳을 먼저 추천해요.'
+      : '많은 사람이 찾던 곳이지만 요즘 검색이 뜸해진 곳을 먼저 추천해요.'}</p>
+
+    <h2 class="h2 mt">주요 검색 위치</h2>
     <p class="muted">이곳을 중심으로 주변을 찾아요. 집이 아니어도 돼요. 약속이 있는 곳 근처를 골라 두면, 그 주변에서 더 시간을 보낼 곳을 찾을 수 있어요.</p>
 
     <div class="loc-now" aria-live="polite">
@@ -96,27 +117,6 @@ export function renderMy(state) {
     <p class="muted">가중치가 큰 사람과 같은 성별·연령대가 많이 찾는 곳이 위로 올라와요.</p>
     ${p.members.map((m, i) => memberCard(m, i, p.members.length)).join('')}
     <button type="button" class="btn-add" data-action="add-member">+ 동행 추가</button>
-
-    <h2 class="h2 mt">어떤 곳이 좋으세요?</h2>
-    ${modeToggle(p.mode)}
-    <p class="mode-desc">${p.mode === 'hot'
-      ? '요즘 검색이 늘고 있는 곳을 먼저 추천해요.'
-      : '많은 사람이 찾던 곳이지만 요즘 검색이 뜸해진 곳을 먼저 추천해요.'}</p>
-
-    <h2 class="h2 mt">언제, 얼마나 다녀오세요?</h2>
-    <label class="field">
-      <span class="field-label">가는 날짜</span>
-      <input type="date" class="input" value="${esc(p.date)}" min="${todayISO()}" data-field="date">
-    </label>
-    <div class="field">
-      <span class="field-label">기간</span>
-      <div class="toggle wide" role="group" aria-label="기간">
-        ${NIGHT_OPTIONS.map(
-          (o) => `<button type="button" class="toggle-btn ${p.nights === o.v ? 'is-on' : ''}" data-action="nights" data-v="${o.v}" aria-pressed="${p.nights === o.v}">${o.label}</button>`
-        ).join('')}
-      </div>
-    </div>
-    <p class="muted">기간을 바꾸면 이동시간이 알맞게 맞춰져요(당일 2시간 · 1박 3시간 · 2박 이상 전국).</p>
 
     ${state.ui.installed ? '' : `
     <h2 class="h2 mt">홈 화면에 설치하기</h2>
