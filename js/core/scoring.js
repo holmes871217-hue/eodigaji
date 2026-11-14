@@ -148,6 +148,9 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
       raw *= 1 - 0.12 * Math.min(1, min / 240);
     }
 
+    // 카카오로 채운 동네 장소는 직접 고른 곳보다 아래에 오도록 낮춘다(관광공사 등록 곳은 덜 낮춤).
+    if (place.spot) raw *= place.kto ? 0.75 : 0.5;
+
     // 가는 날 20km 안에서 행사가 열리면 덧점 8%
     const eventNear = tripEvents.find((e) => haversineKm(e, place) <= 20) || null;
     if (eventNear) raw *= 1.08;

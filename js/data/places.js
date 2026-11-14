@@ -27,6 +27,7 @@ export const CATEGORIES = {
   stage: { label: '공연장', icon: '🎭' },
   gallery: { label: '미술관·전시', icon: '🖼️' },
   walk: { label: '산책·골목길', icon: '🚶' },
+  kids: { label: '키즈카페', icon: '🧸' },
 };
 
 // [id, 이름, 지역, 분류, 위도, 경도, base, peak, spread, fBias, kid[3], trend, yearly, crowd, buzz]
@@ -198,7 +199,19 @@ const CAT_DEFAULT = {
   stage: [34, 11, 1.2, [0.5, 0.8, 0.85]],
   gallery: [33, 11, 1.2, [0.35, 0.6, 0.75]],
   walk: [34, 12, 1.15, [0.6, 0.6, 0.55]],
+  kids: [36, 8, 1.1, [0.95, 0.85, 0.35]],
 };
+
+/** 카카오로 모은 동네 장소(data/spots.json 한 줄)를 앱 장소 모양으로 바꾼다. */
+export function spotToPlace(s) {
+  const [peak, spread, fBias, kid] = CAT_DEFAULT[s.cat] || CAT_DEFAULT.walk;
+  const row = [s.id, s.name, s.region, s.cat, s.lat, s.lng, s.base, peak, spread, fBias, kid, 1.0, s.base, 40, 0];
+  return {
+    ...expand(row),
+    scale: 'small', local: true, spot: true, kto: Boolean(s.kto), sample: false,
+    sub: s.sub, kakaoUrl: s.url, overview: s.overview || '',
+  };
+}
 // 실제 데이터(네이버 1년 인기)를 받기 전 기본 인기값
 export const LOCAL_BASE = 50;
 
