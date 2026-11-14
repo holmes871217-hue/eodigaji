@@ -55,6 +55,9 @@ export function parkingInfo(p) {
 
 const distText = (km) => (km < 1 ? `${Math.max(10, Math.round(km * 100) * 10)}m` : `${km.toFixed(1)}km`);
 
+/** 카카오로 찾은 가게의 카카오맵 장소 번호(없으면 ''). 이름 검색이 안 되는 곳도 이 링크는 정확히 열린다. */
+const kakaoId = (s) => (/^k-\d+$/.test(s.id || '') ? s.id.slice(2) : '');
+
 /** 장소 근처 맛집·카페 5곳. 가게를 누르면 네이버 지도로 간다. */
 function shopsSheet(place, kind, data, favs) {
   const k = SHOP_KINDS[kind];
@@ -87,7 +90,7 @@ function shopsSheet(place, kind, data, favs) {
     <ol class="shop-list">
       ${data.items.map((s, i) => `
       <li>
-        <a class="shop ${s.gid ? 'has-g' : ''}" href="https://map.naver.com/p/search/${encodeURIComponent(naverQuery(s.nq || s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
+        <a class="shop ${s.gid || kakaoId(s) ? 'has-g' : ''}" href="https://map.naver.com/p/search/${encodeURIComponent(kind === 'park' && s.addr ? s.addr : naverQuery(s.nq || s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
           <span class="shop-rank" aria-hidden="true">${i + 1}</span>
           <span class="shop-body">
             <span class="shop-name">${esc(s.nq || s.name)}</span>
@@ -99,6 +102,7 @@ function shopsSheet(place, kind, data, favs) {
           </span>
         </a>
         ${heartBtn('shop', s.id, favs.has(favKey('shop', s.id)), 'on-shop')}
+        ${kakaoId(s) ? `<a class="shop-g" href="https://place.map.kakao.com/${kakaoId(s)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(s.name)} 카카오맵에서 보기">카카오맵</a>` : ''}
         ${s.gid ? `<a class="shop-g" href="${esc(googleMapUrl(s.name, s.gid))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(s.name)} 구글 지도에서 보기">구글 지도</a>` : ''}
       </li>`).join('')}
     </ol>
