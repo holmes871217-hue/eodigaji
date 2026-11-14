@@ -6,6 +6,7 @@ import { loadState, saveState, defaultMaxMin, newId } from './core/store.js';
 import { rankPlaces, eventsForTrip, upcomingEvents } from './core/scoring.js';
 import { CITIES } from './core/geo.js';
 import { nearestLabel } from './core/locate.js';
+import { searchLocation } from './core/search.js';
 import { isValidISO, todayISO } from './core/dates.js';
 import { tripRange } from './ui/util.js';
 import { renderHome } from './ui/home.js';
@@ -139,7 +140,7 @@ root.addEventListener('click', (ev) => {
 
   switch (action) {
     case 'tab':
-      update(() => { state.ui.tab = v; state.ui.sheet = null; state.ui.pick = null; state.ui.focusEvent = null; }, { keepScroll: false });
+      update(() => { state.ui.tab = v; state.ui.sheet = null; state.ui.pick = null; state.ui.focusEvent = null; state.ui.locResults = []; state.ui.locMsg = ''; }, { keepScroll: false });
       break;
     case 'mode':
       update(() => { state.profile.mode = v === 'calm' ? 'calm' : 'hot'; });
@@ -220,6 +221,19 @@ root.addEventListener('click', (ev) => {
     case 'use-gps':
       useGps();
       break;
+    case 'pick-result': {
+      const r = state.ui.locResults?.[Number(v)];
+      if (r) {
+        update(() => {
+          state.profile.origin = { type: 'search', name: r.name, lat: r.lat, lng: r.lng };
+          state.ui.locResults = [];
+          state.ui.locMsg = `검색 위치를 "${r.name}"(으)로 정했어요.`;
+          state.ui.pick = null;
+          state.ui.geoMsg = '';
+        });
+      }
+      break;
+    }
     case 'install':
       // 브라우저가 준비해 둔 "홈 화면에 설치" 창을 띄운다.
       if (installEvent) {
@@ -257,6 +271,21 @@ root.addEventListener('change', (ev) => {
     const city = CITIES.find((c) => c.name === el.value);
     if (city) panPicker(city.lat, city.lng);
   }
+});
+
+// ── 주요 검색 위치: 글자로 찾기 ───────────────────────────────
+root.addEventListener('submit', async (ev) => {
+  const form = ev.target.closest('[data-form="loc-search"]');
+  if (!form) return;
+  ev.preventDefault();
+  const q = String(new FormData(form).get('q') || '').trim().slice(0, 60);
+  if (!q) return;
+  update(() => { state.ui.locQuery = q; state.ui.locResults = []; state.ui.locMsg = '찾는 중…'; }, { persist: false });
+  const { results } = await searchLocation(q);
+  update(() => {
+    state.ui.locResults = results;
+    state.ui.locMsg = results.length ? '아래에서 고르면 검색 위치가 바뀌어요.' : '찾지 못했어요. 다른 이름이나 주소로 검색하거나 지도에서 골라 주세요.';
+  }, { persist: false });
 });
 
 // 상세 창이 열려 있을 때 Esc 키로 닫기
