@@ -81,3 +81,14 @@ export function summaryBar(state) {
       </button>
     </div>`;
 }
+
+/** 찜(하트) 버튼. 누르면 main.js 의 'fav' 동작이 처리한다. */
+export function heartBtn(type, id, on, cls = '') {
+  return `<button type="button" class="heart ${cls} ${on ? 'is-on' : ''}" data-action="fav" data-type="${type}" data-id="${esc(id)}" aria-pressed="${on ? 'true' : 'false'}" aria-label="${on ? '찜에서 빼기' : '찜하기'}"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.3A4.4 4.4 0 0 1 12 7.4a4.4 4.4 0 0 1 7.5 2.8c0 5.700-7.500 10.300-7.500 10.300z"/></svg></button>`;
+}
+
+/** 네이버 지도에서 가게를 찾을 말. 같은 이름의 다른 지점이 나오지 않게 주소 맨 앞의 시·군·구를 붙인다. */
+export function naverQuery(name, addr) {
+  const first = (addr || '').split(' ')[0] || '';
+  return /[시군구]$/.test(first) && !name.includes(first) ? `${first} ${name}` : name;
+}

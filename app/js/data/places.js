@@ -210,6 +210,7 @@ export function spotToPlace(s) {
     ...expand(row),
     scale: 'small', local: true, spot: true, kto: Boolean(s.kto), sample: false,
     sub: s.sub, kakaoUrl: s.url, overview: s.overview || '',
+    parking: s.parking || '', parkingFee: s.parkingFee || '',
   };
 }
 // 실제 데이터(네이버 1년 인기)를 받기 전 기본 인기값

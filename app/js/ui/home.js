@@ -18,12 +18,16 @@ const SCOPE_DESC = {
 import { fmtLong } from '../core/dates.js';
 import { NIGHT_OPTIONS } from '../core/store.js';
 import { esc, icon, summaryBar, timeChips, timeLabel, modeToggle } from './util.js';
+import { parkingInfo } from './sheet.js';
+import { heartBtn } from './util.js';
+import { favSet, favKey } from '../core/favs.js';
 
 /** 옆에 사진이 붙는 추천 카드 */
-function placeCard(r, i) {
+function placeCard(r, i, favs) {
   const p = r.place;
   const cat = CATEGORIES[p.cat] || { label: '', icon: '📍' };
   const photo = photoOf(p.id);
+  const park = parkingInfo(p);
   return `
     <li>
       <button type="button" class="pcard" data-action="open-place" data-id="${esc(p.id)}">
@@ -37,19 +41,22 @@ function placeCard(r, i) {
           <span class="pcard-meta"><span class="badge badge-${r.kind}">${KIND_LABEL[r.kind]}</span>${p.scale === 'small' ? `${esc(cat.label)} · ` : ''}${esc(p.region)} · ${tripLabel(r.km, r.min)}</span>
           <span class="pcard-chips">
             ${r.reasons.map((x) => `<span class="why why-${x.kind}">${esc(x.text)}</span>`).join('')}
+            ${park.short ? `<span class="why why-park ${park.state === 'no' ? 'is-no' : ''}"><i aria-hidden="true">P</i>${esc(park.short)}</span>` : ''}
           </span>
         </span>
       </button>
+      ${heartBtn('place', p.id, favs.has(favKey('place', p.id)), 'on-card')}
     </li>`;
 }
 
 export function renderHome(state, c) {
   const { profile, ui } = state;
   const rows = c.ranked.slice(0, 20);
+  const favs = favSet(state);
   const nights = (NIGHT_OPTIONS.find((o) => o.v === profile.nights) || NIGHT_OPTIONS[0]).label;
 
   const list = rows.length
-    ? `<ol class="plist">${rows.map(placeCard).join('')}</ol>`
+    ? `<ol class="plist">${rows.map((r, i) => placeCard(r, i, favs)).join('')}</ol>`
     : `<div class="empty">
          <b>${esc(timeLabel(ui.maxMin))} 거리에는 추천할 곳이 없어요.</b>
          <span>위에서 이동시간을 더 길게 고르거나, 검색 위치를 옮겨 보세요.</span>

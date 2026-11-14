@@ -156,6 +156,10 @@ svg { flex: none; }
 .why-up { background: #ffe0ea; color: #8f1f45; }
 .why-down { background: #dde6ff; color: var(--ink); }
 .why-event { background: #ebe1ff; color: #4b2a99; }
+.why-park { display: inline-flex; align-items: center; gap: 4px; background: #dfe9ff; color: #1d3a8a; }
+.why-park i { display: grid; place-items: center; width: 14px; height: 14px; border-radius: 4px; background: #2f5fd0; color: #fff; font-style: normal; font-size: 10px; font-weight: 800; }
+.why-park.is-no { background: var(--steady-soft); color: var(--ink-2); }
+.why-park.is-no i { background: var(--ink-2); }
 
 /* 사진이 없을 때 분류별 바탕색 */
 .ph-theme { background: #ffe1d6; } .ph-zoo { background: #ffecc7; } .ph-museum { background: #dfe6ff; }
@@ -361,6 +365,37 @@ svg { flex: none; }
 }
 .sheet-head { display: flex; gap: 12px; align-items: center; }
 .sheet:not(.has-photo) .sheet-head { padding-right: 72px; }
+/* 주차 안내 */
+.park { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 12px 14px; border-radius: var(--radius-sm); background: #e6eeff; }
+.park-icon { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: #2f5fd0; color: #fff; font-weight: 800; font-size: 20px; }
+.park-body { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.park-body b { font-weight: 700; }
+.park-body span { font-size: var(--fs-sm); color: var(--ink-2); overflow-wrap: anywhere; }
+.park-link { flex: none; min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; background: var(--surface); font-size: var(--fs-sm); font-weight: 700; white-space: nowrap; }
+.park.is-no { background: var(--steady-soft); }
+.park.is-no .park-icon { background: var(--ink-2); }
+/* 근처 맛집·카페 */
+.shop-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.shop-btn {
+  display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 10px 12px; text-align: left;
+  border: 2px solid transparent; border-radius: var(--radius-sm); background: #fff1d6; color: var(--ink);
+}
+.shop-btn[data-v="cafe"] { background: #f5e4d7; }
+.shop-btn:hover, .shop-btn:focus-visible { border-color: var(--ink); }
+.shop-btn-icon { flex: none; font-size: 28px; line-height: 1; }
+.shop-btn b { display: block; font-weight: 700; }
+.shop-btn small { display: block; font-size: var(--fs-xs); color: var(--ink-2); }
+.shop-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
+.shop { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 2px solid transparent; border-radius: var(--radius-sm); background: var(--bg); color: var(--ink); text-decoration: none; }
+.shop:hover, .shop:focus-visible { border-color: var(--ink); }
+.shop-rank { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: #fff; font-family: var(--font-display); }
+.shop-body { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.shop-name { font-weight: 700; font-size: 17px; overflow-wrap: anywhere; }
+.shop-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: var(--fs-sm); color: var(--ink-2); }
+.shop-star { font-weight: 700; color: var(--ink); }
+.shop-star i { font-style: normal; color: #f5a400; }
+.shop .card-meta { margin-top: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shop-wait { margin-top: 16px; }
 .sheet-title { font-family: var(--font-display); font-size: 26px; font-weight: 400; line-height: 1.25; }
 .sheet .card-meta { margin-top: 4px; }
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
@@ -435,7 +470,7 @@ svg { flex: none; }
   position: fixed; left: 50%; bottom: 0; z-index: 10;
   transform: translateX(-50%);
   width: 100%; max-width: 480px;
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px;
   padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
   background: var(--surface); border-radius: 28px 28px 0 0;
   box-shadow: 0 -4px 18px rgba(27, 37, 89, 0.08);
@@ -466,3 +501,64 @@ svg { flex: none; }
 .sheet-photo.event-photo { margin: 16px 0 0; height: 180px; border-radius: var(--radius-sm); }
 .sheet-photo.event-photo.is-poster { height: 260px; background: var(--bg); }
 .sheet-photo.event-photo.is-poster img { object-fit: contain; }
+
+/* 찜(하트) */
+.heart {
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  border: 0; border-radius: 50%; background: none; color: var(--ink-2);
+}
+.heart svg { fill: rgba(255, 255, 255, 0.7); stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.heart.is-on { color: #f0326b; }
+.heart.is-on svg { fill: currentColor; }
+.plist > li, .list > li, .shop-list > li { position: relative; }
+.heart.on-card { position: absolute; top: 2px; right: 2px; }
+.pcard-title { padding-right: 32px; }
+.card.event .card-tags, .card.event .card-title { padding-right: 32px; }
+.heart.on-shop { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); }
+.shop { padding-right: 54px; }
+.heart.sheet-fav {
+  position: absolute; top: 12px; right: 86px; z-index: 2;
+  background: rgba(255, 255, 255, 0.95); box-shadow: 0 1px 6px rgba(27, 37, 89, 0.25);
+}
+.sheet.has-fav:not(.has-photo) .sheet-head { padding-right: 126px; }
+
+/* 찜 탭 */
+.fav-head { margin-top: 12px; }
+.map-fav { height: 38vh; min-height: 250px; margin-top: 12px; }
+.pin-fav { background: #f0326b; }
+.fav-list { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 10px; }
+.fav {
+  position: relative; display: flex; align-items: center; gap: 2px; padding: 8px 4px 8px 12px;
+  background: var(--surface); border-radius: var(--radius-sm); box-shadow: var(--shadow);
+}
+.fav.is-dragging { z-index: 3; box-shadow: 0 12px 30px rgba(27, 37, 89, 0.28); }
+.fav-list.is-sorting { user-select: none; -webkit-user-select: none; }
+.fav-list.is-sorting .fav:not(.is-dragging) { transition: transform 0.15s ease; }
+.fav-main {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 4px 0;
+  border: 0; background: none; text-align: left; color: inherit; text-decoration: none; font: inherit;
+}
+.fav-num {
+  flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  background: #f0326b; color: #fff; font-family: var(--font-display); font-size: 16px;
+}
+.fav-body { min-width: 0; display: grid; gap: 4px; }
+.fav-name { font-family: var(--font-display); font-size: 18px; line-height: 1.25; overflow-wrap: anywhere; }
+.fav .card-meta { margin-top: 0; }
+.fav-type { margin: 0 2px 0 0; background: var(--bg); color: var(--ink); }
+.fav-type.is-event { background: #ebe1ff; color: #4b2a99; }
+.fav-type.is-food { background: #fff1d6; color: #7a4a00; }
+.fav-type.is-cafe { background: #f5e4d7; color: #6b3d1e; }
+.fav-handle {
+  flex: none; display: grid; place-items: center; width: 44px; height: 48px; padding: 0;
+  border: 0; background: none; color: var(--ink-2); touch-action: none; cursor: grab;
+}
+.fav.is-dragging .fav-handle { cursor: grabbing; }
+.fav-empty { margin-top: 16px; }
+.tab { position: relative; }
+.tab-count {
+  position: absolute; top: 4px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px;
+  display: grid; place-items: center; border-radius: 999px;
+  background: #f0326b; color: #fff; font-size: 11px; font-weight: 800; line-height: 1;
+}
+.tab.is-on .tab-count { position: static; }

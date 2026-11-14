@@ -136,6 +136,39 @@ async function tourPhotos(cid, first) {
   const list = [first, ...items.map((it) => https(it.originimgurl))].filter(Boolean);
   return [...new Set(list)].slice(0, 10);
 }
+
+/** 관광공사 글에서 태그·기호를 걷어 낸다. */
+function plain(text) {
+  return (text || '')
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// 한 번 실행에 주차 안내를 몇 곳까지 받을지
+let introBudget = PHOTOS_ONLY ? 900 : 300;
+
+/**
+ * 주차 안내("소개정보 조회" detailIntro2). row 는 cid 가 있는 장소 한 줄이고, 결과를 그 줄에 적는다.
+ * 종류 번호(관광지 12, 문화시설 14, 레포츠 28 …)마다 칸 이름이 달라서 이름이 parking 으로 시작하는 칸을 모은다.
+ */
+async function tourParking(row) {
+  if (!row.ctype) {
+    const d = await tour('detailCommon2', { contentId: row.cid });
+    row.ctype = d.items[0]?.contenttypeid || '';
+  }
+  if (!row.ctype) return;
+  introBudget--;
+  const { items } = await tour('detailIntro2', { contentId: row.cid, contentTypeId: row.ctype });
+  const it = items[0] || {};
+  const pick = (test) => Object.entries(it).filter(([k, v]) => test(k) && v).map(([, v]) => plain(v)).filter(Boolean).join(' / ');
+  const parking = pick((k) => k.startsWith('parking') && !k.startsWith('parkingfee'));
+  const fee = pick((k) => k.startsWith('parkingfee'));
+  if (parking) row.parking = parking.slice(0, 200);
+  if (fee) row.parkingFee = fee.slice(0, 200);
+}
 const iso = (s) => (s && s.length === 8 ? `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}` : null);
 const kmBetween = (a, b) => {
   const R = 6371, r = (x) => (x * Math.PI) / 180;
@@ -204,6 +237,7 @@ async function collectDetails() {
       const row = { keyword: keywordOf(p), at: new Date().toISOString() };
       if (hit) {
         row.cid = hit.contentid;
+        row.ctype = hit.contenttypeid;
         if (hit.firstimage) row.photo = https(hit.firstimage);
         const d = await tour('detailCommon2', { contentId: hit.contentid });
         row.overview = summarize(d.items[0]?.overview);
@@ -230,8 +264,23 @@ async function collectDetails() {
     }
     await sleep(60);
   }
+  // 주차 안내: 관광공사에 등록된 곳 중 아직 안 받은 곳만
+  let parkFetched = 0;
+  for (const p of PLACES) {
+    const row = cache[p.id];
+    if (!row?.cid || row.introAt || introBudget <= 0) continue;
+    try {
+      await tourParking(row);
+      row.introAt = new Date().toISOString();
+      parkFetched++;
+    } catch (e) {
+      console.log(`  주차 안내 실패 ${p.name}: ${e.message}`);
+      break; // 한도 초과 등은 다음 날 이어서
+    }
+    await sleep(60);
+  }
   writeFileSync(path, JSON.stringify({ updatedAt: new Date().toISOString(), places: cache }));
-  console.log(`  새로 받은 곳 ${fetched}곳, 사진 목록 ${photoFetched}곳`);
+  console.log(`  새로 받은 곳 ${fetched}곳, 사진 목록 ${photoFetched}곳, 주차 안내 ${parkFetched}곳`);
   return cache;
 }
 
@@ -509,7 +558,7 @@ async function collectSpots() {
     const old = new Map(spots.map((s) => [s.id, s]));
     spots = [...byId.values()].map((s) => {
       const o = old.get(s.id);
-      return o ? { ...s, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt } : s;
+      return o ? { ...s, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt } : s;
     });
     prev = { searchedAt: new Date().toISOString() };
   }
@@ -525,6 +574,7 @@ async function collectSpots() {
       if (hit?.firstimage) s.photo = https(hit.firstimage);
       if (hit) {
         s.cid = hit.contentid;
+        s.ctype = hit.contenttypeid;
         const d = await tour('detailCommon2', { contentId: hit.contentid });
         const ov = summarize(d.items[0]?.overview);
         if (ov) s.overview = ov;
@@ -549,6 +599,7 @@ async function collectSpots() {
         const hit = items.find((it) => kmBetween(s, { lat: Number(it.mapy), lng: Number(it.mapx) }) <= 1);
         if (!hit) { s.photosAt = new Date().toISOString(); continue; }
         s.cid = hit.contentid;
+        s.ctype = hit.contenttypeid;
         if (!s.photo && hit.firstimage) s.photo = https(hit.firstimage);
       }
       s.photos = await tourPhotos(s.cid, s.photo);
@@ -562,6 +613,21 @@ async function collectSpots() {
     await sleep(60);
   }
   console.log(`  사진 목록 ${photoFetched}곳 (여러 장 있는 곳 ${spots.filter((s) => s.photos?.length > 1).length}곳)`);
+  // 주차 안내: 관광공사 번호(cid)를 아는 곳 중 아직 안 받은 곳만
+  let parkFetched = 0;
+  for (const s of spots) {
+    if (!s.cid || s.introAt || introBudget <= 0) continue;
+    try {
+      await tourParking(s);
+      s.introAt = new Date().toISOString();
+      parkFetched++;
+    } catch (e) {
+      console.log(`  주차 안내 실패 ${s.name}: ${e.message}`);
+      break;
+    }
+    await sleep(60);
+  }
+  console.log(`  주차 안내 ${parkFetched}곳 (안내가 있는 곳 ${spots.filter((s) => s.parking || s.parkingFee).length}곳)`);
   // 점수: 관광공사 등록 +15, 여러 도시 검색에 걸림 +, 검색 순위가 높을수록 +
   for (const s of spots) s.base = Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
   writeFileSync(path, JSON.stringify({ searchedAt: prev.searchedAt, updatedAt: new Date().toISOString(), source: '카카오 로컬, 한국관광공사', spots }));
@@ -606,6 +672,8 @@ if (PHOTOS_ONLY) {
   for (const p of PLACES) {
     const d = details[p.id] || {};
     if (prevPlaces[p.id] && d.photos?.length > 1) prevPlaces[p.id].photos = d.photos;
+    if (prevPlaces[p.id] && d.parking) prevPlaces[p.id].parking = d.parking;
+    if (prevPlaces[p.id] && d.parkingFee) prevPlaces[p.id].parkingFee = d.parkingFee;
   }
   const prevFile = JSON.parse(readFileSync(`${ROOT}app/data/places.json`, 'utf8'));
   writeFileSync(`${ROOT}app/data/places.json`, JSON.stringify({ ...prevFile, places: prevPlaces }));
@@ -624,6 +692,8 @@ for (const p of PLACES) {
   const d = details[p.id] || {};
   if (d.photo) row.photo = d.photo;
   if (d.photos?.length > 1) row.photos = d.photos;
+  if (d.parking) row.parking = d.parking;
+  if (d.parkingFee) row.parkingFee = d.parkingFee;
   if (d.overview) row.overview = d.overview;
   row.keyword = keywordOf(p);
   places[p.id] = row;

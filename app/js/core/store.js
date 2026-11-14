@@ -46,8 +46,9 @@ function defaults() {
       nights: 0,
       origin: { type: 'city', name: seoul.name, lat: seoul.lat, lng: seoul.lng },
     },
+    favs: [], // 찜한 곳(담은 순서 = 동선 순서). core/favs.js 참고
     ui: {
-      tab: 'home', // home | events | deals | my
+      tab: 'home', // home | events | favs | deals | my
       maxMin: 120,
       scope: 'all', // near(가까운 소소한 곳) | all(전체) | big(큰 나들이)
       view: 'list', // list | map
@@ -71,6 +72,11 @@ export function loadState() {
       if (typeof saved.maxMin === 'number') state.ui.maxMin = saved.maxMin;
       if (saved.hint === false) state.ui.hint = false;
       if (['near', 'all', 'big'].includes(saved.scope)) state.ui.scope = saved.scope;
+      if (Array.isArray(saved.favs)) {
+        state.favs = saved.favs
+          .filter((f) => f && typeof f.key === 'string' && typeof f.name === 'string' && Number.isFinite(f.lat) && Number.isFinite(f.lng))
+          .slice(0, 30);
+      }
     }
   } catch (e) {
     // 저장소를 못 쓰는 환경(시크릿 모드 등)에서는 기본값으로 시작
@@ -86,7 +92,7 @@ export function saveState(state) {
   try {
     localStorage.setItem(
       KEY,
-      JSON.stringify({ profile: state.profile, maxMin: state.ui.maxMin, hint: state.ui.hint, scope: state.ui.scope })
+      JSON.stringify({ profile: state.profile, maxMin: state.ui.maxMin, hint: state.ui.hint, scope: state.ui.scope, favs: state.favs })
     );
   } catch (e) {
     // 저장 실패는 무시 (앱은 계속 동작)

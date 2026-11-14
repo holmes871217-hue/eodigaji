@@ -33,6 +33,8 @@ export async function loadLive() {
       if (typeof r.trend === 'number') p.trend = r.trend;
       if (typeof r.buzz === 'number') p.buzz = r.buzz;
       if (r.overview) p.overview = r.overview;
+      if (r.parking) p.parking = r.parking;
+      if (r.parkingFee) p.parkingFee = r.parkingFee;
       if (r.photo) photos[p.id] = r.photo;
       if (Array.isArray(r.photos) && r.photos.length) lists[p.id] = r.photos;
       if (r.interest || (p.local && typeof r.yearly === 'number')) p.sample = false;

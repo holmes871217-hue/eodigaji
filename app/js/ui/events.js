@@ -2,7 +2,8 @@
 import { EVENT_TYPES } from '../data/events.js';
 import { formatMin } from '../core/geo.js';
 import { diffDays, todayISO, parseISO } from '../core/dates.js';
-import { esc, icon, summaryBar, timeChips, timeLabel, rangeText, tripText } from './util.js';
+import { esc, icon, summaryBar, timeChips, timeLabel, rangeText, tripText, heartBtn } from './util.js';
+import { favSet, favKey } from '../core/favs.js';
 
 const DOW = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -13,7 +14,7 @@ function dday(start, end) {
   return d > 0 ? `D-${d}` : '';
 }
 
-function eventCard(e) {
+function eventCard(e, favs) {
   const d = parseISO(e.start);
   const tag = dday(e.start, e.end);
   return `
@@ -34,6 +35,7 @@ function eventCard(e) {
           <span class="card-meta">${icon('clock', 14)} 약 ${formatMin(e.min)}</span>
         </span>
       </button>
+      ${heartBtn('event', e.id, favs.has(favKey('event', e.id)), 'on-card')}
     </li>`;
 }
 
@@ -44,7 +46,8 @@ export function renderEvents(state, c) {
 
   const during = c.tripEvents.filter(byType).filter(within);
   const later = c.upcoming.filter(byType).filter(within);
-  const card = eventCard;
+  const favs = favSet(state);
+  const card = (e) => eventCard(e, favs);
 
   const typeChips = `
     <div class="chips" role="group" aria-label="종류">
