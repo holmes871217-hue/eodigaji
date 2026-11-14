@@ -1,4 +1,4 @@
-// 장소 근처 맛집·카페 찾기.
+// 장소 근처 맛집·카페·주차장 찾기. (주차장은 평점이 필요 없어서 카카오로만 찾는다)
 // 1순위: 구글 Places(평점·리뷰 수가 있음). 가깝고 평점 높은 순으로 5곳을 고른다.
 // 구글을 못 쓰면(키 없음·하루 한도 초과·인터넷 문제) 카카오 장소 검색으로 가까운 순 5곳(평점 없음).
 // 구글 결과는 저장해 두면 안 되므로(이용 약관) 앱을 켜 둔 동안만 기억한다.
@@ -9,7 +9,11 @@ import { loadKakao } from './search.js';
 export const SHOP_KINDS = {
   food: { label: '맛집', icon: '🍽️', google: 'restaurant', kakao: 'FD6' },
   cafe: { label: '카페', icon: '☕', google: 'cafe', kakao: 'CE7' },
+  park: { label: '주차장', icon: '🅿️', google: null, kakao: 'PK6' },
 };
+
+// 주차장 가운데 일반 차량이 댈 수 없는 곳
+const NOT_PARK = /전용|입주민|거주자|관계자|아파트|교회|학교|유치원|어린이집/;
 
 // 카페로 분류돼 있지만 나들이 중에 들르는 카페가 아닌 곳
 const NOT_CAFE = /스터디|독서실|PC방|피시방|만화|보드게임|코인노래|스크린/i;
@@ -93,8 +97,19 @@ async function viaKakao(place, kind) {
       else reject(new Error('kakao'));
     }, { location: new kakao.maps.LatLng(place.lat, place.lng), radius, sort: SortBy.DISTANCE, size: 15 });
   });
-  let rows = await search(3000);
+  const isPark = kind === 'park';
+  let rows = await search(isPark ? 2000 : 3000);
   if (rows.length < 5) rows = await search(10000);
+  if (isPark) {
+    // 같은 이름이 겹치면 가까운 하나만, 일반 차량이 못 대는 곳은 빼고,
+    // 공영주차장이거나 이름에 그 장소 이름이 들어간 곳은 500m 가까운 것처럼 앞에 둔다.
+    const key = place.name.replace(/\s*\(.*?\)\s*/g, ' ').trim().split(/[\s·]/)[0];
+    const seen = new Set();
+    const rank = (d) => Number(d.distance) - (/공영/.test(d.category_name) || (key && d.place_name.includes(key)) ? 500 : 0);
+    rows = rows
+      .filter((d) => d.place_name.trim() !== '주차장' && !NOT_PARK.test(d.place_name) && !seen.has(d.place_name) && seen.add(d.place_name))
+      .sort((a, b) => rank(a) - rank(b));
+  }
   return rows
     .filter((d) => kind !== 'cafe' || !NOT_CAFE.test(d.place_name))
     .slice(0, 5)
@@ -141,7 +156,7 @@ async function matchNaverNames(items, kind) {
  */
 export async function findShops(place, kind) {
   if (!SHOP_KINDS[kind]) throw new Error('kind');
-  if (GOOGLE_PLACES_KEY) {
+  if (GOOGLE_PLACES_KEY && SHOP_KINDS[kind].google) {
     try {
       const items = await viaGoogle(place, kind);
       // 이름 맞추기는 덤이라, 오래 걸리거나 실패해도 결과는 그대로 보여 준다(4초까지만 기다림).
