@@ -1,6 +1,6 @@
 // 아래에서 올라오는 상세 창(바텀 시트)
 import { CATEGORIES } from '../data/places.js';
-import { photoOf } from '../data/photos.js';
+import { photoOf, photosOf } from '../data/photos.js';
 import { EVENT_TYPES } from '../data/events.js';
 import { KIND_LABEL, crowdLabel, trendPct } from '../core/scoring.js';
 import { formatMin, tripLabel, haversineKm } from '../core/geo.js';
@@ -24,13 +24,20 @@ function placeSheet(r, tripEvents) {
   const pct = trendPct(p.trend);
   const q = encodeURIComponent(p.name);
   const photo = photoOf(p.id);
+  const photos = photosOf(p.id); // 옆으로 넘겨 보는 사진(최대 10장)
   const near = nearbyEvents(p, tripEvents);
   const tips = (p.tip || '').split(/\s+·\s+/).map((s) => s.trim()).filter(Boolean);
 
   return `
     <div class="sheet-photo ph-${esc(p.cat)}">
       <span class="pcard-fallback" aria-hidden="true">${cat.icon}</span>
-      ${photo ? `<img src="${esc(photo.src)}" alt="${esc(p.name)} 사진" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
+      ${photos.length ? `
+      <div class="slides" data-slides tabindex="0" role="group" aria-label="${esc(p.name)} 사진 ${photos.length}장${photos.length > 1 ? ', 옆으로 넘겨 보세요' : ''}">
+        ${photos.map((src, i) => `<img src="${esc(src)}" alt="${esc(p.name)} 사진 ${i + 1}" referrerpolicy="no-referrer" ${i ? 'loading="lazy"' : ''} draggable="false">`).join('')}
+      </div>
+      <span class="slide-count" data-slide-count aria-hidden="true" ${photos.length > 1 ? '' : 'hidden'}>1 / ${photos.length}</span>
+      <button type="button" class="slide-nav is-prev" data-action="slide" data-v="-1" aria-label="이전 사진" hidden>${icon('chevron', 20)}</button>
+      <button type="button" class="slide-nav is-next" data-action="slide" data-v="1" aria-label="다음 사진" ${photos.length > 1 ? '' : 'hidden'}>${icon('chevron', 20)}</button>` : ''}
     </div>
     <div class="sheet-head">
       <div>
@@ -55,7 +62,7 @@ function placeSheet(r, tripEvents) {
         const d = new Date(`${e.start}T00:00:00`);
         return `
         <li>
-          <button type="button" class="near-item" data-action="goto-event" data-id="${esc(e.id)}">
+          <button type="button" class="near-item" data-action="open-event" data-id="${esc(e.id)}">
             <span class="near-date type-${esc(e.type)}"><b>${d.getMonth() + 1}/${d.getDate()}</b><small>${DOW[d.getDay()]}</small></span>
             <span class="near-body">
               <span class="near-title">${esc(e.title)}</span>
@@ -66,7 +73,7 @@ function placeSheet(r, tripEvents) {
         </li>`;
       }).join('')}
     </ul>
-    <p class="muted">누르면 축제 탭에서 자세히 볼 수 있어요.</p>` : ''}
+    <p class="muted">누르면 자세히 볼 수 있어요. 뒤로 가면 이 장소로 돌아와요.</p>` : ''}
 
     <div class="stats">
       <div class="stat"><b>${Math.round(r.fam)}</b><span>우리 가족 관심도</span></div>
@@ -142,10 +149,11 @@ export function renderSheet(state, c) {
     if (ev) inner = eventSheet(ev);
   }
   if (!inner) return '';
+  const back = state.ui.sheetDepth > 1; // 다른 상세 창 위에 열린 창이면 "뒤로"
   return `
     <div class="scrim" data-action="close-sheet"></div>
     <section class="sheet ${s.type === 'place' ? 'has-photo' : ''}" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-      <button type="button" class="sheet-close" data-action="close-sheet" aria-label="닫기">닫기</button>
+      <button type="button" class="sheet-close" data-action="close-sheet" aria-label="${back ? '이전 화면으로' : '닫기'}">${back ? '뒤로' : '닫기'}</button>
       ${inner}
     </section>`;
 }

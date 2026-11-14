@@ -2,7 +2,7 @@
 // 연습용 숫자를 실제 값으로 바꾼다. 파일이 없거나 못 읽으면 연습용 데이터 그대로 동작한다.
 
 import { PLACES, LOCAL_BASE, spotToPlace } from './places.js';
-import { setLivePhotos, addLivePhotos } from './photos.js';
+import { setLivePhotos, addLivePhotos, setLivePhotoLists, addLivePhotoLists } from './photos.js';
 import { haversineKm } from '../core/geo.js';
 
 async function getJson(path) {
@@ -19,6 +19,7 @@ export async function loadLive() {
   if (placesRes.status === 'fulfilled') {
     const rows = placesRes.value.places || {};
     const photos = {};
+    const lists = {};
     for (const p of PLACES) {
       const r = rows[p.id];
       if (!r) continue;
@@ -33,9 +34,11 @@ export async function loadLive() {
       if (typeof r.buzz === 'number') p.buzz = r.buzz;
       if (r.overview) p.overview = r.overview;
       if (r.photo) photos[p.id] = r.photo;
+      if (Array.isArray(r.photos) && r.photos.length) lists[p.id] = r.photos;
       if (r.interest || (p.local && typeof r.yearly === 'number')) p.sample = false;
     }
     setLivePhotos(photos);
+    setLivePhotoLists(lists);
     updatedAt = placesRes.value.updatedAt || null;
   }
 
@@ -44,14 +47,17 @@ export async function loadLive() {
     const { spots = [] } = await getJson('data/spots.json');
     const known = PLACES.slice();
     const photos = {};
+    const lists = {};
     for (const s of spots) {
       if (PLACES.some((p) => p.id === s.id)) continue;
       if (/예정|폐업|휴업|임시휴관|공사중/.test(s.name)) continue;
       if (known.some((p) => Math.abs(p.lat - s.lat) < 0.004 && Math.abs(p.lng - s.lng) < 0.005 && haversineKm(p, s) < 0.3)) continue;
       PLACES.push(spotToPlace(s));
       if (s.photo) photos[s.id] = s.photo;
+      if (Array.isArray(s.photos) && s.photos.length) lists[s.id] = s.photos;
     }
     addLivePhotos(photos);
+    addLivePhotoLists(lists);
   } catch {
     // 파일이 없으면 기존 장소만 쓴다.
   }
