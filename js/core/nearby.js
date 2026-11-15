@@ -86,7 +86,79 @@ export async function viaGoogle(place, kind, key = GOOGLE_PLACES_KEY) {
   return pickBest(rows);
 }
 
-async function viaKakao(place, kind) {
+// ── 서울 주차장(서울 열린데이터광장) ─────────────────────────────
+// 요금·운영 정보가 있는 서울시 관리 주차장 약 2,200곳. 수집기가 app/data/seoul-parking.json 에 담아 둔다.
+// 서울 밖 장소에서는 내려받지 않는다(약 600KB). 한 번 받으면 앱을 켜 둔 동안 기억한다.
+let seoulLotsPromise = null;
+const inSeoul = (p) => p.lat > 37.41 && p.lat < 37.72 && p.lng > 126.76 && p.lng < 127.2;
+function loadSeoulLots() {
+  if (!seoulLotsPromise) {
+    seoulLotsPromise = fetch('data/seoul-parking.json')
+      .then((r) => (r.ok ? r.json() : { lots: [] }))
+      .then((j) => j.lots || [])
+      .catch(() => { seoulLotsPromise = null; return []; });
+  }
+  return seoulLotsPromise;
+}
+
+const won = (n) => `${Number(n).toLocaleString('ko-KR')}원`;
+/** 서울 주차장 한 곳의 요금·운영 안내 글 */
+export function lotFee(l) {
+  if (!l.paid) return { fee: '무료 주차장', feeSub: [l.wd && l.wd !== '00:00~24:00' ? `운영 ${l.wd}` : '', l.n ? `${l.n}면` : ''].filter(Boolean).join(' · ') };
+  const fee = l.base
+    ? [`기본 ${l.base[1]}분 ${won(l.base[0])}`, l.add ? `추가 ${l.add[1]}분당 ${won(l.add[0])}` : '', l.day ? `하루 최대 ${won(l.day)}` : ''].filter(Boolean).join(' · ')
+    : '유료 (요금은 현장 확인)';
+  const free = [l.satFree ? '토요일 무료' : '', l.holFree ? '공휴일 무료' : ''].filter(Boolean).join('·');
+  const hours = l.wd === '00:00~24:00' ? '24시간' : l.wd ? `평일 ${l.wd}` : '';
+  return { fee, feeSub: [free, hours, l.n ? `${l.n}면` : ''].filter(Boolean).join(' · ') };
+}
+
+/** 카카오 주차장 목록(kakaoRows)에 서울 주차장의 요금을 붙이고, 카카오에 없는 서울 주차장도 후보에 넣는다. */
+async function mergeSeoulParking(place, kakaoRows) {
+  if (!inSeoul(place)) return kakaoRows;
+  const lots = (await loadSeoulLots())
+    .map((l) => ({ l, km: haversineKm(place, l) }))
+    .filter((x) => x.km <= 2)
+    .sort((a, b) => a.km - b.km)
+    .slice(0, 25);
+  if (!lots.length) return kakaoRows;
+  const used = new Set();
+  const merged = kakaoRows.map((k) => {
+    // 같은 자리(100m 안, 이름 앞부분이 같으면 300m 안)에 서울 주차장이 있으면 요금을 붙인다.
+    // 이름은 네이버에도 등록된 카카오 이름을 그대로 쓴다.
+    const core = (n) => String(n).replace(/\(.*?\)|공영|주차장|노상|노외|평면|건물|지하|\s/g, '').slice(0, 4);
+    const near = lots.find((x) => {
+      if (used.has(x.l.id)) return false;
+      const d = haversineKm(k, x.l);
+      return d <= 0.1 || (d <= 0.3 && core(k.name).length >= 3 && core(k.name) === core(x.l.name));
+    });
+    if (!near) return k;
+    used.add(near.l.id);
+    return { ...k, ...lotFee(near.l), pub: true };
+  });
+  for (const { l, km } of lots) {
+    if (used.has(l.id)) continue;
+    merged.push({
+      id: `s-${l.id}`, name: l.name, nq: l.name.replace(/\((구|신)\)$/, '').trim(),
+      lat: l.lat, lng: l.lng, type: `${l.kind === '노상' ? '노상' : '노외'} 공영주차장`, addr: `서울 ${l.addr}`,
+      rating: null, reviews: 0, km, ...lotFee(l), pub: true,
+    });
+  }
+  return merged;
+}
+
+/** 근처 주차장: 카카오 주차장 + 서울 주차장(요금), 가까운 순(공영·장소 이름이 든 곳은 500m 앞) 5곳 */
+async function viaParking(place) {
+  let kakaoRows = [];
+  try { kakaoRows = await viaKakao(place, 'park', 15); } catch (e) { /* 서울 자료만으로 보여 줄 수도 있다 */ }
+  const rows = await mergeSeoulParking(place, kakaoRows);
+  if (!rows.length) throw new Error('park');
+  const key = place.name.replace(/\s*\(.*?\)\s*/g, ' ').trim().split(/[\s·]/)[0];
+  const rank = (s) => s.km * 1000 - (s.pub || /공영/.test(s.type) || (key && s.name.includes(key)) ? 500 : 0);
+  return rows.slice().sort((a, b) => rank(a) - rank(b)).slice(0, 5);
+}
+
+async function viaKakao(place, kind, limit = 5) {
   const kakao = await loadKakao();
   const ps = new kakao.maps.services.Places();
   const { Status, SortBy } = kakao.maps.services;
@@ -112,7 +184,7 @@ async function viaKakao(place, kind) {
   }
   return rows
     .filter((d) => kind !== 'cafe' || !NOT_CAFE.test(d.place_name))
-    .slice(0, 5)
+    .slice(0, limit)
     .map((d) => ({
       id: `k-${d.id}`,
       name: d.place_name,
@@ -156,6 +228,10 @@ async function matchNaverNames(items, kind) {
  */
 export async function findShops(place, kind) {
   if (!SHOP_KINDS[kind]) throw new Error('kind');
+  if (kind === 'park') {
+    const items = await viaParking(place);
+    return { items, source: 'kakao', fees: items.some((s) => s.fee) };
+  }
   if (GOOGLE_PLACES_KEY && SHOP_KINDS[kind].google) {
     try {
       const items = await viaGoogle(place, kind);
