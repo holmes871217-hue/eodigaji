@@ -60,6 +60,12 @@ export function addLivePhotos(map) {
   LIVE = { ...LIVE, ...(map || {}) };
 }
 
+// 관광공사가 아닌 곳에서 받은 사진의 출처(위키백과 등): id → { page, label }
+let LIVE_SRC = {};
+export function addLiveSources(map) {
+  LIVE_SRC = { ...LIVE_SRC, ...(map || {}) };
+}
+
 // 한국관광공사 사진 여러 장(대표 사진이 맨 앞, 최대 10장)
 let LIVE_LISTS = {};
 export function setLivePhotoLists(map) {
@@ -79,7 +85,7 @@ export function photosOf(id) {
 
 /** 장소 id → { src: 사진 주소, page: 출처 페이지, label: 출처 이름 } 또는 null */
 export function photoOf(id) {
-  if (LIVE[id]) return { src: LIVE[id], page: 'https://api.visitkorea.or.kr', label: '한국관광공사' };
+  if (LIVE[id]) return { src: LIVE[id], ...(LIVE_SRC[id] || { page: 'https://api.visitkorea.or.kr', label: '한국관광공사' }) };
   if (DIRECT[id]) return DIRECT[id];
   const r = RAW[id];
   if (!r) return null;
