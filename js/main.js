@@ -84,6 +84,7 @@ function render() {
     </nav>`;
 
   document.body.classList.toggle('has-sheet', Boolean(sheetHtml));
+  watchCardPhotos();
   const slides = document.querySelector('[data-slides]');
   if (slides) syncSlides(slides);
 
@@ -157,6 +158,7 @@ function restoreSheetPos() {
   if (!pos) return;
   const sheet = document.querySelector('.sheet');
   if (sheet) sheet.scrollTop = pos.top;
+  watchCardPhotos();
   const slides = document.querySelector('[data-slides]');
   if (slides) { slides.scrollLeft = pos.left; syncSlides(slides); }
 }
@@ -228,6 +230,33 @@ function ensureGooglePhotos() {
       const top = state.ui.sheet;
       if (top && top.type === 'place' && top.id === s.id && state.ui.gphotos[s.id].photos?.length) update(() => {}, { persist: false });
     });
+}
+
+// 추천 카드에 사진이 없으면, 카드가 화면에 보일 때 구글 지도 대표 사진 한 장을 불러와 끼워 넣는다(저장 안 함).
+let cardPhotoIO = null;
+function watchCardPhotos() {
+  if (!('IntersectionObserver' in window)) return;
+  if (!cardPhotoIO) {
+    cardPhotoIO = new IntersectionObserver((entries) => {
+      for (const en of entries) {
+        if (!en.isIntersecting) continue;
+        const el = en.target;
+        cardPhotoIO.unobserve(el);
+        const place = PLACES.find((p) => p.id === el.dataset.gphoto);
+        if (!place) continue;
+        findGooglePhotos(place).then((list) => {
+          if (!list[0] || !el.isConnected || el.querySelector('img')) return;
+          const img = document.createElement('img');
+          img.alt = '';
+          img.decoding = 'async';
+          img.src = list[0].src;
+          img.onerror = () => img.remove();
+          el.insertBefore(img, el.querySelector('.pcard-rank'));
+        });
+      }
+    }, { rootMargin: '200px' });
+  }
+  document.querySelectorAll('[data-gphoto]').forEach((el) => cardPhotoIO.observe(el));
 }
 
 // ── 사진 넘겨 보기 ──────────────────────────────────────────

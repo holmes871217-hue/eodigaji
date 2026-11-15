@@ -24,8 +24,7 @@ function pickSame(place, rows) {
   return scored[0]?.r || null;
 }
 
-/** @returns {Promise<Array<{src:string, by:string}>>} */
-export async function findGooglePhotos(place) {
+async function fetchPhotos(place) {
   if (!GOOGLE_PLACES_KEY) return [];
   const res = await fetch('https://places.googleapis.com/v1/places:searchText', {
     method: 'POST',
@@ -49,4 +48,12 @@ export async function findGooglePhotos(place) {
     src: `https://places.googleapis.com/v1/${ph.name}/media?maxWidthPx=900&key=${GOOGLE_PLACES_KEY}`,
     by: ph.authorAttributions?.[0]?.displayName || '',
   }));
+}
+
+// 같은 장소를 카드와 상세 창이 따로 부르지 않도록 앱을 켜 둔 동안 결과(또는 진행 중인 요청)를 기억한다. 파일에는 저장하지 않는다.
+const memo = new Map();
+/** @returns {Promise<Array<{src:string, by:string}>>} 실패해도 빈 목록으로 끝난다 */
+export function findGooglePhotos(place) {
+  if (!memo.has(place.id)) memo.set(place.id, fetchPhotos(place).catch(() => []));
+  return memo.get(place.id);
 }
