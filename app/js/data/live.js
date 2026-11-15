@@ -4,7 +4,7 @@
 import { PLACES, LOCAL_BASE, spotToPlace } from './places.js';
 import { setCityTours } from './citytour.js';
 import { setLivePhotos, addLivePhotos, setLivePhotoLists, addLivePhotoLists, addLiveSources } from './photos.js';
-import { haversineKm } from '../core/geo.js';
+import { makeDupIndex } from './dedupe.js';
 
 async function getJson(path) {
   const res = await fetch(path, { cache: 'no-cache' });
@@ -45,10 +45,13 @@ export async function loadLive() {
     updatedAt = placesRes.value.updatedAt || null;
   }
 
-  // 카카오로 모은 전국 동네 장소: 이미 있는 장소에서 300m 안이면 겹치는 곳으로 보고 뺀다.
+  // 카카오로 모은 전국 동네 장소: 이미 있는 장소(또는 먼저 넣은 동네 장소)와 같은 곳·세부 시설이면 뺀다(규칙: dedupe.js).
+  // 믿을 만한 쪽이 남도록 꼭 넣을 곳 > 지자체 표준데이터 > 관광공사 등록 > 인기 높은 순으로 먼저 넣는다.
   try {
     const { spots = [] } = await getJson('data/spots.json');
-    const known = PLACES.slice();
+    const dup = makeDupIndex(PLACES);
+    const rank = (x) => (x.must ? 1e6 : 0) + (x.std ? 5e5 : 0) + (x.kto ? 1e5 : 0) + (typeof x.yearly === 'number' ? x.yearly : x.base || 0);
+    spots.sort((a, b) => rank(b) - rank(a));
     const photos = {};
     const lists = {};
     const sources = {};
@@ -58,8 +61,10 @@ export async function loadLive() {
       // 네이버 검색량이 거의 0인 곳(1년 인기 10점 미만)은 "남산케이블카 운전실"처럼 장소라기보다 건물 일부인 경우가 많아 뺀다.
       // 단, 사용자가 꼭 넣어 달라고 한 곳(must)·지자체 표준데이터 명소·팝업은 남긴다.
       if (typeof s.yearly === 'number' && s.yearly < 10 && !s.must && !s.std && !s.popup) continue;
-      if (known.some((p) => Math.abs(p.lat - s.lat) < 0.004 && Math.abs(p.lng - s.lng) < 0.005 && haversineKm(p, s) < 0.3)) continue;
-      PLACES.push(spotToPlace(s));
+      if (dup.find(s)) continue;
+      const place = spotToPlace(s);
+      PLACES.push(place);
+      dup.add(place);
       if (s.photo) photos[s.id] = s.photo;
       else if ((s.pk || s.wp)?.src) { const e = s.pk || s.wp; photos[s.id] = e.src; sources[s.id] = { page: e.page, label: e.label || '위키백과' }; }
       if (Array.isArray(s.photos) && s.photos.length) lists[s.id] = s.photos;

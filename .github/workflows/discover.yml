@@ -49,6 +49,9 @@ jobs:
       - name: 사이트 점검 (깨진 파일 주소·맨 앞 슬래시 경로·서비스 워커 목록)
         run: node tools/check-site.mjs
 
+      - name: 같은 장소가 목록에 두 번 나오는지 점검 (app/js/data/dedupe.js 규칙)
+        run: node tools/check-dupes.mjs # 겹치는 장소가 있으면 여기서 멈춰 게시하지 않는다
+
       - name: 추천 점수 규칙 점검
         run: node tools/check-scoring.mjs
 
