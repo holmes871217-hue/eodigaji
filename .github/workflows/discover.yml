@@ -1,0 +1,70 @@
+# 일주일에 한 번 "요즘 뜨는 곳"을 네이버 블로그에서 찾아 앱의 동네 장소에 합친다.
+# 지역 약 100곳 × 검색어 8개의 블로그 글을 읽고, 자주 나오는 이름을 카카오 지도에서 실제 장소인지 확인한다(tools/discover.mjs).
+# 인스타그램은 쓰지 않는다. 키는 저장소 Settings > Secrets 에 있다.
+# 카카오 키워드 검색은 하루 10만 번 한도라, 이미 확인한 이름은 14일 동안 기억해(캐시) 다시 부르지 않는다.
+name: 뜨는 곳 주간 발굴
+
+on:
+  schedule:
+    - cron: '0 21 * * 0' # 매주 월요일 한국 시간 새벽 6시 (UTC 일요일 21시). 매일 새벽 5시 갱신이 끝난 뒤에 돈다
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: collect # 매일 갱신과 같은 줄에 세워 데이터 파일을 동시에 고치지 않는다
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 카카오 확인 기록 불러오기
+        uses: actions/cache@v4
+        with:
+          path: .discover-cache
+          key: discover-kakao-${{ github.run_id }}
+          restore-keys: discover-kakao-
+
+      - name: 뜨는 곳 발굴 후 앱 데이터에 합치기
+        env:
+          NAVER_API_KEY_ID: ${{ secrets.NAVER_API_KEY_ID }}
+          NAVER_API_KEY: ${{ secrets.NAVER_API_KEY }}
+          KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+        run: |
+          mkdir -p .discover-cache
+          node tools/discover.mjs --min-bloggers 5 --max-kakao 60000 --kakao-cache .discover-cache/kakao.json --out .discover-cache/result.json --merge
+
+      - name: 사이트 점검 (깨진 파일 주소·맨 앞 슬래시 경로·서비스 워커 목록)
+        run: node tools/check-site.mjs
+
+      - name: 추천 점수 규칙 점검
+        run: node tools/check-scoring.mjs
+
+      - name: 저장하고 앱에 게시
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/data
+          if git diff --cached --quiet; then
+            echo "바뀐 데이터 없음"
+            exit 0
+          fi
+          git commit -m "뜨는 곳 주간 발굴 $(TZ=Asia/Seoul date +%F)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          git push origin "$(git subtree split --prefix app HEAD)":refs/heads/gh-pages --force
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || true

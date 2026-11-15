@@ -15,7 +15,7 @@ const REGION_LIMIT = Number(arg('--regions', 999));
 const MAX_KAKAO = Number(arg('--max-kakao', 900));
 
 const env = {};
-for (const line of readFileSync(`${root}/.env`, 'utf8').split(/\r?\n/)) {
+for (const line of (existsSync(`${root}/.env`) ? readFileSync(`${root}/.env`, 'utf8') : '').split(/\r?\n/)) { // 자동 실행(Actions)에는 .env 가 없고 키는 환경변수로 온다
   const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
   if (m && m[2]) env[m[1]] = m[2].replace(/^["']|["']$/g, '');
 }
@@ -156,8 +156,11 @@ for (const s of spotsJson) known.add(norm(s.name));
 
 const OK_CAT = /여행|관광|명소|문화|예술|스포츠|레저|테마|공원|놀이|카페|아쿠아|박물|미술|전시|체험|농장|목장|온천|해수욕|섬|시장|거리|골목/;
 const BAD_CAT = /기독교|천주교|교회|성당|축구|야구장|경마|교육단체|교통|지하철|역$|행정|학교|병원|의료|부동산|주유|은행|편의점|마트|주차|숙박|모텔|호텔|펜션|약국|미용|세탁|통신|공공|사무/;
+const KCACHE = arg('--kakao-cache', '');
+const kcache = KCACHE && existsSync(KCACHE) ? JSON.parse(readFileSync(KCACHE, 'utf8')) : {};
+const staleCut = Date.now() - 14 * 86400000;
 const found = new Map(); // kakao id → 결과
-let kakaoCalls = 0;
+let kakaoCalls = 0, quotaHit = false;
 const todo = [];
 let knownHit = 0;
 for (const c of ranked.slice(0, MAX_KAKAO)) {
@@ -166,13 +169,21 @@ for (const c of ranked.slice(0, MAX_KAKAO)) {
 }
 await pool(todo, 6, async (c) => {
   try {
-    kakaoCalls++;
-    const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(c.text)}&size=5`, { Authorization: `KakaoAK ${process.env.KAKAO_REST_KEY}` });
-    const docs = j.documents || [];
+    if (quotaHit) return;
     const nc = norm(c.text);
-    let same = docs.filter((d) => norm(d.place_name) === nc);
-    if (!same.length) same = docs.filter((d) => { const nn = norm(d.place_name); return nn.length >= 3 && nc.length - nn.length <= 6 && (nc.endsWith(nn) || nc.startsWith(nn)); });
-    if (!same.length && nc.length >= 4) same = docs.filter((d) => { const nn = norm(d.place_name); return nn.startsWith(nc) && nn.length - nc.length <= 6; }); // "플레이아쿠아리움" → "플레이아쿠아리움 부천"
+    const hit = kcache[nc];
+    let same;
+    if (hit && hit.at > staleCut) same = hit.d; // 최근 14일 안에 확인한 이름은 카카오를 다시 부르지 않는다(새로 나온 이름만 확인)
+    else {
+      kakaoCalls++;
+      const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(c.text)}&size=5`, { Authorization: `KakaoAK ${process.env.KAKAO_REST_KEY}` });
+      if (j.errorType || !Array.isArray(j.documents)) { if (/limit|LIMIT/.test(String(j.message || j.msg))) quotaHit = true; throw new Error(`카카오 오류: ${j.message || j.msg || j.errorType || '응답 형식'}`); }
+      const docs = j.documents;
+      same = docs.filter((d) => norm(d.place_name) === nc);
+      if (!same.length) same = docs.filter((d) => { const nn = norm(d.place_name); return nn.length >= 3 && nc.length - nn.length <= 6 && (nc.endsWith(nn) || nc.startsWith(nn)); });
+      if (!same.length && nc.length >= 4) same = docs.filter((d) => { const nn = norm(d.place_name); return nn.startsWith(nc) && nn.length - nc.length <= 6; }); // "플레이아쿠아리움" → "플레이아쿠아리움 부천"
+      kcache[nc] = { at: Date.now(), d: same.length >= 3 ? [] : same.map((d) => ({ id: d.id, place_name: d.place_name, category_name: d.category_name, road_address_name: d.road_address_name, address_name: d.address_name, x: d.x, y: d.y, place_url: d.place_url })) };
+    }
     if (!same.length || same.length >= 3) return; // 이름이 같은 곳이 3곳 이상이면 체인점으로 보고 버린다
     const d = same[0];
     if (BAD_CAT.test(d.category_name) || !OK_CAT.test(d.category_name)) return;
@@ -186,8 +197,16 @@ await pool(todo, 6, async (c) => {
       // 검색한 지역과 카카오 주소가 맞는지(같은 이름의 다른 지역 장소를 걸러내는 용도)
       regionOk: (d.road_address_name || d.address_name || '').includes(c.topRegion.split(' ')[0]) || (c.topRegion.startsWith('서울') && (d.address_name || '').startsWith('서울')),
     });
-  } catch (e) { console.log('  카카오 실패', c.text, e.message); }
+  } catch (e) { if (!quotaHit) console.log('  카카오 실패', c.text, e.message); }
 });
+if (KCACHE) writeFileSync(KCACHE, JSON.stringify(kcache));
 const result = [...found.values()].sort((a, b) => b.bloggers - a.bloggers);
 writeFileSync(OUT, JSON.stringify({ at: new Date().toISOString(), naverCalls, kakaoCalls, posts: posts.size, result, ranked: ranked.map((c) => [c.text, c.top, c.spread, c.topRegion]) }, null, 1));
 console.log(`카카오 확인 ${kakaoCalls}번 → 실제 장소 후보 ${result.length}곳 (이미 앱에 있음 ${result.filter((r) => r.known).length}, 새로운 곳 ${result.filter((r) => !r.known).length}) → ${OUT}`);
+
+// ── 4) 앱 데이터에 합치기 (--merge) — 규칙은 tools/merge-discovered.mjs 에 있다 ──
+if (quotaHit) console.log('⚠ 카카오 하루 호출 한도에 걸려 확인이 중간에 멈췄습니다. 지금까지 확인한 것만 합칩니다(나머지는 다음 실행에서 이어서).');
+if (process.argv.includes('--merge')) {
+  const { mergeDiscovered } = await import('./merge-discovered.mjs');
+  mergeDiscovered(result, { root, min: Number(arg('--merge-min', 5)) });
+}

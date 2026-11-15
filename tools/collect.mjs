@@ -758,9 +758,10 @@ async function collectSpots() {
     const old = new Map(spots.map((s) => [s.id, s]));
     spots = [...byId.values()].map((s) => {
       const o = old.get(s.id);
-      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt, pk: o.pk, pkAt: o.pkAt, popup: o.popup, yearly: o.yearly, trend: o.trend, rel: o.rel, yAt: o.yAt, ykw: o.ykw, kw: o.kw } : s;
+      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt, pk: o.pk, pkAt: o.pkAt, popup: o.popup, yearly: o.yearly, trend: o.trend, rel: o.rel, yAt: o.yAt, ykw: o.ykw, kw: o.kw, disc: o.disc } : s;
     });
-    spots.push(...[...old.values()].filter((o) => o.std)); // 표준데이터 명소는 카카오 재검색과 상관없이 이어받는다
+    const have = new Set(spots.map((s) => s.id));
+    spots.push(...[...old.values()].filter((o) => (o.std || o.disc) && !have.has(o.id))); // 표준데이터 명소·블로그에서 발굴한 명소(tools/discover.mjs)는 카카오 재검색과 상관없이 이어받는다
     prev = { searchedAt: new Date().toISOString() };
   }
 
@@ -880,7 +881,7 @@ async function collectSpots() {
   // 점수: 관광공사 등록 +15, 여러 도시 검색에 걸림 +, 검색 순위가 높을수록 +
   if (env.NAVER_API_KEY) await collectSpotTrends(spots);
   // 표준데이터 명소는 관광지 40, 관광단지 46, 특화거리 28
-  for (const s of spots) if (!s.popup) s.base = s.std ? (s.sub === '관광단지' ? 46 : s.sub === '특화거리' ? 28 : 40) : Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
+  for (const s of spots) if (!s.popup) s.base = s.std ? (s.sub === '관광단지' ? 46 : s.sub === '특화거리' ? 28 : 40) : Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2) + (s.disc ? Math.min(8, Math.floor(s.disc.b / 8)) : 0);
   writeFileSync(path, JSON.stringify({ searchedAt: prev.searchedAt, updatedAt: new Date().toISOString(), source: '카카오 로컬, 한국관광공사', spots }));
   console.log(`  동네 장소 ${spots.length}곳 (관광공사 확인 ${spots.filter((s) => s.ktoAt).length}곳, 등록 ${spots.filter((s) => s.kto).length}곳, 이번에 확인 ${checked}곳)`);
 }
