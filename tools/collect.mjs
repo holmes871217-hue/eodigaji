@@ -530,7 +530,12 @@ async function collectWikiPhotos(spots) {
     if (s.photo || s.wpAt) continue;
     try {
       const url = `https://ko.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${s.lat}|${s.lng}&ggsradius=1000&ggslimit=10&prop=pageimages&piprop=thumbnail|name&pithumbsize=800&format=json&formatversion=2`;
-      const res = await fetch(url, { headers: { 'User-Agent': 'PlaceImageCollector/1.0 (non-commercial hobby app)' } });
+      let res;
+      for (let t = 0; t < 3; t++) { // 호출 제한(429)이면 알려 준 시간(Retry-After, 최대 30초)만큼 쉬고 다시 시도
+        res = await fetch(url, { headers: { 'User-Agent': 'PlaceImageCollector/1.0 (non-commercial hobby app)' } });
+        if (res.status !== 429) break;
+        await sleep(Math.min(30, Number(res.headers.get('retry-after')) || 10) * 1000);
+      }
       if (res.status === 429 || res.status === 403) { blocked = true; console.log(`  위키백과 호출 제한(${res.status}), 다음 날 이어서 함`); break; }
       const text = await res.text();
       let j;
@@ -550,7 +555,7 @@ async function collectWikiPhotos(spots) {
       console.log(`  위키백과 실패 ${s.name}: ${e.message}`);
       break;
     }
-    await sleep(400);
+    await sleep(1500);
   }
   console.log(`  위키백과 사진 확인 ${done}곳, 새로 찾음 ${found}곳 (붙은 곳 전체 ${spots.filter((s) => s.wp).length}곳)`);
 }
