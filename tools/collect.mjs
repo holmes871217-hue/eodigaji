@@ -16,6 +16,7 @@
 // 매 요청에 기준 검색어(ANCHOR)를 함께 넣어 요청끼리 비교할 수 있게 맞춘다.
 
 import { MUST_HAVE } from './must-have.mjs';
+import { MUST_EVENTS } from './must-events.mjs';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { PLACES } from '../app/js/data/places.js';
@@ -1054,6 +1055,19 @@ async function collectCityTours() {
   console.log(`  시티투어 ${rows.length}개 코스 → ${Object.keys(tours).length}개 시·군·구 저장`);
 }
 
+/**
+ * 직접 확인해 넣는 행사(tools/must-events.mjs)를 목록에 더한다.
+ * 이미 목록에 같은 행사(제목·날짜·장소가 겹침)가 있으면 — 공공 자료에 올라온 것 — 직접 넣은 쪽은 뺀다. 끝난 행사도 뺀다.
+ */
+function withManualEvents(events) {
+  const base = events.filter((e) => e.source !== 'manual');
+  const add = MUST_EVENTS
+    .filter((m) => m.end >= ymd(today))
+    .map((m) => ({ ...m, source: 'manual' }))
+    .filter((m) => !base.some((o) => sameEvent(m, o)));
+  return [...base, ...add];
+}
+
 // 전국주차장정보: 격자(0.25도 ≈ 가로 22km × 세로 28km)별 파일로 나눠 app/data/parking/ 에 담는다.
 // 앱은 장소 둘레(2km) 가 걸치는 격자 파일만 받는다. 서울은 서울시 자료(seoul-parking.json)가 더 자세해서 뺀다.
 const PARK_CELL = (lat, lng) => `${Math.floor(lat * 4)}_${Math.floor(lng * 4)}`;
@@ -1155,7 +1169,7 @@ if (process.argv.includes('--std')) {
   const others = file.events.filter((ev) => ev.source !== 'std');
   console.log('· 지자체 축제·공연행사');
   const std = await collectStdEvents(others);
-  writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ ...file, events: [...others, ...std] }));
+  writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ ...file, events: withManualEvents([...others, ...std]) }));
   console.log('· 전국 주차장');
   await collectStdParking();
   console.log('· 시티투어');
@@ -1176,7 +1190,7 @@ if (process.argv.includes('--seoul')) {
   const others = file.events.filter((ev) => ev.source !== 'seoul');
   console.log('· 서울 문화행사');
   const seoul = await collectSeoulEvents(others);
-  writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ ...file, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망, 서울 열린데이터광장', events: [...others, ...seoul] }));
+  writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ ...file, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망, 서울 열린데이터광장', events: withManualEvents([...others, ...seoul]) }));
   console.log('· 서울 주차장');
   await collectSeoulParking();
   console.log(`호출 수: 서울시 ${calls.seoul || 0}회, 카카오 ${calls.kakao || 0}회`);
@@ -1226,7 +1240,7 @@ try {
   stdEvents = keepStd();
   console.log(`  지자체 행사 수집 실패, 지난 자료 ${stdEvents.length}건 유지: ${e.message}`);
 }
-const events = [...festivals, ...stages, ...seoulEvents, ...stdEvents];
+const events = withManualEvents([...festivals, ...stages, ...seoulEvents, ...stdEvents]);
 writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망, 서울 열린데이터광장, 공공데이터포털 표준데이터', events }));
 console.log(`  행사·공연 ${events.length}건 저장`);
 
