@@ -520,6 +520,45 @@ const SPOT_KW = [
 const SPOT_BAD = /주차장|매표소|화장실|충전소|정류장|입구|정문|후문|사무소|사무실|관리소|안내소|대학교|분소|매점|편의점|기념품|수장고|연구소|예정\)|유통센터|농수산물/;
 
 
+// 사진이 없는 곳에 한국관광공사 포토코리아(관광사진 정보, 공공누리 1유형) 사진을 붙인다.
+// 이름으로 검색해 사진 제목·검색어·촬영지에 장소 이름이 들어간 것만 쓴다. 하루 200곳까지, 한도/오류가 나면 다음 날 이어서 한다.
+async function collectPhotoKorea(spots) {
+  const norm = (t) => String(t || '').replace(/[\s·()\-_/]/g, '').toLowerCase();
+  let done = 0, found = 0, logged = false;
+  for (const s of spots) {
+    if (done >= 200) break;
+    if (s.photo || s.pk || s.pkAt) continue;
+    try {
+      const name = s.name.replace(/\s*\(.*?\)\s*/g, ' ').trim();
+      calls.tour++;
+      const q = new URLSearchParams({ serviceKey: env.DATA_GO_KR_KEY, MobileOS: 'ETC', MobileApp: 'eodigaji', _type: 'json', arrange: 'A', numOfRows: '8', pageNo: '1', keyword: name });
+      const j = await getJson(`https://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?${q}`, undefined, 'photokorea');
+      const head = j?.response?.header;
+      if (head && head.resultCode !== '0000') throw new Error(`${head.resultCode} ${head.resultMsg}`);
+      const raw = j?.response?.body?.items?.item;
+      const items = Array.isArray(raw) ? raw : raw ? [raw] : [];
+      if (!logged) { logged = true; console.log(`  포토코리아 첫 응답 필드: ${Object.keys(items[0] || {}).join(',') || '(결과 없음)'}`); }
+      const a = norm(name);
+      const hit = items.find((it) => {
+        const url = it.galWebImageUrl;
+        const text = norm(`${it.galTitle} ${it.galSearchKeyword} ${it.galPhotographyLocation}`);
+        return url && a && text.includes(a);
+      });
+      if (hit) {
+        s.pk = { src: https(hit.galWebImageUrl), page: 'https://phoko.visitkorea.or.kr', label: `한국관광공사 포토코리아${hit.galPhotographer ? ` (${hit.galPhotographer})` : ''}` };
+        found++;
+      }
+      s.pkAt = new Date().toISOString();
+      done++;
+    } catch (e) {
+      console.log(`  포토코리아 실패(${s.name}): ${String(e.message).slice(0, 160)}`);
+      break; // 승인 대기·한도 초과 등은 다음 날 이어서
+    }
+    await sleep(80);
+  }
+  console.log(`  포토코리아 확인 ${done}곳, 새로 찾음 ${found}곳 (붙은 곳 전체 ${spots.filter((s) => s.pk).length}곳)`);
+}
+
 // 사진이 없는 곳에 위키백과(한국어) 문서의 대표 사진을 붙인다. 좌표 근처(1km) 문서 가운데 제목이 장소 이름과 겹치는 것만 쓰고,
 // 자유 이용 사진(위키미디어 공용)만 받는다. 위키 서버가 한꺼번에 많이 부르면 막으므로 한 번에 120곳까지, 막히면 다음 날 이어서 한다.
 async function collectWikiPhotos(spots) {
@@ -527,7 +566,7 @@ async function collectWikiPhotos(spots) {
   let done = 0, found = 0, blocked = false;
   for (const s of spots) {
     if (done >= 120 || blocked) break;
-    if (s.photo || s.wpAt) continue;
+    if (s.photo || s.pk || s.wpAt) continue;
     try {
       const url = `https://ko.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${s.lat}|${s.lng}&ggsradius=1000&ggslimit=10&prop=pageimages&piprop=thumbnail|name&pithumbsize=800&format=json&formatversion=2`;
       let res;
@@ -602,7 +641,7 @@ async function collectSpots() {
     const old = new Map(spots.map((s) => [s.id, s]));
     spots = [...byId.values()].map((s) => {
       const o = old.get(s.id);
-      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt } : s;
+      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt, pk: o.pk, pkAt: o.pkAt } : s;
     });
     prev = { searchedAt: new Date().toISOString() };
   }
@@ -708,6 +747,7 @@ async function collectSpots() {
     await sleep(60);
   }
   console.log(`  주차 안내 ${parkFetched}곳 (안내가 있는 곳 ${spots.filter((s) => s.parking || s.parkingFee).length}곳)`);
+  await collectPhotoKorea(spots);
   await collectWikiPhotos(spots);
   // 점수: 관광공사 등록 +15, 여러 도시 검색에 걸림 +, 검색 순위가 높을수록 +
   for (const s of spots) s.base = Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);

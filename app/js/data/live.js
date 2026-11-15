@@ -57,7 +57,7 @@ export async function loadLive() {
       if (known.some((p) => Math.abs(p.lat - s.lat) < 0.004 && Math.abs(p.lng - s.lng) < 0.005 && haversineKm(p, s) < 0.3)) continue;
       PLACES.push(spotToPlace(s));
       if (s.photo) photos[s.id] = s.photo;
-      else if (s.wp?.src) { photos[s.id] = s.wp.src; sources[s.id] = { page: s.wp.page, label: s.wp.label || '위키백과' }; }
+      else if ((s.pk || s.wp)?.src) { const e = s.pk || s.wp; photos[s.id] = e.src; sources[s.id] = { page: e.page, label: e.label || '위키백과' }; }
       if (Array.isArray(s.photos) && s.photos.length) lists[s.id] = s.photos;
     }
     addLivePhotos(photos);
