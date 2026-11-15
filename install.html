@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#E8F1FF">
+  <title>놀픽 앱 설치</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    :root { --bg: #E8F1FF; --ink: #1b2559; --ink2: #4a5584; --card: #ffffff; --accent: #2f5bff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font-family: system-ui, -apple-system, "Noto Sans KR", "Malgun Gothic", sans-serif; display: grid; place-items: center; padding: 24px 16px; }
+    main { width: 100%; max-width: 420px; background: var(--card); border-radius: 28px; padding: 28px 22px; box-shadow: 0 8px 30px rgba(27, 37, 89, 0.12); text-align: center; }
+    img.logo { width: 96px; height: 96px; border-radius: 24px; }
+    h1 { margin: 14px 0 4px; font-size: 26px; }
+    p { margin: 6px 0; line-height: 1.55; color: var(--ink2); }
+    button, a.btn { display: block; width: 100%; margin-top: 16px; padding: 16px; border: 0; border-radius: 16px; background: var(--accent); color: #fff; font-size: 18px; font-weight: 700; text-decoration: none; cursor: pointer; }
+    a.btn.alt { background: #eef2ff; color: var(--ink); }
+    .box { margin-top: 18px; padding: 14px; border-radius: 16px; background: #f3f6ff; text-align: left; font-size: 15px; line-height: 1.6; color: var(--ink); }
+    .box ol { margin: 6px 0 0; padding-left: 20px; }
+    .hidden { display: none !important; }
+    .qr { margin-top: 22px; }
+    .qr img { width: 150px; height: 150px; }
+    small { color: var(--ink2); }
+  </style>
+</head>
+<body>
+  <main>
+    <img class="logo" src="icons/icon-192.png" alt="">
+    <h1>놀픽</h1>
+    <p>아빠 나들이 추천 · 폰에 앱처럼 설치해서 쓰세요.</p>
+
+    <!-- 1) 카카오톡 같은 앱 안에서 열었을 때: 먼저 브라우저로 옮겨야 설치할 수 있다 -->
+    <div id="inapp" class="box hidden">
+      <b>먼저 브라우저로 열어 주세요.</b><br>
+      지금 화면은 카카오톡 같은 앱 안의 작은 브라우저라 설치가 안 돼요.
+      <a id="openExternal" class="btn" href="#">크롬(브라우저)으로 열기</a>
+    </div>
+
+    <!-- 2) 설치 버튼 (안드로이드 크롬 등) -->
+    <button id="installBtn" class="hidden" type="button">앱으로 설치하기</button>
+
+    <!-- 3) 이미 설치된 앱에서 열었을 때 -->
+    <a id="openApp" class="btn hidden" href="./">앱 열기</a>
+
+    <!-- 4) 설치 버튼이 안 뜨는 브라우저: 직접 하는 방법 -->
+    <div id="manual" class="box hidden"></div>
+
+    <a class="btn alt" href="./">설치 없이 그냥 열어 보기</a>
+
+    <div class="qr">
+      <img src="icons/install-qr.svg" alt="이 설치 페이지로 연결되는 QR 코드">
+      <p><small>다른 폰에서는 이 QR을 찍으면 이 페이지가 열려요.</small></p>
+    </div>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const ua = navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+    const isAndroid = /Android/i.test(ua);
+    const isKakao = /KAKAOTALK/i.test(ua);
+    const isInApp = isKakao || /NAVER\(inapp|FBAN|FBAV|Instagram|Line\//i.test(ua);
+    const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    const here = location.href.split('#')[0];
+
+    // 서비스 워커를 등록해 두면 브라우저가 "설치 가능한 앱"으로 인정한다(앱 본체와 같은 것).
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+    function showManual(html) {
+      $('manual').innerHTML = html;
+      $('manual').classList.remove('hidden');
+    }
+
+    if (standalone) {
+      // 이미 앱으로 열린 상태면 바로 앱 화면으로
+      $('openApp').classList.remove('hidden');
+      location.replace('./');
+    } else if (isInApp) {
+      $('inapp').classList.remove('hidden');
+      const ext = $('openExternal');
+      if (isKakao) ext.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(here);
+      else if (isAndroid) ext.href = 'intent://' + here.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+      else ext.classList.add('hidden');
+      showManual('열리지 않으면 오른쪽 위 <b>⋮ 또는 공유 버튼 → "다른 브라우저로 열기"</b>를 눌러 주세요.');
+    } else if (isIOS) {
+      showManual('<b>아이폰·아이패드는 Safari에서 이렇게 해 주세요.</b><ol><li>화면 아래(또는 위)의 <b>공유 버튼(□↑)</b>을 누릅니다.</li><li><b>"홈 화면에 추가"</b>를 누릅니다.</li><li>오른쪽 위 <b>추가</b>를 누르면 끝!</li></ol>');
+    } else {
+      // 안드로이드 크롬 등: 브라우저가 설치 준비가 되면 이 신호를 준다.
+      let deferred = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferred = e;
+        $('installBtn').classList.remove('hidden');
+        $('manual').classList.add('hidden');
+      });
+      $('installBtn').addEventListener('click', async () => {
+        if (!deferred) return;
+        deferred.prompt();
+        await deferred.userChoice.catch(() => {});
+        deferred = null;
+        $('installBtn').classList.add('hidden');
+      });
+      window.addEventListener('appinstalled', () => {
+        $('installBtn').classList.add('hidden');
+        $('openApp').classList.remove('hidden');
+        showManual('설치됐어요! 홈 화면의 <b>놀픽</b> 아이콘으로 열어 주세요.');
+      });
+      // 몇 초 안에 설치 신호가 없으면(이미 설치했거나 다른 브라우저) 직접 하는 방법을 보여 준다.
+      setTimeout(() => {
+        if (deferred || !$('manual').classList.contains('hidden')) return;
+        showManual(isAndroid
+          ? '<b>설치 버튼이 안 보이면:</b><ol><li>크롬 오른쪽 위 <b>⋮ 메뉴</b>를 누릅니다.</li><li><b>"앱 설치"</b> 또는 <b>"홈 화면에 추가"</b>를 누릅니다.</li><li><b>설치</b>를 누르면 끝! (이미 설치했다면 홈 화면의 놀픽 아이콘을 쓰세요.)</li></ol>'
+          : '이 브라우저에서 주소창 오른쪽의 <b>설치 아이콘</b>이나 메뉴의 <b>"앱 설치"</b>를 눌러 주세요.');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
