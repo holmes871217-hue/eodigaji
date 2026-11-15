@@ -55,6 +55,9 @@ export async function loadLive() {
     for (const s of spots) {
       if (PLACES.some((p) => p.id === s.id)) continue;
       if (/예정|폐업|휴업|임시휴관|공사중/.test(s.name)) continue;
+      // 네이버 검색량이 거의 0인 곳(1년 인기 10점 미만)은 "남산케이블카 운전실"처럼 장소라기보다 건물 일부인 경우가 많아 뺀다.
+      // 단, 사용자가 꼭 넣어 달라고 한 곳(must)·지자체 표준데이터 명소·팝업은 남긴다.
+      if (typeof s.yearly === 'number' && s.yearly < 10 && !s.must && !s.std && !s.popup) continue;
       if (known.some((p) => Math.abs(p.lat - s.lat) < 0.004 && Math.abs(p.lng - s.lng) < 0.005 && haversineKm(p, s) < 0.3)) continue;
       PLACES.push(spotToPlace(s));
       if (s.photo) photos[s.id] = s.photo;

@@ -168,7 +168,9 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
       raw = (0.55 * fam.value + 0.45 * place.yearly) * (1 - 0.5 * tu) * (1 - place.crowd / 250);
     } else {
       // 핫플레이스: 가족 관심도가 높고 최근 뜨는 곳일수록 위로
-      raw = fam.value * (1 + 0.5 * tu);
+      // 아이는 나이대별 검색 인기 대신 "아이에게 맞는 정도"(분류별 표)로 점수를 내서, 인기가 순위에 덜 반영된다.
+      // 그래서 지난 1년 검색 인기(0~100)를 0.6~1.4배로 따로 곱해, 많이 찾는 곳이 위로 오게 한다.
+      raw = fam.value * (1 + 0.5 * tu) * (0.6 + 0.8 * clamp((place.yearly || 0) / 100, 0, 1));
     }
 
     // 가까울수록 유리하되, 이동시간 한도를 길게 고를수록 그 힘이 줄어든다(nearWeight 참고).
@@ -179,7 +181,8 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
     raw *= small ? boost * nearFactor(min, reach, 0.45) : nearFactor(min, reach, 0.15);
 
     // 카카오로 채운 동네 장소는 직접 고른 곳보다 아래에 오도록 낮춘다(관광공사 등록 곳은 덜 낮춤).
-    if (place.spot) raw *= place.kto ? 0.75 : 0.5;
+    // 네이버 검색량이 있는 곳은 실제 인기라 덜 낮춘다(0.9).
+    if (place.spot) raw *= place.naver ? 0.9 : place.kto ? 0.75 : 0.5;
 
     // 가는 날 20km 안에서 행사가 열리면 덧점 8%
     const eventNear = nearbyEvents(place, tripEvents)[0]?.e || null; // 상세 창 목록의 1번과 같은 행사
