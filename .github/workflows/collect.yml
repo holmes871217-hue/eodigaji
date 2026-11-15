@@ -45,6 +45,9 @@ jobs:
       - name: 사이트 점검 (깨진 파일 주소·맨 앞 슬래시 경로·서비스 워커 목록)
         run: node tools/check-site.mjs # 문제가 있으면 여기서 멈춰 게시하지 않는다
 
+      - name: 추천 점수 규칙 점검 (이동시간 한도가 길수록 거리 영향이 줄어드는지)
+        run: node tools/check-scoring.mjs
+
       - name: 저장하고 앱에 게시
         env:
           GH_TOKEN: ${{ github.token }}
