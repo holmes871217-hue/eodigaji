@@ -528,6 +528,7 @@ async function collectPhotoKorea(spots) {
   for (const s of spots) {
     if (done >= 200) break;
     if (s.photo || s.pk || s.pkAt) continue;
+    if (norm(s.name).length < 4) { s.pkAt = new Date().toISOString(); continue; } // "점프"·"생태공원"처럼 짧고 흔한 이름은 다른 곳 사진이 붙을 수 있어 건너뜀
     try {
       const name = s.name.replace(/\s*\(.*?\)\s*/g, ' ').trim();
       calls.tour++;
@@ -564,8 +565,9 @@ async function collectPhotoKorea(spots) {
 async function collectWikiPhotos(spots) {
   const norm = (t) => String(t || '').replace(/[\s·()\-_/]/g, '').toLowerCase();
   let done = 0, found = 0, blocked = false;
+  const t0 = Date.now();
   for (const s of spots) {
-    if (done >= 120 || blocked) break;
+    if (done >= 120 || blocked || Date.now() - t0 > 3 * 60 * 1000) break; // 3분이 넘으면 멈추고 다음 날 이어서(수집 전체 시간 보호)
     if (s.photo || s.pk || s.wpAt) continue;
     try {
       const url = `https://ko.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${s.lat}|${s.lng}&ggsradius=1000&ggslimit=10&prop=pageimages&piprop=thumbnail|name&pithumbsize=800&format=json&formatversion=2`;

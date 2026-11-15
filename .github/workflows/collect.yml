@@ -53,6 +53,7 @@ jobs:
             exit 0
           fi
           git commit -m "데이터 자동 갱신 $(TZ=Asia/Seoul date +%F)"
+          git pull --rebase origin main # 수집 중에 main이 바뀌었어도 데이터 커밋이 밀리지 않게
           git push origin HEAD:main
           git push origin "$(git subtree split --prefix app HEAD)":refs/heads/gh-pages --force
           gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || true
