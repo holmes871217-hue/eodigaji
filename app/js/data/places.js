@@ -211,7 +211,7 @@ export function spotToPlace(s) {
   return {
     ...expand(row),
     scale: 'small', local: true, spot: true, kto: Boolean(s.kto), sample: false,
-    sub: s.sub, kakaoUrl: s.url, overview: s.overview || '',
+    sub: s.sub, kakaoUrl: s.url, overview: s.overview || '', std: Boolean(s.std), stdOverview: s.stdOverview || '',
     parking: s.parking || '', parkingFee: s.parkingFee || '',
   };
 }

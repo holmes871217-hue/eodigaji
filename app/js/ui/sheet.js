@@ -167,13 +167,13 @@ function placeSheet(r, tripEvents, gp) {
       </button>`).join('')}
     </div>
 
-    ${tips.length || p.overview || p.spot ? `
+    ${tips.length || p.overview || p.stdOverview || p.spot ? `
     <section class="about" aria-label="볼거리 요약">
       ${tips.length ? `<h3 class="h3">이런 걸 볼 수 있어요</h3>
       <ul class="tips">${tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
       ${p.spot ? `<h3 class="h3">어떤 곳인가요</h3>
-      <ul class="tips"><li>카카오맵 분류: ${esc(p.sub || cat.label)}</li>${p.kakaoUrl ? `<li><a href="${esc(p.kakaoUrl)}" target="_blank" rel="noopener noreferrer">카카오맵에서 사진·후기 보기</a></li>` : ''}</ul>` : ''}
-      ${p.overview ? `<p class="overview">${esc(p.overview)}</p><p class="credit">소개 글: 한국관광공사</p>` : ''}
+      <ul class="tips"><li>${p.std ? `공공데이터포털 ${p.sub === '특화거리' ? '지역특화거리' : '관광지'} 등록 정보` : '카카오맵 분류'}: ${esc(p.sub || cat.label)}</li>${p.kakaoUrl ? `<li><a href="${esc(p.kakaoUrl)}" target="_blank" rel="noopener noreferrer">카카오맵에서 사진·후기 보기</a></li>` : ''}</ul>` : ''}
+      ${p.overview ? `<p class="overview">${esc(p.overview)}</p><p class="credit">소개 글: 한국관광공사</p>` : p.stdOverview ? `<p class="overview">${esc(p.stdOverview)}</p><p class="credit">소개 글: 지자체 등록 정보(공공데이터포털)</p>` : ''}
     </section>` : ''}
 
     ${near.length ? `
@@ -217,7 +217,9 @@ function placeSheet(r, tripEvents, gp) {
     </ul>
 
     ${p.spot ? '' : `<p class="muted">한 달 블로그 언급 약 ${p.buzz.toLocaleString('ko-KR')}건 · 1년 누적 인기 ${p.yearly}점</p>`}
-    <p class="sample-note">${p.spot
+    <p class="sample-note">${p.std
+      ? `지자체가 공공데이터포털에 등록한 ${p.sub === '특화거리' ? '지역특화거리' : '관광지'}예요. 인기 점수는 등록 여부와 규모로 어림한 값이라 참고만 해 주세요.`
+      : p.spot
       ? '카카오 장소 검색으로 찾은 동네 장소예요. 인기 점수는 관광공사 등록 여부와 검색 순위로 어림한 값이라 참고만 해 주세요.'
       : p.sample
       ? '연습용 숫자예요. 실제 데이터 연결 전이라 참고만 해 주세요.'
@@ -249,12 +251,14 @@ function eventSheet(e) {
       ? '연습용 일정이에요. 실제 날짜와 다를 수 있으니 가기 전에 꼭 확인해 주세요.'
       : e.source === 'kopis'
         ? '공연 정보: KOPIS(공연예술통합전산망). 회차와 예매는 공연 정보 페이지에서 확인해 주세요.'
+        : e.source === 'std'
+        ? '지자체가 공공데이터포털에 등록한 정보 기준이에요. 일정·요금·장소가 바뀌거나 취소될 수 있으니 가기 전에 꼭 확인해 주세요.'
         : e.source === 'seoul'
         ? '서울시 문화행사 정보(서울 열린데이터광장) 기준이에요. 일정·요금·예약 여부가 바뀔 수 있으니 가기 전에 꼭 확인해 주세요.'
         : '한국관광공사 행사 정보 기준이에요. 일정이 바뀔 수 있으니 가기 전에 꼭 확인해 주세요.'}</p>
     <div class="sheet-actions">
       ${e.link
-        ? `<a class="btn-primary" href="${esc(e.link)}" target="_blank" rel="noopener noreferrer">${e.source === 'seoul' ? '행사 정보 보기' : '공연 정보 보기'}</a>`
+        ? `<a class="btn-primary" href="${esc(e.link)}" target="_blank" rel="noopener noreferrer">${e.source === 'seoul' || e.source === 'std' ? '행사 정보 보기' : '공연 정보 보기'}</a>`
         : `<a class="btn-primary" href="https://search.naver.com/search.naver?query=${q}" target="_blank" rel="noopener noreferrer">네이버에서 일정 확인</a>`}
       <a class="btn-secondary" href="https://map.kakao.com/link/to/${q},${e.lat},${e.lng}" target="_blank" rel="noopener noreferrer">카카오맵 길찾기</a>
     </div>`;

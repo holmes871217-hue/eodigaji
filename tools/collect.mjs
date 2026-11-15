@@ -16,7 +16,7 @@
 // 매 요청에 기준 검색어(ANCHOR)를 함께 넣어 요청끼리 비교할 수 있게 맞춘다.
 
 import { MUST_HAVE } from './must-have.mjs';
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { PLACES } from '../app/js/data/places.js';
 
@@ -706,7 +706,13 @@ async function collectSpots() {
       const o = old.get(s.id);
       return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt, pk: o.pk, pkAt: o.pkAt, popup: o.popup } : s;
     });
+    spots.push(...[...old.values()].filter((o) => o.std)); // 표준데이터 명소는 카카오 재검색과 상관없이 이어받는다
     prev = { searchedAt: new Date().toISOString() };
+  }
+
+  // 공공데이터포털 전국관광지·지역특화거리 → 추천 명소 후보
+  if (env.DATA_GO_KR_KEY) {
+    try { await addStdSpots(spots); } catch (e) { console.log(`  표준데이터 명소 실패(지난 자료 유지): ${e.message}`); }
   }
 
   // 반드시 있어야 하는 곳(tools/must-have.mjs): 이미 있으면 건너뛰고, 없으면 카카오에서 이름으로 찾아 넣는다.
@@ -752,7 +758,7 @@ async function collectSpots() {
     try {
       const { items } = await tour('searchKeyword2', { keyword: s.name.replace(/\s*\(.*?\)\s*/g, ' ').trim(), numOfRows: '3', pageNo: '1' });
       const hit = items.find((it) => kmBetween(s, { lat: Number(it.mapy), lng: Number(it.mapx) }) <= 1);
-      s.kto = Boolean(hit);
+      s.kto = s.std ? true : Boolean(hit); // 표준데이터에 있는 곳은 지자체가 공식 등록한 곳
       if (hit?.firstimage) s.photo = https(hit.firstimage);
       if (hit) {
         s.cid = hit.contentid;
@@ -814,7 +820,8 @@ async function collectSpots() {
   await collectWikiPhotos(spots);
   spots = await collectPopups(spots);
   // 점수: 관광공사 등록 +15, 여러 도시 검색에 걸림 +, 검색 순위가 높을수록 +
-  for (const s of spots) if (!s.popup) s.base = Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
+  // 표준데이터 명소는 관광지 40, 관광단지 46, 특화거리 28
+  for (const s of spots) if (!s.popup) s.base = s.std ? (s.sub === '관광단지' ? 46 : s.sub === '특화거리' ? 28 : 40) : Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
   writeFileSync(path, JSON.stringify({ searchedAt: prev.searchedAt, updatedAt: new Date().toISOString(), source: '카카오 로컬, 한국관광공사', spots }));
   console.log(`  동네 장소 ${spots.length}곳 (관광공사 확인 ${spots.filter((s) => s.ktoAt).length}곳, 등록 ${spots.filter((s) => s.kto).length}곳, 이번에 확인 ${checked}곳)`);
 }
@@ -944,9 +951,194 @@ async function collectSeoulParking() {
   console.log(`  서울 주차장 ${rows.length}곳 중 위치 있는 ${lots.length}곳 저장 (카카오 주소로 새로 찾은 곳 ${geocoded}, 위치 못 찾음 ${noPos})`);
 }
 
+// ── 공공데이터포털 전국 표준데이터 (지자체가 직접 올리는 자료) ─────────
+// 전국문화축제 · 전국공연행사정보 · 전국주차장정보 · 전국관광지정보 · 전국지역특화거리.
+// 모두 DATA_GO_KR_KEY 하나로 받는다(각 자료를 활용신청해서 승인받은 키). 승인 전이면 403 이 나오고, 그때는 지난 자료를 그대로 둔다.
+async function stdRows(ep) {
+  const rows = [];
+  for (let page = 1; page <= 60; page++) {
+    calls.std = (calls.std || 0) + 1;
+    const j = await getJson(`http://api.data.go.kr/openapi/${ep}?serviceKey=${encodeURIComponent(env.DATA_GO_KR_KEY)}&pageNo=${page}&numOfRows=1000&type=json`, undefined, ep);
+    if (!j?.body) throw new Error(`${ep}: ${JSON.stringify(j).replace(env.DATA_GO_KR_KEY, '***').slice(0, 100)}`);
+    const items = [].concat(j.body.items?.item || j.body.items || []);
+    rows.push(...items);
+    if (!items.length || page * 1000 >= Number(j.body.totalCount || 0)) break;
+    await sleep(100);
+  }
+  return rows;
+}
+const hash36 = (s) => { let h = 5381; for (const c of String(s)) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0; return h.toString(36); };
+const STD_AREA = (a = '') => ({ 전남광주통합특별시: '광주', 광주특별시: '광주', 광주광역시: '광주' }[a] || SHORT_AREA(a));
+// 2026년 광주·전남이 합쳐져 주소가 모두 "전남광주통합특별시"로 나온다. 광주 5개 구만 광주, 나머지 시·군은 전남으로 본다.
+const stdRegion = (r) => {
+  const t = String(r.rdnmadr || r.lnmadr || '').split(' ');
+  const area = t[0] === '전남광주통합특별시' ? (/^(동구|서구|남구|북구|광산구)$/.test(t[1]) ? '광주' : '전남') : STD_AREA(t[0]);
+  return `${area} ${t[1] || ''}`.trim();
+};
+const stdPos = (r) => { const lat = Number(r.latitude), lng = Number(r.longitude); return lat > 32 && lat < 39.5 && lng > 124 && lng < 132 ? { lat: Number(lat.toFixed(5)), lng: Number(lng.toFixed(5)) } : null; };
+const stdUrl = (u) => { const s = String(u || '').trim(); if (!s) return null; return /^https?:\/\//i.test(s) ? s : /^[\w.-]+\.[a-z]{2,}/i.test(s) ? `http://${s}` : null; };
+const STD_KID_OK = /제한\s*없|전연령|전체|누구나|가족|영유아|유아|어린이|아동|초등|[3-9]세\s*이상|청소년/;
+const STD_TYPE = (t = '') =>
+  /축제|페스티벌|페스타/.test(t) ? 'festival'
+  : /전시|미술|사진전|박람|갤러리|공예/.test(t) ? 'show'
+  : /체험|교육|강좌|만들기|교실|캠프|워크숍/.test(t) ? 'hands'
+  : /공연|연극|음악|콘서트|뮤지컬|무용|인형극|영화|연주|오케스트라|국악|합창|마술|서커스/.test(t) ? 'stage'
+  : 'event';
+
+/** 지자체 축제(전국문화축제) + 공연·행사(전국공연행사정보) 중 앞으로 열리는 것. others 와 겹치면 뺀다. */
+async function collectStdEvents(others) {
+  const today0 = ymd(today);
+  const out = [];
+  let dup = 0, adult = 0, noPos = 0;
+  const push = (ev) => {
+    if (others.some((o) => sameEvent(ev, o)) || out.some((o) => sameEvent(ev, o))) { dup++; return; }
+    out.push(ev);
+  };
+  for (const r of await stdRows('tn_pubr_public_cltur_fstvl_api')) {
+    const start = r.fstvlStartDate, end = r.fstvlEndDate || start;
+    if (!start || end < start || end < today0) continue;
+    const pos = stdPos(r);
+    if (!pos) { noPos++; continue; }
+    push({
+      id: `std-f-${hash36(`${r.fstvlNm}|${start}`)}`,
+      title: plain(r.fstvlNm), type: 'festival', region: stdRegion(r), ...pos, start, end, kid: null,
+      desc: [plain(r.opar), plain(r.fstvlCo).replace(/\+/g, ' · ').slice(0, 100)].filter(Boolean).join(' · '),
+      photo: null, source: 'std', link: stdUrl(r.homepageUrl),
+    });
+  }
+  const nFest = out.length;
+  for (const r of await stdRows('tn_pubr_public_pblprfr_event_info_api')) {
+    const start = r.eventStartDate, end = r.eventEndDate || start;
+    if (!start || end < start || end < today0) continue;
+    const pos = stdPos(r);
+    if (!pos) { noPos++; continue; }
+    const age = String(r.entncAge || '').trim();
+    if (SEOUL_ADULT_ONLY.test(age) && !STD_KID_OK.test(age.replace(/성인/g, ''))) { adult++; continue; }
+    const fee = /무료/.test(r.chrgeInfo || '') ? '무료' : [r.chrgeInfo, r.admfee].map(plain).filter(Boolean).join(' ').slice(0, 60);
+    push({
+      id: `std-e-${hash36(`${r.eventNm}|${start}|${r.opar}`)}`,
+      title: plain(r.eventNm), type: STD_TYPE(`${r.eventNm} ${r.eventCo}`), region: stdRegion(r), ...pos, start, end,
+      kid: STD_KID_OK.test(age) ? true : null,
+      desc: [plain(r.opar), r.eventStartTime ? `${r.eventStartTime} 시작` : '', fee, plain(r.eventCo).slice(0, 80), age ? `관람 ${age}` : ''].filter(Boolean).join(' · '),
+      photo: null, source: 'std', link: stdUrl(r.homepageUrl),
+    });
+  }
+  console.log(`  지자체 축제 ${nFest}건 + 공연·행사 ${out.length - nFest}건 추가 (중복 ${dup}, 어른 전용 ${adult}, 좌표 없음 ${noPos})`);
+  return out;
+}
+
+// 전국주차장정보: 격자(0.25도 ≈ 가로 22km × 세로 28km)별 파일로 나눠 app/data/parking/ 에 담는다.
+// 앱은 장소 둘레(2km) 가 걸치는 격자 파일만 받는다. 서울은 서울시 자료(seoul-parking.json)가 더 자세해서 뺀다.
+const PARK_CELL = (lat, lng) => `${Math.floor(lat * 4)}_${Math.floor(lng * 4)}`;
+async function collectStdParking() {
+  const rows = await stdRows('tn_pubr_prkplce_info_api');
+  const hm = (a, b) => (a && b ? (/^0?0:?00$/.test(a) && /^(23:59|24:00|2400)$/.test(b) ? '00:00~24:00' : `${a}~${b}`) : '');
+  const cells = {};
+  let kept = 0;
+  for (const r of rows) {
+    const pos = stdPos(r);
+    if (!pos || /^서울/.test(r.lnmadr || r.rdnmadr || '')) continue;
+    if (r.prkplceType === '부설' || (r.prkplceSe === '민영' && (r.prkplceType === '노상' || Number(String(r.prkcmprt).replace(/[^d]/g, '')) < 30))) continue; // 건물 손님 전용, 노상 민영, 30면 미만 민영은 뺀다
+    const paid = !/^무료/.test(r.parkingchrgeInfo || '');
+    const num = (v) => Number(String(v || '').replace(/[^\d.]/g, '')) || 0;
+    const lot = {
+      id: `p${r.prkplceNo}`, name: plain(r.prkplceNm), addr: r.rdnmadr || r.lnmadr || '', ...pos,
+      kind: r.prkplceType === '노상' ? '노상' : '노외', pub: r.prkplceSe === '공영',
+      n: num(r.prkcmprt), paid,
+      base: paid && num(r.basicCharge) ? [num(r.basicCharge), num(r.basicTime)] : null,
+      add: paid && num(r.addUnitCharge) ? [num(r.addUnitCharge), num(r.addUnitTime)] : null,
+      day: paid && num(r.dayCmmtkt) ? num(r.dayCmmtkt) : null,
+      wd: hm(r.weekdayOperOpenHhmm, r.weekdayOperColseHhmm),
+      satFree: false, holFree: false,
+      tel: r.phoneNumber || '',
+    };
+    (cells[PARK_CELL(pos.lat, pos.lng)] ||= []).push(lot);
+    kept++;
+  }
+  const dir = `${ROOT}app/data/parking`;
+  mkdirSync(dir, { recursive: true });
+  for (const f of readdirSync(dir)) if (!(f.replace('.json', '') in cells)) unlinkSync(`${dir}/${f}`);
+  for (const [k, lots] of Object.entries(cells)) writeFileSync(`${dir}/${k}.json`, JSON.stringify({ lots }));
+  writeFileSync(`${dir}/index.json`, JSON.stringify({ updatedAt: new Date().toISOString(), source: '공공데이터포털 전국주차장정보표준데이터', cells: Object.fromEntries(Object.entries(cells).map(([k, v]) => [k, v.length])) }));
+  console.log(`  전국 주차장 ${rows.length}곳 중 ${kept}곳을 ${Object.keys(cells).length}개 격자 파일로 저장 (서울·건물 전용 제외)`);
+}
+
+// 전국관광지정보 + 전국지역특화거리 → 추천 명소 후보(동네 장소와 같은 모양)
+const STD_CAT = (name, intro, kind) => {
+  const t = `${name} ${intro}`;
+  if (kind === '특화거리') {
+    return /시장|장터/.test(name) ? 'market' : /카페|커피|디저트|빵/.test(t) ? 'cafe' : /음식|먹거리|먹자|맛|식당|횟집|고기|구이|국밥|치킨|족발|막걸리|포장마차|야시장/.test(t) ? 'cafe' : /문화|예술|전통|한옥|역사|공예|도자|한복/.test(t) ? 'culture' : /패션|의류|디자인|가구|도서|책|만화|웹툰|소품|골목/.test(t) ? 'shop' : 'walk';
+  }
+  return /박물관|과학관|전시관|기념관|체험관|천문대/.test(name) ? 'museum'
+    : /동물원|아쿠아|수족관|목장|농장/.test(name) ? 'zoo'
+    : /해수욕장|해변|바다|포구|항|해안|섬|갯벌|등대/.test(name) ? 'sea'
+    : /테마파크|랜드|리조트|워터|유원지/.test(name) ? 'theme'
+    : /스키|레일바이크|레포츠|집라인|루지|짚|래프팅|카트|골프/.test(t) ? 'activity'
+    : /한옥|고택|사찰|사|성곽|산성|궁|유적|민속|마을|서원|향교|역사|전통|문화/.test(name) ? 'culture'
+    : /공원|숲|수목원|정원|호수|계곡|폭포|산|휴양림|자연|생태|습지|온천|저수지|강|천|꽃|둘레길|누리길|해맞이/.test(name) ? 'nature'
+    : 'nature';
+};
+async function fetchStdPlaces() {
+  const out = [];
+  const seen = [];
+  const add = (r, kind) => {
+    const name = plain(kind === '특화거리' ? r.stretNm : r.trrsrtNm).replace(/\s+/g, ' ');
+    const pos = stdPos(r);
+    if (!name || !pos) return;
+    if (kind === '특화거리' && /공구|웨딩|오토바이|귀금속|철물|자동차|부품|인쇄|안경|조명|가구|건축자재|중고|여성친화|안전/.test(name)) return; // 나들이로 가는 거리가 아닌 업종 거리
+    if (/골프|컨트리클럽|CC$/.test(name) || /^(신영|라비에벨)$/.test(name)) return; // 골프장·골프 리조트는 나들이 명소로 쓰지 않는다
+    if (seen.some((s) => s.name === name && kmBetween(s, pos) < 0.5)) return;
+    seen.push({ name, ...pos });
+    const intro = plain(kind === '특화거리' ? r.stretIntrcn : r.trrsrtIntrcn);
+    const sub = kind === '특화거리' ? '특화거리' : (r.trrsrtSe || '관광지');
+    out.push({
+      id: `std-${kind === '특화거리' ? 's' : 't'}-${hash36(`${name}|${pos.lat}|${pos.lng}`)}`,
+      name, cat: STD_CAT(name, intro, kind), region: stdRegion(r), ...pos, sub,
+      stdOverview: summarize(intro), std: true, kto: true, pos: 3, hits: 1,
+    });
+  };
+  for (const r of await stdRows('tn_pubr_public_trrsrt_api')) add(r, '관광지');
+  for (const r of await stdRows('tn_pubr_public_area_spcliz_stret_api')) add(r, '특화거리');
+  return out;
+}
+/** spots(동네 장소 목록)에 표준데이터 명소를 넣거나 새로 고친다. @returns 새로 넣은 수 */
+async function addStdSpots(spots) {
+  const std = await fetchStdPlaces();
+  const byId = new Map(spots.map((s) => [s.id, s]));
+  let added = 0;
+  for (const p of std) {
+    const o = byId.get(p.id);
+    if (o) Object.assign(o, { name: p.name, cat: p.cat, region: p.region, lat: p.lat, lng: p.lng, sub: p.sub, std: true, stdOverview: p.stdOverview, kto: true });
+    else { spots.push(p); added++; }
+  }
+  // 이번 목록에 더는 없는 표준데이터 명소(제외 규칙이 바뀌었거나 자료에서 빠진 곳)는 뺀다.
+  const keep = new Set(std.map((p) => p.id));
+  for (let i = spots.length - 1; i >= 0; i--) if (spots[i].std && !keep.has(spots[i].id)) spots.splice(i, 1);
+  console.log(`  표준데이터 명소 ${std.length}곳 (관광지·관광단지 ${std.filter((p) => p.sub !== '특화거리').length}, 특화거리 ${std.filter((p) => p.sub === '특화거리').length}) 중 새로 넣은 ${added}곳`);
+  return added;
+}
+
 // ── 실행 ────────────────────────────────────────────────────
 mkdirSync(`${ROOT}app/data`, { recursive: true });
 const stamp = new Date().toISOString();
+
+// 표준데이터만 받기: node tools/collect.mjs --std (지자체 행사·전국 주차장·관광지/특화거리 명소. 네이버·관광공사 한도를 쓰지 않는다)
+if (process.argv.includes('--std')) {
+  const file = JSON.parse(readFileSync(`${ROOT}app/data/events.json`, 'utf8'));
+  const others = file.events.filter((ev) => ev.source !== 'std');
+  console.log('· 지자체 축제·공연행사');
+  const std = await collectStdEvents(others);
+  writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ ...file, events: [...others, ...std] }));
+  console.log('· 전국 주차장');
+  await collectStdParking();
+  console.log('· 관광지·지역특화거리 명소');
+  const sp = JSON.parse(readFileSync(`${ROOT}app/data/spots.json`, 'utf8'));
+  await addStdSpots(sp.spots);
+  for (const x of sp.spots) if (x.std) x.base = x.sub === '관광단지' ? 46 : x.sub === '특화거리' ? 28 : 40;
+  writeFileSync(`${ROOT}app/data/spots.json`, JSON.stringify(sp));
+  console.log(`호출 수: 공공데이터포털 ${calls.std || 0}회`);
+  process.exit(0);
+}
 
 // 서울시 자료만 받기: node tools/collect.mjs --seoul (네이버·관광공사 한도를 쓰지 않는다)
 if (process.argv.includes('--seoul')) {
@@ -994,14 +1186,27 @@ if (env.SEOUL_API_KEY) {
   seoulEvents = keepSeoul();
   console.log(`  SEOUL_API_KEY 없음, 지난 자료 ${seoulEvents.length}건 유지`);
 }
-const events = [...festivals, ...stages, ...seoulEvents];
-writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망, 서울 열린데이터광장', events }));
+console.log('· 지자체 축제·공연행사 (공공데이터포털 표준데이터)');
+let stdEvents = [];
+const keepStd = () => {
+  try { return (JSON.parse(readFileSync(`${ROOT}app/data/events.json`, 'utf8')).events || []).filter((ev) => ev.source === 'std' && ev.end >= ymd(today)); } catch { return []; }
+};
+try {
+  stdEvents = await collectStdEvents([...festivals, ...stages, ...seoulEvents]);
+} catch (e) {
+  stdEvents = keepStd();
+  console.log(`  지자체 행사 수집 실패, 지난 자료 ${stdEvents.length}건 유지: ${e.message}`);
+}
+const events = [...festivals, ...stages, ...seoulEvents, ...stdEvents];
+writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망, 서울 열린데이터광장, 공공데이터포털 표준데이터', events }));
 console.log(`  행사·공연 ${events.length}건 저장`);
 
 console.log('· 서울 주차장 (서울 열린데이터광장)');
 if (env.SEOUL_API_KEY) {
   try { await collectSeoulParking(); } catch (e) { console.log(`  서울 주차장 수집 실패, 지난 자료 유지: ${e.message}`); }
 } else console.log('  SEOUL_API_KEY 없음, 지난 자료 유지');
+console.log('· 전국 주차장 (공공데이터포털 표준데이터)');
+try { await collectStdParking(); } catch (e) { console.log(`  전국 주차장 수집 실패, 지난 자료 유지: ${e.message}`); }
 }
 
 console.log('· 장소 사진·소개');
