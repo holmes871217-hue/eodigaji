@@ -31,7 +31,7 @@ function placeCard(r, i, favs) {
   return `
     <li>
       <button type="button" class="pcard" data-action="open-place" data-id="${esc(p.id)}">
-        <span class="pcard-media ph-${esc(p.cat)}">
+        <span class="pcard-media ph-${esc(p.cat)}" ${photo ? '' : `data-gphoto="${esc(p.id)}"`}>
           <span class="pcard-fallback" aria-hidden="true">${cat.icon}</span>
           ${photo ? `<img src="${esc(photo.src)}" alt="" loading="${i < 4 ? 'eager' : 'lazy'}" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
           <span class="pcard-rank ${i === 0 ? 'is-top' : ''}" aria-label="${r.rank}위">${r.rank}</span>
