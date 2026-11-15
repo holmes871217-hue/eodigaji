@@ -102,6 +102,7 @@ function shopsSheet(place, kind, data, favs) {
               <span>여기서 ${distText(s.km)}</span>
             </span>
             <span class="card-meta">${esc([s.type, s.addr].filter(Boolean).join(' · '))}</span>
+            ${s.fee ? `<span class="shop-fee"><b>${esc(s.fee)}</b>${s.feeSub ? `<small>${esc(s.feeSub)}</small>` : ''}</span>` : ''}
           </span>
         </a>
         ${heartBtn('shop', s.id, favs.has(favKey('shop', s.id)), 'on-shop')}
@@ -113,7 +114,7 @@ function shopsSheet(place, kind, data, favs) {
     </ol>
     <p class="sample-note">${data.source === 'google'
       ? '평점·리뷰 수는 Google 지도 기준이에요(네이버는 평점을 외부에 제공하지 않아요). 네이버 지도에서 가게가 안 나오면 오른쪽 아래 "카카오맵"·"구글 지도"를 눌러 보세요(그 자리에 핀을 바로 꽂아 줘요). 리뷰가 적은 곳은 순서에서 조금 뒤로 보내고, 멀수록 점수를 조금 깎았어요.'
-      : kind === 'park' ? '카카오맵에 등록된 주차장을 가까운 순으로 보여 드려요("전용"이 붙은 곳은 뺐어요). 요금·운영시간은 가기 전에 확인해 주세요.' : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
+      : kind === 'park' ? `카카오맵에 등록된 주차장을 가까운 순으로 보여 드려요("전용"이 붙은 곳은 뺐어요). ${data.fees ? '요금·운영 정보는 서울 열린데이터광장(서울시 관리 주차장) 기준이에요. ' : ''}가기 전에 현장 안내를 꼭 확인해 주세요.` : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
 }
 
 function placeSheet(r, tripEvents, gp) {
@@ -243,15 +244,17 @@ function eventSheet(e) {
       <div class="stat"><b>${e.kid ? '좋음' : '보통'}</b><span>아이 동반</span></div>
     </div>
     <p class="desc">${esc(e.desc)}</p>
-    ${e.photo ? `<div class="sheet-photo event-photo ${e.source === 'kopis' ? 'is-poster' : ''}"><img src="${esc(e.photo)}" alt="${esc(e.title)} ${e.source === 'kopis' ? '포스터' : '사진'}" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : ''}
+    ${e.photo ? `<div class="sheet-photo event-photo ${e.source === 'kopis' || e.source === 'seoul' ? 'is-poster' : ''}"><img src="${esc(e.photo)}" alt="${esc(e.title)} ${e.source === 'kopis' || e.source === 'seoul' ? '포스터' : '사진'}" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : ''}
     <p class="sample-note">${e.sample
       ? '연습용 일정이에요. 실제 날짜와 다를 수 있으니 가기 전에 꼭 확인해 주세요.'
       : e.source === 'kopis'
         ? '공연 정보: KOPIS(공연예술통합전산망). 회차와 예매는 공연 정보 페이지에서 확인해 주세요.'
+        : e.source === 'seoul'
+        ? '서울시 문화행사 정보(서울 열린데이터광장) 기준이에요. 일정·요금·예약 여부가 바뀔 수 있으니 가기 전에 꼭 확인해 주세요.'
         : '한국관광공사 행사 정보 기준이에요. 일정이 바뀔 수 있으니 가기 전에 꼭 확인해 주세요.'}</p>
     <div class="sheet-actions">
       ${e.link
-        ? `<a class="btn-primary" href="${esc(e.link)}" target="_blank" rel="noopener noreferrer">공연 정보 보기</a>`
+        ? `<a class="btn-primary" href="${esc(e.link)}" target="_blank" rel="noopener noreferrer">${e.source === 'seoul' ? '행사 정보 보기' : '공연 정보 보기'}</a>`
         : `<a class="btn-primary" href="https://search.naver.com/search.naver?query=${q}" target="_blank" rel="noopener noreferrer">네이버에서 일정 확인</a>`}
       <a class="btn-secondary" href="https://map.kakao.com/link/to/${q},${e.lat},${e.lng}" target="_blank" rel="noopener noreferrer">카카오맵 길찾기</a>
     </div>`;

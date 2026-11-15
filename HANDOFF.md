@@ -66,6 +66,7 @@ git push origin "$(git subtree split --prefix app origin/main)":refs/heads/gh-pa
 | `KAKAO_JS_KEY` | 카카오 지도 SDK(앱 안 위치 검색) | github.io 도메인 등록됨(200). `http://localhost:5173`은 미등록이라 로컬에서는 OSM 검색으로 동작 |
 | `NAVER_API_KEY_ID`, `NAVER_API_KEY` | NAVER API HUB(검색 트렌드·블로그). 종량제 | 동작. 하루 약 180회 |
 | `KOPIS_KEY` | 공연 일정 | 동작. 2027-11 연장 신청 필요 |
+| `SEOUL_API_KEY` | 서울 열린데이터광장(문화행사 `culturalEventInfo`, 주차장 `GetParkInfo`) | 2026-11-15 사용자가 `.env`에 넣고 동작 확인. **http만 됨(https 불가)이라 수집기에서만 호출**. GitHub Secrets 등록 필요(`gh secret set SEOUL_API_KEY`), 워크플로에는 이미 연결 |
 | `GOOGLE_PLACES_KEY` | 구글 Places API (New), 근처 맛집·카페 평점 | 2026-11-15 사용자가 콘솔에서 제한을 걸었고(확인: 출처 없이·다른 사이트에서는 403, `https://holmes871217-hue.github.io/*`에서만 200, 다른 API는 거부), `app/js/config.js`에 넣음. 하루 한도 설정 여부는 내가 확인 못 함. 로컬(localhost)에서는 거부되므로 평점은 게시된 주소에서만 확인 가능. node로 시험할 때는 `Referer` 헤더를 앱 주소로 보내야 함 |
 
 키를 바꾸면 `gh secret set -f .env -R holmes871217-hue/eodigaji`.
@@ -90,6 +91,8 @@ git push origin "$(git subtree split --prefix app origin/main)":refs/heads/gh-pa
 - 주요 검색 위치: 검색칸(카카오 → OSM → 앱 안 이름), "현재 위치 사용", 지도에서 고르기. 고르면 지도 핀도 그 위치로 이동.
 - 추천 탭: "가까운 소소한 곳 / 전체 / 큰 나들이". 지도 첫 화면은 가로 10km.
 - 장소 상세: 사진 옆으로 넘겨 보기(최대 10장, 왼쪽 아래 "3 / 10" 표시), 볼거리 요약(`tip`), 관광공사 소개, 가는 날 근처 축제·공연.
+- 서울 문화행사: `tools/collect.mjs`의 `collectSeoulEvents`가 서울시 `culturalEventInfo` 중 앞으로 열리는 행사(약 300건)를 `events.json`에 `source: 'seoul'`로 합친다. 어른 전용(성인·12세 이상 등)은 빼고, 관광공사·KOPIS와 제목·날짜·장소(1.5km)가 겹치면 중복으로 보고 뺌. 키가 없으면 지난 자료 유지. 서울 주차장은 `collectSeoulParking`이 `app/data/seoul-parking.json`(약 2,200곳, 600KB)을 만들고, 서울 장소의 "근처 주차장" 목록에서만 내려받아 카카오 주차장과 합친다(`nearby.js`의 `mergeSeoulParking`, 요금·운영·면수 표시). 서울시 자료만 받기: `node tools/collect.mjs --seoul`.
+- 행사 자료의 한계(2026-11-15 조사): 관광공사 행사 DB는 전국에서 앞으로 열릴 것이 78건뿐이고 지자체가 관광공사에 등록한 것만 있음(김천김밥축제·대전 빵축제는 등록돼 있으나 10월에 끝남, 홍천 바베큐 같은 지자체 자체 축제는 없음). 더 채우려면 공공데이터포털 "전국문화축제표준데이터"(15013104)·"전국공연행사정보표준데이터" 활용신청이 필요하다(현재 키로는 403 SERVICE_KEY_IS_NOT_REGISTERED).
 - 추천 카드의 "근처 …" 축제 표시는 상세 창 "가는 날 근처 축제·공연" 목록(20km 안, 가까운 순 5개)의 1번과 항상 같다. 둘 다 `scoring.js`의 `nearbyEvents()` 하나를 쓴다(예전엔 카드가 검색 위치에서 가까운 행사를 골라 서로 달랐음, 2026-11-15 수정).
 - 근처 축제·공연을 누르면 탭을 옮기지 않고 장소 창 위에 행사 창이 열린다(버튼이 "닫기" 대신 "뒤로"). 뒤로 가면 보던 위치 그대로 장소 창으로 돌아온다.
 - 주차: 장소 상세에 주차 안내(가능/불가/무료, 요금, "근처 주차장" 네이버 지도 버튼), 추천 카드에 "주차 가능/무료/불가" 표시. 자료는 관광공사 `detailIntro2`(이름이 `parking…`인 칸). 글 다듬기는 `sheet.js`의 `parkingInfo()`.

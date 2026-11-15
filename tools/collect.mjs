@@ -819,9 +819,148 @@ async function collectSpots() {
   console.log(`  동네 장소 ${spots.length}곳 (관광공사 확인 ${spots.filter((s) => s.ktoAt).length}곳, 등록 ${spots.filter((s) => s.kto).length}곳, 이번에 확인 ${checked}곳)`);
 }
 
+// ── 서울시 열린데이터광장 (문화행사·주차장) ─────────────────────
+// 서울시 서버는 http(8088 포트)만 되어서 폰 앱이 직접 부를 수 없다. 그래서 여기서 받아 app/data 에 담아 둔다.
+// 키(SEOUL_API_KEY)가 없으면 건너뛰고 지난 자료를 그대로 둔다.
+async function seoulRows(service, pageSize = 1000, max = 25000) {
+  const rows = [];
+  for (let s = 1; s <= max; s += pageSize) {
+    calls.seoul = (calls.seoul || 0) + 1;
+    const res = await fetch(`http://openapi.seoul.go.kr:8088/${env.SEOUL_API_KEY}/json/${service}/${s}/${s + pageSize - 1}/`);
+    const text = await res.text();
+    let j;
+    try { j = JSON.parse(text); } catch { throw new Error(`${service}: ${text.replace(/\s+/g, ' ').slice(0, 100).split(env.SEOUL_API_KEY).join('***')}`); }
+    const body = j[service];
+    const code = body?.RESULT?.CODE || j.RESULT?.CODE;
+    if (code === 'INFO-200') break; // 더 이상 자료 없음
+    if (!body || code !== 'INFO-000') throw new Error(`${service}: ${code || '응답 이상'}`);
+    rows.push(...(body.row || []));
+    if (rows.length >= body.list_total_count) break;
+    await sleep(100);
+  }
+  return rows;
+}
+
+// 서울 문화행사 → 앱 행사 모양. 어른만 가는 행사는 뺀다.
+const SEOUL_TYPE = (c = '') =>
+  /^축제/.test(c) ? 'festival'
+  : /전시|미술/.test(c) ? 'show'
+  : /교육|체험/.test(c) ? 'hands'
+  : /콘서트|클래식|국악|연극|뮤지컬|오페라|무용|독주|독창|영화/.test(c) ? 'stage'
+  : 'event';
+const SEOUL_ADULT_ONLY = /^(성인|활동가)|1[2-9]세\s*이상|중학생\s*이상|청소년\s*이상|19세/;
+const SEOUL_KID_OK = /누구나|전체|어린이|유아|아동|가족|초등|영유아|[3-9]세\s*이상|청소년/;
+const normTitle = (t) => String(t || '').replace(/\[[^\]]*\]|\([^)]*\)|「|」|<[^>]*>/g, '').replace(/[^0-9A-Za-z가-힣]/g, '').toLowerCase();
+function sameEvent(a, b) {
+  if (a.start > b.end || a.end < b.start) return false;
+  if (kmBetween(a, b) > 1.5) return false;
+  const x = normTitle(a.title), y = normTitle(b.title);
+  if (x.length < 4 || y.length < 4) return false;
+  return x.includes(y) || y.includes(x) || x.slice(0, 7) === y.slice(0, 7);
+}
+
+async function collectSeoulEvents(others) {
+  const rows = await seoulRows('culturalEventInfo', 1000, 25000);
+  const out = [];
+  let adult = 0, noPos = 0, dup = 0;
+  for (const r of rows) {
+    const start = (r.STRTDATE || '').slice(0, 10), end = (r.END_DATE || '').slice(0, 10) || start;
+    if (!start || end < ymd(today)) continue;
+    const lat = Number(r.LAT), lng = Number(r.LOT);
+    if (!lat || !lng) { noPos++; continue; }
+    const target = (r.USE_TRGT || '').trim();
+    if (SEOUL_ADULT_ONLY.test(target) && !SEOUL_KID_OK.test(target.replace(/성인/g, ''))) { adult++; continue; }
+    const code = (r.HMPG_ADDR || '').match(/cultcode=(\d+)/)?.[1] || normTitle(r.TITLE).slice(0, 12);
+    const fee = r.IS_FREE === '무료' ? '무료' : `유료${r.USE_FEE ? ` (${plain(r.USE_FEE).slice(0, 60)})` : ''}`;
+    const program = plain(r.PROGRAM || r.ETC_DESC || '').slice(0, 80);
+    const ev = {
+      id: `seoul-${code}`,
+      title: plain(r.TITLE),
+      type: SEOUL_TYPE(r.CODENAME),
+      region: `서울 ${r.GUNAME || ''}${r.PLACE ? ` · ${plain(r.PLACE)}` : ''}`.trim(),
+      lat, lng, start, end,
+      kid: SEOUL_KID_OK.test(target),
+      desc: [plain(r.PLACE), r.PRO_TIME ? `${r.PRO_TIME} 시작` : '', fee, program].filter(Boolean).join(' · '),
+      photo: https(r.MAIN_IMG) || null,
+      source: 'seoul',
+      link: r.ORG_LINK && /^https?:/.test(r.ORG_LINK) ? r.ORG_LINK : r.HMPG_ADDR || null,
+    };
+    if (others.some((o) => sameEvent(ev, o)) || out.some((o) => sameEvent(ev, o))) { dup++; continue; }
+    out.push(ev);
+  }
+  console.log(`  서울 문화행사 ${rows.length}건 중 앞으로 열리는 ${out.length + dup + adult + noPos}건 → 추가 ${out.length}건 (중복 ${dup}, 어른 전용 ${adult}, 좌표 없음 ${noPos})`);
+  return out;
+}
+
+// 서울 주차장: 요금·운영 정보를 짧게 줄여 app/data/seoul-parking.json 에 담는다.
+// 좌표가 비어 있는 곳은 카카오 주소 검색으로 채우고, 한 번 찾은 좌표는 다음부터 다시 찾지 않는다.
+async function collectSeoulParking() {
+  const path = `${ROOT}app/data/seoul-parking.json`;
+  let prev = {}, prevMissing = new Set(), prevAt = 0;
+  try {
+    const f = JSON.parse(readFileSync(path, 'utf8'));
+    for (const r of f.lots || []) prev[r.id] = r;
+    prevMissing = new Set(f.missing || []);
+    prevAt = Date.parse(f.missingAt || 0) || 0;
+  } catch { /* 처음 */ }
+  const retryMissing = Date.now() - prevAt > 7 * 86400000; // 위치를 못 찾은 곳은 일주일에 한 번만 다시 시도
+  const missing = [];
+  const rows = await seoulRows('GetParkInfo', 1000, 5000);
+  const hhmm = (t) => (t && String(t).length === 4 ? `${String(t).slice(0, 2)}:${String(t).slice(2)}` : '');
+  const lots = [];
+  let geocoded = 0, noPos = 0;
+  for (const r of rows) {
+    const id = String(r.PKLT_CD);
+    let lat = Number(r.LAT), lng = Number(r.LOT);
+    if (!lat || !lng) {
+      if (prev[id]?.lat) { lat = prev[id].lat; lng = prev[id].lng; }
+      else if (env.KAKAO_REST_KEY && (retryMissing || !prevMissing.has(id)) && r.ADDR) {
+        try {
+          calls.kakao = (calls.kakao || 0) + 1;
+          const j = await getJson(`https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(`서울 ${r.ADDR}`)}&size=1`, { headers: { Authorization: `KakaoAK ${env.KAKAO_REST_KEY}` } }, 'kakao-addr');
+          const d = j.documents?.[0];
+          if (d) { lat = Number(Number(d.y).toFixed(5)); lng = Number(Number(d.x).toFixed(5)); geocoded++; }
+        } catch { /* 다음에 다시 */ }
+        await sleep(30);
+      }
+    }
+    if (!lat || !lng) { noPos++; missing.push(id); continue; }
+    const paid = r.CHGD_FREE_SE === 'Y';
+    lots.push({
+      id, name: plain(r.PKLT_NM), addr: r.ADDR || '', lat: Number(Number(lat).toFixed(5)), lng: Number(Number(lng).toFixed(5)),
+      kind: r.PKLT_KND_NM === '노상 주차장' ? '노상' : '노외',
+      n: Number(r.TPKCT) || 0,
+      paid,
+      // 기본요금(기본 시간)·추가요금(단위 시간)·하루 최대·월 정기권
+      base: paid && r.PRK_CRG ? [Number(r.PRK_CRG), Number(r.PRK_HM) || 0] : null,
+      add: paid && r.ADD_CRG ? [Number(r.ADD_CRG), Number(r.ADD_UNIT_TM_MNT) || 0] : null,
+      day: paid && Number(r.DLY_MAX_CRG) ? Number(r.DLY_MAX_CRG) : null,
+      wd: hhmm(r.WD_OPER_BGNG_TM) && `${hhmm(r.WD_OPER_BGNG_TM)}~${hhmm(r.WD_OPER_END_TM)}`,
+      satFree: r.SAT_CHGD_FREE_NM === '무료', holFree: r.LHLDY_NM === '무료',
+      tel: r.TELNO || '',
+    });
+  }
+  writeFileSync(path, JSON.stringify({ updatedAt: new Date().toISOString(), source: '서울 열린데이터광장 GetParkInfo', missing, missingAt: retryMissing ? new Date().toISOString() : new Date(prevAt).toISOString(), lots }));
+  console.log(`  서울 주차장 ${rows.length}곳 중 위치 있는 ${lots.length}곳 저장 (카카오 주소로 새로 찾은 곳 ${geocoded}, 위치 못 찾음 ${noPos})`);
+}
+
 // ── 실행 ────────────────────────────────────────────────────
 mkdirSync(`${ROOT}app/data`, { recursive: true });
 const stamp = new Date().toISOString();
+
+// 서울시 자료만 받기: node tools/collect.mjs --seoul (네이버·관광공사 한도를 쓰지 않는다)
+if (process.argv.includes('--seoul')) {
+  if (!env.SEOUL_API_KEY) { console.log('SEOUL_API_KEY 가 없어요'); process.exit(1); }
+  const file = JSON.parse(readFileSync(`${ROOT}app/data/events.json`, 'utf8'));
+  const others = file.events.filter((ev) => ev.source !== 'seoul');
+  console.log('· 서울 문화행사');
+  const seoul = await collectSeoulEvents(others);
+  writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ ...file, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망, 서울 열린데이터광장', events: [...others, ...seoul] }));
+  console.log('· 서울 주차장');
+  await collectSeoulParking();
+  console.log(`호출 수: 서울시 ${calls.seoul || 0}회, 카카오 ${calls.kakao || 0}회`);
+  process.exit(0);
+}
 
 if (!PHOTOS_ONLY) {
 console.log('· 축제·행사');
@@ -839,9 +978,30 @@ try {
   } catch { /* 없음 */ }
   console.log(`  공연 수집 실패, 지난 자료 ${stages.length}건 유지: ${e.message}`);
 }
-const events = [...festivals, ...stages];
-writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망', events }));
+console.log('· 서울 문화행사 (서울 열린데이터광장)');
+let seoulEvents = [];
+const keepSeoul = () => {
+  try { return (JSON.parse(readFileSync(`${ROOT}app/data/events.json`, 'utf8')).events || []).filter((ev) => ev.source === 'seoul' && ev.end >= ymd(today)); } catch { return []; }
+};
+if (env.SEOUL_API_KEY) {
+  try {
+    seoulEvents = await collectSeoulEvents([...festivals, ...stages]);
+  } catch (e) {
+    seoulEvents = keepSeoul();
+    console.log(`  서울 문화행사 수집 실패, 지난 자료 ${seoulEvents.length}건 유지: ${e.message}`);
+  }
+} else {
+  seoulEvents = keepSeoul();
+  console.log(`  SEOUL_API_KEY 없음, 지난 자료 ${seoulEvents.length}건 유지`);
+}
+const events = [...festivals, ...stages, ...seoulEvents];
+writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망, 서울 열린데이터광장', events }));
 console.log(`  행사·공연 ${events.length}건 저장`);
+
+console.log('· 서울 주차장 (서울 열린데이터광장)');
+if (env.SEOUL_API_KEY) {
+  try { await collectSeoulParking(); } catch (e) { console.log(`  서울 주차장 수집 실패, 지난 자료 유지: ${e.message}`); }
+} else console.log('  SEOUL_API_KEY 없음, 지난 자료 유지');
 }
 
 console.log('· 장소 사진·소개');
@@ -886,4 +1046,4 @@ for (const p of PLACES) {
 writeFileSync(`${ROOT}app/data/places.json`, JSON.stringify({ updatedAt: stamp, anchor: ANCHOR, places }));
 const withStats = Object.values(places).filter((r) => r.interest || r.yearly != null).length;
 console.log(`  장소 통계 ${withStats}/${PLACES.length}곳 저장`);
-console.log(`호출 수: 관광공사 ${calls.tour}회, 네이버 ${calls.naver}회, KOPIS ${calls.kopis || 0}회, 카카오 ${calls.kakao || 0}회`);
+console.log(`호출 수: 서울시 ${calls.seoul || 0}회, 관광공사 ${calls.tour}회, 네이버 ${calls.naver}회, KOPIS ${calls.kopis || 0}회, 카카오 ${calls.kakao || 0}회`);

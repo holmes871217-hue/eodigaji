@@ -35,6 +35,7 @@ jobs:
           NAVER_API_KEY: ${{ secrets.NAVER_API_KEY }}
           KOPIS_KEY: ${{ secrets.KOPIS_KEY }}
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+          SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
         run: node tools/collect.mjs
 
       - name: 빠진 장소 확인 (tools/must-have.mjs 기준)
