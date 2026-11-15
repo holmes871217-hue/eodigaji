@@ -520,6 +520,67 @@ const SPOT_KW = [
 const SPOT_BAD = /주차장|매표소|화장실|충전소|정류장|입구|정문|후문|사무소|사무실|관리소|안내소|대학교|분소|매점|편의점|기념품|수장고|연구소|예정\)|유통센터|농수산물/;
 
 
+// ── 팝업스토어·트렌드 명소 ─────────────────────────────────────
+// 팝업스토어는 기간이 짧고 날짜를 주는 공식 자료가 없다. 그래서 카카오 장소 검색에서 이름에 "팝업"이 든 곳을 찾고,
+// 네이버 블로그 검색(최신순)에서 최근 30일 안에 그 이름으로 쓴 글이 있는 곳만 남긴다(운영 중이라는 보증은 아니고 "최근 화제" 신호).
+// 매 실행마다 새로 만들어 지난 팝업은 저절로 빠진다. 앱에는 "가기 전에 운영 기간을 확인하세요" 안내가 함께 나간다.
+const POPUP_HUBS = HUBS.slice(0, 28); // 서울·수도권·강원·충청 일부까지(앞쪽 거점)
+async function collectPopups(spots) {
+  if (!env.KAKAO_REST_KEY || !env.NAVER_API_KEY) { console.log('  팝업: 카카오/네이버 키 없음, 건너뜀'); return spots; }
+  const kept = spots.filter((s) => !s.popup); // 지난 팝업 결과는 버리고 다시 만든다
+  const byId = new Map();
+  for (const [hub, y, x] of POPUP_HUBS) {
+    try {
+      calls.kakao = (calls.kakao || 0) + 1;
+      const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent('팝업스토어')}&x=${x}&y=${y}&radius=15000&sort=accuracy&size=15`, {
+        headers: { Authorization: `KakaoAK ${env.KAKAO_REST_KEY}` },
+      }, 'kakao-popup');
+      for (const d of j.documents || []) {
+        if (!/팝업|pop[- ]?up/i.test(d.place_name) || /주차장|화장실|정류장/.test(d.place_name)) continue;
+        if (byId.has(d.id) || kept.some((k) => k.id === `k-${d.id}`)) continue;
+        const addr = d.road_address_name || d.address_name || '';
+        byId.set(d.id, {
+          id: `k-${d.id}`, name: d.place_name, cat: 'trend',
+          region: addr.split(' ').slice(0, 2).join(' ').replace(/특별자치도|특별자치시|통합특별시/, ''),
+          lat: Number(Number(d.y).toFixed(5)), lng: Number(Number(d.x).toFixed(5)),
+          sub: '팝업스토어', url: d.place_url, pos: 1, hits: 1, popup: true,
+        });
+      }
+    } catch (e) {
+      console.log(`  팝업 검색 실패 ${hub}: ${e.message}`);
+    }
+    await sleep(40);
+  }
+  let logged = false, fresh = 0;
+  const now = Date.now();
+  for (const c of byId.values()) {
+    if (fresh >= 80) break; // 한 번에 블로그 확인 80곳까지
+    try {
+      calls.naver++;
+      const j = await getJson(`${NAVER}/search/v1/blog?query=${encodeURIComponent(c.name)}&display=3&sort=date`, { headers: naverHeaders }, 'blog-popup');
+      const items = j.items || [];
+      if (!logged) { logged = true; console.log(`  팝업 블로그 첫 응답 필드: ${Object.keys(items[0] || {}).join(',') || '(결과 없음)'}`); }
+      const d = String(items[0]?.postdate || '').replace(/\D/g, '').slice(0, 8);
+      if (d.length !== 8) continue;
+      const days = Math.floor((now - Date.parse(`${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`)) / 86400000);
+      if (days > 30) continue;
+      c.blogDays = days;
+      c.base = Math.min(70, 52 + (days <= 7 ? 10 : days <= 14 ? 6 : 2) + Math.min(6, Math.floor(Math.log10(Math.max(1, j.total || 1)) * 2)));
+      c.overview = `팝업스토어·트렌드 명소예요. 최근 ${days}일 안에 블로그 글이 올라온 곳이라 요즘 화제인 곳으로 보여요. 운영 기간은 바뀔 수 있으니 가기 전에 꼭 확인하세요.`;
+      c.ktoAt = new Date().toISOString(); // 관광공사 확인 대상이 아님
+      c.pkAt = c.ktoAt; c.wpAt = c.ktoAt;
+      kept.push(c);
+      fresh++;
+    } catch (e) {
+      console.log(`  팝업 블로그 확인 실패 ${c.name}: ${String(e.message).slice(0, 100)}`);
+      break;
+    }
+    await sleep(120);
+  }
+  console.log(`  팝업스토어 후보 ${byId.size}곳 중 최근 30일 화제 ${fresh}곳`);
+  return kept;
+}
+
 // 사진이 없는 곳에 한국관광공사 포토코리아(관광사진 정보, 공공누리 1유형) 사진을 붙인다.
 // 이름으로 검색해 사진 제목·검색어·촬영지에 장소 이름이 들어간 것만 쓴다. 하루 200곳까지, 한도/오류가 나면 다음 날 이어서 한다.
 async function collectPhotoKorea(spots) {
@@ -643,7 +704,7 @@ async function collectSpots() {
     const old = new Map(spots.map((s) => [s.id, s]));
     spots = [...byId.values()].map((s) => {
       const o = old.get(s.id);
-      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt, pk: o.pk, pkAt: o.pkAt } : s;
+      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt, pk: o.pk, pkAt: o.pkAt, popup: o.popup } : s;
     });
     prev = { searchedAt: new Date().toISOString() };
   }
@@ -751,8 +812,9 @@ async function collectSpots() {
   console.log(`  주차 안내 ${parkFetched}곳 (안내가 있는 곳 ${spots.filter((s) => s.parking || s.parkingFee).length}곳)`);
   await collectPhotoKorea(spots);
   await collectWikiPhotos(spots);
+  spots = await collectPopups(spots);
   // 점수: 관광공사 등록 +15, 여러 도시 검색에 걸림 +, 검색 순위가 높을수록 +
-  for (const s of spots) s.base = Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
+  for (const s of spots) if (!s.popup) s.base = Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
   writeFileSync(path, JSON.stringify({ searchedAt: prev.searchedAt, updatedAt: new Date().toISOString(), source: '카카오 로컬, 한국관광공사', spots }));
   console.log(`  동네 장소 ${spots.length}곳 (관광공사 확인 ${spots.filter((s) => s.ktoAt).length}곳, 등록 ${spots.filter((s) => s.kto).length}곳, 이번에 확인 ${checked}곳)`);
 }
