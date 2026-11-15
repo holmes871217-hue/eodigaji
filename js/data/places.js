@@ -28,6 +28,7 @@ export const CATEGORIES = {
   gallery: { label: '미술관·전시', icon: '🖼️' },
   walk: { label: '산책·골목길', icon: '🚶' },
   kids: { label: '키즈카페', icon: '🧸' },
+  trend: { label: '트렌드·팝업', icon: '✨' },
 };
 
 // [id, 이름, 지역, 분류, 위도, 경도, base, peak, spread, fBias, kid[3], trend, yearly, crowd, buzz]
@@ -200,6 +201,7 @@ const CAT_DEFAULT = {
   gallery: [33, 11, 1.2, [0.35, 0.6, 0.75]],
   walk: [34, 12, 1.15, [0.6, 0.6, 0.55]],
   kids: [36, 8, 1.1, [0.95, 0.85, 0.35]],
+  trend: [32, 10, 1.25, [0.3, 0.55, 0.65]],
 };
 
 /** 카카오로 모은 동네 장소(data/spots.json 한 줄)를 앱 장소 모양으로 바꾼다. */
