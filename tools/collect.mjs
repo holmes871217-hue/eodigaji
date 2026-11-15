@@ -517,7 +517,7 @@ const SPOT_KW = [
   // 시간 보내기 좋은 실내 복합 공간(코엑스·스타필드 같은 곳). 2026-11-15 누락 제보로 추가
   ['복합쇼핑몰', 'shop', /쇼핑몰|백화점/], ['실내놀이터', 'kids', /놀이|키즈/], ['방탈출', 'activity', /방탈출|테마카페|오락/],
 ];
-const SPOT_BAD = /주차장|매표소|화장실|충전소|정류장|입구|정문|후문|사무소|사무실|관리소|안내소|대학교|분소|매점|편의점|기념품|수장고|연구소/;
+const SPOT_BAD = /주차장|매표소|화장실|충전소|정류장|입구|정문|후문|사무소|사무실|관리소|안내소|대학교|분소|매점|편의점|기념품|수장고|연구소|예정\)|유통센터|농수산물/;
 
 async function collectSpots() {
   if (!env.KAKAO_REST_KEY) { console.log('  KAKAO_REST_KEY 없음, 건너뜀'); return; }
@@ -579,7 +579,10 @@ async function collectSpots() {
         if (n >= max) break;
         if (!d.place_name.replace(/\s/g, '').includes(must.replace(/\s/g, '')) || /주차장|매표소|화장실|정류장|입구|사무|고객센터|지점|\s\d+호|약국|은행|병원/.test(d.place_name)) continue;
         // 건물 안 입점 매장(예: "코엑스 스타벅스")은 건너뛴다: 쇼핑몰·문화시설·관광명소 계열만 받는다.
-        if (!/쇼핑몰|백화점|도서관|관광|문화|아쿠아|박물관|미술관|전시|테마|놀이/.test(d.category_name)) continue;
+        // 이름이 찾는 이름으로 시작하고 길이가 비슷하면(예: "코엑스마곡 컨벤션센터") 분류가 뭐든 받는다.
+        const norm = d.place_name.replace(/\s/g, '');
+        const same = norm.startsWith(must.replace(/\s/g, '')) && norm.length <= must.replace(/\s/g, '').length + 8;
+        if (!same && !/쇼핑몰|백화점|도서관|관광|문화|아쿠아|박물관|미술관|전시|테마|놀이/.test(d.category_name)) continue;
         n++;
         const idx = spots.findIndex((s) => s.id === `k-${d.id}`);
         const addr = d.road_address_name || d.address_name || '';
