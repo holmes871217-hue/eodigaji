@@ -47,10 +47,12 @@
 ## 게시 방법
 
 작업 전 `git pull`(Actions가 매일 자동 커밋함). 커밋 후:
+**주의(2026-11-15 사고): 로컬 `main`이 최신이 아니면 옛 내용이 게시본을 덮어쓴다. 반드시 `origin/main`으로 나눠 올리고, 올린 뒤 게시 주소의 `sw.js` CACHE 숫자가 바뀌었는지 확인할 것.**
 
 ```bash
 git push origin main
-git push origin "$(git subtree split --prefix app main)":refs/heads/gh-pages --force
+git fetch origin
+git push origin "$(git subtree split --prefix app origin/main)":refs/heads/gh-pages --force
 ```
 
 푸시는 `gh auth git-credential`을 credential helper로 지정해서 한다(gh: `C:\Program Files\GitHub CLI\gh.exe`, node: `C:\Program Files\nodejs\node.exe`). 커밋 전 `.env`의 키 값이 추적 파일에 섞이지 않았는지 grep으로 확인(카카오 JS 키와 구글 Places 키만 `app/js/config.js`에 허용).

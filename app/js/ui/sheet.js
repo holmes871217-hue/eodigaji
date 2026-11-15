@@ -58,6 +58,9 @@ const distText = (km) => (km < 1 ? `${Math.max(10, Math.round(km * 100) * 10)}m`
 /** 카카오로 찾은 가게의 카카오맵 장소 번호(없으면 ''). 이름 검색이 안 되는 곳도 이 링크는 정확히 열린다. */
 const kakaoId = (s) => (/^k-\d+$/.test(s.id || '') ? s.id.slice(2) : '');
 
+/** 카카오맵에서 이 가게를 여는 주소. 카카오로 찾은 가게는 장소 번호로, 아니면 이름+좌표로 그 자리에 핀을 꽂는다(이름 검색이 안 맞아도 열린다). */
+const kakaoPinUrl = (s) => (kakaoId(s) ? `https://place.map.kakao.com/${kakaoId(s)}` : `https://map.kakao.com/link/map/${encodeURIComponent(s.name)},${s.lat},${s.lng}`);
+
 /** 장소 근처 맛집·카페 5곳. 가게를 누르면 네이버 지도로 간다. */
 function shopsSheet(place, kind, data, favs) {
   const k = SHOP_KINDS[kind];
@@ -90,7 +93,7 @@ function shopsSheet(place, kind, data, favs) {
     <ol class="shop-list">
       ${data.items.map((s, i) => `
       <li>
-        <a class="shop ${s.gid || kakaoId(s) ? 'has-g' : ''}" href="https://map.naver.com/p/search/${encodeURIComponent(kind === 'park' && s.addr ? s.addr : naverQuery(s.nq || s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
+        <a class="shop has-g" href="https://map.naver.com/p/search/${encodeURIComponent(kind === 'park' && s.addr ? s.addr : naverQuery(s.nq || s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
           <span class="shop-rank" aria-hidden="true">${i + 1}</span>
           <span class="shop-body">
             <span class="shop-name">${esc(s.nq || s.name)}</span>
@@ -102,12 +105,14 @@ function shopsSheet(place, kind, data, favs) {
           </span>
         </a>
         ${heartBtn('shop', s.id, favs.has(favKey('shop', s.id)), 'on-shop')}
-        ${kakaoId(s) ? `<a class="shop-g" href="https://place.map.kakao.com/${kakaoId(s)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(s.name)} 카카오맵에서 보기">카카오맵</a>` : ''}
-        ${s.gid ? `<a class="shop-g" href="${esc(googleMapUrl(s.name, s.gid))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(s.name)} 구글 지도에서 보기">구글 지도</a>` : ''}
+        <span class="shop-chips">
+          <a class="shop-g" href="${esc(kakaoPinUrl(s))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(s.name)} 카카오맵에서 보기">카카오맵</a>
+          ${s.gid ? `<a class="shop-g" href="${esc(googleMapUrl(s.name, s.gid))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(s.name)} 구글 지도에서 보기">구글 지도</a>` : ''}
+        </span>
       </li>`).join('')}
     </ol>
     <p class="sample-note">${data.source === 'google'
-      ? '평점·리뷰 수는 Google 지도 기준이에요(네이버는 평점을 외부에 제공하지 않아요). 네이버 지도에서 가게를 못 찾으면 오른쪽 아래 "구글 지도"를 눌러 보세요. 리뷰가 적은 곳은 순서에서 조금 뒤로 보내고, 멀수록 점수를 조금 깎았어요.'
+      ? '평점·리뷰 수는 Google 지도 기준이에요(네이버는 평점을 외부에 제공하지 않아요). 네이버 지도에서 가게가 안 나오면 오른쪽 아래 "카카오맵"·"구글 지도"를 눌러 보세요(그 자리에 핀을 바로 꽂아 줘요). 리뷰가 적은 곳은 순서에서 조금 뒤로 보내고, 멀수록 점수를 조금 깎았어요.'
       : kind === 'park' ? '카카오맵에 등록된 주차장을 가까운 순으로 보여 드려요("전용"이 붙은 곳은 뺐어요). 요금·운영시간은 가기 전에 확인해 주세요.' : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
 }
 
