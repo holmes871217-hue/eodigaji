@@ -101,8 +101,30 @@ function loadSeoulLots() {
   return seoulLotsPromise;
 }
 
+// ── 전국 주차장(공공데이터포털 전국주차장정보) ─────────────────────
+// 수집기가 0.25도 격자별 파일(app/data/parking/<격자>.json)로 나눠 둔다. 장소 둘레 약 3km 가 걸치는 격자만 받는다.
+const PARK_CELL = (lat, lng) => `${Math.floor(lat * 4)}_${Math.floor(lng * 4)}`;
+let parkIndexPromise = null;
+const parkCells = new Map();
+function loadParkIndex() {
+  if (!parkIndexPromise) {
+    parkIndexPromise = fetch('data/parking/index.json').then((r) => (r.ok ? r.json() : { cells: {} })).then((j) => j.cells || {}).catch(() => { parkIndexPromise = null; return {}; });
+  }
+  return parkIndexPromise;
+}
+async function loadStdLots(place) {
+  const index = await loadParkIndex();
+  const keys = new Set();
+  for (const dy of [-0.03, 0.03]) for (const dx of [-0.036, 0.036]) keys.add(PARK_CELL(place.lat + dy, place.lng + dx));
+  const lots = await Promise.all([...keys].filter((k) => index[k]).map((k) => {
+    if (!parkCells.has(k)) parkCells.set(k, fetch(`data/parking/${k}.json`).then((r) => (r.ok ? r.json() : { lots: [] })).then((j) => j.lots || []).catch(() => { parkCells.delete(k); return []; }));
+    return parkCells.get(k);
+  }));
+  return lots.flat();
+}
+
 const won = (n) => `${Number(n).toLocaleString('ko-KR')}원`;
-/** 서울 주차장 한 곳의 요금·운영 안내 글 */
+/** 주차장 한 곳의 요금·운영 안내 글(서울시·전국 표준데이터 공통) */
 export function lotFee(l) {
   if (!l.paid) return { fee: '무료 주차장', feeSub: [l.wd && l.wd !== '00:00~24:00' ? `운영 ${l.wd}` : '', l.n ? `${l.n}면` : ''].filter(Boolean).join(' · ') };
   const fee = l.base
@@ -115,8 +137,8 @@ export function lotFee(l) {
 
 /** 카카오 주차장 목록(kakaoRows)에 서울 주차장의 요금을 붙이고, 카카오에 없는 서울 주차장도 후보에 넣는다. */
 async function mergeSeoulParking(place, kakaoRows) {
-  if (!inSeoul(place)) return kakaoRows;
-  const lots = (await loadSeoulLots())
+  const pool = [...(inSeoul(place) ? await loadSeoulLots() : []), ...(await loadStdLots(place))];
+  const lots = pool
     .map((l) => ({ l, km: haversineKm(place, l) }))
     .filter((x) => x.km <= 2)
     .sort((a, b) => a.km - b.km)
@@ -134,14 +156,14 @@ async function mergeSeoulParking(place, kakaoRows) {
     });
     if (!near) return k;
     used.add(near.l.id);
-    return { ...k, ...lotFee(near.l), pub: true };
+    return { ...k, ...lotFee(near.l), pub: near.l.pub !== false };
   });
   for (const { l, km } of lots) {
     if (used.has(l.id)) continue;
     merged.push({
       id: `s-${l.id}`, name: l.name, nq: l.name.replace(/\((구|신)\)$/, '').trim(),
-      lat: l.lat, lng: l.lng, type: `${l.kind === '노상' ? '노상' : '노외'} 공영주차장`, addr: `서울 ${l.addr}`,
-      rating: null, reviews: 0, km, ...lotFee(l), pub: true,
+      lat: l.lat, lng: l.lng, type: `${l.kind === '노상' ? '노상' : '노외'} ${l.pub === false ? '민영' : '공영'}주차장`, addr: /^(서울|경기|인천|부산|대구|광주|대전|울산|세종|강원|충청|충북|충남|전라|전북|전남|경상|경북|경남|제주)/.test(l.addr) ? l.addr : `서울 ${l.addr}`,
+      rating: null, reviews: 0, km, ...lotFee(l), pub: l.pub !== false,
     });
   }
   return merged;
