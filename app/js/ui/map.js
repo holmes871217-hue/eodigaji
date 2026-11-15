@@ -8,7 +8,9 @@ import { zoomForKm } from '../core/geo.js';
 const LEAFLET = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4';
 const TILE = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const START_KM = 10; // 처음 열었을 때 화면 가로에 보이는 실제 거리
-const PICK_KM = 0.2; // 마이 탭 위치 고르기 지도: 화면 가로에 200m가 보이게 연다(타일 최대 확대 18단계까지)
+// 마이 탭 위치 고르기 지도: 축척 막대(왼쪽 아래)가 "200 m"로 보이게 연다. 가로 110px가 실제 200m가 되도록 확대 단계를 맞춘다.
+const PICK_KM = 0.2;
+const PICK_BAR_PX = 110;
 
 let loading = null;
 let homeMap = null; // { map, origin, points }
@@ -138,7 +140,7 @@ export async function mountPicker(el, { center, onMove }) {
 
   const map = baseMap(el);
   pickMap = map;
-  map.setView([center.lat, center.lng], zoomForKm(center.lat, map.getSize().x, PICK_KM), { animate: false });
+  map.setView([center.lat, center.lng], zoomForKm(center.lat, PICK_BAR_PX, PICK_KM), { animate: false });
   map.on('moveend', () => {
     const c = map.getCenter();
     onMove({ lat: c.lat, lng: c.lng });
@@ -148,7 +150,7 @@ export async function mountPicker(el, { center, onMove }) {
 /** 위치 고르기 지도를 다른 지역으로 옮긴다. */
 export function panPicker(lat, lng) {
   if (!pickMap) return;
-  pickMap.setView([lat, lng], zoomForKm(lat, pickMap.getSize().x, PICK_KM), { animate: false });
+  pickMap.setView([lat, lng], zoomForKm(lat, PICK_BAR_PX, PICK_KM), { animate: false });
 }
 
 /** 찜 지도: 검색 위치 + 찜한 곳을 번호 핀으로 찍고, 가는 순서대로 선을 잇는다. */
