@@ -519,6 +519,42 @@ const SPOT_KW = [
 ];
 const SPOT_BAD = /주차장|매표소|화장실|충전소|정류장|입구|정문|후문|사무소|사무실|관리소|안내소|대학교|분소|매점|편의점|기념품|수장고|연구소|예정\)|유통센터|농수산물/;
 
+
+// 사진이 없는 곳에 위키백과(한국어) 문서의 대표 사진을 붙인다. 좌표 근처(1km) 문서 가운데 제목이 장소 이름과 겹치는 것만 쓰고,
+// 자유 이용 사진(위키미디어 공용)만 받는다. 위키 서버가 한꺼번에 많이 부르면 막으므로 한 번에 120곳까지, 막히면 다음 날 이어서 한다.
+async function collectWikiPhotos(spots) {
+  const norm = (t) => String(t || '').replace(/[\s·()\-_/]/g, '').toLowerCase();
+  let done = 0, found = 0, blocked = false;
+  for (const s of spots) {
+    if (done >= 120 || blocked) break;
+    if (s.photo || s.wpAt) continue;
+    try {
+      const url = `https://ko.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${s.lat}|${s.lng}&ggsradius=1000&ggslimit=10&prop=pageimages&piprop=thumbnail|name&pithumbsize=800&format=json&formatversion=2`;
+      const res = await fetch(url, { headers: { 'User-Agent': 'PlaceImageCollector/1.0 (non-commercial hobby app)' } });
+      if (res.status === 429 || res.status === 403) { blocked = true; console.log(`  위키백과 호출 제한(${res.status}), 다음 날 이어서 함`); break; }
+      const text = await res.text();
+      let j;
+      try { j = JSON.parse(text); } catch { blocked = true; console.log('  위키백과가 JSON이 아닌 답을 줘서 멈춤(호출 제한으로 추정)'); break; }
+      const a = norm(s.name.replace(/\s*\(.*?\)\s*/g, ' '));
+      const hit = (j.query?.pages || []).find((pg) => {
+        const b = norm(pg.title);
+        return pg.thumbnail?.source?.includes('/wikipedia/commons/') && a && b && (a.includes(b) || b.includes(a));
+      });
+      if (hit) {
+        s.wp = { src: hit.thumbnail.source, page: `https://ko.wikipedia.org/wiki/${encodeURIComponent(hit.title.replace(/ /g, '_'))}`, label: `위키백과 "${hit.title}"` };
+        found++;
+      }
+      s.wpAt = new Date().toISOString();
+      done++;
+    } catch (e) {
+      console.log(`  위키백과 실패 ${s.name}: ${e.message}`);
+      break;
+    }
+    await sleep(400);
+  }
+  console.log(`  위키백과 사진 확인 ${done}곳, 새로 찾음 ${found}곳 (붙은 곳 전체 ${spots.filter((s) => s.wp).length}곳)`);
+}
+
 async function collectSpots() {
   if (!env.KAKAO_REST_KEY) { console.log('  KAKAO_REST_KEY 없음, 건너뜀'); return; }
   const path = `${ROOT}app/data/spots.json`;
@@ -561,7 +597,7 @@ async function collectSpots() {
     const old = new Map(spots.map((s) => [s.id, s]));
     spots = [...byId.values()].map((s) => {
       const o = old.get(s.id);
-      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt } : s;
+      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt } : s;
     });
     prev = { searchedAt: new Date().toISOString() };
   }
@@ -667,6 +703,7 @@ async function collectSpots() {
     await sleep(60);
   }
   console.log(`  주차 안내 ${parkFetched}곳 (안내가 있는 곳 ${spots.filter((s) => s.parking || s.parkingFee).length}곳)`);
+  await collectWikiPhotos(spots);
   // 점수: 관광공사 등록 +15, 여러 도시 검색에 걸림 +, 검색 순위가 높을수록 +
   for (const s of spots) s.base = Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
   writeFileSync(path, JSON.stringify({ searchedAt: prev.searchedAt, updatedAt: new Date().toISOString(), source: '카카오 로컬, 한국관광공사', spots }));

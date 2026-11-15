@@ -111,13 +111,17 @@ function shopsSheet(place, kind, data, favs) {
       : kind === 'park' ? '카카오맵에 등록된 주차장을 가까운 순으로 보여 드려요("전용"이 붙은 곳은 뺐어요). 요금·운영시간은 가기 전에 확인해 주세요.' : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
 }
 
-function placeSheet(r, tripEvents) {
+function placeSheet(r, tripEvents, gp) {
   const p = r.place;
   const cat = CATEGORIES[p.cat] || { label: '', icon: '📍' };
   const pct = trendPct(p.trend);
   const q = encodeURIComponent(p.name);
   const photo = photoOf(p.id);
-  const photos = photosOf(p.id); // 옆으로 넘겨 보는 사진(최대 10장)
+  const basePhotos = photosOf(p.id); // 옆으로 넘겨 보는 사진(최대 10장)
+  // 사진이 한 장 이하면 구글 지도 사진(실시간, 저장 안 함)을 뒤에 붙인다.
+  const gPhotos = basePhotos.length <= 1 ? (gp?.photos || []) : [];
+  const photos = [...basePhotos, ...gPhotos.map((g) => g.src)];
+  const gBy = [...new Set(gPhotos.map((g) => g.by).filter(Boolean))].slice(0, 3);
   const near = nearbyEvents(p, tripEvents);
   const tips = (p.tip || '').split(/\s+·\s+/).map((s) => s.trim()).filter(Boolean);
   const park = parkingInfo(p);
@@ -127,7 +131,7 @@ function placeSheet(r, tripEvents) {
       <span class="pcard-fallback" aria-hidden="true">${cat.icon}</span>
       ${photos.length ? `
       <div class="slides" data-slides tabindex="0" role="group" aria-label="${esc(p.name)} 사진 ${photos.length}장${photos.length > 1 ? ', 옆으로 넘겨 보세요' : ''}">
-        ${photos.map((src, i) => `<img src="${esc(src)}" alt="${esc(p.name)} 사진 ${i + 1}" referrerpolicy="no-referrer" ${i ? 'loading="lazy"' : ''} draggable="false">`).join('')}
+        ${photos.map((src, i) => `<img src="${esc(src)}" alt="${esc(p.name)} 사진 ${i + 1}" ${src.startsWith('https://places.googleapis.com/') ? '' : 'referrerpolicy="no-referrer"'} ${i ? 'loading="lazy"' : ''} draggable="false">`).join('')}
       </div>
       <span class="slide-count" data-slide-count aria-hidden="true" ${photos.length > 1 ? '' : 'hidden'}>1 / ${photos.length}</span>
       <button type="button" class="slide-nav is-prev" data-action="slide" data-v="-1" aria-label="이전 사진" hidden>${icon('chevron', 20)}</button>
@@ -211,7 +215,7 @@ function placeSheet(r, tripEvents) {
       ? '카카오 장소 검색으로 찾은 동네 장소예요. 인기 점수는 관광공사 등록 여부와 검색 순위로 어림한 값이라 참고만 해 주세요.'
       : p.sample
       ? '연습용 숫자예요. 실제 데이터 연결 전이라 참고만 해 주세요.'
-      : `검색 인기·추세·블로그 수는 네이버 검색 데이터("${esc(p.keyword || p.name)}" 기준)예요.${p.local ? ' 사람별 점수는 1년 인기에 장소 분류별 경향을 더한 추정이에요.' : ''} 혼잡 예측은 아직 예시 값이에요.`}${photo ? ` <a href="${esc(photo.page)}" target="_blank" rel="noopener noreferrer">사진 출처: ${esc(photo.label || '위키미디어 공용')}</a>` : ''}</p>
+      : `검색 인기·추세·블로그 수는 네이버 검색 데이터("${esc(p.keyword || p.name)}" 기준)예요.${p.local ? ' 사람별 점수는 1년 인기에 장소 분류별 경향을 더한 추정이에요.' : ''} 혼잡 예측은 아직 예시 값이에요.`}${photo ? ` <a href="${esc(photo.page)}" target="_blank" rel="noopener noreferrer">사진 출처: ${esc(photo.label || '위키미디어 공용')}</a>` : ''}${gPhotos.length ? ` 일부 사진은 Google 지도에서 그때그때 불러왔어요${gBy.length ? `(${esc(gBy.join(', '))})` : ''}.` : ''}</p>
 
     <div class="sheet-actions">
       <a class="btn-primary" href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener noreferrer">네이버 지도에서 보기</a>
@@ -254,7 +258,7 @@ export function renderSheet(state, c) {
   let inner = '';
   if (s.type === 'place') {
     const row = c.rankedAll.find((r) => r.place.id === s.id);
-    if (row) inner = placeSheet(row, c.tripEvents);
+    if (row) inner = placeSheet(row, c.tripEvents, state.ui.gphotos?.[s.id]);
   } else if (s.type === 'event') {
     const ev = [...c.tripEvents, ...c.upcoming].find((e) => e.id === s.id);
     if (ev) inner = eventSheet(ev);

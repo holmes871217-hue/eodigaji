@@ -8,6 +8,8 @@ import { CITIES } from './core/geo.js';
 import { nearestLabel } from './core/locate.js';
 import { searchLocation } from './core/search.js';
 import { findShops, SHOP_KINDS } from './core/nearby.js';
+import { findGooglePhotos } from './core/gphotos.js';
+import { photosOf } from './data/photos.js';
 import { isValidISO, todayISO } from './core/dates.js';
 import { tripRange, rangeText } from './ui/util.js';
 import { favKey, toggleFav, moveFav, autoRoute, FAV_MAX } from './core/favs.js';
@@ -49,6 +51,7 @@ function compute() {
 
 function render() {
   ensureShops();
+  ensureGooglePhotos();
   const c = compute();
   const tab = state.ui.tab;
   const view =
@@ -205,6 +208,25 @@ function ensureShops() {
     .then(() => {
       const top = state.ui.sheet;
       if (top && top.type === 'shops' && `${top.id}|${top.kind}` === key) update(() => {}, { persist: false });
+    });
+}
+
+// ── 구글 사진(실시간) ───────────────────────────────────────
+// 장소 상세 창이 열렸는데 사진이 한 장 이하면 구글 지도 사진을 불러와 붙인다. 저장하지 않고 메모리에만 둔다.
+function ensureGooglePhotos() {
+  const s = state.ui.sheet;
+  if (!s || s.type !== 'place') return;
+  if (!state.ui.gphotos) state.ui.gphotos = {};
+  if (state.ui.gphotos[s.id]) return;
+  const place = PLACES.find((p) => p.id === s.id);
+  if (!place || photosOf(s.id).length > 1) return;
+  state.ui.gphotos[s.id] = { status: 'loading' };
+  findGooglePhotos(place)
+    .then((photos) => { state.ui.gphotos[s.id] = { status: 'done', photos }; })
+    .catch(() => { state.ui.gphotos[s.id] = { status: 'error', photos: [] }; })
+    .then(() => {
+      const top = state.ui.sheet;
+      if (top && top.type === 'place' && top.id === s.id && state.ui.gphotos[s.id].photos?.length) update(() => {}, { persist: false });
     });
 }
 

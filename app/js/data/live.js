@@ -2,7 +2,7 @@
 // 연습용 숫자를 실제 값으로 바꾼다. 파일이 없거나 못 읽으면 연습용 데이터 그대로 동작한다.
 
 import { PLACES, LOCAL_BASE, spotToPlace } from './places.js';
-import { setLivePhotos, addLivePhotos, setLivePhotoLists, addLivePhotoLists } from './photos.js';
+import { setLivePhotos, addLivePhotos, setLivePhotoLists, addLivePhotoLists, addLiveSources } from './photos.js';
 import { haversineKm } from '../core/geo.js';
 
 async function getJson(path) {
@@ -50,15 +50,18 @@ export async function loadLive() {
     const known = PLACES.slice();
     const photos = {};
     const lists = {};
+    const sources = {};
     for (const s of spots) {
       if (PLACES.some((p) => p.id === s.id)) continue;
       if (/예정|폐업|휴업|임시휴관|공사중/.test(s.name)) continue;
       if (known.some((p) => Math.abs(p.lat - s.lat) < 0.004 && Math.abs(p.lng - s.lng) < 0.005 && haversineKm(p, s) < 0.3)) continue;
       PLACES.push(spotToPlace(s));
       if (s.photo) photos[s.id] = s.photo;
+      else if (s.wp?.src) { photos[s.id] = s.wp.src; sources[s.id] = { page: s.wp.page, label: s.wp.label || '위키백과' }; }
       if (Array.isArray(s.photos) && s.photos.length) lists[s.id] = s.photos;
     }
     addLivePhotos(photos);
+    addLiveSources(sources);
     addLivePhotoLists(lists);
   } catch {
     // 파일이 없으면 기존 장소만 쓴다.
