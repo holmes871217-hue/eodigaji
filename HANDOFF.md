@@ -44,6 +44,12 @@
 - `tools/serve.ps1` 로컬 미리보기(포트 5173, `.claude/launch.json`의 `eodigaji`)
 - `.github/workflows/collect.yml` 매일 05:00 KST 수집 → `app/data` 커밋 → 게시
 
+## 검수 요령
+
+- 게시된 주소(`https://holmes871217-hue.github.io/eodigaji/`)는 주소 뒤에 `/eodigaji/`가 붙는다. 브라우저 콘솔에서 모듈을 불러올 때 `import('/js/...')`(맨 앞 슬래시)로 쓰면 `github.io/js/...`를 찾아 404가 난다. **`import('./js/...')`처럼 상대 경로로 쓸 것**(로컬 `localhost:5173`은 루트라 둘 다 됨). 2026-11-15에 콘솔의 404 한 줄이 이 때문이었다(앱 오류 아님).
+- 콘솔 메시지는 같은 탭·같은 출처에서 쌓여 남는다. 새 탭에서 열어 확인할 것.
+- 게시 직후 예전 파일이 보이면 서비스 워커·캐시를 지우고(`caches.delete`, 서비스 워커 해제) 다시 열면 된다.
+
 ## 게시 방법
 
 작업 전 `git pull`(Actions가 매일 자동 커밋함). 커밋 후:
