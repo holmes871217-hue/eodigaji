@@ -303,14 +303,14 @@ async function trend(body) {
 const chunks = (arr, n) => Array.from({ length: Math.ceil(arr.length / n) }, (_, i) => arr.slice(i * n, i * n + n));
 
 /** 장소들을 기준 검색어 대비 배수로 계산: { id: { sum: 기간 합/기준 합, series: [...] } } */
-async function relative(list, extra, startDate, timeUnit) {
+async function relative(list, extra, startDate, timeUnit, kwOf = keywordOf) {
   const result = {};
   for (const group of chunks(list, 4)) {
     const body = {
       startDate, endDate: ymd(yesterday), timeUnit,
       keywordGroups: [
         { groupName: '__anchor', keywords: [ANCHOR] },
-        ...group.map((p) => ({ groupName: p.id, keywords: [keywordOf(p)] })),
+        ...group.map((p) => ({ groupName: p.id, keywords: [kwOf(p)] })),
       ],
       ...extra,
     };
@@ -507,6 +507,16 @@ const HUBS = [
   ['김천', 36.1398, 128.1136], ['울산', 35.5384, 129.3114], ['부산', 35.1796, 129.0756], ['부산 해운대', 35.1631, 129.1636],
   ['창원', 35.228, 128.6811], ['김해', 35.2285, 128.8894], ['진주', 35.18, 128.1076], ['통영', 34.8544, 128.4331],
   ['거제', 34.8806, 128.6211], ['제주', 33.4996, 126.5312], ['서귀포', 33.2541, 126.56],
+  // 2026-11-15 사용자 제보("시흥 거북섬·송도·부천·대부도 같은 곳이 없다")로 거점을 크게 늘림: 서울 안쪽 + 수도권 + 지방 소도시
+  ['서울 용산', 37.5326, 126.9906], ['서울 성동', 37.5634, 127.0369], ['서울 송파', 37.5145, 127.1059], ['서울 마포', 37.5663, 126.9019],
+  ['서울 영등포', 37.5264, 126.8963], ['서울 관악', 37.4784, 126.9516], ['서울 성북', 37.5894, 127.0167],
+  ['시흥', 37.38, 126.8029], ['부천', 37.5034, 126.766], ['광명', 37.4786, 126.8644], ['안양', 37.3943, 126.9568], ['의정부', 37.7381, 127.0337],
+  ['양주', 37.7852, 127.0458], ['포천', 37.8949, 127.2003], ['동두천', 37.9036, 127.0607], ['이천', 37.272, 127.435], ['여주', 37.2983, 127.637],
+  ['양평', 37.4912, 127.4875], ['하남', 37.5393, 127.2148], ['김포', 37.6153, 126.7156], ['인천 송도', 37.392, 126.64], ['인천 영종', 37.4932, 126.493],
+  ['안산 대부도', 37.29, 126.59], ['강화', 37.7474, 126.4878], ['홍천', 37.6971, 127.8887], ['평창', 37.3706, 128.3903], ['태안', 36.7456, 126.2978],
+  ['서산', 36.7848, 126.4503], ['당진', 36.8898, 126.6458], ['아산', 36.7898, 127.0018], ['부여', 36.2756, 126.9097], ['단양', 36.9845, 128.3655],
+  ['문경', 36.5866, 128.1867], ['영주', 36.8057, 128.6241], ['구미', 36.1195, 128.3446], ['양산', 35.335, 129.0372], ['남원', 35.4164, 127.3905],
+  ['담양', 35.3214, 126.9882], ['해남', 34.5733, 126.5992], ['완도', 34.311, 126.755], ['고창', 35.4358, 126.702], ['부안', 35.7317, 126.7335],
 ];
 // [검색어, 앱 분류, 허용 조건(카카오 분류 그룹 또는 분류 이름에 들어갈 말)]
 const SPOT_KW = [
@@ -517,6 +527,10 @@ const SPOT_KW = [
   ['출렁다리', 'activity', /^AT4$/], ['키즈카페', 'kids', /^CE7$|키즈카페/], ['전통시장', 'market', /시장/], ['한옥마을', 'culture', /^AT4$/],
   // 시간 보내기 좋은 실내 복합 공간(코엑스·스타필드 같은 곳). 2026-11-15 누락 제보로 추가
   ['복합쇼핑몰', 'shop', /쇼핑몰|백화점/], ['실내놀이터', 'kids', /놀이|키즈/], ['방탈출', 'activity', /방탈출|테마카페|오락/],
+  // 2026-11-15 추가: 먹자골목·섬·한강공원·온천·전망대·촬영지·체험마을·워터파크 등 "요즘 가는 곳"과 오래된 동네 명소
+  ['먹자골목', 'cafe', /먹자골목|테마거리/], ['한강공원', 'nature', /공원|^AT4$/], ['호수공원', 'nature', /공원|^AT4$/], ['온천', 'activity', /온천|^AT4$/],
+  ['전망대', 'activity', /전망대|^AT4$/], ['드라마 촬영지', 'culture', /촬영지|^AT4$/], ['체험마을', 'activity', /체험|^AT4$/], ['워터파크', 'theme', /워터파크|테마파크|^AT4$/],
+  ['서커스', 'stage', /서커스|공연/], ['섬', 'nature', /섬|^AT4$/], ['스트리트 쇼핑', 'shop', /쇼핑|스트리트|거리/], ['미디어아트', 'gallery', /미디어|전시|^AT4$/],
 ];
 const SPOT_BAD = /주차장|매표소|화장실|충전소|정류장|입구|정문|후문|사무소|사무실|관리소|안내소|대학교|분소|매점|편의점|기념품|수장고|연구소|예정\)|유통센터|농수산물/;
 
@@ -663,6 +677,45 @@ async function collectWikiPhotos(spots) {
   console.log(`  위키백과 사진 확인 ${done}곳, 새로 찾음 ${found}곳 (붙은 곳 전체 ${spots.filter((s) => s.wp).length}곳)`);
 }
 
+// 동네 장소(카카오·표준데이터)에도 네이버 검색량(1년 인기·최근 추세)을 붙인다.
+// 지금까지 이 장소들은 "카카오 검색 순위"로 어림한 점수뿐이라 제이드가든·노들섬처럼 실제로 인기 많은 곳도 위로 못 올라왔다.
+// 네이버 데이터랩에서 기준 검색어(남이섬) 대비 배수를 받아 s.yearly(0~100), s.trend(최근 4주÷연평균)로 저장한다.
+// 한 번 실행에 SPOT_TREND_CALLS 번(요청 한 번에 4곳)만 부르고, 14일이 지난 곳부터 다시 받는다. 인기 있을 법한 곳(점수 높은 순)이 먼저다.
+const SPOT_TREND_CALLS = PHOTOS_ONLY ? 400 : 200;
+const REL_LO = Math.log10(1e-3), REL_HI = Math.log10(8); // 기준(남이섬) 대비 0.001배~8배를 0~100점으로
+const relScore = (sum) => Math.max(0, Math.min(100, Math.round((100 * (Math.log10(Math.max(sum, 1e-3)) - REL_LO)) / (REL_HI - REL_LO))));
+// 네이버에서 실제로 많이 쓰는 이름이 장소 정식 이름과 다르면("원조민속순대타운"↔"신림 순대타운") must-have 목록의 5번째 칸(kw)으로 검색어를 정한다.
+const spotKeyword = (s) => s.kw || s.name.replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+
+async function collectSpotTrends(spots) {
+  const stale = Date.now() - 14 * 86400000;
+  const todo = spots
+    .filter((s) => !s.popup && !(s.yAt && s.ykw === spotKeyword(s) && Date.parse(s.yAt) > stale))
+    .sort((a, b) => (b.must ? 1 : 0) - (a.must ? 1 : 0) || (b.base || 0) - (a.base || 0))
+    .slice(0, SPOT_TREND_CALLS * 4);
+  if (!todo.length) { console.log('  동네 장소 검색량: 새로 받을 곳 없음'); return; }
+  const start = new Date(today); start.setFullYear(start.getFullYear() - 1);
+  const items = todo.map((s) => ({ id: s.id, name: spotKeyword(s), kw: spotKeyword(s) }));
+  const rel = await relative(items, {}, ymd(start), 'week', (p) => p.kw);
+  const partialWeek = yesterday.getDay() !== 0; // 이번 주가 덜 찼으면 마지막 주는 뺀다(collectNaver 와 같은 규칙)
+  let got = 0;
+  for (const s of todo) {
+    const r = rel[s.id];
+    if (!r) continue; // 요청이 실패한 곳은 다음에 다시
+    const ser = partialWeek ? r.series.slice(0, -1) : r.series;
+    const avg = ser.reduce((a, b) => a + b, 0) / (ser.length || 1);
+    const recent = ser.slice(-4).reduce((a, b) => a + b, 0) / Math.max(1, Math.min(4, ser.length));
+    s.rel = Math.round(r.sum * 1e4) / 1e4;
+    s.yearly = relScore(r.sum);
+    s.trend = avg > 0 ? Math.round((recent / avg) * 100) / 100 : 1;
+    s.yAt = new Date().toISOString();
+    s.ykw = spotKeyword(s);
+    got++;
+  }
+  const have = spots.filter((s) => typeof s.yearly === 'number').length;
+  console.log(`  동네 장소 검색량 ${got}곳 새로 받음 (전체 ${have}/${spots.length}곳 완료, 남은 ${spots.filter((s) => !s.popup && !s.yAt).length}곳)`);
+}
+
 async function collectSpots() {
   if (!env.KAKAO_REST_KEY) { console.log('  KAKAO_REST_KEY 없음, 건너뜀'); return; }
   const path = `${ROOT}app/data/spots.json`;
@@ -670,7 +723,7 @@ async function collectSpots() {
   try { prev = JSON.parse(readFileSync(path, 'utf8')); } catch { /* 처음 */ }
   let spots = prev?.spots || [];
 
-  if (!prev || Date.parse(prev.searchedAt) < Date.now() - 7 * 86400000) {
+  if (!prev || process.argv.includes('--research') || Date.parse(prev.searchedAt) < Date.now() - 7 * 86400000) {
     const byId = new Map();
     for (const [hub, y, x] of HUBS) {
       for (const [kw, cat, ok] of SPOT_KW) {
@@ -705,7 +758,7 @@ async function collectSpots() {
     const old = new Map(spots.map((s) => [s.id, s]));
     spots = [...byId.values()].map((s) => {
       const o = old.get(s.id);
-      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt, pk: o.pk, pkAt: o.pkAt, popup: o.popup } : s;
+      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt, wp: o.wp, wpAt: o.wpAt, pk: o.pk, pkAt: o.pkAt, popup: o.popup, yearly: o.yearly, trend: o.trend, rel: o.rel, yAt: o.yAt, ykw: o.ykw, kw: o.kw } : s;
     });
     spots.push(...[...old.values()].filter((o) => o.std)); // 표준데이터 명소는 카카오 재검색과 상관없이 이어받는다
     prev = { searchedAt: new Date().toISOString() };
@@ -717,8 +770,12 @@ async function collectSpots() {
   }
 
   // 반드시 있어야 하는 곳(tools/must-have.mjs): 이미 있으면 건너뛰고, 없으면 카카오에서 이름으로 찾아 넣는다.
-  for (const [q, cat, max, must] of MUST_HAVE) {
-    if (!max || spots.some((s) => s.must?.includes(q))) continue;
+  for (const [q, cat, max, must, kw] of MUST_HAVE) {
+    if (!max || spots.some((s) => s.must?.includes(q))) {
+      // 이미 들어 있는 곳이어도 검색어(kw)가 바뀌었으면 반영한다.
+      if (kw) for (const s of spots) if (s.must?.includes(q)) s.kw = kw;
+      continue;
+    }
     try {
       calls.kakao = (calls.kakao || 0) + 1;
       const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(q)}&sort=accuracy&size=15`, {
@@ -740,9 +797,9 @@ async function collectSpots() {
           id: `k-${d.id}`, name: d.place_name, cat,
           region: addr.split(' ').slice(0, 2).join(' ').replace(/특별자치도|특별자치시|통합특별시/, ''),
           lat: Number(Number(d.y).toFixed(5)), lng: Number(Number(d.x).toFixed(5)),
-          sub: d.category_name.split(' > ').slice(-1)[0], url: d.place_url, pos: 1, hits: 4, must: [q],
+          sub: d.category_name.split(' > ').slice(-1)[0], url: d.place_url, pos: 1, hits: 4, must: [q], ...(kw ? { kw } : {}),
         };
-        if (idx >= 0) spots[idx] = { ...spots[idx], must: [...new Set([...(spots[idx].must || []), q])], cat };
+        if (idx >= 0) spots[idx] = { ...spots[idx], must: [...new Set([...(spots[idx].must || []), q])], cat, ...(kw ? { kw } : {}) };
         else spots.push(row);
       }
       if (!n) console.log(`  ⚠ 누락: 반드시 있어야 하는 곳 "${q}"을(를) 카카오에서 못 찾음`);
@@ -821,6 +878,7 @@ async function collectSpots() {
   await collectWikiPhotos(spots);
   spots = await collectPopups(spots);
   // 점수: 관광공사 등록 +15, 여러 도시 검색에 걸림 +, 검색 순위가 높을수록 +
+  if (env.NAVER_API_KEY) await collectSpotTrends(spots);
   // 표준데이터 명소는 관광지 40, 관광단지 46, 특화거리 28
   for (const s of spots) if (!s.popup) s.base = s.std ? (s.sub === '관광단지' ? 46 : s.sub === '특화거리' ? 28 : 40) : Math.min(60, 28 + (s.kto ? 15 : 0) + (5 - s.pos) * 2 + Math.min(3, s.hits - 1) * 2);
   writeFileSync(path, JSON.stringify({ searchedAt: prev.searchedAt, updatedAt: new Date().toISOString(), source: '카카오 로컬, 한국관광공사', spots }));

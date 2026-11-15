@@ -51,12 +51,14 @@ function placeCard(r, i, favs) {
 
 export function renderHome(state, c) {
   const { profile, ui } = state;
-  const rows = c.ranked.slice(0, 20);
+  const shown = Math.min(ui.listMax || 20, 200); // 처음엔 20곳, "더 보기"로 20곳씩 늘려 최대 200곳
+  const rows = c.ranked.slice(0, shown);
   const favs = favSet(state);
   const nights = (NIGHT_OPTIONS.find((o) => o.v === profile.nights) || NIGHT_OPTIONS[0]).label;
 
   const list = rows.length
-    ? `<ol class="plist">${rows.map((r, i) => placeCard(r, i, favs)).join('')}</ol>`
+    ? `<ol class="plist">${rows.map((r, i) => placeCard(r, i, favs)).join('')}</ol>
+       ${c.ranked.length > rows.length && rows.length < 200 ? `<button type="button" class="btn-secondary more-btn" data-action="more">더 보기 · 다음 ${Math.min(20, c.ranked.length - rows.length)}곳 (남은 ${c.ranked.length - rows.length}곳)</button>` : ''}`
     : `<div class="empty">
          <b>${esc(timeLabel(ui.maxMin))} 거리에는 추천할 곳이 없어요.</b>
          <span>위에서 이동시간을 더 길게 고르거나, 검색 위치를 옮겨 보세요.</span>

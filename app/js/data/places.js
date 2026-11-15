@@ -207,10 +207,13 @@ const CAT_DEFAULT = {
 /** 카카오로 모은 동네 장소(data/spots.json 한 줄)를 앱 장소 모양으로 바꾼다. */
 export function spotToPlace(s) {
   const [peak, spread, fBias, kid] = CAT_DEFAULT[s.cat] || CAT_DEFAULT.walk;
-  const row = [s.id, s.name, s.region, s.cat, s.lat, s.lng, s.base, peak, spread, fBias, kid, 1.0, s.base, 40, 0];
+  // 네이버 검색량(1년 인기·최근 추세)이 있으면 그것으로, 없으면 카카오 검색 순위로 어림한 base 로 인기 값을 만든다.
+  const hasN = typeof s.yearly === 'number';
+  const lvl = hasN ? Math.max(15, Math.min(100, s.yearly)) : s.base;
+  const row = [s.id, s.name, s.region, s.cat, s.lat, s.lng, lvl, peak, spread, fBias, kid, hasN && s.trend > 0 ? s.trend : 1.0, lvl, 40, 0];
   return {
     ...expand(row),
-    scale: 'small', local: true, spot: true, kto: Boolean(s.kto), sample: false,
+    scale: 'small', local: true, spot: true, naver: hasN, kto: Boolean(s.kto), sample: false,
     sub: s.sub, kakaoUrl: s.url, overview: s.overview || '', std: Boolean(s.std), stdOverview: s.stdOverview || '',
     parking: s.parking || '', parkingFee: s.parkingFee || '',
   };

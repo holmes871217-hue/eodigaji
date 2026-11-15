@@ -352,13 +352,17 @@ root.addEventListener('click', (ev) => {
       break;
     }
     case 'mode':
-      update(() => { state.profile.mode = v === 'calm' ? 'calm' : 'hot'; });
+      update(() => { state.profile.mode = v === 'calm' ? 'calm' : 'hot'; state.ui.listMax = 20; });
       break;
     case 'maxmin':
-      update(() => { state.ui.maxMin = Number(v); });
+      update(() => { state.ui.maxMin = Number(v); state.ui.listMax = 20; });
       break;
     case 'scope':
-      update(() => { state.ui.scope = ['near', 'all', 'big'].includes(v) ? v : 'all'; });
+      update(() => { state.ui.scope = ['near', 'all', 'big'].includes(v) ? v : 'all'; state.ui.listMax = 20; });
+      break;
+    case 'more':
+      // 추천 목록을 20곳 더 보여 준다(조건을 바꾸면 다시 20곳부터).
+      update(() => { state.ui.listMax = (state.ui.listMax || 20) + 20; }, { persist: false });
       break;
     case 'view':
       update(() => { state.ui.view = v === 'map' ? 'map' : 'list'; });
@@ -462,6 +466,7 @@ root.addEventListener('click', (ev) => {
       update(() => {
         state.profile.nights = Math.max(0, Math.min(3, Number(v) || 0));
         state.ui.maxMin = defaultMaxMin(state.profile.nights);
+        state.ui.listMax = 20;
       });
       break;
     case 'use-gps':
