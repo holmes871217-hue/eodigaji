@@ -568,7 +568,7 @@ async function collectSpots() {
 
   // 반드시 있어야 하는 곳(tools/must-have.mjs): 이미 있으면 건너뛰고, 없으면 카카오에서 이름으로 찾아 넣는다.
   for (const [q, cat, max, must] of MUST_HAVE) {
-    if (!max || spots.some((s) => s.name.includes(must) && s.must)) continue;
+    if (!max || spots.some((s) => s.name.replace(/\s/g, '').includes(must.replace(/\s/g, '')) && s.must)) continue;
     try {
       calls.kakao = (calls.kakao || 0) + 1;
       const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(q)}&sort=accuracy&size=15`, {
@@ -577,7 +577,7 @@ async function collectSpots() {
       let n = 0;
       for (const d of j.documents || []) {
         if (n >= max) break;
-        if (!d.place_name.includes(must) || /주차장|매표소|화장실|정류장|입구|사무|고객센터|지점|\s\d+호|약국|은행|병원/.test(d.place_name)) continue;
+        if (!d.place_name.replace(/\s/g, '').includes(must.replace(/\s/g, '')) || /주차장|매표소|화장실|정류장|입구|사무|고객센터|지점|\s\d+호|약국|은행|병원/.test(d.place_name)) continue;
         // 건물 안 입점 매장(예: "코엑스 스타벅스")은 건너뛴다: 쇼핑몰·문화시설·관광명소 계열만 받는다.
         if (!/쇼핑몰|백화점|도서관|관광|문화|아쿠아|박물관|미술관|전시|테마|놀이/.test(d.category_name)) continue;
         n++;

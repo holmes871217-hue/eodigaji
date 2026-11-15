@@ -9,7 +9,7 @@ import { PLACES } from '../app/js/data/places.js';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const spots = JSON.parse(readFileSync(`${ROOT}app/data/spots.json`, 'utf8')).spots || [];
 const names = [...spots.filter((s) => s.must).map((s) => s.name), ...PLACES.map((p) => p.name)];
-const missing = MUST_HAVE.filter(([, , max, must]) => max && !names.some((n) => n.includes(must)));
+const missing = MUST_HAVE.filter(([, , max, must]) => max && !names.some((n) => n.replace(/\s/g, '').includes(must.replace(/\s/g, ''))));
 for (const [q] of MUST_HAVE.filter(([, , max]) => max)) {
   const hit = missing.some(([m]) => m === q) ? '❌ 없음' : '✅ 있음';
   console.log(`${hit}  ${q}`);
