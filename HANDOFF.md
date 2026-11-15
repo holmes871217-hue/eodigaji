@@ -20,6 +20,14 @@
 - 기획서: https://claude.ai/artifact/1VHpiij1ATNAUP41ZPmQgt
 - 디자인: https://claude.ai/artifact/7V2sXf3aW4nEsJ2hXtJMwm (3번 "소프트 플레이" 적용됨)
 
+## 누락 방지 규칙 (2026-11-15 사용자가 "코엑스가 관광명소에 안 뜬다, 이런 종류를 다 넣으라고 계속 말했다"고 지적)
+
+사용자가 "이런 곳·이런 종류도 넣어 줘"라고 하면 **그 장소만 넣고 끝내지 말고 종류 전체**를 다룬다.
+1. 장소 하나 지적 → `tools/must-have.mjs`에 그 곳(지점 여러 개면 최대 수 포함)을 적는다. 수집기가 매일 카카오에서 이름으로 찾아 넣는다.
+2. 같은 종류 전체 → `tools/collect.mjs`의 `SPOT_KW`에 검색어를 더한다(예: 복합쇼핑몰, 실내놀이터, 방탈출). 예전엔 박물관·수목원 등 16종만 있어서 코엑스 같은 곳이 통째로 빠졌다.
+3. 확인 → `node tools/check-coverage.mjs`(빠지면 ❌). 매일 자동 갱신(`collect.yml`)에도 같은 확인이 들어 있어 빠지면 Actions 화면에 경고가 남는다.
+4. 사용자가 말한 장소는 답하기 전에 앱 데이터(`app/data/spots.json`, `places.js`)에서 이름으로 직접 찾아 있는지 확인한다.
+
 ## 구조 (빌드 도구 없음, 순수 HTML/CSS/JS 모듈)
 
 - `app/` 앱 본체. 이 폴더만 게시됨.

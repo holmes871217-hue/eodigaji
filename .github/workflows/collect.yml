@@ -37,6 +37,10 @@ jobs:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
         run: node tools/collect.mjs
 
+      - name: 빠진 장소 확인 (tools/must-have.mjs 기준)
+        continue-on-error: true # 빠져 있어도 게시는 계속하되, 실행 화면에 경고가 남는다
+        run: node tools/check-coverage.mjs
+
       - name: 저장하고 앱에 게시
         env:
           GH_TOKEN: ${{ github.token }}

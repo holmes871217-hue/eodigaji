@@ -15,6 +15,7 @@
 // 네이버 검색어 트렌드는 한 번 요청 안에서만 비교되는 상대값(가장 높은 값 = 100)이라,
 // 매 요청에 기준 검색어(ANCHOR)를 함께 넣어 요청끼리 비교할 수 있게 맞춘다.
 
+import { MUST_HAVE } from './must-have.mjs';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { PLACES } from '../app/js/data/places.js';
@@ -513,6 +514,8 @@ const SPOT_KW = [
   ['해수욕장', 'sea', /^AT4$/], ['동물원', 'zoo', /^AT4$|동물원/], ['아쿠아리움', 'zoo', /아쿠아리움|^AT4$/],
   ['테마파크', 'theme', /테마파크|놀이공원|^AT4$/], ['케이블카', 'activity', /^AT4$|케이블카/], ['레일바이크', 'activity', /^AT4$|레일바이크/],
   ['출렁다리', 'activity', /^AT4$/], ['키즈카페', 'kids', /^CE7$|키즈카페/], ['전통시장', 'market', /시장/], ['한옥마을', 'culture', /^AT4$/],
+  // 시간 보내기 좋은 실내 복합 공간(코엑스·스타필드 같은 곳). 2026-11-15 누락 제보로 추가
+  ['복합쇼핑몰', 'shop', /쇼핑몰|백화점/], ['실내놀이터', 'kids', /놀이|키즈/], ['방탈출', 'activity', /방탈출|테마카페|오락/],
 ];
 const SPOT_BAD = /주차장|매표소|화장실|충전소|정류장|입구|정문|후문|사무소|사무실|관리소|안내소|대학교|분소|매점|편의점|기념품|수장고|연구소/;
 
@@ -558,9 +561,42 @@ async function collectSpots() {
     const old = new Map(spots.map((s) => [s.id, s]));
     spots = [...byId.values()].map((s) => {
       const o = old.get(s.id);
-      return o ? { ...s, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt } : s;
+      return o ? { ...s, must: o.must, kto: o.kto, photo: o.photo, overview: o.overview, ktoAt: o.ktoAt, cid: o.cid, photos: o.photos, photosAt: o.photosAt, ctype: o.ctype, parking: o.parking, parkingFee: o.parkingFee, introAt: o.introAt } : s;
     });
     prev = { searchedAt: new Date().toISOString() };
+  }
+
+  // 반드시 있어야 하는 곳(tools/must-have.mjs): 이미 있으면 건너뛰고, 없으면 카카오에서 이름으로 찾아 넣는다.
+  for (const [q, cat, max, must] of MUST_HAVE) {
+    if (!max || spots.some((s) => s.name.includes(must) && s.must)) continue;
+    try {
+      calls.kakao = (calls.kakao || 0) + 1;
+      const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(q)}&sort=accuracy&size=15`, {
+        headers: { Authorization: `KakaoAK ${env.KAKAO_REST_KEY}` },
+      }, 'kakao-must');
+      let n = 0;
+      for (const d of j.documents || []) {
+        if (n >= max) break;
+        if (!d.place_name.includes(must) || /주차장|매표소|화장실|정류장|입구|사무|고객센터|지점|\s\d+호|약국|은행|병원/.test(d.place_name)) continue;
+        // 건물 안 입점 매장(예: "코엑스 스타벅스")은 건너뛴다: 쇼핑몰·문화시설·관광명소 계열만 받는다.
+        if (!/쇼핑몰|백화점|도서관|관광|문화|아쿠아|박물관|미술관|전시|테마|놀이/.test(d.category_name)) continue;
+        n++;
+        const idx = spots.findIndex((s) => s.id === `k-${d.id}`);
+        const addr = d.road_address_name || d.address_name || '';
+        const row = {
+          id: `k-${d.id}`, name: d.place_name, cat,
+          region: addr.split(' ').slice(0, 2).join(' ').replace(/특별자치도|특별자치시|통합특별시/, ''),
+          lat: Number(Number(d.y).toFixed(5)), lng: Number(Number(d.x).toFixed(5)),
+          sub: d.category_name.split(' > ').slice(-1)[0], url: d.place_url, pos: 1, hits: 4, must: true,
+        };
+        if (idx >= 0) spots[idx] = { ...spots[idx], must: true, cat };
+        else spots.push(row);
+      }
+      if (!n) console.log(`  ⚠ 누락: 반드시 있어야 하는 곳 "${q}"을(를) 카카오에서 못 찾음`);
+    } catch (e) {
+      console.log(`  필수 장소 검색 실패 ${q}: ${e.message}`);
+    }
+    await sleep(40);
   }
 
   // 관광공사에도 있는 곳인지 확인 (1km 안, 이름이 겹치면). 하루 호출 한도 때문에 한 번에 최대 400곳.
