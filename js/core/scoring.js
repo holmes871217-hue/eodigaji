@@ -130,6 +130,21 @@ function reasonsFor(row, mode) {
 export const NEAR_MAX = 45; // "가까운 소소한 곳"에서 보여줄 최대 이동시간(분)
 const SMALL_BOOST = 1.35; // 작은 곳은 검색량 자체가 적으니, 같은 규모끼리 비교되도록 보정
 
+/**
+ * 가까움이 순위에 미치는 힘(0.1~1). 사용자가 고른 이동시간 한도가 길수록 작아진다.
+ * 한도를 길게 잡았다는 것은 "멀어도 괜찮으니 우리 가족 또래에게 인기 높은 곳을 가겠다"는 뜻이라서,
+ * 그럴수록 거리 대신 또래 인기(가족 관심도)가 순위를 정하게 한다.
+ *   한도 30분 이하 1.0 · 60분 0.5 · 120분 0.25 · 180분 0.17 · 전국(300분으로 침) 0.1
+ */
+export function nearWeight(reachMin) {
+  return clamp(30 / Math.max(30, reachMin), 0.1, 1);
+}
+/** 거리 보정 배율: 0분이면 1+amp×w, 한도에 닿으면 1−amp×w. amp 는 규모별 최대 영향(작은 곳 0.45, 큰 곳 0.15) */
+function nearFactor(min, reachMin, amp) {
+  const p = clamp(1 - (2 * min) / Math.max(1, reachMin), -1, 1);
+  return 1 + amp * nearWeight(reachMin) * p;
+}
+
 export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
   const { members, mode, origin } = profile;
   const rows = [];
@@ -139,7 +154,9 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
     if (scope === 'near' && !small) continue;
     if (scope === 'big' && small) continue;
     const { km, min } = driveEstimate(origin, place);
-    if (min > (scope === 'near' ? Math.min(maxMin, NEAR_MAX) : maxMin)) continue;
+    const limit = scope === 'near' ? Math.min(maxMin, NEAR_MAX) : maxMin;
+    if (min > limit) continue;
+    const reach = Math.min(limit, 300); // "전국"(9999분)은 300분으로 쳐서 계산
 
     const fam = familyInterest(place, members);
     // 추세를 -1(크게 하락) ~ +1(크게 상승) 사이 값으로 바꾼다.
@@ -154,13 +171,12 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
       raw = fam.value * (1 + 0.5 * tu);
     }
 
-    if (small) {
-      // 작은 곳은 가까울수록 크게 유리: 5분 거리는 덧점, 40분을 넘으면 거의 안 올라옴
-      raw *= SMALL_BOOST * clamp(1.25 - min / 40, 0.1, 1.25);
-    } else {
-      // 큰 나들이 장소는 가까울수록 약간 유리 (최대 12%)
-      raw *= 1 - 0.12 * Math.min(1, min / 240);
-    }
+    // 가까울수록 유리하되, 이동시간 한도를 길게 고를수록 그 힘이 줄어든다(nearWeight 참고).
+    // 작은 곳은 "잠깐 들르는 곳"이라 큰 곳보다 거리 영향이 크다.
+    // 작은 곳의 규모 보정(SMALL_BOOST)도 가까움과 같이 움직인다: 잠깐 들르는 가까운 곳끼리 비교할 때만 크게 주고,
+    // 멀리 갈 때는 큰 나들이 장소와 같은 눈높이(1.0에 가깝게)로 비교한다. 그래야 어림 점수인 작은 곳이 진짜 인기 많은 큰 곳을 밀어내지 않는다.
+    const boost = 1 + (SMALL_BOOST - 1) * nearWeight(reach);
+    raw *= small ? boost * nearFactor(min, reach, 0.45) : nearFactor(min, reach, 0.15);
 
     // 카카오로 채운 동네 장소는 직접 고른 곳보다 아래에 오도록 낮춘다(관광공사 등록 곳은 덜 낮춤).
     if (place.spot) raw *= place.kto ? 0.75 : 0.5;
