@@ -157,7 +157,7 @@ function restoreSheetPos() {
   const pos = sheetPos[sheets.length - 1];
   if (!pos) return;
   const sheet = document.querySelector('.sheet');
-  watchCardPhotos();
+  if (sheet) sheet.scrollTop = pos.top;
   const slides = document.querySelector('[data-slides]');
   if (slides) { slides.scrollLeft = pos.left; syncSlides(slides); }
 }
