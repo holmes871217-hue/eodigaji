@@ -49,16 +49,19 @@ function placeCard(r, i, favs) {
     </li>`;
 }
 
+const MAX_RESULTS = 100; // 추천 결과는 최대 100곳까지만 보여준다(2026-11-16 사용자 요청. 예전에는 최대 200곳)
+
 export function renderHome(state, c) {
   const { profile, ui } = state;
-  const shown = Math.min(ui.listMax || 20, 200); // 처음엔 20곳, "더 보기"로 20곳씩 늘려 최대 200곳
-  const rows = c.ranked.slice(0, shown);
+  const results = c.ranked.slice(0, MAX_RESULTS);
+  const shown = Math.min(ui.listMax || 20, MAX_RESULTS); // 처음엔 20곳, "더 보기"로 20곳씩 늘려 최대 100곳
+  const rows = results.slice(0, shown);
   const favs = favSet(state);
   const nights = (NIGHT_OPTIONS.find((o) => o.v === profile.nights) || NIGHT_OPTIONS[0]).label;
 
   const list = rows.length
     ? `<ol class="plist">${rows.map((r, i) => placeCard(r, i, favs)).join('')}</ol>
-       ${c.ranked.length > rows.length && rows.length < 200 ? `<button type="button" class="btn-secondary more-btn" data-action="more">더 보기 · 다음 ${Math.min(20, c.ranked.length - rows.length)}곳 (남은 ${c.ranked.length - rows.length}곳)</button>` : ''}`
+       ${results.length > rows.length ? `<button type="button" class="btn-secondary more-btn" data-action="more">더 보기 · 다음 ${Math.min(20, results.length - rows.length)}곳 (남은 ${results.length - rows.length}곳)</button>` : ''}`
     : `<div class="empty">
          <b>${esc(timeLabel(ui.maxMin))} 거리에는 추천할 곳이 없어요.</b>
          <span>위에서 이동시간을 더 길게 고르거나, 검색 위치를 옮겨 보세요.</span>
@@ -109,7 +112,7 @@ export function renderHome(state, c) {
     ${timeChips(ui.maxMin)}
 
     <div class="row-between">
-      <h2 class="h2">추천 <span class="count">${c.ranked.length}</span>곳</h2>
+      <h2 class="h2">추천 <span class="count">${results.length}</span>곳</h2>
       <div class="toggle" role="group" aria-label="보기 방식">
         <button type="button" class="toggle-btn ${ui.view === 'list' ? 'is-on' : ''}" data-action="view" data-v="list" aria-pressed="${ui.view === 'list'}">목록</button>
         <button type="button" class="toggle-btn ${ui.view === 'map' ? 'is-on' : ''}" data-action="view" data-v="map" aria-pressed="${ui.view === 'map'}">지도</button>
