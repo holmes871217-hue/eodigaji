@@ -134,6 +134,21 @@ function reasonsFor(row, mode) {
  * @param tripEvents 여행 기간에 열리는 행사 (근처 행사 덧점용)
  * @param maxMin   이동시간 상한(분)
  */
+/** 동행인 중에 아이(12세 이하)가 있는지 */
+export function hasChild(members) {
+  return members.some((m) => kidStage(m.age));
+}
+
+/**
+ * 아이 전용 장소인지: 분류가 "키즈"(키즈카페·실내놀이터·방방 등)이거나 이름에 키즈·유아·어린이(어린이대공원은 제외)·놀이터 등이 들어간 곳.
+ * 아이가 없는 가족에게는 또래 인기가 높아도 추천에서 뺀다(2026-11-16 사용자 요청).
+ * 동물원·테마파크·박물관처럼 어른도 가는 곳은 이름에 어린이가 없으면 뺀 대상이 아니다.
+ */
+const KIDS_NAME = /키즈|유아|베이비|꼬마|어린이(?!\s*대공원)|놀이터/;
+export function isKidsPlace(place) {
+  return place.cat === 'kids' || KIDS_NAME.test(place.name || '');
+}
+
 export const NEAR_MAX = 45; // "가까운 소소한 곳"에서 보여줄 최대 이동시간(분)
 const SMALL_BOOST = 1.35; // 작은 곳은 검색량 자체가 적으니, 같은 규모끼리 비교되도록 보정
 
@@ -162,11 +177,13 @@ function nearFactor(min, reachMin, amp) {
   return 1 + amp * nearWeight(reachMin) * p;
 }
 
-export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
+export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', { hideKids = true } = {}) {
   const { members, mode, origin } = profile;
   const rows = [];
+  const dropKids = hideKids && !hasChild(members); // 아이가 없는 가족에게는 아이 전용 장소를 추천하지 않는다
 
   for (const place of places) {
+    if (dropKids && isKidsPlace(place)) continue;
     const small = place.scale === 'small';
     if (scope === 'near' && !small) continue;
     if (scope === 'big' && small) continue;

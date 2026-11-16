@@ -3,7 +3,7 @@ import { PLACES, CATEGORIES } from './data/places.js';
 import { getEvents } from './data/events.js';
 import { loadLive } from './data/live.js';
 import { loadState, saveState, defaultMaxMin, newId } from './core/store.js';
-import { rankPlaces, eventsForTrip, upcomingEvents } from './core/scoring.js';
+import { rankPlaces, eventsForTrip, upcomingEvents, hasChild } from './core/scoring.js';
 import { CITIES } from './core/geo.js';
 import { nearestLabel } from './core/locate.js';
 import { searchLocation } from './core/search.js';
@@ -45,7 +45,8 @@ function compute() {
   const upcoming = upcomingEvents(EVENTS, end, p.origin);
   const ranked = rankPlaces(PLACES, p, tripEvents, state.ui.maxMin, state.ui.scope);
   // 상세 창은 이동시간 필터와 상관없이 열 수 있어야 해서 전체 순위도 계산해 둔다.
-  const rankedAll = state.ui.maxMin >= 9999 && state.ui.scope === 'all' ? ranked : rankPlaces(PLACES, p, tripEvents, 9999, 'all');
+  // 상세 창·찜 목록이 장소를 찾을 때 쓰는 전체 순위: 아이 전용 장소도 빼지 않는다(예전에 찜했거나 직접 열 수 있게)
+  const rankedAll = hasChild(p.members) && state.ui.maxMin >= 9999 && state.ui.scope === 'all' ? ranked : rankPlaces(PLACES, p, tripEvents, 9999, 'all', { hideKids: false });
   return { tripEvents, upcoming, ranked, rankedAll };
 }
 
