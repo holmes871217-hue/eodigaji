@@ -2,7 +2,7 @@
 // 같은 장소를 가까운 곳(바로 옆)과 먼 곳(약 76분 거리)에 하나씩 두고, 한도별로 가까운 쪽이 몇 배 유리한지 잰다.
 // 사용: node tools/check-scoring.mjs   (규칙이 깨지면 종료 코드 1)
 import { PLACES } from '../app/js/data/places.js';
-import { rankPlaces, nearWeight, memberScore, isKidsPlace } from '../app/js/core/scoring.js';
+import { rankPlaces, nearWeight, memberScore, isKidsPlace, isKidsEvent } from '../app/js/core/scoring.js';
 import { segKey } from '../app/js/core/segments.js';
 
 const profile = {
@@ -100,6 +100,14 @@ for (const scale of ['big', 'small']) {
   ok(ids(profile) === 'k1,k2,k3,n1', '아이가 있으면 키즈 장소도 그대로 나와야 해요');
   ok(ids(adults, { hideKids: false }) === 'k1,k2,k3,n1', '상세 창·찜 목록용 전체 순위는 아이가 없어도 키즈 장소를 빼지 않아야 해요');
   ok(isKidsPlace({ name: '아이파크몰', cat: 'shop' }) === false && isKidsPlace({ name: '트릭아이뮤지엄', cat: 'theme' }) === false, '"아이"가 이름에 들어간 어른 장소(아이파크몰 등)를 키즈 장소로 잘못 보면 안 돼요');
+}
+
+// 6) 아이 전용 행사 판별(아이가 없는 가족에게는 축제 탭에서 뺀다).
+{
+  const yes = [{ source: 'kopis', title: '뮤지컬 시험' }, { title: '[구립도서관] 유아 미술 책놀이' }, { title: '제38회 춘천인형극제' }, { title: '[서울상상나라] 그림책 작업실' }, { title: '키즈인비또 12월' }];
+  const no = [{ title: '서울 빛초롱 축제' }, { title: '[구립도서관] 어른이를 위한 그림책 11월' }, { title: '서울어린이대공원 가을 걷기' }, { title: '남산 단풍 야간 산책' }, { title: '재즈 콘서트' }];
+  for (const e of yes) ok(isKidsEvent(e), `아이 전용 행사로 봐야 해요: ${e.title}`);
+  for (const e of no) ok(!isKidsEvent(e), `아이 전용 행사로 보면 안 돼요: ${e.title}`);
 }
 
 if (problems.length) {

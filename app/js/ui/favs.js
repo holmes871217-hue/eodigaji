@@ -15,7 +15,7 @@ function favRow(f, i, favs, c) {
   // 장소·행사는 누르면 상세 창. 가게, 그리고 지금 날짜 목록에 없는 행사는 네이버 지도로 간다.
   const openable =
     f.type === 'place' ? c.rankedAll.some((r) => r.place.id === f.id)
-    : f.type === 'event' ? [...c.tripEvents, ...c.upcoming].some((e) => e.id === f.id)
+    : f.type === 'event' ? (c.eventsAll || [...c.tripEvents, ...c.upcoming]).some((e) => e.id === f.id)
     : false;
   const leg = i > 0 ? `앞에서 ${kmText(haversineKm(favs[i - 1], f))}` : '';
   const body = `

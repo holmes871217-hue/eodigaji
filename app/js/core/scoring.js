@@ -149,6 +149,18 @@ export function isKidsPlace(place) {
   return place.cat === 'kids' || KIDS_NAME.test(place.name || '');
 }
 
+/**
+ * 아이 전용 행사인지: 공연(KOPIS)은 수집할 때 "아동 공연"만 골라 받으므로 전부 해당하고,
+ * 그 밖의 행사는 제목에 키즈·유아·어린이(어린이대공원은 제외)·아동·꼬마·베이비·인형극·동화·그림책·가족극·서울상상나라가 들어간 것.
+ * "어른이를 위한 그림책"처럼 어른 대상 행사는 뺀다. 아이가 없는 가족에게는 축제·공연 목록과 "근처 축제" 표시에서 뺀다(2026-11-16 사용자 요청).
+ */
+const KIDS_EVENT = /키즈|유아|어린이(?!\s*대공원)|아동|꼬마|베이비|인형극|동화|그림책|가족극|상상나라/;
+export function isKidsEvent(e) {
+  if (e.source === 'kopis') return true;
+  const t = e.title || '';
+  return KIDS_EVENT.test(t) && !/어른이/.test(t);
+}
+
 export const NEAR_MAX = 45; // "가까운 소소한 곳"에서 보여줄 최대 이동시간(분)
 const SMALL_BOOST = 1.35; // 작은 곳은 검색량 자체가 적으니, 같은 규모끼리 비교되도록 보정
 

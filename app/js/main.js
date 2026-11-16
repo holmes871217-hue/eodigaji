@@ -3,7 +3,7 @@ import { PLACES, CATEGORIES } from './data/places.js';
 import { getEvents } from './data/events.js';
 import { loadLive } from './data/live.js';
 import { loadState, saveState, defaultMaxMin, newId } from './core/store.js';
-import { rankPlaces, eventsForTrip, upcomingEvents, hasChild } from './core/scoring.js';
+import { rankPlaces, eventsForTrip, upcomingEvents, hasChild, isKidsEvent } from './core/scoring.js';
 import { CITIES } from './core/geo.js';
 import { nearestLabel } from './core/locate.js';
 import { searchLocation } from './core/search.js';
@@ -41,13 +41,18 @@ const TABS = [
 function compute() {
   const p = state.profile;
   const { start, end } = tripRange(p);
-  const tripEvents = eventsForTrip(EVENTS, start, end, p.origin);
-  const upcoming = upcomingEvents(EVENTS, end, p.origin);
+  // 동행인에 아이가 없으면 아이 전용 행사(아동 공연 등)는 목록과 "근처 축제" 표시에서 뺀다.
+  const hideKids = !hasChild(p.members);
+  const shownEvents = hideKids ? EVENTS.filter((e) => !isKidsEvent(e)) : EVENTS;
+  const tripEvents = eventsForTrip(shownEvents, start, end, p.origin);
+  const upcoming = upcomingEvents(shownEvents, end, p.origin);
+  // 상세 창·찜 목록이 행사를 찾을 때는 뺀 행사도 포함한다(예전에 찜했거나 직접 열 수 있게)
+  const eventsAll = hideKids ? [...eventsForTrip(EVENTS, start, end, p.origin), ...upcomingEvents(EVENTS, end, p.origin)] : [...tripEvents, ...upcoming];
   const ranked = rankPlaces(PLACES, p, tripEvents, state.ui.maxMin, state.ui.scope);
   // 상세 창은 이동시간 필터와 상관없이 열 수 있어야 해서 전체 순위도 계산해 둔다.
   // 상세 창·찜 목록이 장소를 찾을 때 쓰는 전체 순위: 아이 전용 장소도 빼지 않는다(예전에 찜했거나 직접 열 수 있게)
   const rankedAll = hasChild(p.members) && state.ui.maxMin >= 9999 && state.ui.scope === 'all' ? ranked : rankPlaces(PLACES, p, tripEvents, 9999, 'all', { hideKids: false });
-  return { tripEvents, upcoming, ranked, rankedAll };
+  return { tripEvents, upcoming, eventsAll, ranked, rankedAll };
 }
 
 function render() {
