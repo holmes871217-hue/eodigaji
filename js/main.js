@@ -109,16 +109,15 @@ function render() {
   if (tab === 'my') {
     const el = document.getElementById('pick-map');
     if (el) {
-      const center = state.ui.pick || state.profile.origin;
-      const label = document.getElementById('pick-label');
-      if (label && state.ui.pick) label.textContent = nearestLabel(state.ui.pick);
       mountPicker(el, {
-        center,
-        // 지도를 움직일 때는 화면 전체를 다시 그리지 않고 핀 위치 글자만 바꾼다.
-        onMove: (pos) => {
-          state.ui.pick = pos;
-          const l = document.getElementById('pick-label');
-          if (l) l.textContent = nearestLabel(pos);
+        center: state.profile.origin,
+        // 지도를 한 번 누르면 그 자리가 새 검색 위치가 된다. 화면 전체를 다시 그리면 지도가 움직이니, 위치 글자만 바꾼다.
+        onTap: (pos) => {
+          const name = nearestLabel(pos);
+          state.profile.origin = { type: 'map', name, lat: pos.lat, lng: pos.lng };
+          state.ui.geoMsg = '';
+          saveState(state);
+          for (const node of document.querySelectorAll('.loc-now b, #pick-label')) node.textContent = name;
         },
       });
     }
@@ -328,7 +327,6 @@ function useGps() {
     (pos) => update(() => {
       const here = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       state.profile.origin = { type: 'gps', name: `현재 위치 (${nearestLabel(here)})`, ...here };
-      state.ui.pick = null;
       state.ui.geoMsg = '';
     }),
     () => update(() => { state.ui.geoMsg = '위치를 가져오지 못했어요. 위치 권한을 허용하거나 아래 지도에서 골라 주세요.'; }),
@@ -347,7 +345,7 @@ root.addEventListener('click', (ev) => {
       // 창이 열린 채 탭을 옮기면 쌓아 둔 방문 기록도 함께 되돌린다.
       const depth = sheets.length;
       sheets = [];
-      update(() => { state.ui.tab = v; syncSheets(); state.ui.pick = null; state.ui.locResults = []; state.ui.locMsg = ''; }, { keepScroll: false });
+      update(() => { state.ui.tab = v; syncSheets(); state.ui.locResults = []; state.ui.locMsg = ''; }, { keepScroll: false });
       if (depth && Array.isArray(history.state?.sheets)) history.go(-depth);
       break;
     }
@@ -435,14 +433,6 @@ root.addEventListener('click', (ev) => {
     case 'dismiss-hint':
       update(() => { state.ui.hint = false; });
       break;
-    case 'commit-pick':
-      update(() => {
-        const pos = state.ui.pick || { lat: state.profile.origin.lat, lng: state.profile.origin.lng };
-        state.profile.origin = { type: 'map', name: nearestLabel(pos), lat: pos.lat, lng: pos.lng };
-        state.ui.pick = null;
-        state.ui.geoMsg = '';
-      });
-      break;
     case 'add-member':
       update(() => {
         state.profile.members.push({ id: newId(), label: '', age: 35, gender: 'f', weight: 1 });
@@ -479,7 +469,6 @@ root.addEventListener('click', (ev) => {
           state.profile.origin = { type: 'search', name: r.name, lat: r.lat, lng: r.lng };
           state.ui.locResults = [];
           state.ui.locMsg = `검색 위치를 "${r.name}"(으)로 정했어요.`;
-          state.ui.pick = null;
           state.ui.geoMsg = '';
         });
       }

@@ -1,7 +1,7 @@
 // 지도. 1단계는 열쇠(API 키)가 필요 없는 공개 지도(Leaflet + OpenStreetMap)를 쓴다.
 // 3단계에서 카카오맵으로 교체 예정.
 //  - 추천 지도: 검색 위치를 가운데 두고, 화면 가로에 10km가 보이도록 연다.
-//  - 위치 고르기 지도: 지도를 움직여 가운데 핀 위치를 고른다.
+//  - 위치 고르기 지도: 지도는 자유롭게 움직이고, 원하는 자리를 한 번 누르면 검색 위치가 그곳으로 옮겨진다.
 
 import { zoomForKm } from '../core/geo.js';
 
@@ -15,6 +15,7 @@ const PICK_BAR_PX = 110;
 let loading = null;
 let homeMap = null; // { map, origin, points }
 let pickMap = null;
+let pickMarker = null;
 let favMap = null;
 
 function loadLeaflet() {
@@ -64,7 +65,7 @@ function destroy(map) {
 export function unmountMaps() {
   if (homeMap) { destroy(homeMap.map); homeMap = null; }
   // 지도를 없앨 때 나오는 마지막 "움직임" 신호가 새로 정한 위치를 옛 핀 위치로 덮어쓰지 않게, 먼저 신호 연결을 끊는다.
-  if (pickMap) { pickMap.off(); destroy(pickMap); pickMap = null; }
+  if (pickMap) { pickMap.off(); destroy(pickMap); pickMap = null; pickMarker = null; }
   if (favMap) { destroy(favMap); favMap = null; }
 }
 
@@ -128,8 +129,11 @@ export function mapWidthKm() {
   return a.distanceTo(b) / 1000;
 }
 
-/** 위치 고르기 지도: 지도를 움직이면 가운데 좌표를 onMove로 알려준다. */
-export async function mountPicker(el, { center, onMove }) {
+/**
+ * 위치 고르기 지도: 지금 검색 위치에 핀을 꽂아 보여 주고, 지도의 다른 자리를 한 번 누르면 핀이 그곳으로 옮겨지며 onTap 으로 알려준다.
+ * 지도를 끌거나 확대해도 위치는 바뀌지 않는다(예전에는 지도를 움직일 때마다 가운데 핀 위치가 바뀌어 계속 움직였다).
+ */
+export async function mountPicker(el, { center, onTap }) {
   try {
     await loadLeaflet();
   } catch (e) {
@@ -138,12 +142,19 @@ export async function mountPicker(el, { center, onMove }) {
   }
   if (!el.isConnected) return;
 
+  const L = window.L;
   const map = baseMap(el);
   pickMap = map;
   map.setView([center.lat, center.lng], zoomForKm(center.lat, PICK_BAR_PX, PICK_KM), { animate: false });
-  map.on('moveend', () => {
-    const c = map.getCenter();
-    onMove({ lat: c.lat, lng: c.lng });
+  pickMarker = L.marker([center.lat, center.lng], {
+    icon: L.divIcon({ className: '', html: '<span class="pin pin-me">검색 위치</span>', iconSize: [64, 28], iconAnchor: [32, 14] }),
+    keyboard: false,
+    interactive: false,
+    zIndexOffset: 1000,
+  }).addTo(map);
+  map.on('click', (e) => {
+    pickMarker.setLatLng(e.latlng);
+    onTap({ lat: e.latlng.lat, lng: e.latlng.lng });
   });
 }
 
