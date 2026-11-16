@@ -939,7 +939,16 @@ async function collectSpots() {
         headers: { Authorization: `KakaoAK ${env.KAKAO_REST_KEY}` },
       }, 'kakao-must');
       let n = 0;
-      for (const d of j.documents || []) {
+      const docs = [...(j.documents || [])];
+      // 리조트는 "호텔 안 입점 시설"보다 리조트 본체가 먼저 오도록: 이름이 찾는 말로 시작하는 것, 이름이 짧은 것 순
+      if (cat === 'resort') {
+        const m = must.replace(/\s/g, '');
+        docs.sort((a, b) => {
+          const an = a.place_name.replace(/\s/g, ''), bn = b.place_name.replace(/\s/g, '');
+          return (an.startsWith(m) ? 0 : 1) - (bn.startsWith(m) ? 0 : 1) || an.length - bn.length;
+        });
+      }
+      for (const d of docs) {
         if (n >= max) break;
         if (!d.place_name.replace(/\s/g, '').includes(must.replace(/\s/g, '')) || /주차장|매표소|화장실|정류장|입구|사무|고객센터|지점|\s\d+호|약국|은행|병원|예정/.test(d.place_name)) continue;
         // 건물 안 입점 매장(예: "코엑스 스타벅스")은 건너뛴다: 쇼핑몰·문화시설·관광명소 계열만 받는다.
