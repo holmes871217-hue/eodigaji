@@ -20,10 +20,13 @@ function eventCard(e, favs) {
   return `
     <li>
       <button type="button" class="card event" data-action="open-event" data-id="${esc(e.id)}">
-        <span class="datebox type-${esc(e.type)}" aria-hidden="true">
-          <small>${d.getMonth() + 1}월</small>
-          <b>${d.getDate()}</b>
-          <small>${DOW[d.getDay()]}요일</small>
+        <span class="evthumb ${e.photo ? 'has-photo' : ''}">
+          <span class="datebox type-${esc(e.type)}" aria-hidden="true">
+            <small>${d.getMonth() + 1}월</small>
+            <b>${d.getDate()}</b>
+            <small>${DOW[d.getDay()]}요일</small>
+          </span>
+          ${e.photo ? `<img src="${esc(e.photo)}" alt="${esc(e.title)} ${e.source === 'kopis' || e.source === 'seoul' ? '포스터' : '사진'}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
         </span>
         <span class="card-body">
           <span class="card-tags">
@@ -66,7 +69,7 @@ export function renderEvents(state, c) {
     </div>
 
     <div class="row-between tight">
-      <span class="label">이동시간 <em>검색 위치에서 차로(추정)</em></span>
+      <span class="label">이동시간</span>
     </div>
     ${timeChips(ui.maxMin)}
     ${typeChips}
