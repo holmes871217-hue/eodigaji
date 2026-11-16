@@ -396,17 +396,6 @@ svg { flex: none; }
 .shop-star i { font-style: normal; color: #f5a400; }
 .shop .card-meta { margin-top: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .shop-wait { margin-top: 16px; }
-/* 시티투어 안내 */
-.tour { margin-top: 8px; padding: 12px 14px; border-radius: var(--radius-sm); background: #e4f6ec; }
-.tour-head { display: flex; align-items: center; gap: 8px; }
-.tour-icon { font-size: 22px; }
-.tour-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 10px; }
-.tour-list li { display: grid; gap: 2px; padding-top: 8px; border-top: 1px solid rgba(27, 37, 89, 0.12); }
-.tour-list li:first-child { border-top: 0; padding-top: 0; }
-.tour-list span { font-size: var(--fs-sm); color: var(--ink-2); overflow-wrap: anywhere; }
-.tour-links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 2px; }
-.tour-links a { font-size: var(--fs-sm); font-weight: 700; text-decoration: underline; color: var(--ink); }
-.tour .muted { margin-top: 6px; }
 .shop-fee { display: grid; gap: 1px; margin-top: 2px; padding: 6px 10px; border-radius: 12px; background: #dfe9ff; }
 .shop-fee b { font-size: var(--fs-sm); font-weight: 700; color: #1d3a8a; overflow-wrap: anywhere; }
 .shop-fee small { font-size: var(--fs-xs); color: var(--ink-2); overflow-wrap: anywhere; }

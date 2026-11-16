@@ -8,7 +8,6 @@ import { memberLabel } from '../core/segments.js';
 import { SHOP_KINDS } from '../core/nearby.js';
 import { esc, icon, rangeText, heartBtn, naverQuery, googleMapUrl } from './util.js';
 import { favSet, favKey } from '../core/favs.js';
-import { cityToursFor } from '../data/citytour.js';
 
 const DOW = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -118,30 +117,6 @@ function shopsSheet(place, kind, data, favs) {
       : kind === 'park' ? `카카오맵에 등록된 주차장을 가까운 순으로 보여 드려요("전용"이 붙은 곳은 뺐어요). ${data.fees ? '요금·운영 정보는 서울 열린데이터광장(서울시 관리 주차장) 기준이에요. ' : ''}가기 전에 현장 안내를 꼭 확인해 주세요.` : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
 }
 
-/** 이 장소가 있는 시·군·구의 시티투어 안내(코스 2개까지) */
-function tourBox(p) {
-  const tours = cityToursFor(p);
-  if (!tours.length) return '';
-  const shown = tours.slice(0, 2);
-  const town = String(p.region || '').split(' ')[1] || '';
-  return `
-    <section class="tour" aria-label="시티투어 안내">
-      <div class="tour-head"><span class="tour-icon" aria-hidden="true">🚌</span><b>${esc(town)} 시티투어 ${tours.length}개 코스</b></div>
-      <ul class="tour-list">
-        ${shown.map((t) => `
-        <li>
-          <b>${esc(t.c)}</b>
-          ${t.run ? `<span>운행 ${esc(t.run)}</span>` : ''}
-          ${t.fee ? `<span>요금 ${esc(t.fee)}</span>` : ''}
-          ${t.brd ? `<span>탑승 ${esc(t.brd)}</span>` : ''}
-          <span class="tour-links">${t.url ? `<a href="${esc(t.url)}" target="_blank" rel="noopener noreferrer">자세히 보기</a>` : ''}${t.tel ? `<a href="tel:${esc(t.tel.replace(/[^\d+]/g, ''))}">전화 ${esc(t.tel)}</a>` : ''}</span>
-        </li>`).join('')}
-      </ul>
-      ${tours.length > shown.length ? `<p class="muted">나머지 ${tours.length - shown.length}개 코스는 위 "자세히 보기"나 시·군 관광 누리집에서 확인하세요.</p>` : ''}
-      <p class="muted">지자체가 공공데이터포털에 등록한 정보예요. 운행 일정은 바뀔 수 있어요.</p>
-    </section>`;
-}
-
 function placeSheet(r, tripEvents, gp) {
   const p = r.place;
   const cat = CATEGORIES[p.cat] || { label: '', icon: '📍' };
@@ -184,7 +159,6 @@ function placeSheet(r, tripEvents, gp) {
       <button type="button" class="park-link" data-action="open-shops" data-id="${esc(p.id)}" data-v="park">근처 주차장</button>
     </div>
 
-    ${tourBox(p)}
 
     <div class="shop-btns" role="group" aria-label="근처 가게 찾기">
       ${Object.entries(SHOP_KINDS).filter(([k]) => k !== 'park').map(([k, s]) => `
