@@ -104,7 +104,7 @@ export function renderHome(state, c) {
     <p class="mode-desc">${SCOPE_DESC[ui.scope] || SCOPE_DESC.all}</p>
 
     <div class="row-between tight">
-      <span class="label">이동시간 <em>검색 위치에서 차로(추정)</em></span>
+      <span class="label">이동시간</span>
     </div>
     ${timeChips(ui.maxMin)}
 
