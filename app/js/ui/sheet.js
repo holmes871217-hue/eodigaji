@@ -201,7 +201,7 @@ function placeSheet(r, tripEvents, gp) {
 
     <div class="stats">
       <div class="stat"><b>${Math.round(r.fam)}</b><span>우리 가족 관심도</span></div>
-      <div class="stat"><b class="${pct >= 0 ? 'up' : 'down'}">${pct >= 0 ? '+' : ''}${pct}%</b><span>최근 4주 추세</span></div>
+      <div class="stat"><b class="${pct >= 0 ? 'up' : 'down'}">${pct >= 0 ? '+' : ''}${pct}%${pct >= 100 ? ' 이상' : ''}</b><span>최근 4주 추세</span></div>
       <div class="stat"><b>${crowdLabel(p.crowd)}</b><span>혼잡 예측</span></div>
     </div>
 

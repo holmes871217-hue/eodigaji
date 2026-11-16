@@ -30,6 +30,7 @@ export const CATEGORIES = {
   kids: { label: '키즈카페', icon: '🧸' },
   trend: { label: '트렌드·팝업', icon: '✨' },
   resort: { label: '리조트·휴양', icon: '🏨' },
+  expo: { label: '전시장·컨벤션', icon: '🏛️' },
 };
 
 // [id, 이름, 지역, 분류, 위도, 경도, base, peak, spread, fBias, kid[3], trend, yearly, crowd, buzz]
@@ -204,15 +205,22 @@ const CAT_DEFAULT = {
   kids: [36, 8, 1.1, [0.95, 0.85, 0.35]],
   trend: [32, 10, 1.25, [0.3, 0.55, 0.65]],
   resort: [38, 12, 1.2, [0.7, 0.8, 0.7]],
+  expo: [34, 12, 1.1, [0.25, 0.45, 0.5]],
 };
 
 /** 카카오로 모은 동네 장소(data/spots.json 한 줄)를 앱 장소 모양으로 바꾼다. */
+// 킨텍스·벡스코 같은 전시장·컨벤션센터는 카카오에서 "전시관"이라 박물관 검색에 섞여 들어온다.
+// 박물관 분류로 두면 아이 적합도가 높게 나와 "아이에게 딱"으로 추천되므로 별도 분류로 뺀다(2026-11-16).
+const HALL_NAME = /킨텍스|KINTEX|컨벤션|전시장|엑스코|벡스코|BEXCO|세텍|SETEC|학여울|무역센터|박람회장|코엑스마곡/i;
+const catOfSpot = (s) => ((s.cat === 'museum' || s.cat === 'gallery' || s.cat === 'culture' || /전시관|컨벤션/.test(s.sub || '')) && HALL_NAME.test(s.name || '') ? 'expo' : s.cat);
+
 export function spotToPlace(s) {
-  const [peak, spread, fBias, kid] = CAT_DEFAULT[s.cat] || CAT_DEFAULT.walk;
+  const cat = catOfSpot(s);
+  const [peak, spread, fBias, kid] = CAT_DEFAULT[cat] || CAT_DEFAULT.walk;
   // 네이버 검색량(1년 인기·최근 추세)이 있으면 그것으로, 없으면 카카오 검색 순위로 어림한 base 로 인기 값을 만든다.
   const hasN = typeof s.yearly === 'number';
   const lvl = hasN ? Math.max(15, Math.min(100, s.yearly)) : s.base;
-  const row = [s.id, s.name, s.region, s.cat, s.lat, s.lng, lvl, peak, spread, fBias, kid, hasN && s.trend > 0 ? s.trend : 1.0, lvl, 40, 0];
+  const row = [s.id, s.name, s.region, cat, s.lat, s.lng, lvl, peak, spread, fBias, kid, hasN && s.trend > 0 ? s.trend : 1.0, lvl, 40, 0];
   return {
     ...expand(row),
     scale: 'small', local: true, spot: true, naver: hasN, kto: Boolean(s.kto), sample: false,
