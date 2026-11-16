@@ -369,7 +369,7 @@ async function relative(list, extra, startDate, timeUnit, kwOf = keywordOf) {
       startDate, endDate: ymd(yesterday), timeUnit,
       keywordGroups: [
         { groupName: '__anchor', keywords: [ANCHOR] },
-        ...group.map((p) => ({ groupName: p.id, keywords: [kwOf(p)] })),
+        ...group.map((p) => ({ groupName: p.id, keywords: [].concat(kwOf(p)).slice(0, 20) })), // 이름 변형이 있으면 한 그룹으로 합쳐 같은 검색으로 센다(데이터랩이 합산)
       ],
       ...extra,
     };
@@ -841,17 +841,27 @@ const SPOT_TREND_CALLS = PHOTOS_ONLY ? 400 : 200;
 const REL_LO = Math.log10(1e-3), REL_HI = Math.log10(8); // 기준(남이섬) 대비 0.001배~8배를 0~100점으로
 const relScore = (sum) => Math.max(0, Math.min(100, Math.round((100 * (Math.log10(Math.max(sum, 1e-3)) - REL_LO)) / (REL_HI - REL_LO))));
 // 네이버에서 실제로 많이 쓰는 이름이 장소 정식 이름과 다르면("원조민속순대타운"↔"신림 순대타운") must-have 목록의 5번째 칸(kw)으로 검색어를 정한다.
-const spotKeyword = (s) => s.kw || s.name.replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+const spotKeyword = (s) => (Array.isArray(s.kw) ? s.kw[0] : s.kw) || s.name.replace(/\s*\(.*?\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+// 같은 장소를 다르게 부르는 이름("파라다이스시티"·"파라다이스시티호텔")은 같은 검색으로 합쳐 센다(2026-11-16 사용자 지시).
+// must-have 의 kw 에 배열로 적은 이름 + 이름 끝의 호텔·리조트·콘도·본점·컨벤션센터를 뗀 이름을 한 그룹으로 보낸다.
+const NAME_TAIL = /\s*(호텔|리조트|콘도|본점|컨벤션센터)$/;
+function spotKeywords(s) {
+  const base = spotKeyword(s);
+  const set = new Set([base, ...(Array.isArray(s.kw) ? s.kw : [])]);
+  const cut = base.replace(NAME_TAIL, '').trim();
+  if (cut && cut !== base && cut.length >= 3) set.add(cut);
+  return [...set];
+}
 
 async function collectSpotTrends(spots) {
   const stale = Date.now() - 14 * 86400000;
   const todo = spots
-    .filter((s) => !s.popup && !(s.yAt && s.ykw === spotKeyword(s) && Date.parse(s.yAt) > stale))
+    .filter((s) => !s.popup && !(s.yAt && s.ykw === spotKeywords(s).join('|') && Date.parse(s.yAt) > stale))
     .sort((a, b) => (b.must ? 1 : 0) - (a.must ? 1 : 0) || (b.base || 0) - (a.base || 0))
     .slice(0, SPOT_TREND_CALLS * 4);
   if (!todo.length) { console.log('  동네 장소 검색량: 새로 받을 곳 없음'); return; }
   const start = new Date(today); start.setFullYear(start.getFullYear() - 1);
-  const items = todo.map((s) => ({ id: s.id, name: spotKeyword(s), kw: spotKeyword(s) }));
+  const items = todo.map((s) => ({ id: s.id, name: spotKeyword(s), kw: spotKeywords(s) }));
   const rel = await relative(items, {}, ymd(start), 'week', (p) => p.kw);
   const partialWeek = yesterday.getDay() !== 0; // 이번 주가 덜 찼으면 마지막 주는 뺀다(collectNaver 와 같은 규칙)
   let got = 0;
@@ -865,7 +875,7 @@ async function collectSpotTrends(spots) {
     s.yearly = relScore(r.sum);
     s.trend = avg > 0 ? Math.round((recent / avg) * 100) / 100 : 1;
     s.yAt = new Date().toISOString();
-    s.ykw = spotKeyword(s);
+    s.ykw = spotKeywords(s).join('|');
     got++;
   }
   const have = spots.filter((s) => typeof s.yearly === 'number').length;
