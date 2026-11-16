@@ -203,7 +203,8 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', {
     if (scope === 'near' && !small) continue;
     if (scope === 'big' && small) continue;
     const { km, min } = driveEstimate(origin, place);
-    const limit = scope === 'near' ? Math.min(maxMin, NEAR_MAX) : maxMin; // 보여줄 범위("가까운 소소한 곳"은 45분 안)
+    // 보여줄 범위: 사용자가 고른 이동시간 그대로. (예전에는 "가까운 소소한 곳"을 45분에서 잘라 1·2·3시간이 거의 같은 결과였다 — 2026-11-16 수정)
+    const limit = maxMin;
     if (min > limit) continue;
     // 가까움의 힘은 "보여줄 범위"가 아니라 사용자가 고른 이동시간으로 정한다.
     // (예전에는 "가까운 소소한 곳"에서 범위가 45분으로 잘려, 이동시간을 3시간으로 늘려도 가까운 곳 덧점이 그대로여서 같은 곳만 위에 올라왔다.)
@@ -237,6 +238,13 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', {
     raw *= small ? boost * nearFactor(min, reach, 0.7) : nearFactor(min, reach, 0.25);
     // 이동시간을 길게 고를수록 또래 인기가 높은 곳에 큰 덧점(peerBonus 참고)
     raw *= peerBonus(fam.value, reach);
+
+    // 이동시간을 길게 골랐다면 "한도의 절반 가까이 쓰는" 먼 곳의 인기 장소에 덧점(전체·큰 나들이 탭): 1·2·3시간의 결과가 눈에 띄게 달라지게 한다.
+    // 한도에 대한 이동시간 비율 x 가 0.4를 넘으면 늘어나 0.8에서 최대(+35%), 가까움의 힘(nearWeight)이 큰 짧은 한도에서는 덜 준다.
+    if (scope !== 'near') {
+      const x = clamp(min / Math.max(1, reach), 0, 1);
+      raw *= 1 + 0.35 * (1 - nearWeight(reach)) * clamp((x - 0.4) / 0.4, 0, 1);
+    }
 
     // 카카오로 채운 동네 장소는 직접 고른 곳보다 아래에 오도록 낮춘다(관광공사 등록 곳은 덜 낮춤).
     // 네이버 검색량이 있는 곳은 실제 인기라 덜 낮춘다(0.9).

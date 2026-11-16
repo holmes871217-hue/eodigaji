@@ -3,7 +3,6 @@ import { CATEGORIES } from '../data/places.js';
 import { photoOf } from '../data/photos.js';
 import { KIND_LABEL } from '../core/scoring.js';
 import { tripLabel } from '../core/geo.js';
-import { NEAR_MAX } from '../core/scoring.js';
 
 const SCOPES = [
   { v: 'near', label: '가까운 소소한 곳' },
@@ -11,7 +10,7 @@ const SCOPES = [
   { v: 'big', label: '큰 나들이' },
 ];
 const SCOPE_DESC = {
-  near: `시장·소품샵·공연장·작은 전시처럼 검색 위치 근처(차로 ${NEAR_MAX}분 안)에서 잠깐 들르기 좋은 곳만 보여줘요.`,
+  near: `시장·소품샵·공연장·작은 전시처럼 잠깐 들르기 좋은 작은 곳만 보여줘요. 고른 이동시간(위)만큼 범위가 넓어져요.`,
   all: '큰 나들이 장소와 소소한 곳을 함께 보여줘요. 이동시간을 길게 고를수록 거리보다 우리 가족 또래의 인기를 더 많이 반영해요.',
   big: '테마파크·동물원·바다처럼 하루를 쓰는 큰 나들이 장소만 보여줘요.',
 };
