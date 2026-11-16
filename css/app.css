@@ -167,7 +167,7 @@ svg { flex: none; }
 .ph-nature { background: #d9f2df; } .ph-sea { background: #d5ecfb; } .ph-culture { background: #f1e3d3; }
 .ph-cafe { background: #f5dfe9; } .ph-activity { background: #e3e0fb; }
 .ph-market { background: #ffe9c2; } .ph-shop { background: #ffe0ea; } .ph-stage { background: #e6dcff; }
-.ph-trend { background: #ffd9f0; } .ph-gallery { background: #dde6ff; } .ph-walk { background: #d5f5e3; } .ph-kids { background: #fff1b8; }
+.ph-trend { background: #ffd9f0; } .ph-resort { background: #d8f0f5; } .ph-gallery { background: #dde6ff; } .ph-walk { background: #d5f5e3; } .ph-kids { background: #fff1b8; }
 
 /* 일반 카드 (행사·특가) */
 .list { display: grid; gap: 12px; }
