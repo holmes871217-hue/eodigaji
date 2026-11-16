@@ -35,7 +35,7 @@ function eventCard(e, favs) {
           </span>
           <span class="card-title">${esc(e.title)}</span>
           <span class="card-meta">${esc(rangeText(e.start, e.end))} · ${esc(e.region)}</span>
-          <span class="card-meta">${icon('clock', 14)} 약 ${formatMin(e.min)}</span>
+          <span class="card-meta">${icon('clock', 14)} 약 ${formatMin(e.min)}${e.fee ? `<span class="card-fee ${/^무료/.test(e.fee) ? 'is-free' : ''}">· ${esc(e.fee)}</span>` : ''}</span>
         </span>
       </button>
       ${heartBtn('event', e.id, favs.has(favKey('event', e.id)), 'on-card')}

@@ -178,6 +178,65 @@ const kmBetween = (a, b) => {
   return 2 * R * Math.asin(Math.sqrt(h));
 };
 
+// ── 행사 요금 (축제 탭 카드에 "약 N분 · 요금"으로 보여 준다) ─────────────────────
+// 공식 자료에 적힌 요금 글(예: "R석 70,000원, S석 50,000원", "무료(일부 프로그램 유료)")을 짧게 줄인다.
+//   금액이 있으면 가장 싼 것~가장 비싼 것("20,000~70,000원"), 금액 없이 무료면 "무료", 모르면 빈 값(앱은 아무것도 안 보여 준다).
+function feeShort(raw) {
+  const t = String(raw || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+  if (!t || t === '-') return '';
+  const prices = [...t.matchAll(/(\d{1,3}(?:,\d{3})+|\d{3,6})\s*원/g)].map((m) => Number(m[1].replace(/,/g, ''))).filter((n) => n >= 100);
+  if (prices.length) {
+    const lo = Math.min(...prices), hi = Math.max(...prices);
+    const n = (x) => x.toLocaleString('ko-KR');
+    return lo === hi ? `${n(lo)}원` : `${n(lo)}~${n(hi)}원`;
+  }
+  if (/(^|\s)0\s*원/.test(t)) return '무료';
+  if (/무료/.test(t)) return /유료|일부/.test(t) ? '무료(일부 유료)' : '무료';
+  if (/유료/.test(t)) return '유료';
+  return '';
+}
+
+// 관광공사 행사는 소개 정보(detailIntro2)의 이용요금, 공연은 KOPIS 상세(pcseguidance)에서 받는다.
+// 서울 문화행사·지자체 공연행사는 목록을 받을 때 요금 칸이 같이 와서 여기서는 다루지 않는다.
+// 한 번 받은 요금은 지난 events.json 에서 이어받아 다시 부르지 않는다(받아 봤는데 없으면 null 로 기억).
+async function collectEventFees(events) {
+  const prev = new Map();
+  try { for (const e of JSON.parse(readFileSync(`${ROOT}app/data/events.json`, 'utf8')).events || []) if (e.fee !== undefined) prev.set(e.id, e.fee); } catch { /* 처음 */ }
+  let kopis = 0, kto = 0, carried = 0, failed = 0;
+  for (const e of events) {
+    if (e.fee !== undefined || !(e.source === 'kopis' || e.id.startsWith('kto-'))) continue;
+    if (prev.has(e.id)) { e.fee = prev.get(e.id); carried++; continue; }
+    try {
+      if (e.source === 'kopis') {
+        if (!env.KOPIS_KEY || kopis >= 700) continue; // 한 번에 700건까지, 나머지는 다음 실행에서
+        kopis++;
+        let xml = '';
+        for (let attempt = 1; attempt <= 3 && !xml; attempt++) { // KOPIS 서버가 가끔 400을 돌려줘서 몇 번 다시 시도
+          calls.kopis = (calls.kopis || 0) + 1;
+          const res = await fetch(`https://kopis.or.kr/openApi/restful/pblprfr/${e.id.replace('kopis-', '')}?service=${env.KOPIS_KEY}`);
+          const text = await res.text();
+          if (res.ok && text.includes('<db>')) xml = text; else await sleep(1500 * attempt);
+        }
+        if (!xml) { failed++; continue; } // 못 받았으면 비워 두고 다음 실행에서 다시
+        e.fee = feeShort(xmlField(xml, 'pcseguidance')) || null;
+        await sleep(150);
+      } else {
+        if (kto >= 150) continue; // 관광공사 하루 한도 때문에 한 번에 150건까지
+        kto++;
+        const { items } = await tour('detailIntro2', { contentId: e.id.replace('kto-', ''), contentTypeId: '15' });
+        e.fee = feeShort(items[0]?.usetimefestival) || null;
+        await sleep(60);
+      }
+    } catch (err) {
+      failed++;
+      console.log(`  요금 확인 실패 ${e.title}: ${String(err.message).slice(0, 80)}`);
+      if (e.id.startsWith('kto-')) break; // 한도 초과 등은 다음 날 이어서
+    }
+  }
+  const have = events.filter((e) => e.fee).length;
+  console.log(`  요금: 이번에 받음 공연 ${kopis}건·관광공사 ${kto}건, 이어받음 ${carried}건, 실패 ${failed}건 → 요금을 아는 행사 ${have}/${events.length}건`);
+}
+
 async function collectEvents() {
   const from = new Date(today.getTime() - 120 * 86400000);
   const out = [];
@@ -392,6 +451,101 @@ async function collectNaver(prevPlaces) {
     await sleep(120);
   }
   return { yearlyScore, trendOf, interest, buzz, buzzAt };
+}
+
+// ── 아이 없는 또래의 인기 (영유아 부모에게 희석되지 않은 인기) ───────────────────────
+// 네이버 데이터랩의 "30대 남성이 이 장소를 검색한 정도"에는 영유아를 키우는 부모(아이 때문에 어린이 장소를 찾는 사람)가 섞여 있다.
+// 그래서 어린이 장소가 같은 나이·성별의 실제 취향보다 높게, 어른 취향 장소가 낮게 나온다.
+// 데이터랩은 "아이와 함께인 사람"을 빼고 보는 기능이 없어서, 같은 성별·연령 안에서 두 종류의 검색어 양을 따로 재어 비율로 추정한다.
+//   · 어른 목적 검색어: "<장소> 데이트·커플·친구랑·혼자·연인"
+//   · 아이 목적 검색어: "<장소> 아이랑·아이와·아기랑·키즈·어린이·유아"
+//   어른 몫 = (어른 목적 + 1.5) ÷ (어른 목적 + 아이 목적 + 3)  (검색량이 적은 곳이 우연히 0이나 1이 되지 않게 가운데로 살짝 당긴 값).
+//   배율 = 0.55 + 0.9 × 어른 몫 (어른 몫 0.5면 ×1.0, 아이 목적뿐이면 ×0.55, 어른 목적뿐이면 ×1.45). 그 성별·연령의 인기 점수에 곱한다.
+//   (처음에는 0.4~1.6배로 했더니 추정치인데도 분류 사이 차이가 4배까지 벌어져, 어른 취향 골목이 "전국" 순위 맨 위까지 올라갔다. 그래서 범위를 줄였다.)
+//   (예전 시험에서 기준을 "모든 장소의 중간값"으로 했더니, 큐레이션 장소가 어린이 장소 위주라 중간값 자체가 낮아 에버랜드 같은 곳이 깎이지 않았다. 그래서 균형값 0.5로 고정.)
+//   결과는 places.json 의 interestFree 에 담는다.
+//   직접 잰 곳은 큐레이션 장소(CORE)뿐이라, 나머지 장소(동네 장소 등)는 분류별 평균 배율(freeFactor)을 쓴다.
+// 호출 수: 장소 2곳을 한 번에 묻고, 성별 2 × 연령 3(20·30·40대) = 6번 → 장소당 3번. 하루 KF_CALLS 번까지, 30일마다 다시 잰다.
+const ADULT_INTENT = ['데이트', '커플', '친구랑', '혼자', '연인'];
+const KID_INTENT = ['아이랑', '아이와', '아기랑', '키즈', '어린이', '유아'];
+const FREE_BANDS = AGE_GROUPS.filter((b) => ['2030', '30s', '40s'].includes(b.name));
+const KF_VER = 3; // 계산 방식이 바뀌면 올린다(올리면 예전 측정값은 버리고 다시 잰다)
+const KF_MIN_VOLUME = 1; // 어른+아이 목적 검색량(상대값 합)이 이보다 작으면 믿을 수 없어 비워 둔다
+const kfFactor = (share) => Math.max(0.55, Math.min(1.45, 0.55 + 0.9 * share));
+const argNum = (k, d) => { const i = process.argv.indexOf(k); return i > 0 ? Number(process.argv[i + 1]) : d; };
+
+async function collectKidFree(prevPlaces, { calls: budget = PHOTOS_ONLY ? 0 : 90, only = null } = {}) {
+  const out = {};
+  const fresh = Date.now() - 30 * 86400000;
+  const todo = [];
+  for (const p of CORE) {
+    if (only && !only.includes(p.id)) continue;
+    const prev = prevPlaces[p.id];
+    if (prev?.kidShare && prev.kfVer === KF_VER) out[p.id] = { shares: prev.kidShare, at: prev.kfAt }; // 오래된 값도 새로 재기 전까지는 쓴다
+    if (prev?.kidShare && prev.kfVer === KF_VER && Date.parse(prev.kfAt) > fresh) continue;
+    todo.push(p);
+  }
+  const start = new Date(today); start.setMonth(start.getMonth() - 3);
+  let used = 0, done = 0;
+  for (const pair of chunks(todo, 2)) {
+    const res = Object.fromEntries(pair.map((p) => [p.id, {}]));
+    let okAll = true;
+    for (const g of ['m', 'f']) {
+      for (const band of FREE_BANDS) {
+        if (used >= budget) { okAll = false; break; }
+        used++;
+        const keywordGroups = pair.flatMap((p) => [
+          { groupName: `${p.id}|D`, keywords: ADULT_INTENT.map((w) => `${keywordOf(p)} ${w}`) },
+          { groupName: `${p.id}|K`, keywords: KID_INTENT.map((w) => `${keywordOf(p)} ${w}`) },
+        ]);
+        try {
+          const j = await trend({ startDate: ymd(start), endDate: ymd(yesterday), timeUnit: 'month', gender: g, ages: band.ages, keywordGroups });
+          const sum = (title) => ((j.results || []).find((r) => r.title === title)?.data || []).reduce((s, d) => s + d.ratio, 0);
+          for (const p of pair) {
+            const D = sum(`${p.id}|D`), K = sum(`${p.id}|K`);
+            const share = D + K >= KF_MIN_VOLUME ? Math.round(((D + 1.5) / (D + K + 3)) * 100) / 100 : null;
+            for (const code of band.codes) res[p.id][`${g}${code}`] = share;
+          }
+        } catch (e) {
+          console.log(`  아이 없는 또래 인기 실패 (${pair.map((p) => p.id).join(',')} ${g} ${band.name}): ${String(e.message).slice(0, 80)}`);
+          okAll = false;
+        }
+      }
+      if (!okAll) break;
+    }
+    if (!okAll) { if (used >= budget) break; continue; }
+    const at = new Date().toISOString();
+    for (const p of pair) { out[p.id] = { shares: res[p.id], at }; done++; }
+  }
+  console.log(`  아이 없는 또래 인기: 이번에 ${done}곳 새로 측정(호출 ${used}번), 전체 ${Object.keys(out).length}/${CORE.length}곳 측정 완료`);
+  return out;
+}
+
+/** 어른 몫(kidShare)으로 interestFree(아이 없는 또래의 인기)와 분류별 배율(freeFactor)을 계산한다. places: { id: row } */
+function finishKidFree(places, kf) {
+  const ids = Object.keys(kf);
+  for (const id of ids) { if (places[id]) { places[id].kidShare = kf[id].shares; places[id].kfAt = kf[id].at; places[id].kfVer = KF_VER; } }
+  const byCat = {};
+  for (const id of ids) {
+    const row = places[id];
+    const p = PLACES.find((x) => x.id === id);
+    if (!row?.interest || !p) continue;
+    const free = {};
+    for (const [key, share] of Object.entries(kf[id].shares)) {
+      if (typeof share !== 'number' || typeof row.interest[key] !== 'number') continue;
+      const factor = kfFactor(share);
+      free[key] = Math.max(0, Math.min(100, Math.round(row.interest[key] * factor)));
+      ((byCat[p.cat] ||= {})[key] ||= []).push(factor);
+    }
+    if (Object.keys(free).length) row.interestFree = free;
+  }
+  const freeFactor = {};
+  for (const [cat, keys] of Object.entries(byCat)) {
+    for (const [key, arr] of Object.entries(keys)) {
+      if (arr.length >= 3) (freeFactor[cat] ||= {})[key] = Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 100) / 100;
+    }
+  }
+  return freeFactor;
 }
 
 // ── KOPIS 공연 일정 (아동 공연) ─────────────────────────────────
@@ -948,6 +1102,7 @@ async function collectSeoulEvents(others) {
       lat, lng, start, end,
       kid: SEOUL_KID_OK.test(target),
       desc: [plain(r.PLACE), r.PRO_TIME ? `${r.PRO_TIME} 시작` : '', fee, program].filter(Boolean).join(' · '),
+      fee: r.IS_FREE === '무료' ? '무료' : feeShort(r.USE_FEE) || '유료',
       photo: https(r.MAIN_IMG) || null,
       source: 'seoul',
       link: r.ORG_LINK && /^https?:/.test(r.ORG_LINK) ? r.ORG_LINK : r.HMPG_ADDR || null,
@@ -1080,6 +1235,7 @@ async function collectStdEvents(others) {
       title: plain(r.eventNm), type: STD_TYPE(`${r.eventNm} ${r.eventCo}`), region: stdRegion(r), ...pos, start, end,
       kid: STD_KID_OK.test(age) ? true : null,
       desc: [plain(r.opar), r.eventStartTime ? `${r.eventStartTime} 시작` : '', fee, plain(r.eventCo).slice(0, 80), age ? `관람 ${age}` : ''].filter(Boolean).join(' · '),
+      fee: feeShort(`${r.chrgeInfo || ''} ${r.admfee || ''}`) || null,
       photo: null, source: 'std', link: stdUrl(r.homepageUrl),
     });
   }
@@ -1222,6 +1378,35 @@ async function addStdSpots(spots) {
 mkdirSync(`${ROOT}app/data`, { recursive: true });
 const stamp = new Date().toISOString();
 
+// 아이 없는 또래 인기만 재기: node tools/collect.mjs --kidfree [--calls 300] [--only id1,id2] (네이버 데이터랩만 쓴다. 이미 받은 places.json 의 인기 점수에 이어 붙인다)
+if (process.argv.includes('--kidfree')) {
+  const file = JSON.parse(readFileSync(`${ROOT}app/data/places.json`, 'utf8'));
+  const only = (() => { const i = process.argv.indexOf('--only'); return i > 0 ? process.argv[i + 1].split(',') : null; })();
+  const kf = await collectKidFree(file.places, { calls: argNum('--calls', 300), only });
+  const freeFactor = finishKidFree(file.places, kf);
+  writeFileSync(`${ROOT}app/data/places.json`, JSON.stringify({ ...file, places: file.places, freeFactor }));
+  console.log(`분류별 배율: ${JSON.stringify(freeFactor)}`);
+  console.log(`호출 수: 네이버 ${calls.naver}회`);
+  process.exit(0);
+}
+
+// 행사 요금만 받기: node tools/collect.mjs --fees (관광공사·공연은 요금 상세, 서울·지자체 행사는 목록을 다시 받아 요금 칸을 채운다. 주차장·명소·네이버는 건드리지 않는다)
+if (process.argv.includes('--fees')) {
+  const file = JSON.parse(readFileSync(`${ROOT}app/data/events.json`, 'utf8'));
+  const base = file.events.filter((ev) => ev.source === 'kopis' || ev.id.startsWith('kto-'));
+  let seoul = [];
+  if (env.SEOUL_API_KEY) { try { seoul = await collectSeoulEvents(base); } catch (e) { seoul = file.events.filter((ev) => ev.source === 'seoul'); console.log(`  서울 행사 실패, 지난 자료 유지: ${e.message}`); } }
+  else seoul = file.events.filter((ev) => ev.source === 'seoul');
+  let std = [];
+  try { std = await collectStdEvents([...base, ...seoul]); } catch (e) { std = file.events.filter((ev) => ev.source === 'std'); console.log(`  지자체 행사 실패, 지난 자료 유지: ${e.message}`); }
+  const events = withManualEvents([...base, ...seoul, ...std]);
+  await collectEventFees(events);
+  writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ ...file, events }));
+  console.log(`행사 ${events.length}건 저장 (요금을 아는 행사 ${events.filter((e) => e.fee).length}건)`);
+  console.log(`호출 수: 서울시 ${calls.seoul || 0}회, 관광공사 ${calls.tour}회, KOPIS ${calls.kopis || 0}회, 공공데이터포털 ${calls.std || 0}회`);
+  process.exit(0);
+}
+
 // 표준데이터만 받기: node tools/collect.mjs --std (지자체 행사·전국 주차장·관광지/특화거리 명소. 네이버·관광공사 한도를 쓰지 않는다)
 if (process.argv.includes('--std')) {
   const file = JSON.parse(readFileSync(`${ROOT}app/data/events.json`, 'utf8'));
@@ -1300,6 +1485,7 @@ try {
   console.log(`  지자체 행사 수집 실패, 지난 자료 ${stdEvents.length}건 유지: ${e.message}`);
 }
 const events = withManualEvents([...festivals, ...stages, ...seoulEvents, ...stdEvents]);
+try { await collectEventFees(events); } catch (e) { console.log(`  요금 수집 실패(요금 없이 저장): ${e.message}`); }
 writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ updatedAt: stamp, source: '한국관광공사 국문 관광정보 서비스, KOPIS 공연예술통합전산망, 서울 열린데이터광장, 공공데이터포털 표준데이터', events }));
 console.log(`  행사·공연 ${events.length}건 저장`);
 
@@ -1352,7 +1538,13 @@ for (const p of PLACES) {
   row.keyword = keywordOf(p);
   places[p.id] = row;
 }
-writeFileSync(`${ROOT}app/data/places.json`, JSON.stringify({ updatedAt: stamp, anchor: ANCHOR, places }));
+let freeFactor = {};
+try {
+  freeFactor = finishKidFree(places, await collectKidFree(prevPlaces));
+} catch (e) {
+  console.log(`  아이 없는 또래 인기 계산 실패(건너뜀): ${e.message}`);
+}
+writeFileSync(`${ROOT}app/data/places.json`, JSON.stringify({ updatedAt: stamp, anchor: ANCHOR, places, freeFactor }));
 const withStats = Object.values(places).filter((r) => r.interest || r.yearly != null).length;
 console.log(`  장소 통계 ${withStats}/${PLACES.length}곳 저장`);
 console.log(`호출 수: 서울시 ${calls.seoul || 0}회, 관광공사 ${calls.tour}회, 네이버 ${calls.naver}회, KOPIS ${calls.kopis || 0}회, 카카오 ${calls.kakao || 0}회`);

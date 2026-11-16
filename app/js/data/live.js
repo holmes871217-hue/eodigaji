@@ -16,6 +16,7 @@ async function getJson(path) {
 export async function loadLive() {
   const [placesRes, eventsRes] = await Promise.allSettled([getJson('data/places.json'), getJson('data/events.json')]);
   let updatedAt = null;
+  let freeFactor = {}; // 분류별 "아이 없는 또래" 배율(직접 재지 않은 장소에 쓴다)
 
   if (placesRes.status === 'fulfilled') {
     const rows = placesRes.value.places || {};
@@ -25,6 +26,7 @@ export async function loadLive() {
       const r = rows[p.id];
       if (!r) continue;
       if (r.interest) p.interest = { ...p.interest, ...r.interest };
+      if (r.interestFree) p.interestFree = r.interestFree; // 아이 없는 또래의 실제 인기(tools/collect.mjs 의 collectKidFree)
       else if (p.local && typeof r.yearly === 'number') {
         // 전국 소소한 곳: 성별·연령대 모양은 분류 기본값, 크기는 네이버 1년 인기로 맞춘다.
         const k = r.yearly / LOCAL_BASE;
@@ -42,6 +44,8 @@ export async function loadLive() {
     }
     setLivePhotos(photos);
     setLivePhotoLists(lists);
+    freeFactor = placesRes.value.freeFactor || {};
+    for (const p of PLACES) if (!p.interestFree && freeFactor[p.cat]) p.freeFactor = freeFactor[p.cat];
     updatedAt = placesRes.value.updatedAt || null;
   }
 
@@ -63,6 +67,7 @@ export async function loadLive() {
       if (typeof s.yearly === 'number' && s.yearly < 10 && !s.must && !s.std && !s.popup) continue;
       if (dup.find(s)) continue;
       const place = spotToPlace(s);
+      if (freeFactor[place.cat]) place.freeFactor = freeFactor[place.cat];
       PLACES.push(place);
       dup.add(place);
       if (s.photo) photos[s.id] = s.photo;

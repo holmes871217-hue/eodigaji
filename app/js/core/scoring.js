@@ -19,7 +19,14 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 export function memberScore(place, m) {
   const stage = kidStage(m.age);
   if (stage) return Math.round(((place.kid && place.kid[stage]) ?? 0.5) * 100);
-  return place.interest[segKey(m.gender, m.age)] ?? 0;
+  const key = segKey(m.gender, m.age);
+  // 같은 나이·성별의 검색 인기에는 영유아를 키우는 부모(아이 때문에 어린이 장소를 찾는 사람)가 섞여 실제 또래 취향이 희석된다.
+  // 그래서 "아이 없는 또래의 인기"를 따로 재서(interestFree: 장소별 직접 측정, freeFactor: 분류별 평균 배율) 어른 점수로 쓴다.
+  const free = place.interestFree?.[key];
+  if (typeof free === 'number') return free;
+  const base = place.interest[key] ?? 0;
+  const f = place.freeFactor?.[key];
+  return f ? clamp(Math.round(base * f), 0, 100) : base;
 }
 
 /** 우리 가족 관심도 = 각자의 관심도를 가중치만큼 섞은 평균(가중 평균) */
@@ -134,10 +141,20 @@ const SMALL_BOOST = 1.35; // 작은 곳은 검색량 자체가 적으니, 같은
  * 가까움이 순위에 미치는 힘(0.1~1). 사용자가 고른 이동시간 한도가 길수록 작아진다.
  * 한도를 길게 잡았다는 것은 "멀어도 괜찮으니 우리 가족 또래에게 인기 높은 곳을 가겠다"는 뜻이라서,
  * 그럴수록 거리 대신 또래 인기(가족 관심도)가 순위를 정하게 한다.
- *   한도 30분 이하 1.0 · 60분 0.5 · 120분 0.25 · 180분 0.17 · 전국(300분으로 침) 0.1
+ * 2026-11-16: "이동시간에 따른 덧점이 너무 낮다, 크게 다르게" 요청으로 곡선을 훨씬 가파르게 바꿨다(30/한도 의 1.4제곱).
+ *   한도 30분 이하 1.0 · 45분 0.57 · 60분 0.38 · 120분 0.14 · 180분 0.08 · 전국(300분으로 침) 0.03
  */
 export function nearWeight(reachMin) {
-  return clamp(30 / Math.max(30, reachMin), 0.1, 1);
+  return clamp((30 / Math.max(30, reachMin)) ** 1.4, 0.03, 1);
+}
+/**
+ * 또래 인기의 덧점 배율. 이동시간 한도가 길수록(= 가까움의 힘이 작을수록) 가족 관심도가 높은 곳이 훨씬 더 큰 덧점을 받는다.
+ * 관심도 60점을 기준(×1)으로, 한도 30분 이하는 거의 그대로(지수 0), 120분은 지수 약 1.7, 전국은 약 1.9.
+ * 예) 관심도 90점 vs 45점인 두 곳: 30분 한도에서는 추가 차이 없음, 전국에서는 그 비율(2배)의 1.9제곱 ≈ 3.7배가 더 붙는다.
+ */
+export function peerBonus(famValue, reachMin) {
+  const exp = 2 * (1 - nearWeight(reachMin));
+  return clamp(famValue / 60, 0.2, 2) ** exp;
 }
 /** 거리 보정 배율: 0분이면 1+amp×w, 한도에 닿으면 1−amp×w. amp 는 규모별 최대 영향(작은 곳 0.45, 큰 곳 0.15) */
 function nearFactor(min, reachMin, amp) {
@@ -176,11 +193,13 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
     }
 
     // 가까울수록 유리하되, 이동시간 한도를 길게 고를수록 그 힘이 줄어든다(nearWeight 참고).
-    // 작은 곳은 "잠깐 들르는 곳"이라 큰 곳보다 거리 영향이 크다.
+    // 작은 곳은 "잠깐 들르는 곳"이라 큰 곳보다 거리 영향이 크다(최대 ±70%, 큰 곳 ±25%).
     // 작은 곳의 규모 보정(SMALL_BOOST)도 가까움과 같이 움직인다: 잠깐 들르는 가까운 곳끼리 비교할 때만 크게 주고,
     // 멀리 갈 때는 큰 나들이 장소와 같은 눈높이(1.0에 가깝게)로 비교한다. 그래야 어림 점수인 작은 곳이 진짜 인기 많은 큰 곳을 밀어내지 않는다.
     const boost = 1 + (SMALL_BOOST - 1) * nearWeight(reach);
-    raw *= small ? boost * nearFactor(min, reach, 0.45) : nearFactor(min, reach, 0.15);
+    raw *= small ? boost * nearFactor(min, reach, 0.7) : nearFactor(min, reach, 0.25);
+    // 이동시간을 길게 고를수록 또래 인기가 높은 곳에 큰 덧점(peerBonus 참고)
+    raw *= peerBonus(fam.value, reach);
 
     // 카카오로 채운 동네 장소는 직접 고른 곳보다 아래에 오도록 낮춘다(관광공사 등록 곳은 덜 낮춤).
     // 네이버 검색량이 있는 곳은 실제 인기라 덜 낮춘다(0.9).
