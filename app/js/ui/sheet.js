@@ -211,7 +211,10 @@ function placeSheet(r, tripEvents, gp) {
         return `
         <li>
           <button type="button" class="near-item" data-action="open-event" data-id="${esc(e.id)}">
-            <span class="near-date type-${esc(e.type)}"><b>${d.getMonth() + 1}/${d.getDate()}</b><small>${DOW[d.getDay()]}</small></span>
+            <span class="near-thumb ${e.photo ? 'has-photo' : ''}">
+              <span class="near-date type-${esc(e.type)}"><b>${d.getMonth() + 1}/${d.getDate()}</b><small>${DOW[d.getDay()]}</small></span>
+              ${e.photo ? `<img src="${esc(e.photo)}" alt="${esc(e.title)} ${e.source === 'kopis' || e.source === 'seoul' ? '포스터' : '사진'}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
+            </span>
             <span class="near-body">
               <span class="near-title">${esc(e.title)}</span>
               <span class="card-meta">${esc(EVENT_TYPES[e.type] || '행사')} · ${esc(rangeText(e.start, e.end))} · 여기서 ${km < 10 ? km.toFixed(1) : Math.round(km)}km</span>
