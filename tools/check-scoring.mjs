@@ -2,7 +2,7 @@
 // 같은 장소를 가까운 곳(바로 옆)과 먼 곳(약 76분 거리)에 하나씩 두고, 한도별로 가까운 쪽이 몇 배 유리한지 잰다.
 // 사용: node tools/check-scoring.mjs   (규칙이 깨지면 종료 코드 1)
 import { PLACES } from '../app/js/data/places.js';
-import { rankPlaces, nearWeight, memberScore } from '../app/js/core/scoring.js';
+import { rankPlaces, nearWeight, memberScore, isKidsPlace } from '../app/js/core/scoring.js';
 import { segKey } from '../app/js/core/segments.js';
 
 const profile = {
@@ -84,6 +84,22 @@ for (const scale of ['big', 'small']) {
   ok(memberScore({ ...base }, m) === (base.interest[key] ?? 0), '측정값이 없는 장소는 예전 점수 그대로여야 해요');
   const kid = { age: 7, gender: 'f', weight: 3 };
   ok(memberScore({ ...base, interestFree: { f6: 1 }, freeFactor: { f6: 0.1 } }, kid) === Math.round(((base.kid && base.kid.lower) ?? 0.5) * 100), '아이 점수는 아이 적합도 표를 그대로 써야 해요(어른 보정 영향 없음)');
+}
+
+// 5) 동행인에 아이(12세 이하)가 없으면 아이 전용 장소(키즈 분류·이름에 키즈/어린이 등)는 추천에서 빠져야 한다. 아이가 있으면 그대로 나온다.
+{
+  const base = PLACES.find((p) => p.scale === 'big' && !p.spot);
+  const mk = (id, name, cat) => ({ ...base, id, name, cat, lat: 37.57, lng: 126.99, spot: false, kto: false });
+  const kidsCat = mk('k1', '시험 방방랜드', 'kids');
+  const kidsName = mk('k2', '시험 어린이박물관', 'museum');
+  const okPark = mk('k3', '시험 서울어린이대공원', 'theme');
+  const normal = mk('n1', '시험 박물관', 'museum');
+  const adults = { ...profile, members: [{ id: 'a', label: '나', age: 38, gender: 'm', weight: 1 }, { id: 'b', label: '배우자', age: 36, gender: 'f', weight: 1 }] };
+  const ids = (prof, opt) => rankPlaces([kidsCat, kidsName, okPark, normal], prof, [], 9999, 'all', opt).map((r) => r.place.id).sort().join(',');
+  ok(ids(adults) === 'k3,n1', `아이가 없으면 키즈 분류·이름에 어린이가 든 곳은 빠지고 어린이대공원은 남아야 해요(지금 ${ids(adults)})`);
+  ok(ids(profile) === 'k1,k2,k3,n1', '아이가 있으면 키즈 장소도 그대로 나와야 해요');
+  ok(ids(adults, { hideKids: false }) === 'k1,k2,k3,n1', '상세 창·찜 목록용 전체 순위는 아이가 없어도 키즈 장소를 빼지 않아야 해요');
+  ok(isKidsPlace({ name: '아이파크몰', cat: 'shop' }) === false && isKidsPlace({ name: '트릭아이뮤지엄', cat: 'theme' }) === false, '"아이"가 이름에 들어간 어른 장소(아이파크몰 등)를 키즈 장소로 잘못 보면 안 돼요');
 }
 
 if (problems.length) {
