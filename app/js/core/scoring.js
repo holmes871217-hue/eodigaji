@@ -162,8 +162,6 @@ export function isKidsEvent(e) {
   return KIDS_EVENT.test(t) && !/어른이/.test(t);
 }
 
-/** 일반 업소(방탈출·룸카페·보드게임·노래방·PC방·스크린골프·당구 등) */
-const COMMERCIAL = /방탈출|이스케이프|룸카페|보드게임|노래방|코인노래|PC방|피시방|스크린골프|당구/;
 export const NEAR_MAX = 45; // "가까운 소소한 곳"에서 보여줄 최대 이동시간(분)
 const SMALL_BOOST = 1.35; // 작은 곳은 검색량 자체가 적으니, 같은 규모끼리 비교되도록 보정
 
@@ -216,15 +214,17 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', {
     const trendTrust = clamp((place.yearly || 0) / 60, 0.3, 1);
     const tu = clamp((place.trend - 1) / 0.5, -trendTrust, trendTrust);
 
+    // 순위의 뼈대는 "총 검색량"이다: 지난 1년 누적 인기(yearly, 0~100)가 높은 곳이 위로 온다.
+    // 최근 증감(추세)은 그 위에 "핫플이냐 여유로운 곳이냐"를 가르는 보조 요소로만 쓴다(최대 ±25%).
+    //  - 핫플 모드: 요즘 뜨는 곳(추세 ↑)이 같은 검색량이면 위로
+    //  - 여유 모드: 요즘 뜸해진 곳(추세 ↓)·덜 붐비는 곳이 같은 검색량이면 위로
+    // (2026-11-16 사용자 지시: "실제 총 검색량을 기준으로 하고, 증감이 핫플인지 여유로운 곳인지를 정한다")
+    const volume = clamp((place.yearly || 0) / 100, 0, 1);
     let raw;
     if (mode === 'calm') {
-      // 여유로운 곳: 검증된 누적 인기 + 가족 관심도, 최근 뜸해질수록·덜 붐빌수록 위로
-      raw = (0.55 * fam.value + 0.45 * place.yearly) * (1 - 0.5 * tu) * (1 - place.crowd / 250);
+      raw = fam.value * (0.3 + 1.4 * volume) * (1 - 0.25 * tu) * (1 - place.crowd / 250);
     } else {
-      // 핫플레이스: 가족 관심도가 높고 최근 뜨는 곳일수록 위로
-      // 아이는 나이대별 검색 인기 대신 "아이에게 맞는 정도"(분류별 표)로 점수를 내서, 인기가 순위에 덜 반영된다.
-      // 그래서 지난 1년 검색 인기(0~100)를 0.6~1.4배로 따로 곱해, 많이 찾는 곳이 위로 오게 한다.
-      raw = fam.value * (1 + 0.5 * tu) * (0.6 + 0.8 * clamp((place.yearly || 0) / 100, 0, 1));
+      raw = fam.value * (0.3 + 1.4 * volume) * (1 + 0.25 * tu);
     }
 
     // 가까울수록 유리하되, 이동시간 한도를 길게 고를수록 그 힘이 줄어든다(nearWeight 참고).
@@ -239,8 +239,6 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', {
     // 카카오로 채운 동네 장소는 직접 고른 곳보다 아래에 오도록 낮춘다(관광공사 등록 곳은 덜 낮춤).
     // 네이버 검색량이 있는 곳은 실제 인기라 덜 낮춘다(0.9).
     if (place.spot) raw *= place.naver ? 0.9 : place.kto ? 0.75 : 0.5;
-    // 방탈출·보드게임카페처럼 나들이 "명소"보다 일반 업소에 가까운 곳은 리조트·관광지보다 아래에 오도록 낮춘다(2026-11-16 사용자 지적).
-    if (place.spot && COMMERCIAL.test(place.name || '')) raw *= 0.6;
 
     // 가는 날 20km 안에서 행사가 열리면 덧점 8%
     const eventNear = nearbyEvents(place, tripEvents)[0]?.e || null; // 상세 창 목록의 1번과 같은 행사
