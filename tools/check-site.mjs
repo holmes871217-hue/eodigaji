@@ -80,7 +80,7 @@ if (existsSync(idxPath)) {
 
 // 4) 게시된 주소에서 실제로 열리는지(주소를 준 경우)
 if (base) {
-  const targets = [...new Set(['', ...refs, 'sw.js', 'data/places.json', 'data/events.json', 'data/spots.json', 'data/citytour.json', 'data/parking/index.json', 'data/seoul-parking.json'])];
+  const targets = [...new Set(['', ...refs, 'sw.js', 'data/places.json', 'data/events.json', 'data/spots.json', 'data/parking/index.json', 'data/seoul-parking.json'])];
   let ok = 0;
   for (const t of targets) {
     try {

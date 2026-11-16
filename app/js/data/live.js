@@ -2,7 +2,6 @@
 // 연습용 숫자를 실제 값으로 바꾼다. 파일이 없거나 못 읽으면 연습용 데이터 그대로 동작한다.
 
 import { PLACES, LOCAL_BASE, spotToPlace } from './places.js';
-import { setCityTours } from './citytour.js';
 import { setLivePhotos, addLivePhotos, setLivePhotoLists, addLivePhotoLists, addLiveSources } from './photos.js';
 import { makeDupIndex } from './dedupe.js';
 
@@ -79,13 +78,6 @@ export async function loadLive() {
     addLivePhotoLists(lists);
   } catch {
     // 파일이 없으면 기존 장소만 쓴다.
-  }
-
-  // 시·군·구별 시티투어 안내(없으면 안내만 안 나온다)
-  try {
-    setCityTours((await getJson('data/citytour.json')).tours);
-  } catch {
-    // 파일이 없으면 시티투어 안내만 빠진다.
   }
 
   let events = null;

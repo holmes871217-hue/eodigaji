@@ -1243,33 +1243,6 @@ async function collectStdEvents(others) {
   return out;
 }
 
-// 전국시티투어정보: 좌표가 없어서 장소로는 못 쓰고, 시·군·구별 "이 지역에 시티투어가 있어요" 안내로만 쓴다.
-// app/data/citytour.json 에 { "<시도 두 글자>|<시군구에서 시·군·구를 뗀 이름>": [{ c: 코스, run: 운행, fee: 요금, tel, url, brd: 탑승지 }] } 로 담는다.
-const stripGun = (n) => String(n || '').replace(/(시|군|구)$/, '');
-async function collectCityTours() {
-  const rows = await stdRows('tn_pubr_public_city_tour_api');
-  const clean = (t, n) => plain(t).replace(/\s*\+\s*/g, ' · ').slice(0, n);
-  const tours = {};
-  for (const r of rows) {
-    const area = r.ctprvnNm === '전남광주통합특별시' ? (/^(동구|서구|남구|북구|광산구)$/.test(r.signguNm) ? '광주' : '전남') : STD_AREA(r.ctprvnNm);
-    const key = `${area.slice(0, 2)}|${stripGun(r.signguNm)}`;
-    const c = clean(r.cityTourCourse, 40);
-    if (!c) continue;
-    const list = (tours[key] ||= []);
-    if (list.some((x) => x.c === c)) continue;
-    list.push({
-      c,
-      run: [clean(r.operHhmm, 60), r.operOpenHhmm && r.operCloseHhmm && !/\d{2}:\d{2}/.test(r.operHhmm || '') ? `${r.operOpenHhmm}~${r.operCloseHhmm}` : ''].filter(Boolean).join(' · '),
-      fee: clean(r.useCharge, 70),
-      brd: clean(r.brdngPlaceNm, 50),
-      tel: r.phoneNumber || '',
-      url: stdUrl(r.homepageUrl),
-    });
-  }
-  writeFileSync(`${ROOT}app/data/citytour.json`, JSON.stringify({ updatedAt: new Date().toISOString(), source: '공공데이터포털 전국시티투어정보표준데이터', tours }));
-  console.log(`  시티투어 ${rows.length}개 코스 → ${Object.keys(tours).length}개 시·군·구 저장`);
-}
-
 /**
  * 직접 확인해 넣는 행사(tools/must-events.mjs)를 목록에 더한다.
  * 이미 목록에 같은 행사(제목·날짜·장소가 겹침)가 있으면 — 공공 자료에 올라온 것 — 직접 넣은 쪽은 뺀다. 끝난 행사도 뺀다.
@@ -1416,8 +1389,6 @@ if (process.argv.includes('--std')) {
   writeFileSync(`${ROOT}app/data/events.json`, JSON.stringify({ ...file, events: withManualEvents([...others, ...std]) }));
   console.log('· 전국 주차장');
   await collectStdParking();
-  console.log('· 시티투어');
-  await collectCityTours();
   console.log('· 관광지·지역특화거리 명소');
   const sp = JSON.parse(readFileSync(`${ROOT}app/data/spots.json`, 'utf8'));
   await addStdSpots(sp.spots);
@@ -1495,8 +1466,6 @@ if (env.SEOUL_API_KEY) {
 } else console.log('  SEOUL_API_KEY 없음, 지난 자료 유지');
 console.log('· 전국 주차장 (공공데이터포털 표준데이터)');
 try { await collectStdParking(); } catch (e) { console.log(`  전국 주차장 수집 실패, 지난 자료 유지: ${e.message}`); }
-console.log('· 시티투어 (공공데이터포털 표준데이터)');
-try { await collectCityTours(); } catch (e) { console.log(`  시티투어 수집 실패, 지난 자료 유지: ${e.message}`); }
 }
 
 console.log('· 장소 사진·소개');
