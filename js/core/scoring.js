@@ -154,9 +154,11 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all') {
     if (scope === 'near' && !small) continue;
     if (scope === 'big' && small) continue;
     const { km, min } = driveEstimate(origin, place);
-    const limit = scope === 'near' ? Math.min(maxMin, NEAR_MAX) : maxMin;
+    const limit = scope === 'near' ? Math.min(maxMin, NEAR_MAX) : maxMin; // 보여줄 범위("가까운 소소한 곳"은 45분 안)
     if (min > limit) continue;
-    const reach = Math.min(limit, 300); // "전국"(9999분)은 300분으로 쳐서 계산
+    // 가까움의 힘은 "보여줄 범위"가 아니라 사용자가 고른 이동시간으로 정한다.
+    // (예전에는 "가까운 소소한 곳"에서 범위가 45분으로 잘려, 이동시간을 3시간으로 늘려도 가까운 곳 덧점이 그대로여서 같은 곳만 위에 올라왔다.)
+    const reach = Math.min(maxMin, 300); // "전국"(9999분)은 300분으로 쳐서 계산
 
     const fam = familyInterest(place, members);
     // 추세를 -1(크게 하락) ~ +1(크게 상승) 사이 값으로 바꾼다.

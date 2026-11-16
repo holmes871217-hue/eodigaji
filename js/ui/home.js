@@ -91,6 +91,9 @@ export function renderHome(state, c) {
       </div>` : ''}
 
     ${modeToggle(profile.mode)}
+    <p class="mode-desc">${profile.mode === 'hot'
+      ? '요즘 검색이 늘고 있는 곳을 먼저 추천해요.'
+      : '많은 사람이 찾던 곳이지만 요즘 검색이 뜸해진 곳을 먼저 추천해요.'}</p>
 
     <div class="row-between tight">
       <span class="label">어디까지 볼까요?</span>
