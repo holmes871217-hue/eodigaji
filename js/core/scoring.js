@@ -59,7 +59,8 @@ export function crowdLabel(crowd) {
 }
 
 export function trendPct(trend) {
-  return Math.round((trend - 1) * 100);
+  // 검색량이 적은 곳은 최근 4주 ÷ 1년 평균이 크게 튀어(+541% 등) 화면에서 과장돼 보이므로 표시는 최대 +100%로 자른다(점수 계산은 따로 ±50%로 자름).
+  return Math.min(100, Math.round((trend - 1) * 100));
 }
 
 function withDrive(e, origin) {
@@ -117,7 +118,7 @@ function reasonsFor(row, mode) {
 
   // 2) 추세
   const pct = trendPct(place.trend);
-  if (pct >= 10) out.push({ kind: 'up', text: `검색 +${pct}%` });
+  if (pct >= 10) out.push({ kind: 'up', text: pct >= 100 ? '검색 +100% 이상' : `검색 +${pct}%` });
   else if (pct <= -8) out.push({ kind: 'down', text: `검색 ${pct}% · ${crowdLabel(place.crowd)}` });
   else if (mode === 'calm') out.push({ kind: 'down', text: `혼잡 ${crowdLabel(place.crowd)}` });
 
@@ -161,6 +162,8 @@ export function isKidsEvent(e) {
   return KIDS_EVENT.test(t) && !/어른이/.test(t);
 }
 
+/** 일반 업소(방탈출·룸카페·보드게임·노래방·PC방·스크린골프·당구 등) */
+const COMMERCIAL = /방탈출|이스케이프|룸카페|보드게임|노래방|코인노래|PC방|피시방|스크린골프|당구/;
 export const NEAR_MAX = 45; // "가까운 소소한 곳"에서 보여줄 최대 이동시간(분)
 const SMALL_BOOST = 1.35; // 작은 곳은 검색량 자체가 적으니, 같은 규모끼리 비교되도록 보정
 
@@ -208,7 +211,10 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', {
 
     const fam = familyInterest(place, members);
     // 추세를 -1(크게 하락) ~ +1(크게 상승) 사이 값으로 바꾼다.
-    const tu = clamp((place.trend - 1) / 0.5, -1, 1);
+    // 검색량이 적은 곳(1년 인기 낮음)은 "최근 4주 ÷ 1년 평균"이 조금만 움직여도 크게 튀어서(예: 방탈출 +365%) 믿기 어렵다.
+    // 그래서 1년 인기가 60점 미만이면 추세가 점수에 미치는 한도를 그만큼 줄인다(최소 30%). 인기 높은 곳은 그대로 ±1.
+    const trendTrust = clamp((place.yearly || 0) / 60, 0.3, 1);
+    const tu = clamp((place.trend - 1) / 0.5, -trendTrust, trendTrust);
 
     let raw;
     if (mode === 'calm') {
@@ -233,6 +239,8 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', {
     // 카카오로 채운 동네 장소는 직접 고른 곳보다 아래에 오도록 낮춘다(관광공사 등록 곳은 덜 낮춤).
     // 네이버 검색량이 있는 곳은 실제 인기라 덜 낮춘다(0.9).
     if (place.spot) raw *= place.naver ? 0.9 : place.kto ? 0.75 : 0.5;
+    // 방탈출·보드게임카페처럼 나들이 "명소"보다 일반 업소에 가까운 곳은 리조트·관광지보다 아래에 오도록 낮춘다(2026-11-16 사용자 지적).
+    if (place.spot && COMMERCIAL.test(place.name || '')) raw *= 0.6;
 
     // 가는 날 20km 안에서 행사가 열리면 덧점 8%
     const eventNear = nearbyEvents(place, tripEvents)[0]?.e || null; // 상세 창 목록의 1번과 같은 행사
