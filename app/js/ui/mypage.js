@@ -116,10 +116,8 @@ export function renderMy(state) {
       </div>
       <div class="picker-map-wrap">
         <div id="pick-map" class="map picker-map" role="application" aria-label="검색 위치를 고르는 지도"></div>
-        <span class="picker-pin" aria-hidden="true">${icon('pin', 40)}</span>
       </div>
-      <p class="picker-label">지도를 움직여 핀을 원하는 곳에 맞추세요. 핀 위치: <b id="pick-label">${esc(p.origin.name)}</b></p>
-      <button type="button" class="btn-dark wide" data-action="commit-pick">이 위치로 정하기</button>
+      <p class="picker-label">지도에서 원하는 곳을 한 번 누르면 검색 위치가 그곳으로 옮겨져요. 지금 검색 위치: <b id="pick-label">${esc(p.origin.name)}</b></p>
     </div>
 
     <h2 class="h2 mt">함께 가는 사람</h2>
