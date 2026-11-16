@@ -3,7 +3,7 @@ import { CITIES } from '../core/geo.js';
 import { NIGHT_OPTIONS } from '../core/store.js';
 import { todayISO } from '../core/dates.js';
 import { kidStage, KID_STAGE_LABEL, bandOf, memberLabel } from '../core/segments.js';
-import { esc, icon, modeToggle } from './util.js';
+import { esc, icon } from './util.js';
 
 function memberCard(m, index, total) {
   const stage = kidStage(m.age);
@@ -73,12 +73,6 @@ export function renderMy(state) {
       </div>
     </div>
     <p class="muted">기간을 바꾸면 이동시간이 알맞게 맞춰져요(당일 2시간 · 1박 3시간 · 2박 이상 전국).</p>
-
-    <h2 class="h2 mt">어떤 곳이 좋으세요?</h2>
-    ${modeToggle(p.mode)}
-    <p class="mode-desc">${p.mode === 'hot'
-      ? '요즘 검색이 늘고 있는 곳을 먼저 추천해요.'
-      : '많은 사람이 찾던 곳이지만 요즘 검색이 뜸해진 곳을 먼저 추천해요.'}</p>
 
     <h2 class="h2 mt">주요 검색 위치</h2>
     <p class="muted">이곳을 중심으로 주변을 찾아요. 집이 아니어도 돼요. 약속이 있는 곳 근처를 골라 두면, 그 주변에서 더 시간을 보낼 곳을 찾을 수 있어요.</p>

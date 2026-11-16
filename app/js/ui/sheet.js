@@ -69,7 +69,7 @@ function shopsSheet(place, kind, data, favs) {
     <div class="sheet-head">
       <div>
         <h2 class="sheet-title" id="sheet-title">${esc(place.name)} 근처 ${k.label}</h2>
-        <p class="card-meta">${data?.source === 'kakao' ? '가까운 순 5곳' : '가깝고 평점 높은 순 5곳'} · 누르면 네이버 지도, ♥는 찜</p>
+        <p class="card-meta">${data?.source === 'kakao' ? '가까운 순 5곳' : '가깝고 평점 높은 순 5곳'}</p>
       </div>
     </div>`;
   if (!data || data.status === 'loading') {
@@ -220,8 +220,7 @@ function placeSheet(r, tripEvents, gp) {
           </button>
         </li>`;
       }).join('')}
-    </ul>
-    <p class="muted">누르면 자세히 볼 수 있어요. 뒤로 가면 이 장소로 돌아와요.</p>` : ''}
+    </ul>` : ''}
 
     <div class="stats">
       <div class="stat"><b>${Math.round(r.fam)}</b><span>우리 가족 관심도</span></div>
