@@ -271,6 +271,7 @@ function eventSheet(e) {
       <div class="stat"><b>${Math.round(e.km)}km</b><span>직선거리</span></div>
       <div class="stat"><b>${e.kid ? '좋음' : '보통'}</b><span>아이 동반</span></div>
     </div>
+    ${e.fee ? `<p class="desc"><b>요금</b> ${esc(e.fee)} <span class="muted">(공식 자료 기준, 바뀔 수 있어요)</span></p>` : ''}
     <p class="desc">${esc(e.desc)}</p>
     ${e.photo ? `<div class="sheet-photo event-photo ${e.source === 'kopis' || e.source === 'seoul' ? 'is-poster' : ''}"><img src="${esc(e.photo)}" alt="${esc(e.title)} ${e.source === 'kopis' || e.source === 'seoul' ? '포스터' : '사진'}" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : ''}
     <p class="sample-note">${e.sample
