@@ -301,7 +301,7 @@ export function renderSheet(state, c) {
     const row = c.rankedAll.find((r) => r.place.id === s.id);
     if (row) inner = placeSheet(row, c.tripEvents, state.ui.gphotos?.[s.id]);
   } else if (s.type === 'event') {
-    const ev = [...c.tripEvents, ...c.upcoming].find((e) => e.id === s.id);
+    const ev = (c.eventsAll || [...c.tripEvents, ...c.upcoming]).find((e) => e.id === s.id);
     if (ev) inner = eventSheet(ev);
   } else if (s.type === 'shops' && SHOP_KINDS[s.kind]) {
     const row = c.rankedAll.find((r) => r.place.id === s.id);
