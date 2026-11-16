@@ -33,7 +33,9 @@ for (const scale of ['big', 'small']) {
   const r = [100, 150, 9999].map((m) => ratio(scale, m));
   if (r.some((x) => !x)) { problems.push(`${scale}: 시험용 장소가 한도 안에 안 들어와요(먼 곳 이동시간 확인 필요)`); continue; }
   console.log(`${scale}: 가까운 쪽이 먼 쪽보다 유리한 배수  100분 한도 ${r[0].ratio.toFixed(2)}배 · 150분 ${r[1].ratio.toFixed(2)}배 · 전국 ${r[2].ratio.toFixed(2)}배 (가까운 곳 ${r[0].nearMin}분, 먼 곳 ${r[0].farMin}분)`);
-  ok(r[0].ratio >= r[1].ratio && r[1].ratio >= r[2].ratio, `${scale}: 한도가 길수록 가까운 쪽의 유리함이 줄어야 해요`);
+  // 2026-11-16: 전체·큰 나들이 탭은 한도의 절반 이상 떨어진 먼 곳에 덧점(최대 +35%)을 줘서 1·2·3시간 결과가 달라지게 했다.
+  // 그래서 "한도가 길수록 가까운 쪽 유리함이 줄어든다"는 단조 규칙은 이 탭에서 더 이상 성립하지 않는다. 대신 극단으로 치우치지 않는지만 본다.
+  ok(r.every((x) => x.ratio > 0.8 && x.ratio < 1.4), `${scale}: 가까움·먼 곳 덧점이 한쪽으로 지나치게 치우쳤어요(${r.map((x) => x.ratio.toFixed(2)).join(', ')})`);
   ok(r[2].ratio < (scale === 'small' ? 1.25 : 1.12), `${scale}: 전국으로 고르면 거리 영향이 작아야 해요(지금 ${r[2].ratio.toFixed(2)}배)`);
 }
 
@@ -71,6 +73,14 @@ for (const scale of ['big', 'small']) {
   console.log(`또래 인기가 2배 높은 곳이 유리한 배수  30분 ${gs[0].toFixed(2)}배 · 2시간 ${gs[1].toFixed(2)}배 · 전국 ${gs[2].toFixed(2)}배`);
   ok(gs[0] < gs[1] && gs[1] < gs[2], '이동시간을 길게 고를수록 또래 인기가 높은 곳의 덧점이 커져야 해요');
   ok(gs[2] > gs[0] * 1.8, `전국으로 고르면 또래 인기 차이가 30분 한도보다 훨씬 크게(1.8배 이상) 반영돼야 해요(지금 ${(gs[2] / gs[0]).toFixed(2)}배)`);
+}
+
+// 3-2) "가까운 소소한 곳" 탭도 이동시간을 고른 만큼 후보가 넓어져야 한다(예전에는 45분에서 잘라 1·2·3시간이 거의 같았다).
+{
+  const base = PLACES.find((p) => p.scale === 'small' && !p.spot);
+  const far = { ...base, id: 'far', lat: 37.4, lng: 127.6, spot: false, kto: false }; // 서울에서 약 76분
+  const has = (maxMin) => rankPlaces([far], profile, [], maxMin, 'near').length > 0;
+  ok(!has(60) && has(120), '가까운 소소한 곳: 이동시간을 길게 고르면(2시간) 그만큼 먼 곳도 후보에 들어와야 해요');
 }
 
 // 4) 어른 점수는 "아이 없는 또래의 인기"(interestFree, 없으면 분류별 배율 freeFactor)를 써야 한다(영유아 부모에 희석되지 않게).
