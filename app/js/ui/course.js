@@ -45,7 +45,7 @@ export function courseSheet(state) {
           const n = visits.indexOf(it) + 1, p = it.place;
           if (p.shop) {
             const tag = it.meal === 'cafe' ? '☕ 카페' : `🍽 ${it.meal === 'lunch' ? '점심 · ' : it.meal === 'dinner' ? '저녁 · ' : ''}맛집`;
-            return `<li class="course-visit course-shop"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>${n}. ${esc(p.name)}</b><span class="card-meta">${tag}${p.auto ? ' · 근처에서 자동으로 찾았어요' : ' · 찜한 곳'} · 이동 ${kmin(it.travel)} · 약 ${kmin(it.dwell)}(추정)${p.rating ? ` · ★${p.rating.toFixed(1)}` : ''} · 영업시간 미확인</span></span></li>`;
+            return `<li class="course-visit course-shop"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>${n}. ${esc(p.name)}</b><span class="card-meta">${tag}${p.auto ? ' · 근처에서 자동으로 찾았어요' : ' · 찜한 곳'} · 이동 ${kmin(it.travel)} · 약 ${kmin(it.dwell)}(추정)${p.br ? ' · 블루리본 선정' : ''}${p.rating ? ` · ★${p.rating.toFixed(1)}` : ''} · 영업시간 미확인</span></span></li>`;
           }
           return `<li class="course-visit"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>${n}. ${esc(p.name)}</b><span class="card-meta">이동 ${kmin(it.travel)} · 머무는 시간 약 ${kmin(it.dwell)}(추정) · 영업시간 미확인 · ${esc(parkingNote(p))}${it.lunchIn ? ' · 점심은 이 안에서' : ''}</span></span></li>`;
         }
