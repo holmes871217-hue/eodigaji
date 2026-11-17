@@ -190,7 +190,14 @@ function chapterName(title) {
  * @param {string} description 영상 설명
  * @returns {{items:Array<{name,role,cue,addr,phone,hint}>, listOnly:boolean}}
  */
+/** 제품 판매·제휴 안내 구간("🚀또간집 X (제품) 여기서만 최저가" 등)부터는 식당 정보가 아니므로 잘라 낸다. */
+export function stripPromo(description) {
+  const lines = String(description || '').split(/\r?\n/);
+  const i = lines.findIndex((l) => /^\s*🚀|여기서만\s*최저가|수제샵|공식\s*최저가|판매\s*기간|\b1\s*\+\s*1\b|쿠폰|할인\s*코드/.test(l));
+  return (i >= 0 ? lines.slice(0, i) : lines).join('\n');
+}
 export function extractSeries(description, regionCtx = '') {
+  description = stripPromo(description);
   const lines = String(description || '').split(/\r?\n/);
   const found = new Map(); // normName → item
   const put = (it) => {

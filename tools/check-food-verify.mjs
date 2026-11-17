@@ -146,6 +146,7 @@ ok(!N.sameEligible({ name: '맛있는집', lat: 37.3, lng: 127.0 }, { n: '맛있
   ok(role('셋째횟집') === 'final', '"최종 선정" 표시가 있으면 final 이어야 해요');
   ok(role('넷째한우') === 'winner', '1위 표시가 있으면 winner 여야 해요');
   ok(L.extractSeries('00:00 오프닝\n03:00 그냥 이야기\n구독', '').items.every((x) => x.role !== 'winner'), '1위 표시가 없으면 winner 로 추정하면 안 돼요');
+  ok(L.extractSeries('소개글입니다\n#풍자 #또간집 #이천\n\n🚀또간집 X 어떤브랜드 여기서만 최저가\n2025 올리브영 어워즈 토너 1위\n마일드민트 1L x 3개 = 34,200원', '이천시').items.length === 0, '제품 판매·제휴 안내 구간에서 식당을 뽑으면 안 돼요(실제 데이터에서 "올리브영 어워즈 토너"가 잡혔음)');
   const now = Date.parse('2026-11-17');
   const win = L.contentScore([{ videoId: 'a', role: 'winner', publishedAt: '2026-05-01' }], undefined, now).score;
   const vis = L.contentScore([{ videoId: 'a', role: 'visited', publishedAt: '2026-05-01' }], undefined, now).score;
