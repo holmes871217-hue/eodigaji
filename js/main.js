@@ -9,7 +9,7 @@ import { nearestLabel } from './core/locate.js';
 import { searchLocation } from './core/search.js';
 import { findShops, SHOP_KINDS } from './core/nearby.js';
 import { findGooglePhotos } from './core/gphotos.js';
-import { loadTaste, saveTaste, togglePref, recordView, setHidden, setVisited, setRating, clearHidden, makeTasteScorer } from './core/taste.js';
+import { loadTaste, saveTaste, togglePref, migratePrefs, recordView, setHidden, setVisited, setRating, clearHidden, makeTasteScorer } from './core/taste.js';
 import { photosOf } from './data/photos.js';
 import { isValidISO, todayISO } from './core/dates.js';
 import { tripRange, rangeText } from './ui/util.js';
@@ -32,8 +32,9 @@ const state = loadState();
 // 개인 취향·행동 데이터(C 항목): 새 키 eodigaji.taste.v1 에 따로 저장한다. 화면이 읽을 수 있게 state.ui 에 걸어 둔다(state.ui 는 폰에 저장되지 않는다).
 const taste = loadTaste();
 state.ui.taste = taste;
+if (migratePrefs(taste, state.profile.members[0]?.id)) saveTaste(taste); // 예전 공통 취향 → 나의 취향
 state.ui.course = { start: '09:00', end: '18:00', mode: 'car', result: null }; // 코스 만들기 입력과 결과(저장하지 않음)
-const tasteScorer = () => makeTasteScorer(taste, PLACES, state.favs.filter((f) => f.type === 'place').map((f) => f.id));
+const tasteScorer = () => makeTasteScorer(taste, PLACES, state.favs.filter((f) => f.type === 'place').map((f) => f.id), state.profile.members);
 let EVENTS = getEvents();
 let liveUpdatedAt = null; // 실제 데이터를 모은 시각 (없으면 연습용 데이터)
 let installEvent = null; // 브라우저가 건네준 "설치 창 띄우기" 손잡이
@@ -41,7 +42,7 @@ let installEvent = null; // 브라우저가 건네준 "설치 창 띄우기" 손
 const TABS = [
   { v: 'home', label: '추천', full: '추천', icon: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>' },
   { v: 'events', label: '축제', full: '축제·행사', icon: '<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>' },
-  { v: 'favs', label: '찜', full: '찜한 곳', icon: '<path d="M12 20.5s-7.5-4.6-7.5-10.3A4.4 4.4 0 0 1 12 7.4a4.4 4.400 0 0 1 7.500 2.800c0 5.700-7.500 10.300-7.500 10.300z"/>' },
+  { v: 'favs', label: '찜·코스', full: '찜·코스', icon: '<path d="M12 20.5s-7.5-4.6-7.5-10.3A4.4 4.4 0 0 1 12 7.4a4.4 4.400 0 0 1 7.500 2.800c0 5.700-7.500 10.300-7.500 10.300z"/>' },
   { v: 'deals', label: '특가', full: '특가', icon: '<path d="M3.5 12.5V4.5h8l9 9-8 8z"/><circle cx="8" cy="9" r="1.5"/>' },
   { v: 'my', label: '마이', full: '마이페이지', icon: '<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>' },
 ];
@@ -421,7 +422,7 @@ root.addEventListener('click', (ev) => {
       const snap = had ? {} : favSnapshot(type, id);
       if (!snap) break;
       const result = toggleFav(state, { key, type, id, ...snap });
-      if (result === 'full') { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 찜 탭에서 몇 곳을 빼 주세요.`); break; }
+      if (result === 'full') { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 찜·코스 탭에서 몇 곳을 빼 주세요.`); break; }
       saveState(state);
       if (state.ui.tab === 'favs' && !state.ui.sheet) { update(() => {}, { persist: false }); break; }
       // 화면 전체를 다시 그리면 상세 창이 맨 위로 올라가 버려서, 하트 모양과 탭의 숫자만 바꾼다.
@@ -473,7 +474,7 @@ root.addEventListener('click', (ev) => {
         const old = state.favs.find((f) => f.type === 'place' && f.id === p.id);
         return old || { key: favKey('place', p.id), type: 'place', id: p.id, ...favSnapshot('place', p.id) };
       });
-      if (placed.length + keep.length > FAV_MAX) { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 찜 탭에서 몇 곳을 빼 주세요.`); break; }
+      if (placed.length + keep.length > FAV_MAX) { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 찜·코스 탭에서 몇 곳을 빼 주세요.`); break; }
       state.favs = [...placed, ...keep]; // 코스 순서대로 맨 위에, 나머지 찜은 그 아래에 그대로 둔다
       saveState(state);
       sheets = [];
@@ -482,7 +483,7 @@ root.addEventListener('click', (ev) => {
       break;
     }
     case 'taste-pref':
-      togglePref(taste, v); saveTaste(taste);
+      togglePref(taste, v, id); saveTaste(taste);
       update(() => {}, { persist: false });
       break;
     case 'taste-hide':
@@ -536,6 +537,7 @@ root.addEventListener('click', (ev) => {
       update(() => {
         if (state.profile.members.length > 1) {
           state.profile.members = state.profile.members.filter((m) => m.id !== id);
+          if (taste.mp) { delete taste.mp[id]; saveTaste(taste); }
         }
       });
       break;

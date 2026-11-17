@@ -4,9 +4,9 @@ import { NIGHT_OPTIONS } from '../core/store.js';
 import { todayISO } from '../core/dates.js';
 import { kidStage, KID_STAGE_LABEL, bandOf, memberLabel } from '../core/segments.js';
 import { esc, icon } from './util.js';
-import { TASTES, hiddenCount } from '../core/taste.js';
+import { TASTES, hiddenCount, prefsOf } from '../core/taste.js';
 
-function memberCard(m, index, total) {
+function memberCard(m, index, total, taste) {
   const stage = kidStage(m.age);
   const group = stage ? `아이 · ${KID_STAGE_LABEL[stage]}` : bandOf(m.age).label;
   const name = memberLabel(m, index);
@@ -45,6 +45,12 @@ function memberCard(m, index, total) {
           ${[1, 2, 3, 4, 5]
             .map((w) => `<button type="button" class="weight ${m.weight === w ? 'is-on' : ''}" data-action="weight" data-id="${esc(m.id)}" data-v="${w}" aria-pressed="${m.weight === w}">${w}</button>`)
             .join('')}
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-label">${esc(name)}의 취향 <em>(선택)</em></span>
+        <div class="chips" role="group" aria-label="${esc(name)} 취향">
+          ${TASTES.map((t) => { const on = prefsOf(taste || {}, m.id).includes(t.v); return `<button type="button" class="chip ${on ? 'is-on' : ''}" data-action="taste-pref" data-id="${esc(m.id)}" data-v="${t.v}" aria-pressed="${on}">${t.icon} ${t.label}</button>`; }).join('')}
         </div>
       </div>
       <p class="member-group">${esc(group)} 기준으로 계산돼요.</p>
@@ -121,16 +127,10 @@ export function renderMy(state) {
       <p class="picker-label">지도에서 원하는 곳을 한 번 누르면 검색 위치가 그곳으로 옮겨져요. 지금 검색 위치: <b id="pick-label">${esc(p.origin.name)}</b></p>
     </div>
 
-    <h2 class="h2 mt">내 취향 <small class="muted">(선택)</small></h2>
-    <p class="muted">고른 취향에 맞는 곳이 위로 올라와요. 고르지 않아도 돼요. 찜·다녀옴·별점·관심 없음 기록도 추천에 반영돼요.</p>
-    <div class="chips" role="group" aria-label="내 취향">
-      ${TASTES.map((t) => `<button type="button" class="chip ${state.ui.taste?.prefs?.includes(t.v) ? 'is-on' : ''}" data-action="taste-pref" data-v="${t.v}" aria-pressed="${state.ui.taste?.prefs?.includes(t.v) ? 'true' : 'false'}">${t.icon} ${t.label}</button>`).join('')}
-    </div>
-    ${state.ui.taste && hiddenCount(state.ui.taste) ? `<p class="muted">관심 없음으로 숨긴 곳 ${hiddenCount(state.ui.taste)}곳 <button type="button" class="link-btn" data-action="taste-unhide-all">모두 다시 보기</button></p>` : ''}
-
     <h2 class="h2 mt">함께 가는 사람</h2>
-    <p class="muted">가중치가 큰 사람과 같은 성별·연령대가 많이 찾는 곳이 위로 올라와요.</p>
-    ${p.members.map((m, i) => memberCard(m, i, p.members.length)).join('')}
+    <p class="muted">가중치가 큰 사람과 같은 성별·연령대가 많이 찾는 곳이 위로 올라와요. 사람마다 취향(선택)을 따로 고르면, 고른 취향에 맞는 곳이 위로 올라와요(가중치가 큰 사람의 취향을 더 반영해요). 고르지 않아도 돼요. 찜·다녀옴·별점·관심 없음 기록도 추천에 반영돼요.</p>
+    ${p.members.map((m, i) => memberCard(m, i, p.members.length, state.ui.taste)).join('')}
+    ${state.ui.taste && hiddenCount(state.ui.taste) ? `<p class="muted">관심 없음으로 숨긴 곳 ${hiddenCount(state.ui.taste)}곳 <button type="button" class="link-btn" data-action="taste-unhide-all">모두 다시 보기</button></p>` : ''}
     <button type="button" class="btn-add" data-action="add-member">+ 동행 추가</button>
 
     ${state.ui.installed ? '' : `

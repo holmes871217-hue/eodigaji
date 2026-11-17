@@ -42,12 +42,16 @@ export function renderFavs(state, c) {
   if (!favs.length) {
     return `
       <div class="headline">
-        <h1>찜한 곳으로<br>동선을 짜 보세요</h1>
+        <h1>찜·코스</h1>
       </div>
       <div class="empty fav-empty">
         <b>아직 찜한 곳이 없어요.</b>
         <span>추천·축제 탭에서 오른쪽 위 ♥를 누르면 여기에 담겨요. 장소 상세의 근처 맛집·카페도 담을 수 있어요.</span>
       </div>
+    <div class="trend-tools">
+      <button type="button" class="trend-open" data-action="open-course">🗺 여행 코스 자동 만들기 (시간표)</button>
+      <button type="button" class="trend-open" data-action="open-trend">🔥 전국 지역 트렌드 지도 보기</button>
+    </div>
       <div class="sheet-actions">
         <button type="button" class="btn-primary" data-action="tab" data-v="home">추천 보러 가기</button>
         <button type="button" class="btn-secondary" data-action="tab" data-v="events">축제 보러 가기</button>
@@ -56,9 +60,12 @@ export function renderFavs(state, c) {
   const km = routeKm(favs);
   return `
     <div class="headline fav-head">
-      <h1>찜한 곳 동선</h1>
+      <h1>찜·코스</h1>
     </div>
-    <button type="button" class="trend-open" data-action="open-course">🗺 코스 자동 만들기 (시간표)</button>
+    <div class="trend-tools">
+      <button type="button" class="trend-open" data-action="open-course">🗺 여행 코스 자동 만들기 (시간표)</button>
+      <button type="button" class="trend-open" data-action="open-trend">🔥 전국 지역 트렌드 지도 보기</button>
+    </div>
     <div class="map-wrap">
       <div id="fav-map" class="map map-fav" role="application" aria-label="찜한 곳 지도. 번호는 가는 순서예요"></div>
     </div>

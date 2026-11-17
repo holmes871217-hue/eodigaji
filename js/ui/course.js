@@ -17,7 +17,7 @@ function parkingNote(p) {
 export function courseSheet(state) {
   const cs = state.ui.course || {};
   const p = state.profile;
-  const taste = (state.ui.taste?.prefs || []).map((v) => TASTES.find((t) => t.v === v)?.label).filter(Boolean);
+  const taste = [...new Set(p.members.flatMap((m) => (state.ui.taste?.mp?.[m.id] || [])))].map((v) => TASTES.find((t) => t.v === v)?.label).filter(Boolean);
   const r = cs.result;
   const form = `
     <div class="sheet-head"><div>
