@@ -11,6 +11,10 @@ const ALLOW = /^여행|^문화,예술>(문화시설|미술|전시|종교)|^가�
 const NOT = /음식점|카페|스포츠시설|교육|유아|도서|축산업|여행사|이벤트|공연기획|공연,연극|영화|학교|병원/;
 const BAD_NAME = /주차장|매표소|화장실|충전소|정류장|입구|정문|후문|사무소|사무실|관리소|안내소|인포센터|대학교|분소|매점|편의점|기념품|수장고|연구소|예정\)|유통센터|농수산물|보조풀장|상가|공구|도매/;
 
+// 장소가 아닌 이름(행사·상품·프로모션·일반 단어)이 장소로 들어오지 않게 하는 추가 검증(2026-11-17, A 항목)
+const NOT_PLACE_NAME = /페스티벌|축제$|이벤트|할인|세일|증정|쿠폰|프로모션|공모전|모집|체험단|후기|추천|맛집|베스트|TOP\s?\d|\d+곳|코스$|여행$|투어$|패키지|특가|오픈$|팝업/;
+const isPlaceName = (n) => { const t = String(n || '').trim(); return t.length >= 2 && !/^[\d\s.,]+$/.test(t) && !NOT_PLACE_NAME.test(t); };
+
 export const catOf = (r) => {
   const t = `${r.name} ${r.cat}`;
   return /박물관|과학관|전시관|기념관|체험관|천문대/.test(t) ? 'museum'
@@ -42,7 +46,7 @@ export function mergeDiscovered(result, { root = process.cwd(), min = 5, dryRun 
     const old = byId.get(id);
     if (old?.disc) { old.disc = { ...old.disc, b: r.bloggers, at: today }; seen.add(id); refreshed++; continue; }
     if (old) continue; // 이미 다른 경로로 들어온 곳
-    if (!ALLOW.test(r.cat) || NOT.test(r.cat) || BAD_NAME.test(r.name)) { skipped++; continue; }
+    if (!ALLOW.test(r.cat) || NOT.test(r.cat) || BAD_NAME.test(r.name) || !isPlaceName(r.name)) { skipped++; continue; }
     if (/종교/.test(r.cat) && r.bloggers < 20) { skipped++; continue; }
     if (nearSame(r)) { skipped++; continue; }
     const row = {

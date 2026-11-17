@@ -249,6 +249,11 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', {
     // 카카오로 채운 동네 장소는 직접 고른 곳보다 아래에 오도록 낮춘다(관광공사 등록 곳은 덜 낮춤).
     // 네이버 검색량이 있는 곳은 실제 인기라 덜 낮춘다(0.9).
     if (place.spot) raw *= place.naver ? 0.9 : place.kto ? 0.75 : 0.5;
+    // 핫플 분류 보정(A 항목, 작게): 검색량이 낮아 순위 아래에 묻히는 숨은 명소·신규 발견을 조금 끌어올리고, 모드에 맞는 분류에 소폭 가산한다.
+    // 근거가 부족한 분류(hotQ=0)는 반영하지 않는다. 총 검색량 뼈대는 그대로 두고 최대 +20%만 건드린다.
+    if (place.hot && place.hotQ !== 0) {
+      raw *= place.hot === 'h' ? 1.2 : place.hot === 'n' ? 1.1 : place.hot === 'r' && mode !== 'calm' ? 1.08 : place.hot === 'f' && mode === 'calm' ? 1.08 : 1;
+    }
 
     // 가는 날 20km 안에서 행사가 열리면 덧점 8%
     const eventNear = nearbyEvents(place, tripEvents)[0]?.e || null; // 상세 창 목록의 1번과 같은 행사
