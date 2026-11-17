@@ -33,6 +33,30 @@ export function cleanShopName(name) {
   return s || String(name || '');
 }
 
+
+// ── 블루리본 선정 표시(이용 허락이 확인된 자료가 있을 때만 켜진다) ──────────────
+// app/data/blueribbon.json 의 license.status 가 "permitted" 일 때만 쓴다. 허락 전에는 자료가 비어 있어 아무것도 달라지지 않는다.
+// 로고·리본 그림은 쓰지 않고 글자("블루리본 선정")로만 표시한다. 자세한 사정은 docs/블루리본-연동.md
+let brPromise = null;
+function loadBlueRibbon() {
+  if (!brPromise) {
+    brPromise = fetch('data/blueribbon.json').then((r) => (r.ok ? r.json() : null))
+      .then((j) => (j && j.license?.status === 'permitted' && Array.isArray(j.items) ? j.items : []))
+      .catch(() => []);
+  }
+  return brPromise;
+}
+const brKey = (s) => String(s || '').replace(/\s+|\([^)]*\)/g, '').toLowerCase();
+export function tagBlueRibbon(rows, list) {
+  if (!list.length) return rows;
+  for (const r of rows) {
+    const k = brKey(r.nq || r.name);
+    const hit = list.find((b) => brKey(b.n) === k && haversineKm({ lat: b.lat, lng: b.lng }, r) < 0.3);
+    if (hit) { r.br = hit.y || true; }
+  }
+  return rows;
+}
+
 async function googleNearby(place, kind, radius, key) {
   const res = await fetch('https://places.googleapis.com/v1/places:searchNearby', {
     method: 'POST',
@@ -71,17 +95,18 @@ async function googleNearby(place, kind, radius, key) {
  * 리뷰가 몇 개뿐인 5.0점이 맨 위로 오지 않게, 리뷰 20개 분량의 보통 점수(4.0)를 섞어 계산하고
  * 1km 멀어질 때마다 0.15점씩 깎는다.
  */
-function pickBest(rows) {
-  const score = (r) => (r.rating == null ? 0 : (r.rating * r.reviews + 4.0 * 20) / (r.reviews + 20)) - 0.15 * r.km;
+export function pickBest(rows) {
+  const score = (r) => (r.rating == null ? 0 : (r.rating * r.reviews + 4.0 * 20) / (r.reviews + 20)) - 0.15 * r.km + (r.br ? 2 : 0); // 블루리본 선정은 평점보다 우선
   return rows.slice().sort((a, b) => score(b) - score(a)).slice(0, 5);
 }
 
 /** 구글로 찾기. key 를 따로 주는 것은 검수용(평소에는 config.js 의 키를 쓴다). */
 export async function viaGoogle(place, kind, key = GOOGLE_PLACES_KEY) {
-  let rows = await googleNearby(place, kind, 3000, key);
+  const br = kind === 'food' ? await loadBlueRibbon() : [];
+  let rows = tagBlueRibbon(await googleNearby(place, kind, 3000, key), br);
   // 근처에 가게가 거의 없는 곳(산·바다)은 10km까지 넓혀 한 번 더 찾는다.
   if (rows.filter((r) => r.rating != null).length < 5) {
-    try { rows = await googleNearby(place, kind, 10000, key); } catch { /* 처음 결과를 쓴다 */ }
+    try { rows = tagBlueRibbon(await googleNearby(place, kind, 10000, key), br); } catch { /* 처음 결과를 쓴다 */ }
   }
   return pickBest(rows);
 }
@@ -204,9 +229,9 @@ async function viaKakao(place, kind, limit = 5) {
       .filter((d) => d.place_name.trim() !== '주차장' && !NOT_PARK.test(d.place_name) && !seen.has(d.place_name) && seen.add(d.place_name))
       .sort((a, b) => rank(a) - rank(b));
   }
-  return rows
+  const brList = kind === 'food' ? await loadBlueRibbon() : [];
+  const out = rows
     .filter((d) => kind !== 'cafe' || !NOT_CAFE.test(d.place_name))
-    .slice(0, limit)
     .map((d) => ({
       id: `k-${d.id}`,
       name: d.place_name,
@@ -219,6 +244,9 @@ async function viaKakao(place, kind, limit = 5) {
       reviews: 0,
       km: haversineKm(place, { lat: Number(d.y), lng: Number(d.x) }),
     }));
+  tagBlueRibbon(out, brList);
+  if (brList.length) out.sort((a, b) => Number(Boolean(b.br)) - Number(Boolean(a.br))); // 블루리본 선정을 앞으로(나머지는 가까운 순 유지)
+  return out.slice(0, limit);
 }
 
 /**

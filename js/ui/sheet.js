@@ -99,7 +99,7 @@ function shopsSheet(place, kind, data, favs) {
         <a class="shop has-g" href="https://map.naver.com/p/search/${encodeURIComponent(kind === 'park' && s.addr ? s.addr : naverQuery(s.nq || s.name, s.addr))}" target="_blank" rel="noopener noreferrer">
           <span class="shop-rank" aria-hidden="true">${i + 1}</span>
           <span class="shop-body">
-            <span class="shop-name">${esc(s.nq || s.name)}</span>
+            <span class="shop-name">${esc(s.nq || s.name)}${s.br ? ' <em class="br-badge">블루리본 선정</em>' : ''}</span>
             <span class="shop-meta">
               ${s.rating != null ? `<span class="shop-star"><i aria-hidden="true">★</i> ${s.rating.toFixed(1)}</span><span>리뷰 ${s.reviews.toLocaleString('ko-KR')}</span>` : ''}
               <span>여기서 ${distText(s.km)}</span>

@@ -220,7 +220,7 @@ window.addEventListener('popstate', (ev) => {
 });
 
 // ── 코스: 식사 장소 자동 찾기 ──────────────────────────────────
-const shopPlace = (s, kind) => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, cat: kind === 'cafe' ? 'cafe' : 'food', shop: true, kind, sub: s.sub || s.type || '', addr: s.addr || '', nq: s.nq || s.name, gid: s.gid || '', rating: s.rating ?? null });
+const shopPlace = (s, kind) => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, cat: kind === 'cafe' ? 'cafe' : 'food', shop: true, kind, sub: s.sub || s.type || '', addr: s.addr || '', nq: s.nq || s.name, gid: s.gid || '', rating: s.rating ?? null, br: s.br || null });
 const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
 /** 이 지점 근처에서 가장 알맞은 가게 하나(이미 쓴 곳은 제외). 못 찾으면 null */
 async function nearestShop(near, kind, used) {
