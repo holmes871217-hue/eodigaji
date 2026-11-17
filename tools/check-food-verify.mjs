@@ -65,6 +65,9 @@ ok(L.pickPlace({ name: '다른식당', addr: '경기 수원시', phone: '' }, [p
 ok(L.pickPlace({ name: '정각', addr: '서울 마포구 망원로6길 57 2층', phone: '' }, [{ id: '9', place_name: '정각 서울망원본점', phone: '', address_name: '서울 마포구 망원동 1', road_address_name: '서울 마포구 망원로6길 57', x: '126.9', y: '37.5' }]).level === 'linked', '"상호 + 지점명" 형태의 카카오 이름을 같은 상호로 인정해야 해요');
 ok(L.pickPlace({ name: '정각', addr: '서울 마포구 망원로6길 57', phone: '' }, [{ id: '9', place_name: '정각사', phone: '', address_name: '서울 마포구 망원동 1', road_address_name: '서울 마포구 망원로6길 57', x: '126.9', y: '37.5' }]).level !== 'linked', '이름이 다른 가게(정각사)를 같은 곳으로 보면 안 돼요');
 
+ok(L.pickPlace({ name: '뉴오더클럽', addr: '서울 마포구', phone: '' }, [{ id: '5', place_name: '뉴오더클럽 연남', phone: '', address_name: '서울 마포구 연남동 1', road_address_name: '서울 마포구 성미산로 1', x: '126.9', y: '37.5' }]).level === 'linked', '"상호 + 동네" 형태의 카카오 이름을 같은 상호로 인정해야 해요');
+ok(L.pickPlace({ name: '대가', addr: '경기 수원시', phone: '' }, [{ id: '6', place_name: '대가네 설렁탕', phone: '', address_name: '경기 수원시 팔달구 1', road_address_name: '', x: '127', y: '37' }]).level !== 'linked', '상호가 비슷하기만 한 다른 가게를 연결하면 안 돼요');
+
 // 4) 판정
 const refs = (...ch) => ch.map((c, i) => ({ videoId: `v${i}`, channelId: c, publishedAt: '2026-10-01' }));
 ok(L.judge(refs('A'), new Set(['B'])).status === 'rejected', '승인되지 않은 채널만 추천하면 탈락이어야 해요');

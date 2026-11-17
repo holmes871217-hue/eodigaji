@@ -308,7 +308,7 @@ async function viaEligible(place, list, key) {
   const withKm = list.map((it) => ({ it, km: haversineKm(place, it) }));
   let near = withKm.filter((x) => x.km <= 3);
   if (near.length < 5) near = withKm.filter((x) => x.km <= 10);
-  near = near.sort((a, b) => a.km - b.km).slice(0, 12); // 호출 수 상한
+  near = near.sort((a, b) => (b.it.p || 0) - (a.it.p || 0) || a.km - b.km).slice(0, 12); // 호출 수 상한: 또간집 점수가 높은 식당부터(같으면 가까운 곳)
   const rows = [];
   await Promise.all(near.map(async ({ it }) => {
     try {

@@ -61,7 +61,8 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
     const kakaoSearch = async (query, code = 'FD6') => {
       if (kakaoLeft <= 0) return [];
       kakaoLeft--;
-      const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?${new URLSearchParams({ query, category_group_code: code, size: '15' })}`, { Authorization: `KakaoAK ${kakaoKey}` }, http).catch(() => ({ documents: [] }));
+      const q = { query, size: '15' }; if (code) q.category_group_code = code;
+      const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?${new URLSearchParams(q)}`, { Authorization: `KakaoAK ${kakaoKey}` }, http).catch(() => ({ documents: [] }));
       return j.documents || [];
     };
     const identify = async (item, region) => {
@@ -79,6 +80,11 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
         const cafe = await kakaoSearch([shortRegion(region), item.name].join(' '), 'CE7');
         const p2 = pickPlace(item, cafe);
         if (p2.level !== 'none') pick = p2;
+      }
+      if (pick.level === 'none') { // 분류 없이 이름으로 한 번 더(분류가 다르게 등록된 식당·카페·술집). 음식점·카페·간식·술집 분류만 인정
+        const any = (await kakaoSearch([shortRegion(region), item.name].join(' '), '')).filter((d) => /음식점|카페|간식|술집|제과|베이커리/.test(d.category_name || ''));
+        const p3 = pickPlace(item, any);
+        if (p3.level !== 'none') pick = p3;
       }
       return pick;
     };
