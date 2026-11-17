@@ -32,8 +32,8 @@ const mem = () => { const d = {}; return { getItem: (k) => (k in d ? d[k] : null
   ok(Math.abs(base.nat - none.nat) < 1e-9 && Math.abs(base.shp - none.shp) < 1e-9, '취향·기록이 없으면 점수가 그대로여야 해요');
   const tn = { prefs: ['nature'], places: {}, v: 1 };
   const withPref = raw(T.makeTasteScorer(tn, [a, b]));
-  ok(withPref.nat / base.nat > 1.2 && withPref.shp / base.shp <= 1 + 1e-9, '고른 취향(자연)에 맞는 곳은 오르고 안 맞는 곳은 오르지 않아야 해요');
-  ok(withPref.nat / base.nat <= 1.36, '취향 보정은 최대 +35%여야 해요');
+  ok(withPref.nat / base.nat > 1.5 && withPref.shp / base.shp <= 1 + 1e-9, '고른 취향(자연)에 맞는 곳은 오르고 안 맞는 곳은 오르지 않아야 해요');
+  ok(withPref.nat / base.nat <= 1.91, '취향 보정은 최대 +90%여야 해요');
   const th = { prefs: [], places: { nat: { h: 1 } }, v: 1 };
   const hid = rankPlaces([a, b], profile, [], 120, 'all', { taste: T.makeTasteScorer(th, [a, b]) }).map((r) => r.place.id);
   ok(!hid.includes('nat') && hid.includes('shp'), '관심 없음으로 숨긴 곳은 추천에서 빠져야 해요');
@@ -48,7 +48,7 @@ const mem = () => { const d = {}; return { getItem: (k) => (k in d ? d[k] : null
   const two = [{ id: 'm', weight: 1 }, { id: 'k', weight: 1 }];
   const tm = { prefs: [], mp: { m: ['nature'] }, places: {}, v: 1 };
   const f1 = T.makeTasteScorer(tm, [a, b], [], two).factor(a);
-  ok(f1 > 1 && f1 < 1.25, '한 사람만 취향을 골랐으면 그 효과가 평균으로 줄어야 해요(' + f1 + ')');
+  ok(f1 > 1 && f1 < 1.6, '한 사람만 취향을 골랐으면 그 효과가 평균으로 줄어야 해요(' + f1 + ')');
   const heavy = T.makeTasteScorer(tm, [a, b], [], [{ id: 'm', weight: 5 }, { id: 'k', weight: 1 }]).factor(a);
   ok(heavy > f1, '가중치가 큰 사람의 취향이 더 반영돼야 해요');
   ok(T.makeTasteScorer(tm, [a, b], [], [{ id: 'z', weight: 1 }]).factor(a) === 1, '취향이 없는 사람만 있으면 점수가 그대로여야 해요');

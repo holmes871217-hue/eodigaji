@@ -64,6 +64,23 @@ ok(schedule(origin, near.slice(0, 6), { startMin: toMin('09:00'), endMin: toMin(
   ok(c.ok && c.warnings.some((w) => w.includes('월요일')), '월요일 박물관 코스에는 일반 안내가 있어야 해요');
 }
 
+// 9) 찜한 맛집은 점심 시간에 방문으로 들어가고, 이어서 카페가 나온다(식당이 없다는 안내가 나오면 안 된다)
+{
+  const shop = (id, cat, lat, lng) => ({ id, name: id, lat, lng, cat, shop: true, kind: cat });
+  const f = shop('맛집A', 'food', origin.lat + 0.02, origin.lng + 0.02), cf = shop('카페A', 'cafe', origin.lat + 0.021, origin.lng + 0.021);
+  const c = buildCourse({ origin, date: '2026-11-21', start: '09:00', end: '18:00', candidates: [...cands.slice(0, 3), { place: f, score: 1e9 }, { place: cf, score: 1e9 }] });
+  ok(c.ok, '맛집·카페가 있는 코스가 만들어져야 해요');
+  if (c.ok) {
+    const v = c.items.filter((i) => i.type === 'visit');
+    const fi = v.findIndex((i) => i.place === f);
+    ok(fi >= 0 && v[fi].meal === 'lunch', '찜한 맛집이 점심으로 들어가야 해요');
+    ok(fi >= 0 && v[fi + 1]?.place === cf, '맛집 바로 다음에 카페가 이어져야 해요');
+    ok(!c.items.some((i) => i.type === 'meal' && i.kind === 'lunch'), '맛집이 있으면 "식당 미정" 점심 칸이 따로 나오면 안 돼요');
+    ok(v[fi].start >= toMin('11:00') && v[fi].start <= toMin('14:30'), '점심 맛집은 점심 시간대여야 해요(' + v[fi].start + ')');
+    ok(validateCourse(c, { startMin: toMin('09:00'), endMin: toMin('18:00') }).length === 0, '맛집 코스도 검증을 통과해야 해요');
+  }
+}
+
 // 8) 검증기는 겹치는 일정을 잡아낸다
 ok(validateCourse({ items: [{ type: 'visit', start: 600, end: 700 }, { type: 'visit', start: 650, end: 720 }, { type: 'return', start: 720, end: 760 }] }, { startMin: 540, endMin: 1080 }).length > 0, '겹치는 일정을 검증기가 잡아내야 해요');
 

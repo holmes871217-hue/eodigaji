@@ -1,7 +1,7 @@
 // C 항목: 개인 취향 프로필과 행동 데이터(조회·찜·관심 없음·방문 완료·평가).
 // 저장: localStorage 의 새 키 "eodigaji.taste.v1" 하나. 기존 설정 키(eodigaji.v1)는 읽지도 쓰지도 않는다.
 // 원칙: 성별·나이로 취향을 단정하지 않는다. 사용자가 직접 고른 취향과 실제 행동만 쓴다.
-//   직접 고른 취향(함께 가는 사람마다 따로, 사람의 가중치로 평균) → 취향에 맞는 장소 최대 +35%
+//   직접 고른 취향(함께 가는 사람마다 따로, 사람의 가중치로 평균) → 취향에 맞는 장소 최대 +90%
 //   행동(찜·좋은 평가·방문 → 그 분류에 대한 호감 / 관심 없음·나쁜 평가 → 비호감) → 분류별 ±25%
 //   관심 없음으로 숨긴 장소는 추천 목록에서 뺀다(마이 탭에서 되돌릴 수 있다)
 //   다녀온 장소는 같은 곳이 또 위에 오지 않게 조금 낮춘다(좋게 평가한 곳은 덜 낮춤)
@@ -116,9 +116,9 @@ export function makeTasteScorer(t, places, favIds = [], members = []) {
   const wsum = groups.reduce((a, g) => a + g.w, 0);
   const one = (set, mine) => { // 취향 하나 묶음에 대한 배수
     if (!set.size) return 1;
-    if (!mine.length) return 0.97;
+    if (!mine.length) return 0.92;
     const hit = mine.filter((k) => set.has(k)).length;
-    return 1 + (hit >= 2 ? 0.35 : hit === 1 ? 0.25 : 0); // 고른 취향 1개에 맞으면 +25%, 2개 이상 +35%
+    return 1 + (hit >= 2 ? 0.9 : hit === 1 ? 0.6 : 0); // 고른 취향 1개에 맞으면 +60%, 2개 이상 +90%
   };
   return {
     hidden: (p) => Boolean(t.places[p.id]?.h),

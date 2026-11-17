@@ -280,6 +280,9 @@ svg { flex: none; }
 }
 .member-head { display: flex; align-items: flex-end; gap: 10px; }
 .member-row { display: grid; grid-template-columns: 120px 1fr; gap: 12px; }
+.member .chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
+.member .chip { min-height: 40px; padding: 0 13px; background: var(--bg); }
+.member .chip.is-on { background: var(--ink); }
 .member-group { font-size: var(--fs-sm); color: var(--ink-2); }
 .field { display: grid; gap: 6px; margin: 0; }
 .view > .field { margin-top: 12px; }
