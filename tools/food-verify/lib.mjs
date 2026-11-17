@@ -3,17 +3,26 @@
 
 // ── 제작지원·협찬·광고 영상 제외 ─────────────────────────────
 // 하나라도 해당하면 그 영상은 통째로 버린다(후보·독립 추천 수 어디에도 쓰지 않는다).
-const SPONSOR_WORDS = /제작\s*지원|협찬|유료\s*광고|광고\s*포함|광고|제공\s*받|지원\s*받|원고료|소정의|체험단|서포터즈|브랜디드|\bAD\b|#\s*ad\b|sponsor|paid\s*promotion|paid\s*partnership/i;
-// "광고 없음·광고 아님" 같은 부정 표현은 협찬 표시가 아니므로 먼저 지운 뒤 검사한다.
-const NEGATED = /(광고|협찬|제작\s*지원|유료\s*광고)\s*(없|아닙|아님|아니)/g;
-// "맛집 광고·협찬·비즈니스 안 받겠습니다"(또간집 선서)처럼 광고를 받지 않는다는 선언 줄은 협찬 표시가 아니다. 줄 전체를 지운 뒤 검사한다.
-const DISCLAIMER_LINE = /^.*(?:광고|협찬|제작\s*지원|비즈니스).*(?:안\s*받|받지\s*않|받지\s*아니|받질\s*않|일체\s*없|없습니다|않습니다|않겠습니다).*$/gm;
-export const SPONSOR_RULE_V = 2; // 판정 규칙을 바꿀 때 올린다(저장된 제작지원 판정을 한 번 다시 확인하게 함)
+// "광고"·"협찬" 낱말만으로는 판정하지 않는다: 실제 데이터에서 또간집 정규 회차 31편이 "[또간집 선서] 맛집 광고·협찬·비즈니스 안 받겠습니다",
+// "광고 맛집 전부 제외", "게스트 출연 문의 / 협찬 / 비즈니스(연락처)" 같은 안내 문구 때문에 잘못 걸렸다.
+// 광고·협찬·제작지원을 "받았다/포함한다"는 긍정 표현만 인정한다.
+const SPONSOR_WORDS = new RegExp([
+  '제작\\s*지원', '유료\\s*광고', '광고\\s*(?:포함|영상|콘텐츠|임을|입니다|비)', '#\\s*광고', '\\[\\s*광고\\s*\\]', '\\(\\s*광고\\s*\\)',
+  '(?:으?로부터|에게서)\\s*(?:협찬|광고|지원|제공)', '협찬\\s*(?:을|를)?\\s*(?:받|제공|포함|영상)', '협찬\\s*[:：]', '협찬(?:사|품|\\s*제품)',
+  '제공\\s*받', '지원\\s*받', '원고료', '소정의', '체험단', '서포터즈', '브랜디드',
+  '\\bAD\\b', '#\\s*ad\\b', 'sponsor', 'paid\\s*promotion', 'paid\\s*partnership',
+].join('|'), 'i');
+// 광고를 받지 않는다는 선언·연락처 안내는 협찬 표시가 아니므로 줄 단위로 먼저 지운다.
+const NEGATED = /(?:광고|협찬|제작\s*지원|유료\s*광고)\s*(?:없|아닙|아님|아니)|(?:제작\s*지원|협찬|광고)[^\n]{0,12}(?:받지\s*않|안\s*받)/g;
+const STRONG = /제작\s*지원|유료\s*광고|원고료|소정의|체험단|제공\s*받|지원\s*받/; // 이 표현이 있는 줄은 안내 문구로 지우지 않는다
+const DISCLAIMER_LINE = /(?:안\s*받|받지\s*않|받지\s*아니|받질\s*않|일체\s*없|없습니다|않습니다|않겠습니다|전부\s*제외|모두\s*제외|제외\s*(?:하고|했|합)|문의|연락처|@[a-z0-9.-]+\.[a-z]{2,})/i;
+export const SPONSOR_RULE_V = 3; // 판정 규칙을 바꿀 때 올린다(저장된 제작지원 판정을 한 번 다시 확인하게 함)
 
 /** video: videos.list 한 건 { snippet:{title,description}, paidProductPlacementDetails?:{hasPaidProductPlacement} } */
 export function isSponsored(video) {
   if (video?.paidProductPlacementDetails?.hasPaidProductPlacement === true) return { yes: true, why: 'flag' };
-  const text = `${video?.snippet?.title || ''}\n${video?.snippet?.description || ''}`.replace(DISCLAIMER_LINE, ' ').replace(NEGATED, ' ');
+  const lines = `${video?.snippet?.title || ''}\n${video?.snippet?.description || ''}`.split(/\r?\n/).filter((l) => !(DISCLAIMER_LINE.test(l) && !STRONG.test(l)));
+  const text = lines.join('\n').replace(NEGATED, ' ');
   const m = text.match(SPONSOR_WORDS);
   return m ? { yes: true, why: `word:${m[0].trim().toLowerCase()}`, ctx: text.slice(Math.max(0, m.index - 40), m.index + 60).replace(/\s+/g, ' ').trim() } : { yes: false }; // ctx: 어떤 문장 때문에 걸렸는지 점검용(60자 안팎)
 }
