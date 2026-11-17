@@ -156,3 +156,7 @@ git push origin "$(git subtree split --prefix app origin/main)":refs/heads/gh-pa
 
 ## 운영자 지시 원칙
 - 운영자 지시는 CLAUDE.md 의 "운영자 지시"를 따른다(운영자가 직접 한 말만 적혀 있다).
+
+## 유튜브 기반 맛집 검증 (구현 완료, 기본 꺼짐)
+- 운영법: docs/유튜브-맛집-검증-운영법.md, 설계: docs/유튜브-맛집-검증-설계.md. 코드 tools/food-verify/, 점검 tools/check-food-verify.mjs(자동 실행에 연결).
+- 스위치 2개(tools/food-verify/config.json): collect(수집), appEnabled(앱이 승인 식당만 노출). 둘 다 false 가 기본이며 이때 앱은 기존 동작.

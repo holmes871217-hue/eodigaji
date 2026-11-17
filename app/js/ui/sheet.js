@@ -82,7 +82,7 @@ function shopsSheet(place, kind, data, favs) {
   }
   if (!data.items.length) {
     return `${head}
-      <div class="empty"><b>10km 안에서는 찾지 못했어요.</b></div>
+      <div class="empty"><b>${data.verified ? '이 근처에는 추천할 맛집이 아직 없어요.' : '10km 안에서는 찾지 못했어요.'}</b></div>
       <div class="sheet-actions">
         <a class="btn-primary" href="https://map.naver.com/p/search/${encodeURIComponent(`${place.name} ${k.label}`)}" target="_blank" rel="noopener noreferrer">네이버 지도에서 찾기</a>
       </div>`;

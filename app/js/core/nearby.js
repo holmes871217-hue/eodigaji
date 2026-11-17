@@ -250,6 +250,67 @@ async function viaKakao(place, kind, limit = 5) {
   return out.slice(0, limit);
 }
 
+// ── 승인된 맛집만 추천(유튜브 기반 검증, 설계: docs/유튜브-맛집-검증-설계.md) ─────────────
+// app/data/food-eligible.json 의 status 가 "on" 일 때만 켜진다(꺼져 있으면 기존 동작 그대로).
+// 켜지면 맛집 5곳은 ① 승인 목록에 있고 ② 구글 실시간 평점·리뷰 수 기준을 넘고 ③ 영업 중인 곳만이며, 5곳 미만이면 그대로 보여 준다.
+// 평점은 저장하지 않고 추천하는 순간에만 구글에서 받는다(장소 이름·좌표는 승인 목록에 이미 있는 것).
+export const RATING_RULE = { minAdjusted: 4.2, minReviews: 100, prior: 4.0, priorWeight: 20 }; // [추측값] tools/food-verify/lib.mjs 와 같아야 한다
+export function passesRating(rating, reviews, rule = RATING_RULE) {
+  if (typeof rating !== 'number' || !Number.isFinite(reviews) || reviews <= 0) return false; // 평가 정보가 부족하면 통과 불가
+  const adj = (rating * reviews + rule.prior * rule.priorWeight) / (reviews + rule.priorWeight);
+  return reviews >= rule.minReviews && adj >= rule.minAdjusted;
+}
+const eName = (s) => String(s || '').toLowerCase().replace(/\([^)]*\)|\[[^\]]*\]/g, '').replace(/[\s·.,&'"’“”\-_/]/g, '');
+/** 구글이 찾아 온 가게가 승인 목록의 그 식당인지(이름이 같거나 한쪽이 3자 이상 포함 + 150m 안) */
+export function sameEligible(row, it) {
+  const a = eName(cleanShopName(row.name)), b = eName(it.n);
+  if (!a || !b) return false;
+  const nameOk = a === b || (Math.min(a.length, b.length) >= 3 && (a.includes(b) || b.includes(a)));
+  return nameOk && haversineKm({ lat: it.lat, lng: it.lng }, row) <= 0.15;
+}
+let eligPromise = null;
+function loadEligible() {
+  if (!eligPromise) {
+    eligPromise = fetch('data/food-eligible.json').then((r) => (r.ok ? r.json() : null))
+      .then((j) => (j && j.status === 'on' && Array.isArray(j.items) ? j.items : null)) // 꺼져 있거나 못 읽으면 null → 기존 동작
+      .catch(() => null);
+  }
+  return eligPromise;
+}
+const TEXT_FIELDS = ['places.id', 'places.displayName', 'places.rating', 'places.userRatingCount', 'places.location', 'places.shortFormattedAddress', 'places.primaryTypeDisplayName', 'places.businessStatus'].join(',');
+async function googleFindOne(it, key) {
+  const res = await fetch('https://places.googleapis.com/v1/places:searchText', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': TEXT_FIELDS },
+    body: JSON.stringify({
+      textQuery: it.n, includedType: 'restaurant', strictTypeFiltering: false, pageSize: 3, languageCode: 'ko', regionCode: 'KR',
+      locationBias: { circle: { center: { latitude: it.lat, longitude: it.lng }, radius: 200 } },
+    }),
+  });
+  if (!res.ok) throw new Error(`google ${res.status}`);
+  return ((await res.json()).places || []).map((r) => ({
+    id: `g-${r.id}`, gid: r.id, name: r.displayName?.text || '', nq: cleanShopName(r.displayName?.text || ''),
+    lat: r.location?.latitude, lng: r.location?.longitude, type: r.primaryTypeDisplayName?.text || '',
+    addr: (r.shortFormattedAddress || '').replace(/\s+KR(?=\s|$)/g, '').replace(/\s*Address:\s*$/, ''),
+    rating: typeof r.rating === 'number' ? r.rating : null, reviews: r.userRatingCount || 0, closed: r.businessStatus && r.businessStatus !== 'OPERATIONAL',
+  })).filter((r) => r.name && Number.isFinite(r.lat));
+}
+/** 승인된 식당 중 이 장소 근처(3km, 없으면 10km)의 곳을 구글에서 확인해 기준을 넘는 곳만 돌려준다. */
+async function viaEligible(place, list, key) {
+  const withKm = list.map((it) => ({ it, km: haversineKm(place, it) }));
+  let near = withKm.filter((x) => x.km <= 3);
+  if (near.length < 5) near = withKm.filter((x) => x.km <= 10);
+  near = near.sort((a, b) => a.km - b.km).slice(0, 12); // 호출 수 상한
+  const rows = [];
+  await Promise.all(near.map(async ({ it }) => {
+    try {
+      const hit = (await googleFindOne(it, key)).find((r) => sameEligible(r, it));
+      if (hit && !hit.closed && passesRating(hit.rating, hit.reviews)) rows.push({ ...hit, km: haversineKm(place, hit) });
+    } catch { /* 한 곳 실패는 그 곳만 빠진다 */ }
+  }));
+  return pickBest(rows);
+}
+
 /**
  * 구글이 준 가게를 같은 자리(200m 안)의 카카오 장소와 이어서, 네이버에도 등록돼 있는 이름(nq)으로 바꾼다.
  * 구글과 네이버는 이름 표기가 달라 구글 이름으로 네이버 지도를 찾으면 "없음"이 나오는 일이 있어서다.
@@ -282,6 +343,14 @@ export async function findShops(place, kind) {
   if (kind === 'park') {
     const items = await viaParking(place);
     return { items, source: 'kakao', fees: items.some((s) => s.fee) };
+  }
+  // 승인된 맛집만 추천하는 기능이 켜져 있으면 맛집은 그 목록으로만 만든다(5곳 미만이면 그대로, 카카오 대체 목록으로 채우지 않는다).
+  const eligible = kind === 'food' ? await loadEligible() : null;
+  if (eligible) {
+    let items = [];
+    if (GOOGLE_PLACES_KEY) items = await viaEligible(place, eligible, GOOGLE_PLACES_KEY).catch(() => []);
+    await Promise.race([matchNaverNames(items, kind).catch(() => {}), new Promise((r) => setTimeout(r, 4000))]);
+    return { items, source: 'google', verified: true };
   }
   if (GOOGLE_PLACES_KEY && SHOP_KINDS[kind].google) {
     try {
