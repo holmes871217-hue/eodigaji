@@ -118,7 +118,8 @@ export async function processSeries({ store, ext, restaurants, regionKeys, now, 
     if (v.sponsored) { delete ext[v.id]; continue; }
     const man = manual[v.id]; // 관리자가 영상을 보고 적은 식당(설명에 식당명이 없는 시리즈용)
     const sig = hash(v.descHash + JSON.stringify(man || null));
-    if (ext[v.id]?.descHash === sig) continue; // 변경 없음 → 반복 처리하지 않는다
+    const prev = ext[v.id];
+    if (prev?.descHash === sig && !prev.items.some((i) => i.match?.level !== 'linked')) continue; // 변경 없고 모두 연결됐으면 반복 처리하지 않는다(못 찾은 식당은 규칙이 좋아졌을 수 있어 다시 시도)
     const ctx = man?.regionKey || regionContext(v, regionKeys) || '';
     const ex = man?.restaurants?.length ? { items: man.restaurants.filter((r) => r.name).map((r) => ({ name: String(r.name).trim(), role: ROLE_RANK[r.role] ? r.role : 'visited', cue: 'manual', addr: r.addr || '', phone: r.phone || '', hint: '', src: r.src || '' })) } : extractSeries(v.description, ctx);
     out.processed++;
@@ -147,7 +148,9 @@ export async function processSeries({ store, ext, restaurants, regionKeys, now, 
       items.push({ name: it.name, role: it.role, cue: it.cue, addr: it.addr, match: m });
     }
     if (!items.length) out.noItems++;
-    ext[v.id] = { descHash: sig, extractedAt: now, region: ctx, source: man?.restaurants?.length ? 'manual' : 'description', items };
+    const entry = { descHash: sig, extractedAt: now, region: ctx, source: man?.restaurants?.length ? 'manual' : 'description', items };
+    if (prev && prev.descHash === sig && JSON.stringify(prev.items) === JSON.stringify(items)) continue; // 다시 시도했지만 결과가 같으면 기록을 바꾸지 않는다
+    ext[v.id] = entry;
   }
   return out;
 }
