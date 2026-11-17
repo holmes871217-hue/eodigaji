@@ -244,8 +244,8 @@
   ]
  },
  "Uf8V4EvPKWk": {
-  "descHash": "c83bf54e0d755e44",
-  "extractedAt": 1794921060420,
+  "descHash": "0609a3385a7b48dc",
+  "extractedAt": 1794921549484,
   "region": "경남 진주시",
   "source": "manual",
   "items": [
@@ -253,11 +253,11 @@
     "name": "진양호짬뽕",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "경남 진주시 진양호로 17-4",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "2036861263",
+     "why": ""
     }
    },
    {
@@ -443,8 +443,8 @@
   "items": []
  },
  "-rdQxOZgQCE": {
-  "descHash": "baf63702160d01ae",
-  "extractedAt": 1794921060420,
+  "descHash": "88febcf4b1b24861",
+  "extractedAt": 1794921549484,
   "region": "경기 성남시",
   "source": "manual",
   "items": [
@@ -474,11 +474,11 @@
     "name": "돈멜",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "경기 성남시 분당구 느티로63번길 6",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "20916775",
+     "why": ""
     }
    }
   ]
@@ -505,8 +505,8 @@
   "items": []
  },
  "uXq3hmDhpps": {
-  "descHash": "0b36efba4def4e92",
-  "extractedAt": 1794921060420,
+  "descHash": "c87fc29ed3a2eafc",
+  "extractedAt": 1794921549484,
   "region": "서울 노원구",
   "source": "manual",
   "items": [
@@ -525,11 +525,11 @@
     "name": "쭈꾸미달인",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 노원구 상계로 71-1",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "26904390",
+     "why": ""
     }
    },
    {
@@ -720,8 +720,8 @@
   "items": []
  },
  "fvD36nHVbhs": {
-  "descHash": "c1feb531706442ca",
-  "extractedAt": 1794921060420,
+  "descHash": "d03d05e7ef679641",
+  "extractedAt": 1794921549484,
   "region": "서울 마포구",
   "source": "manual",
   "items": [
@@ -740,11 +740,11 @@
     "name": "얼큰이왕냉면",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 마포구 희우정로 76",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "16846659",
+     "why": ""
     }
    },
    {
@@ -773,11 +773,11 @@
     "name": "망원동즉석우동",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 마포구 동교로 83",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "15526158",
+     "why": ""
     }
    },
    {
@@ -991,7 +991,7 @@
  },
  "y4rM8vnYsZc": {
   "descHash": "9092f2e33ab0878b",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921549484,
   "region": "서울 종로구",
   "source": "manual",
   "items": [
@@ -1034,9 +1034,9 @@
     "cue": "manual",
     "addr": "서울 종로구 종로32길 2 105호",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "1024788121",
+     "why": ""
     }
    },
    {
@@ -1328,8 +1328,8 @@
   ]
  },
  "ep:81": {
-  "descHash": "34419a36edb10ed1",
-  "extractedAt": 1794921060420,
+  "descHash": "fb1c979759cef914",
+  "extractedAt": 1794921549484,
   "region": "경북 구미시",
   "source": "manual",
   "items": [
@@ -1350,9 +1350,9 @@
     "cue": "manual",
     "addr": "경북 구미시 고아읍 들성로 199",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "1129915324",
+     "why": ""
     }
    },
    {
@@ -1493,7 +1493,7 @@
  },
  "ep:74": {
   "descHash": "3137404efb1f9055",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921549484,
   "region": "서울 관악구",
   "source": "manual",
   "items": [
@@ -1525,9 +1525,9 @@
     "cue": "manual",
     "addr": "서울 관악구 관천로 39 1층 목포수산",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "21928434",
+     "why": ""
     }
    }
   ]
@@ -1616,7 +1616,7 @@
  },
  "ep:71": {
   "descHash": "ec28077b5a9a2c46",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921549484,
   "region": "경기 화성시",
   "source": "manual",
   "items": [
@@ -1648,9 +1648,9 @@
     "cue": "manual",
     "addr": "경기 수원시 권선구 덕영대로1207번길 26-21 권선동 1195-2번지 1층 황소곱창",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "27549048",
+     "why": ""
     }
    }
   ]
@@ -1697,8 +1697,8 @@
   ]
  },
  "ep:69": {
-  "descHash": "a0b814710bcf748a",
-  "extractedAt": 1794921060420,
+  "descHash": "7b1e5b3a0e32bd72",
+  "extractedAt": 1794921549484,
   "region": "경남 창원시",
   "source": "manual",
   "items": [
@@ -1706,7 +1706,7 @@
     "name": "울트라반점",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "경남 창원시 성산구 삼귀로 135",
     "match": {
      "level": "none",
      "key": "",
@@ -1738,8 +1738,8 @@
   ]
  },
  "ep:68": {
-  "descHash": "6d2056f98a0865c6",
-  "extractedAt": 1794921060420,
+  "descHash": "b2e5cef1699e4584",
+  "extractedAt": 1794921549484,
   "region": "경남 통영시",
   "source": "manual",
   "items": [
@@ -1747,11 +1747,11 @@
     "name": "되뫼골부대찌개",
     "role": "winner",
     "cue": "manual",
-    "addr": "경남 통영시 무전1길 64-11 되뫼골부대찌개",
+    "addr": "경남 통영시 무전1길 64-11",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "1696078914",
+     "why": ""
     }
    },
    {
@@ -1779,8 +1779,8 @@
   ]
  },
  "ep:67": {
-  "descHash": "1b02c2d343599d85",
-  "extractedAt": 1794921060420,
+  "descHash": "890a9eac5a812605",
+  "extractedAt": 1794921549484,
   "region": "전남 목포시",
   "source": "manual",
   "items": [
@@ -1902,8 +1902,8 @@
   ]
  },
  "ep:64": {
-  "descHash": "329e8837d2a3025f",
-  "extractedAt": 1794921060420,
+  "descHash": "e2b7d933c450f69b",
+  "extractedAt": 1794921549484,
   "region": "전북 전주시",
   "source": "manual",
   "items": [
@@ -1924,9 +1924,9 @@
     "cue": "manual",
     "addr": "전북 전주시 완산구 전주객사3길 49",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "1428417823",
+     "why": ""
     }
    },
    {
@@ -2498,8 +2498,8 @@
   ]
  },
  "ep:50": {
-  "descHash": "7895e20d3e41e8b7",
-  "extractedAt": 1794921060420,
+  "descHash": "22c8021f56231eb5",
+  "extractedAt": 1794921549484,
   "region": "대구",
   "source": "manual",
   "items": [
@@ -2507,11 +2507,11 @@
     "name": "앞산큰골집",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "대구 남구 큰골길 35",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "1550268637",
+     "why": ""
     }
    },
    {
@@ -2808,7 +2808,7 @@
  },
  "ep:43": {
   "descHash": "ab54a37a6695b8ea",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921549484,
   "region": "서울 종로구",
   "source": "manual",
   "items": [
@@ -2840,9 +2840,9 @@
     "cue": "manual",
     "addr": "서울 종로구 청계천로 75-2 진중 우육면관 본점 (Niuroumianguan)",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "2143988257",
+     "why": ""
     }
    }
   ]
@@ -2900,8 +2900,8 @@
   ]
  },
  "ep:39": {
-  "descHash": "0a8f46217120d478",
-  "extractedAt": 1794921060420,
+  "descHash": "8085947245801002",
+  "extractedAt": 1794921549484,
   "region": "전남 순천시",
   "source": "manual",
   "items": [
@@ -2941,8 +2941,8 @@
   ]
  },
  "ep:38": {
-  "descHash": "d55110668bd6661e",
-  "extractedAt": 1794921182742,
+  "descHash": "c874bfc1edcd5ce4",
+  "extractedAt": 1794921549484,
   "region": "전남 여수시",
   "source": "manual",
   "items": [
@@ -3280,8 +3280,8 @@
   ]
  },
  "ep:30": {
-  "descHash": "2dcf2ca8ba6cf791",
-  "extractedAt": 1794921060420,
+  "descHash": "6c4b0e8d5014455c",
+  "extractedAt": 1794921549484,
   "region": "서울 영등포구",
   "source": "manual",
   "items": [
@@ -3300,11 +3300,11 @@
     "name": "가양칼국수",
     "role": "winner",
     "cue": "manual",
-    "addr": "서울 영등포구 국제금융로 78 홍우빌딩 지하 1층",
+    "addr": "서울 영등포구 국제금융로 86",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "20746242",
+     "why": ""
     }
    },
    {
@@ -3322,7 +3322,7 @@
  },
  "ep:28": {
   "descHash": "c9f0ee3de9c2df63",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921549484,
   "region": "제주 서귀포시",
   "source": "manual",
   "items": [
@@ -3354,9 +3354,9 @@
     "cue": "manual",
     "addr": "제주 서귀포시 표선면 표선관정로 105-1",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "2090669998",
+     "why": ""
     }
    }
   ]
@@ -3507,8 +3507,8 @@
   ]
  },
  "ep:24": {
-  "descHash": "4583c8c973728f22",
-  "extractedAt": 1794921182742,
+  "descHash": "92a399f55dabbdf3",
+  "extractedAt": 1794921549484,
   "region": "서울 강남구",
   "source": "manual",
   "items": [
@@ -3527,18 +3527,18 @@
     "name": "길목",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 강남구 영동대로129길 10",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "27512695",
+     "why": ""
     }
    }
   ]
  },
  "ep:23": {
-  "descHash": "c90f249bf4406ff9",
-  "extractedAt": 1794921060420,
+  "descHash": "0171641a361c6055",
+  "extractedAt": 1794921549484,
   "region": "강원 속초시",
   "source": "manual",
   "items": [
@@ -3568,11 +3568,11 @@
     "name": "송정희어머니",
     "role": "winner",
     "cue": "manual",
-    "addr": "강원 속초시 원암학사평길 192 송정희어머니순두부",
+    "addr": "강원 속초시 원암학사평길 192",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "1629060954",
+     "why": ""
     }
    }
   ]
@@ -3764,8 +3764,8 @@
   ]
  },
  "ep:18": {
-  "descHash": "5bad23f8b2c0d6e4",
-  "extractedAt": 1794921060420,
+  "descHash": "4ba978149e198797",
+  "extractedAt": 1794921549484,
   "region": "전남 목포시",
   "source": "manual",
   "items": [
