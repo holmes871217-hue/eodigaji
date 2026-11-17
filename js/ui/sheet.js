@@ -3,6 +3,7 @@ import { CATEGORIES } from '../data/places.js';
 import { photoOf, photosOf } from '../data/photos.js';
 import { EVENT_TYPES } from '../data/events.js';
 import { KIND_LABEL, crowdLabel, trendPct, nearbyEvents } from '../core/scoring.js';
+import { trustBox } from './trust.js';
 import { formatMin, tripLabel } from '../core/geo.js';
 import { memberLabel } from '../core/segments.js';
 import { SHOP_KINDS } from '../core/nearby.js';
@@ -220,6 +221,7 @@ function placeSheet(r, tripEvents, gp) {
     </ul>
 
     ${p.spot ? '' : `<p class="muted">한 달 블로그 언급 약 ${p.buzz.toLocaleString('ko-KR')}건 · 1년 누적 인기 ${p.yearly}점</p>`}
+    ${trustBox(p)}
     <p class="sample-note">${p.std
       ? `지자체가 공공데이터포털에 등록한 ${p.sub === '특화거리' ? '지역특화거리' : '관광지'}예요. 인기 점수는 등록 여부와 규모로 어림한 값이라 참고만 해 주세요.`
       : p.spot
