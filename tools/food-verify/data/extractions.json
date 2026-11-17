@@ -7,9 +7,9 @@
   "items": []
  },
  "yCQxgkJXI5E": {
-  "descHash": "aa5ae315278eb49e",
-  "extractedAt": 1794919520725,
-  "region": "신당",
+  "descHash": "5141857333a458e3",
+  "extractedAt": 1794919984150,
+  "region": "",
   "source": "description",
   "items": []
  },
@@ -21,18 +21,42 @@
   "items": []
  },
  "Z6cPZiosZEo": {
-  "descHash": "62b91b2e680d9c66",
-  "extractedAt": 1794919520725,
-  "region": "익산시",
-  "source": "description",
-  "items": []
+  "descHash": "a049bc48c5f5f891",
+  "extractedAt": 1794919984150,
+  "region": "전북 익산시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "용수촌",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "25969289",
+     "why": ""
+    }
+   }
+  ]
  },
  "jSiLx_Ahh_s": {
-  "descHash": "648aeb38f38e9313",
-  "extractedAt": 1794919520725,
-  "region": "정읍시",
-  "source": "description",
-  "items": []
+  "descHash": "714ef1cecd3d461b",
+  "extractedAt": 1794919984150,
+  "region": "전북 정읍시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "아들딸사랑한다",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "9204068",
+     "why": ""
+    }
+   }
+  ]
  },
  "d7pDNDTiPBM": {
   "descHash": "0863a2cf92172069",
@@ -49,30 +73,54 @@
   "items": []
  },
  "mVOW2N97Usk": {
-  "descHash": "59f9b5017345b107",
-  "extractedAt": 1794919520725,
-  "region": "구리시",
-  "source": "description",
-  "items": []
+  "descHash": "8fae309280352791",
+  "extractedAt": 1794919984150,
+  "region": "경기 구리시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "밀향기",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "276672628",
+     "why": ""
+    }
+   }
+  ]
  },
  "pSjLqki_oJ8": {
-  "descHash": "d212fff9df964d77",
-  "extractedAt": 1794919520725,
+  "descHash": "d87eb4d0311e3c63",
+  "extractedAt": 1794919984150,
   "region": "기장군",
   "source": "description",
   "items": []
  },
  "m9u4_9Uau8g": {
-  "descHash": "8a7c622038181d0e",
-  "extractedAt": 1794919520725,
+  "descHash": "de203c62a1ee63cd",
+  "extractedAt": 1794919984150,
   "region": "부산",
-  "source": "description",
-  "items": []
+  "source": "manual",
+  "items": [
+   {
+    "name": "주문진 막국수",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "17959212",
+     "why": ""
+    }
+   }
+  ]
  },
  "BE1CT-3362Y": {
-  "descHash": "20ea4f57847bd332",
-  "extractedAt": 1794919520725,
-  "region": "세종",
+  "descHash": "5f14f5aedeac91f0",
+  "extractedAt": 1794919984150,
+  "region": "",
   "source": "description",
   "items": []
  },
@@ -84,18 +132,42 @@
   "items": []
  },
  "nxukV1yfvCA": {
-  "descHash": "67ae2fdc5d90fbb4",
-  "extractedAt": 1794919520725,
-  "region": "영월군",
-  "source": "description",
-  "items": []
+  "descHash": "ee0b123eca2259a4",
+  "extractedAt": 1794919984150,
+  "region": "강원 영월군",
+  "source": "manual",
+  "items": [
+   {
+    "name": "박가네",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "2097320989",
+     "why": ""
+    }
+   }
+  ]
  },
  "7vqYRXkPyTQ": {
-  "descHash": "e77677350e6c5f59",
-  "extractedAt": 1794919520725,
-  "region": "이천시",
-  "source": "description",
-  "items": []
+  "descHash": "47e83cbb5d4d9884",
+  "extractedAt": 1794919984150,
+  "region": "경기 이천시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "경림수산",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "16182544",
+     "why": ""
+    }
+   }
+  ]
  },
  "4lbKeQTThCo": {
   "descHash": "595dede774e76177",
@@ -112,22 +184,46 @@
   "items": []
  },
  "9LdSGv5wHec": {
-  "descHash": "03aa1ea765f39942",
-  "extractedAt": 1794919520725,
-  "region": "논산시",
-  "source": "description",
-  "items": []
+  "descHash": "63deaa00a3f425cf",
+  "extractedAt": 1794919984150,
+  "region": "충남 논산시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "다락가든",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "8844408",
+     "why": ""
+    }
+   }
+  ]
  },
  "-vsNkVIRvt0": {
-  "descHash": "3558b6792f05e91d",
-  "extractedAt": 1794919520725,
-  "region": "공주시",
-  "source": "description",
-  "items": []
+  "descHash": "80250cf328a037f2",
+  "extractedAt": 1794919984150,
+  "region": "충남 공주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "북경탕수육",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "20296394",
+     "why": ""
+    }
+   }
+  ]
  },
  "Uf8V4EvPKWk": {
-  "descHash": "7434e0599745b19e",
-  "extractedAt": 1794919520725,
+  "descHash": "67f249d54acadb09",
+  "extractedAt": 1794919984150,
   "region": "진주시",
   "source": "description",
   "items": []
@@ -147,11 +243,23 @@
   "items": []
  },
  "1HExH6cy5BQ": {
-  "descHash": "d79bddf89234812f",
-  "extractedAt": 1794919520725,
+  "descHash": "62814488c9b63dc7",
+  "extractedAt": 1794919984150,
   "region": "괴산군",
-  "source": "description",
-  "items": []
+  "source": "manual",
+  "items": [
+   {
+    "name": "천성삼거리장어구이",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
  },
  "BfkvbWSEA30": {
   "descHash": "e01a0616d891f34d",
@@ -161,18 +269,42 @@
   "items": []
  },
  "Ppt-Dr0QT_o": {
-  "descHash": "312568e7b3a815d1",
-  "extractedAt": 1794919520725,
+  "descHash": "247ea58ad5985420",
+  "extractedAt": 1794919984150,
   "region": "울산",
-  "source": "description",
-  "items": []
+  "source": "manual",
+  "items": [
+   {
+    "name": "갓포이찌",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "2002173821",
+     "why": ""
+    }
+   }
+  ]
  },
  "mNjTXSfQXnE": {
-  "descHash": "086b5f3b0970feea",
-  "extractedAt": 1794919520725,
-  "region": "김해시",
-  "source": "description",
-  "items": []
+  "descHash": "4bdb49feda6f14d2",
+  "extractedAt": 1794919984150,
+  "region": "경남 김해시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "부엌",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "27571944",
+     "why": ""
+    }
+   }
+  ]
  },
  "LHLatxdCGHQ": {
   "descHash": "c944532876966b6e",
@@ -189,11 +321,23 @@
   "items": []
  },
  "-rdQxOZgQCE": {
-  "descHash": "5ebcb0da1b587791",
-  "extractedAt": 1794919520725,
-  "region": "경기",
-  "source": "description",
-  "items": []
+  "descHash": "8aa360852366d55c",
+  "extractedAt": 1794919984150,
+  "region": "경기 성남시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "예돈돈까스",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   }
+  ]
  },
  "U-aR5RF-qeo": {
   "descHash": "411ac5eb4bf921ef",
@@ -217,36 +361,72 @@
   "items": []
  },
  "uXq3hmDhpps": {
-  "descHash": "05d054bad289c278",
-  "extractedAt": 1794919520725,
-  "region": "노원구",
-  "source": "description",
-  "items": []
+  "descHash": "15d2ccf78360ebba",
+  "extractedAt": 1794919984150,
+  "region": "서울 노원구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "원조이모네연탄불곱창",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "21412672",
+     "why": ""
+    }
+   }
+  ]
  },
  "2WLWFZ81k6E": {
-  "descHash": "d21ac61be920f3bf",
-  "extractedAt": 1794919520725,
-  "region": "철원군",
-  "source": "description",
-  "items": []
+  "descHash": "109b9a9f27baacca",
+  "extractedAt": 1794919984150,
+  "region": "강원 철원군",
+  "source": "manual",
+  "items": [
+   {
+    "name": "동송칡냉면",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "18285734",
+     "why": ""
+    }
+   }
+  ]
  },
  "vAKeY1t_bLI": {
-  "descHash": "5357acb414ff1e42",
-  "extractedAt": 1794919520725,
-  "region": "상암",
+  "descHash": "cd95b9d2faa1b7d1",
+  "extractedAt": 1794919984150,
+  "region": "",
   "source": "description",
   "items": []
  },
  "5tV8wKaUxSA": {
-  "descHash": "c0ea5ac9d5fe5db1",
-  "extractedAt": 1794919520725,
-  "region": "광주시",
-  "source": "description",
-  "items": []
+  "descHash": "b2ac09d672fb67b3",
+  "extractedAt": 1794919984150,
+  "region": "광주 서구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "진수식당",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
  },
  "Z-zG-6rynP8": {
-  "descHash": "6a0461ed27fa2f26",
-  "extractedAt": 1794919520725,
+  "descHash": "43a22dd4d3a02111",
+  "extractedAt": 1794919984150,
   "region": "해남군",
   "source": "description",
   "items": []
@@ -273,11 +453,23 @@
   "items": []
  },
  "fvD36nHVbhs": {
-  "descHash": "92369fd16c801f34",
-  "extractedAt": 1794919520725,
-  "region": "",
-  "source": "description",
-  "items": []
+  "descHash": "bc25309c616e53c6",
+  "extractedAt": 1794919984150,
+  "region": "서울 마포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "정각",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
  },
  "NMTxmxieDAI": {
   "descHash": "0e0d100703b191ac",
@@ -287,25 +479,61 @@
   "items": []
  },
  "4cCrjwgi54w": {
-  "descHash": "8d58ec8068c26796",
-  "extractedAt": 1794919520725,
-  "region": "안산시",
-  "source": "description",
-  "items": []
+  "descHash": "35a5b400c7340b87",
+  "extractedAt": 1794919984150,
+  "region": "경기 안산시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "미락식당",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   }
+  ]
  },
  "rqmIz5TAhwY": {
-  "descHash": "e5a55820c00e6455",
-  "extractedAt": 1794919520725,
-  "region": "안산시",
-  "source": "description",
-  "items": []
+  "descHash": "7c5b4843906a03f5",
+  "extractedAt": 1794919984150,
+  "region": "충남 서산시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "뚱이네포차",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "114122314",
+     "why": ""
+    }
+   }
+  ]
  },
  "qqNFLhkYh04": {
-  "descHash": "2356fcc0fbc1eb1b",
-  "extractedAt": 1794919520725,
-  "region": "남양주시",
-  "source": "description",
-  "items": []
+  "descHash": "42d88b5be91a4bad",
+  "extractedAt": 1794919984150,
+  "region": "경기 남양주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "오리촌",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "9317412",
+     "why": ""
+    }
+   }
+  ]
  },
  "ZZBwwWGN0uQ": {
   "descHash": "93859aed1705fb54",
@@ -315,11 +543,23 @@
   "items": []
  },
  "vbBYnmELwqk": {
-  "descHash": "9da87d2198322870",
-  "extractedAt": 1794919520725,
-  "region": "남양주시",
-  "source": "description",
-  "items": []
+  "descHash": "d5c2e5525a812d38",
+  "extractedAt": 1794919984150,
+  "region": "서울 종로구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "사직로서울",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1832568835",
+     "why": ""
+    }
+   }
+  ]
  },
  "FNC7nDNtq5Y": {
   "descHash": "edb2f845a39fd004",
@@ -343,11 +583,23 @@
   "items": []
  },
  "xGzUPV1lqNw": {
-  "descHash": "791600af051ca9c5",
-  "extractedAt": 1794919520725,
-  "region": "",
-  "source": "description",
-  "items": []
+  "descHash": "6122180c5d20a11c",
+  "extractedAt": 1794919984150,
+  "region": "서울 중구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "막내회집",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "10335617",
+     "why": ""
+    }
+   }
+  ]
  },
  "qM4IliSpcrE": {
   "descHash": "ecc2c0d0cff3057f",
@@ -357,10 +609,22 @@
   "items": []
  },
  "LI-mgx3HL3I": {
-  "descHash": "e97ba0b779d6b33c",
-  "extractedAt": 1794919520725,
-  "region": "평택시",
-  "source": "description",
-  "items": []
+  "descHash": "0fa9cb5c184c04ba",
+  "extractedAt": 1794919984150,
+  "region": "경기 평택시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "호성식당",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1202480492",
+     "why": ""
+    }
+   }
+  ]
  }
 }
