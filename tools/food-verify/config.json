@@ -1,5 +1,5 @@
 {
-  "collect": false,
+  "collect": true,
   "appEnabled": false,
   "minChannels": 1,
   "recentMonths": 12,
