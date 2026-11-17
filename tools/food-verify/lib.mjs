@@ -104,7 +104,7 @@ export function matchScore(cand, place) {
   const dongEq = dong && (String(place.address_name || '').includes(dong) || String(place.road_address_name || '').includes(dong));
   const sigunEq = sigunOf(cand.addr) && String(place.address_name || '').includes(sigunOf(cand.addr));
   let level = 'none';
-  if (nameEq && (phoneEq || idEq || roadEq || dongEq)) level = 'linked';
+  if (nameEq && (phoneEq || idEq || roadEq || dongEq || sigunEq)) level = 'linked'; // sigunEq: 영상이 소개한 지역(시·군·구)과 업체 주소가 같음. 같은 이름 지점이 그 지역에 둘 이상이면 pickPlace 가 모호로 돌린다
   else if (idEq && (nameEq || nameLike)) level = 'linked';
   else if (nameEq || nameLike || (idEq)) level = 'ambiguous';
   return { level, nameEq, nameLike, phoneEq, idEq, roadEq, dongEq, sigunEq };
@@ -127,14 +127,19 @@ export function pickPlace(cand, places) {
  * @param {{minChannels?:number, override?:'approve'|'reject'|undefined}} opts
  * @returns {{status:'eligible'|'rejected'|'pending', reasons:string[], channels:number}}
  */
-export function judge(refs, approved, { minChannels = 1, override } = {}) {
-  if (override === 'reject') return { status: 'rejected', reasons: ['ADMIN_REJECT'], channels: 0 };
+export function judge(refs, approved, { minChannels = 1, override, weights, now = Date.now(), open, risk } = {}) {
+  if (override === 'reject') return { status: 'rejected', reasons: ['ADMIN_REJECT'], channels: 0, score: 0 };
   const okRefs = refs.filter((r) => approved.has(r.channelId));
-  if (!okRefs.length) return { status: 'rejected', reasons: ['A1_UNAPPROVED_CHANNEL'], channels: 0 };
+  if (!okRefs.length) return { status: 'rejected', reasons: ['A1_UNAPPROVED_CHANNEL'], channels: 0, score: 0 };
   const channels = new Set(okRefs.map((r) => r.channelId)).size; // 같은 채널의 반복 소개는 1로 센다
-  if (override === 'approve') return { status: 'eligible', reasons: ['ADMIN_APPROVE'], channels };
-  if (channels < minChannels) return { status: 'rejected', reasons: ['A4_INSUFFICIENT_INDEPENDENT'], channels };
-  return { status: 'eligible', reasons: [], channels };
+  const cs = contentScore(okRefs, weights, now);
+  const base = { channels, score: cs.score, top: cs.top, episodes: cs.episodes };
+  if (override === 'approve') return { status: 'eligible', reasons: ['ADMIN_APPROVE'], ...base };
+  if (okRefs.every((r) => r.role === 'mentioned')) return { status: 'rejected', reasons: ['A2_MENTION_ONLY'], ...base }; // 단순 언급만으로는 통과 불가
+  if (channels < minChannels) return { status: 'rejected', reasons: ['A4_INSUFFICIENT_INDEPENDENT'], ...base };
+  if (open === false) return { status: 'rejected', reasons: ['STATUS_CLOSED'], ...base };
+  if (risk?.level === 'high') return { status: 'rejected', reasons: ['RISK_HIGH'], ...base }; // 위험 신호가 2개 이상: 허위 확정이 아니라 추천 보류
+  return { status: 'eligible', reasons: [], ...base };
 }
 
 // ── 방문자 평가(조건 B) — 앱이 추천 순간에 구글 실시간 값으로 판정한다. 임계값은 [추측]이므로 설정값으로 둔다 ──
@@ -143,4 +148,102 @@ export function passesRating(rating, reviews, rule = RATING_RULE) {
   if (typeof rating !== 'number' || !Number.isFinite(reviews) || reviews <= 0) return false; // 평가 정보가 부족하면 통과 불가
   const adj = (rating * reviews + rule.prior * rule.priorWeight) / (reviews + rule.priorWeight);
   return reviews >= rule.minReviews && adj >= rule.minAdjusted;
+}
+
+
+// ══ 전문 시리즈 채널(예: 풍자의 또간집) ══════════════════════════════════════
+// 영상 설명에서 소개된 식당 전체를 뽑고, 각 식당이 영상에서 어떤 역할이었는지 구분해 저장한다.
+//   winner(최종 1위) > final(최종 선정) > visited(실제 방문·소개) > mentioned(단순 언급)
+// 역할은 설명 글자에 근거가 있을 때만 올린다: 1위·우승 표시가 없으면 winner 로 추정하지 않는다.
+export const ROLE_RANK = { mentioned: 1, visited: 2, final: 3, winner: 4 };
+const CH = /^\s*(?:(\d{1,2}):)?(\d{1,2}):(\d{2})\s*[-–—·|)\]]?\s*(.+)$/; // 00:00 / 1:02:03 타임스탬프 줄(챕터)
+const GENERIC = /^(?:오프닝|인트로|프롤로그|엔딩|아웃트로|에필로그|예고|하이라이트|광고|타임라인|다음\s*편|opening|intro|prologue|ending|outro|epilogue|preview|trailer)/i;
+const WINNER_CUE = /(최종\s*1위|1위|우승|또간집\s*(?:선정|1위)|🏆|👑|winner)/i;
+const FINAL_CUE = /(최종\s*(?:선정|후보|결정|결승)|결승|최종|final)/i;
+const MENTION_HEAD = /(언급|참고|그\s*외|기타|추가로)/;
+const ORDINAL = /^(?:\d+\s*(?:번|차)\s*(?:째)?\s*(?:식당|집|맛집)?|\d+(?:st|nd|rd|th)|[첫두세네다섯여섯일곱여덟아홉열]\s*(?:번째|째)\s*(?:식당|집|맛집)?)\s*[-–—:·|]?\s*/i;
+
+/** 챕터 제목 한 줄 → 식당명 후보. 일반 구간(오프닝 등)은 null */
+function chapterName(title) {
+  const t = title.replace(/[🏆👑🥇⭐️★☆]/gu, ' ').replace(ORDINAL, '').trim();
+  if (GENERIC.test(t)) return null;
+  const clean = (x) => x.replace(/\([^)]*\)/g, '').replace(new RegExp(WINNER_CUE.source, 'gi'), ' ').replace(new RegExp(FINAL_CUE.source, 'gi'), ' ').replace(/(?:선정|결정|후보)/g, ' ').replace(/\s+/g, ' ').replace(/^[\s,.\-]+|[\s,.\-]+$/g, '').trim();
+  const parts = t.split(/\s+[-–—:|]\s+/).map((x) => x.trim()).filter(Boolean);
+  const pick = parts.map((x) => ({ raw: x, name: clean(x) })).find((x) => x.name && !/(식당|번째)$/.test(x.name) && plausibleName(x.name));
+  if (!pick) return null;
+  return { name: pick.name, hint: (pick.raw.match(/\(([^)]*)\)/) || [])[1] || '' };
+}
+
+/**
+ * @param {string} description 영상 설명
+ * @returns {{items:Array<{name,role,cue,addr,phone,hint}>, listOnly:boolean}}
+ */
+export function extractSeries(description, regionCtx = '') {
+  const lines = String(description || '').split(/\r?\n/);
+  const found = new Map(); // normName → item
+  const put = (it) => {
+    const k = normName(it.name); if (!k) return;
+    const prev = found.get(k);
+    if (!prev || ROLE_RANK[it.role] > ROLE_RANK[prev.role]) found.set(k, { ...prev, ...it, addr: it.addr || prev?.addr || '', phone: it.phone || prev?.phone || '' });
+  };
+  let section = 'visited';
+  for (const raw of lines) {
+    const line = raw.trim(); if (!line) continue;
+    const ch = line.match(CH);
+    if (ch) { // 타임스탬프 챕터 = 영상 안에서 소개하는 구간
+      section = 'visited';
+      const c = chapterName(ch[4]); if (!c) continue;
+      const cue = WINNER_CUE.test(ch[4]) ? 'winner' : FINAL_CUE.test(ch[4]) ? 'final' : '';
+      put({ name: c.name, role: cue || section, cue: cue ? ch[4].match(cue === 'winner' ? WINNER_CUE : FINAL_CUE)[0] : '', addr: c.hint, phone: '', hint: c.hint });
+      continue;
+    }
+    if (MENTION_HEAD.test(line) && line.replace(MARK, '').length < 30 && !PHONE.test(line)) { section = 'mentioned'; continue; }
+    // 정보란 형식(📍 상호 : 주소 / ☎ 전화)은 기존 추출기를 쓴다
+  }
+  const info = extractRestaurants(description, regionCtx);
+  for (const it of info.items) {
+    const cueLine = String(description).split(/\r?\n/).find((l) => l.includes(it.name)) || '';
+    const cue = WINNER_CUE.test(cueLine) ? 'winner' : FINAL_CUE.test(cueLine) ? 'final' : '';
+    put({ name: it.name, role: cue || 'visited', cue: cue ? cueLine.match(cue === 'winner' ? WINNER_CUE : FINAL_CUE)[0] : '', addr: it.addr, phone: it.phone, hint: '' });
+  }
+  const items = [...found.values()].map((x) => ({ name: x.name, role: x.role, cue: x.cue || '', addr: x.addr || '', phone: x.phone || '', hint: x.hint || '' }));
+  return { items, listOnly: items.length > 30 }; // 시리즈는 한 편에 여러 곳을 소개하므로 나열형 기준을 크게 둔다
+}
+
+// ── 최종 선정 점수: 가중치는 관리자가 tools/food-verify/weights.json 에서 조정한다 ──
+export const DEFAULT_WEIGHTS = { winner: 5, final: 3, visited: 1, mentioned: 0.3, repeatPerEpisode: 1.5, repeatCap: 3, recent24m: 0.5, ratingTiebreak: 0.5 };
+/** 전문 콘텐츠 이력 점수. 방문자 평점은 여기 들어가지 않는다(평점만 높은 식당이 위로 오지 않게). 같은 영상은 한 번만 센다. */
+export function contentScore(mentions, weights = DEFAULT_WEIGHTS, now = Date.now()) {
+  const w = { ...DEFAULT_WEIGHTS, ...weights };
+  const best = new Map(); // videoId → 가장 높은 역할
+  for (const m of mentions) { const r = m.role || 'visited'; if (!best.has(m.videoId) || ROLE_RANK[r] > ROLE_RANK[best.get(m.videoId).role]) best.set(m.videoId, { role: r, publishedAt: m.publishedAt }); }
+  const list = [...best.values()];
+  const top = list.reduce((a, x) => (ROLE_RANK[x.role] > ROLE_RANK[a] ? x.role : a), 'mentioned');
+  const real = list.filter((x) => ROLE_RANK[x.role] >= ROLE_RANK.visited).length; // 실제 소개된 회차 수
+  const repeat = Math.min(Math.max(real - 1, 0), w.repeatCap) * w.repeatPerEpisode;
+  const recent = list.some((x) => x.publishedAt && now - Date.parse(x.publishedAt) <= 730 * 86400000) ? w.recent24m : 0;
+  const base = w[top] ?? 0;
+  return { score: +(base + repeat + recent).toFixed(2), top, episodes: real, parts: { base, repeat, recent } };
+}
+
+// ── 리뷰 위험 신호(가짜 리뷰라고 확정하지 않는다. 확인 가능한 신호만 분류하고 모자라면 unknown) ──
+const EVENT_WORDS = /(이벤트|리뷰\s*(?:작성|쓰면|참여|남기)|서비스\s*(?:로\s*)?(?:제공|받)|무료\s*(?:제공|증정)|체험단|협찬|제공\s*받)/;
+const bigrams = (t) => { const s = String(t).replace(/\s+/g, ''); const g = new Set(); for (let i = 0; i < s.length - 1; i++) g.add(s.slice(i, i + 2)); return g; };
+const jaccard = (a, b) => { if (!a.size || !b.size) return 0; let n = 0; for (const x of a) if (b.has(x)) n++; return n / (a.size + b.size - n); };
+/** info: { rating, count, reviews?: [{ publishTime(ISO), text }] }  → { level:'none'|'watch'|'high'|'unknown', signals:[코드] } */
+export function reviewRisk(info) {
+  const signals = [];
+  const { rating, count } = info || {};
+  if (typeof rating !== 'number' || !Number.isFinite(count)) return { level: 'unknown', signals: ['NO_RATING_DATA'] };
+  if (rating >= 4.9 && count < 200) signals.push('PERFECT_LOW_COUNT');
+  const rv = (info.reviews || []).filter((r) => r && r.text);
+  const times = rv.map((r) => Date.parse(r.publishTime)).filter(Number.isFinite).sort((a, b) => a - b);
+  if (times.length >= 4 && times[3] - times[0] <= 3 * 86400000) signals.push('TIME_BURST'); // 가져온 리뷰 중 4개가 3일 안에 몰림
+  const bg = rv.filter((r) => r.text.length >= 20).map((r) => bigrams(r.text));
+  let dup = false; for (let i = 0; i < bg.length && !dup; i++) for (let j = i + 1; j < bg.length; j++) if (jaccard(bg[i], bg[j]) >= 0.8) { dup = true; break; }
+  if (dup) signals.push('DUPLICATE_TEXT');
+  if (rv.filter((r) => EVENT_WORDS.test(r.text)).length >= 2) signals.push('EVENT_WORDS');
+  const limited = rv.length < 3; // 공식 API 가 주는 리뷰는 최대 5개뿐이라 전체 분포는 알 수 없다
+  const level = signals.length >= 2 ? 'high' : signals.length === 1 ? 'watch' : limited ? 'unknown' : 'none';
+  return { level, signals, sample: rv.length };
 }

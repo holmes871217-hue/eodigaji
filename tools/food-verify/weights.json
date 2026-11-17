@@ -1,0 +1,10 @@
+{
+  "winner": 5,
+  "final": 3,
+  "visited": 1,
+  "mentioned": 0.3,
+  "repeatPerEpisode": 1.5,
+  "repeatCap": 3,
+  "recent24m": 0.5,
+  "_설명": "전문 콘텐츠 이력 점수(관리자가 조정). winner=또간집 최종 1위, final=최종 선정, visited=실제 방문·소개, mentioned=단순 언급(이것만으론 통과 불가). 같은 영상은 한 번만 세고, 여러 회차 반복 소개는 회차당 repeatPerEpisode(최대 repeatCap회) 가산, 최근 24개월 이력은 recent24m 가산. 방문자 평점은 점수에 넣지 않는다(필수 기준 통과 여부와 동점 정렬에만 쓴다)."
+}

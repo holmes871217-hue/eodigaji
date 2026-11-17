@@ -12,7 +12,8 @@
 // 사용: node tools/food-verify/run.mjs
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { isSponsored, extractRestaurants, pickPlace, judge } from './lib.mjs';
+import { isSponsored, extractRestaurants, pickPlace, judge, DEFAULT_WEIGHTS, normName } from './lib.mjs';
+import { collectSeries, processSeries } from './series.mjs';
 
 const ROOT = fileURLToPath(new URL('../..', import.meta.url));
 const DIR = `${ROOT}tools/food-verify/`;
@@ -22,7 +23,7 @@ export const REFRESH_AFTER_DAYS = 25; // 30일 규칙보다 일찍 갱신한다
 const read = (p, d) => { try { return JSON.parse(readFileSync(p, 'utf8')); } catch { return d; } };
 const write = (p, v) => { mkdirSync(p.replace(/\/[^/]*$/, ''), { recursive: true }); writeFileSync(p, JSON.stringify(v, null, 1)); };
 
-export const DEFAULT_CONFIG = { collect: false, appEnabled: false, minChannels: 1, recentMonths: 12, searchesPerRun: 90, kakaoPerRun: 400 };
+export const DEFAULT_CONFIG = { collect: false, regionSearch: true, appEnabled: false, minChannels: 1, recentMonths: 12, searchesPerRun: 90, kakaoPerRun: 400, seriesMaxPages: 12, fetchReviews: false };
 
 async function getJson(url, headers, http) {
   const r = await http(url, { headers });
@@ -42,7 +43,7 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
   const cfg = { ...DEFAULT_CONFIG, ...read(`${dir}config.json`, {}) };
   const data = `${dir}data/`;
   const channels = read(`${data}channels.json`, { approved: [] });
-  const approved = new Set(channels.approved.map((c) => c.id));
+  const approved = new Set(channels.approved.map((c) => c.id).filter(Boolean));
   const store = read(`${data}candidates.json`, { videos: {} });
   const state = read(`${data}state.json`, { cursor: 0 });
   const overrides = read(`${data}overrides.json`, {}); // { "<카카오ID>": "approve" | "reject" }
@@ -89,6 +90,7 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
     };
 
     try {
+     if (cfg.regionSearch) {
       // 1) 오래된 영상은 30일이 되기 전에 다시 받아 갱신(없어졌으면 삭제)
       const stale = Object.entries(store.videos).filter(([, v]) => now - v.fetchedAt > REFRESH_AFTER_DAYS * DAY).map(([id]) => id);
       for (let i = 0; i < stale.length; i += 50) {
@@ -119,33 +121,73 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
         for (const v of d.items || []) await handle(v, region);
       }
       state.cursor = regions.length ? (state.cursor + out.searched) % regions.length : 0;
+     }
     } catch (e) {
       log(`  맛집 검증 수집 오류(${e.message}) — 이번에는 여기까지만 저장`);
     }
+    // 4) 전문 시리즈 채널(예: 스튜디오 수제의 '풍자의 또간집'): 새 영상 수집 → 식당 추출 → 업체 매칭
+    try {
+      const sv = read(`${data}series-videos.json`, { videos: {} });
+      const ext = read(`${data}extractions.json`, {});
+      const restaurants = read(`${data}restaurants.json`, {});
+      let chChanged = false;
+      for (const ch of channels.approved.filter((c) => c.series && c.enabled !== false)) {
+        const res = await collectSeries({ ch, yt, store: sv, now, maxPages: cfg.seriesMaxPages, log });
+        if (res.resolved && (ch.id !== res.resolved.id || ch.uploads !== res.resolved.uploads)) { ch.id = res.resolved.id; ch.uploads = res.resolved.uploads; ch.title = res.resolved.title; chChanged = true; approved.add(ch.id); }
+        log(`  시리즈 "${ch.name}": 새 영상 ${res.newVideos} · 갱신 ${res.refreshed} · 삭제 ${res.removed} · 제작지원 제외 ${res.sponsored} · 제목 필터 밖 ${res.skippedTitle}${res.resolved ? '' : ' · 채널 확정 못 함'}`);
+      }
+      for (const [vid, x] of Object.entries(ext)) { // 구글 좌표는 30일 안에 다시 확인해야 하므로 오래되면 그 영상을 다시 매칭한다
+        if (x.items.some((it) => it.match?.key?.startsWith('g:') && now - (restaurants[it.match.key]?.coordsAt || 0) > REFRESH_AFTER_DAYS * DAY)) delete ext[vid];
+      }
+      const g = env.GOOGLE_PLACES_SERVER_KEY ? { key: env.GOOGLE_PLACES_SERVER_KEY, http, fetchReviews: cfg.fetchReviews } : null;
+      const ps = await processSeries({ store: sv, ext, restaurants, regionKeys: regionList(root), now, identifyKakao: kakaoKey ? (it, ctx) => identify(it, ctx) : null, google: g, log });
+      log(`  시리즈 식당 추출: 영상 ${ps.processed}편 처리 · 식당 ${ps.items}곳(자동 연결 ${ps.linked} · 검수 ${ps.ambiguous + ps.none}) · 식당 못 뽑은 영상 ${ps.noItems}${g ? ' · 구글 업체 매칭 사용' : ' · 구글 서버 키 없음(카카오로만 매칭)'}`);
+      write(`${data}series-videos.json`, sv); write(`${data}extractions.json`, ext); write(`${data}restaurants.json`, restaurants);
+      if (chChanged) write(`${data}channels.json`, channels);
+    } catch (e) { log(`  시리즈 수집 오류(${e.message}) — 이번에는 여기까지만 저장`); }
     write(`${data}candidates.json`, store);
     write(`${data}state.json`, state);
     write(`${data}suggestions.json`, sugg);
   }
 
   // 3) 판정 → 앱용 목록. (수집을 건너뛴 날에도 기존 저장분으로 다시 만든다)
-  const byPlace = new Map(); // 카카오 장소 ID → { name, lat, lng, refs[] }
+  const restaurants = read(`${data}restaurants.json`, {});
+  const ext = read(`${data}extractions.json`, {});
+  const sv = read(`${data}series-videos.json`, { videos: {} });
+  const weights = { ...DEFAULT_WEIGHTS, ...read(`${dir}weights.json`, {}) };
+  const byPlace = new Map(); // 업체 키(카카오 장소 ID 또는 g:구글ID) → { name, lat, lng, refs[] }
   const review = [];
-  for (const [videoId, v] of Object.entries(store.videos)) {
+  const addRef = (key, base, ref) => { const e = byPlace.get(key) || { ...base, refs: [] }; e.refs.push(ref); byPlace.set(key, e); };
+  for (const [videoId, v] of Object.entries(store.videos)) { // 지역 검색 영상
     if (now - v.fetchedAt > 30 * DAY) continue; // 30일 넘게 갱신 못 한 영상 정보는 쓰지 않는다
     for (const it of v.items) {
-      if (it.place.level === 'linked' && it.place.key) {
-        const e = byPlace.get(it.place.key) || { name: it.place.name, lat: it.place.lat, lng: it.place.lng, refs: [] };
-        e.refs.push({ videoId, channelId: v.channelId, publishedAt: v.publishedAt });
-        byPlace.set(it.place.key, e);
-      } else if (it.place.level === 'ambiguous') review.push({ videoId, channelId: v.channelId, name: it.name, addr: it.addr, why: it.place.why || 'AMBIGUOUS' });
+      if (it.place.level === 'linked' && it.place.key) addRef(it.place.key, { name: it.place.name, lat: it.place.lat, lng: it.place.lng }, { videoId, channelId: v.channelId, publishedAt: v.publishedAt, role: 'visited' });
+      else if (it.place.level === 'ambiguous') review.push({ videoId, channelId: v.channelId, name: it.name, addr: it.addr, why: it.place.why || 'AMBIGUOUS' });
+    }
+  }
+  for (const [videoId, x] of Object.entries(ext)) { // 시리즈 영상(또간집 등)
+    const v = sv.videos[videoId];
+    if (!v || v.sponsored || now - v.fetchedAt > 30 * DAY) continue;
+    for (const it of x.items) {
+      const m = it.match || {}, r = restaurants[m.key];
+      if (m.level === 'linked' && r && !(r.googlePlaceId && now - (r.coordsAt || 0) > 30 * DAY)) addRef(m.key, { name: r.name || it.name, lat: r.lat, lng: r.lng, g: r.googlePlaceId || '', open: r.open, risk: r.risk }, { videoId, channelId: v.channelId, publishedAt: v.publishedAt, role: it.role });
+      else review.push({ kind: 'series', videoId, channelId: v.channelId, name: it.name, role: it.role, why: m.why || (m.level === 'ambiguous' ? 'AMBIGUOUS' : 'NO_MATCH') });
     }
   }
   const items = [], verdicts = {};
   for (const [k, e] of byPlace) {
-    const j = judge(e.refs, approved, { minChannels: cfg.minChannels, override: overrides[k] });
-    verdicts[k] = { name: e.name, ...j, videos: e.refs.map((r) => r.videoId) };
-    if (j.status === 'eligible') items.push({ k, n: e.name, lat: +e.lat.toFixed(5), lng: +e.lng.toFixed(5) });
+    const j = judge(e.refs, approved, { minChannels: cfg.minChannels, override: overrides[k], weights, now, open: e.open, risk: e.risk });
+    verdicts[k] = { name: e.name, ...j, videos: [...new Set(e.refs.map((r) => r.videoId))] };
+    if (j.status === 'eligible') items.push({ k, n: e.name, lat: +e.lat.toFixed(5), lng: +e.lng.toFixed(5), p: j.score, ...(e.g ? { g: e.g } : {}) });
   }
+  // 같은 식당이 다른 경로(구글·카카오)로 두 번 들어오면 하나로 합친다(150m 안·같은 이름) — 중복 추천 방지
+  items.sort((a, b) => b.p - a.p);
+  const uniq = [];
+  for (const it of items) {
+    if (uniq.some((u) => normName(u.n) === normName(it.n) && Math.hypot((u.lat - it.lat) * 111, (u.lng - it.lng) * 88) <= 0.15)) continue;
+    uniq.push(it);
+  }
+  items.length = 0; items.push(...uniq);
   write(`${data}verdicts.json`, verdicts);
   write(`${data}review-queue.json`, review);
   const status = cfg.appEnabled && items.length ? 'on' : 'off';

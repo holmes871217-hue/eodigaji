@@ -1,0 +1,58 @@
+# 전문 맛집 채널(풍자의 또간집) 수집·검증만 따로 실행한다. 키가 있는지부터 알려 주고(값은 출력하지 않음), 결과를 저장소에 기록한다.
+# 켜는 순서와 스위치: docs/유튜브-맛집-검증-운영법.md
+name: 또간집 맛집 검증 실행
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 20 * * 1' # 매주 월요일 한국 시간 05:30 (신규 영상 확인)
+
+permissions:
+  contents: write
+
+concurrency:
+  group: food-verify
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 키 설정 여부 확인 (값은 출력하지 않음)
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+          GOOGLE_PLACES_SERVER_KEY: ${{ secrets.GOOGLE_PLACES_SERVER_KEY }}
+        run: |
+          for n in YOUTUBE_API_KEY KAKAO_REST_KEY GOOGLE_PLACES_SERVER_KEY; do
+            if [ -n "${!n}" ]; then echo "$n: 설정됨"; else echo "$n: 없음"; fi
+          done
+
+      - name: 규칙 점검
+        run: node tools/check-food-verify.mjs
+
+      - name: 또간집 수집·검증
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+          GOOGLE_PLACES_SERVER_KEY: ${{ secrets.GOOGLE_PLACES_SERVER_KEY }}
+        run: node tools/food-verify/run.mjs
+
+      - name: 저장
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/data/food-eligible.json tools/food-verify/data tools/food-verify/config.json
+          if git diff --cached --quiet; then echo "바뀐 내용 없음"; exit 0; fi
+          git commit -m "또간집 맛집 검증 결과 갱신 $(TZ=Asia/Seoul date +%F)"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -5,5 +5,8 @@
   "recentMonths": 12,
   "searchesPerRun": 90,
   "kakaoPerRun": 400,
-  "_설명": "collect: YouTube 수집을 켠다(YOUTUBE_API_KEY 도 있어야 함). appEnabled: 앱이 맛집 5곳을 '승인된 식당'으로만 거른다(false면 기존 동작). 두 스위치는 따로 켠다."
+  "_설명": "collect: 유튜브 수집 전체 스위치(YOUTUBE_API_KEY 필요). regionSearch: '{지역} 맛집' 검색 수집(지금은 꺼 둠). 시리즈 채널(또간집)은 channels.json 의 series:true 항목이 수집된다. fetchReviews: 구글 리뷰(최대 5개)로 위험 신호를 분석(비용이 더 듦, GOOGLE_PLACES_SERVER_KEY 필요). appEnabled: 앱이 승인 식당만 노출(false면 기존 동작).",
+  "regionSearch": false,
+  "seriesMaxPages": 12,
+  "fetchReviews": false
 }

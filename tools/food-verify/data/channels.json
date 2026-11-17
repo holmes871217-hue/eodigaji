@@ -1,1 +1,17 @@
-{"approved":[]}
+{
+  "approved": [
+    {
+      "key": "ddagganjip",
+      "name": "스튜디오 수제 — 풍자의 또간집",
+      "handle": "@STUDIO_SUZE",
+      "expectTitle": "스튜디오 수제",
+      "titleFilter": "또간집|Repeat Restaurant",
+      "series": true,
+      "enabled": true,
+      "id": "",
+      "uploads": "",
+      "approvedAt": "2026-11-17",
+      "note": "또간집은 별도 채널이 아니라 스튜디오 수제 채널의 코너. 채널 ID 는 첫 실행 때 핸들로 조회해 이름이 맞을 때만 채워진다(추측 금지)."
+    }
+  ]
+}

@@ -268,6 +268,14 @@ export function sameEligible(row, it) {
   const nameOk = a === b || (Math.min(a.length, b.length) >= 3 && (a.includes(b) || b.includes(a)));
   return nameOk && haversineKm({ lat: it.lat, lng: it.lng }, row) <= 0.15;
 }
+/** 전문 콘텐츠 우선순위(p) 순 → 같으면 보정 평점 → 가까운 순. 평점만 높은 식당이 위로 오지 않는다. 최대 5곳, 같은 식당은 한 번만. */
+export function rankEligible(rows, rule = RATING_RULE) {
+  const adj = (r) => (r.rating * r.reviews + rule.prior * rule.priorWeight) / (r.reviews + rule.priorWeight);
+  const seen = new Set();
+  return rows.slice().sort((a, b) => (b.p || 0) - (a.p || 0) || adj(b) - adj(a) || a.km - b.km)
+    .filter((r) => { const k = r.gid || r.id || r.name; if (seen.has(k)) return false; seen.add(k); return true; })
+    .slice(0, 5);
+}
 let eligPromise = null;
 function loadEligible() {
   if (!eligPromise) {
@@ -304,11 +312,11 @@ async function viaEligible(place, list, key) {
   const rows = [];
   await Promise.all(near.map(async ({ it }) => {
     try {
-      const hit = (await googleFindOne(it, key)).find((r) => sameEligible(r, it));
-      if (hit && !hit.closed && passesRating(hit.rating, hit.reviews)) rows.push({ ...hit, km: haversineKm(place, hit) });
+      const hit = (await googleFindOne(it, key)).find((r) => (it.g && r.gid === it.g) || sameEligible(r, it));
+      if (hit && !hit.closed && passesRating(hit.rating, hit.reviews)) rows.push({ ...hit, km: haversineKm(place, hit), p: it.p });
     } catch { /* 한 곳 실패는 그 곳만 빠진다 */ }
   }));
-  return pickBest(rows);
+  return rankEligible(rows);
 }
 
 /**
