@@ -54,7 +54,7 @@ export async function collectSeries({ ch, yt, store, now, maxPages = 12, log = (
     page = j.nextPageToken || '';
     if (hitKnown || !page) break; // 이미 받은 영상을 만났으면 그 뒤는 옛 영상이므로 멈춘다
   }
-  const stale = Object.entries(known).filter(([, v]) => v.channelKey === ch.key && now - v.fetchedAt > REFRESH_AFTER_DAYS * DAY).map(([id]) => id);
+  const stale = Object.entries(known).filter(([, v]) => v.channelKey === ch.key && (now - v.fetchedAt > REFRESH_AFTER_DAYS * DAY || (v.sponsored && !v.ctx))).map(([id]) => id); // 점검 정보(ctx)가 없는 제작지원 판정은 한 번 다시 받는다
   const ids = [...new Set([...wanted, ...stale])];
   for (let i = 0; i < ids.length; i += 50) {
     const batch = ids.slice(i, i + 50);
@@ -65,7 +65,7 @@ export async function collectSeries({ ch, yt, store, now, maxPages = 12, log = (
       const isNew = !known[id];
       if (!v) { if (!isNew) { delete known[id]; out.removed++; } continue; } // 삭제·비공개 영상은 지운다
       const sp = isSponsored(v);
-      if (sp.yes) { known[id] = { id, channelKey: ch.key, channelId: v.snippet?.channelId || info.id, sponsored: true, why: sp.why, publishedAt: v.snippet?.publishedAt || '', fetchedAt: now }; out.sponsored++; continue; } // 제작지원은 설명도 저장하지 않는다
+      if (sp.yes) { known[id] = { id, channelKey: ch.key, channelId: v.snippet?.channelId || info.id, sponsored: true, why: sp.why, ctx: sp.ctx || (v.paidProductPlacementDetails?.hasPaidProductPlacement ? '(유료 광고 표시 플래그)' : ''), title: v.snippet?.title || '', publishedAt: v.snippet?.publishedAt || '', fetchedAt: now }; out.sponsored++; continue; } // 제작지원은 설명도 저장하지 않는다
       const rec = {
         id, channelKey: ch.key, url: `https://www.youtube.com/watch?v=${id}`, title: v.snippet?.title || '', channelId: v.snippet?.channelId || info.id, channelTitle: v.snippet?.channelTitle || info.title,
         publishedAt: v.snippet?.publishedAt || '', description: v.snippet?.description || '',

@@ -12,7 +12,7 @@ export function isSponsored(video) {
   if (video?.paidProductPlacementDetails?.hasPaidProductPlacement === true) return { yes: true, why: 'flag' };
   const text = `${video?.snippet?.title || ''}\n${video?.snippet?.description || ''}`.replace(NEGATED, ' ');
   const m = text.match(SPONSOR_WORDS);
-  return m ? { yes: true, why: `word:${m[0].trim().toLowerCase()}` } : { yes: false };
+  return m ? { yes: true, why: `word:${m[0].trim().toLowerCase()}`, ctx: text.slice(Math.max(0, m.index - 40), m.index + 60).replace(/\s+/g, ' ').trim() } : { yes: false }; // ctx: 어떤 문장 때문에 걸렸는지 점검용(60자 안팎)
 }
 
 // ── 정보란(설명)에서 맛집 정보 추출 ───────────────────────────
