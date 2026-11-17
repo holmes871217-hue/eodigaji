@@ -454,7 +454,7 @@
  },
  "fvD36nHVbhs": {
   "descHash": "fb9995e5275b7a55",
-  "extractedAt": 1794920065399,
+  "extractedAt": 1794920214887,
   "region": "서울 마포구",
   "source": "manual",
   "items": [
@@ -464,8 +464,8 @@
     "cue": "manual",
     "addr": "서울 마포구 망원로6길 57 2층",
     "match": {
-     "level": "none",
-     "key": "",
+     "level": "linked",
+     "key": "889810020",
      "why": ""
     }
    }
