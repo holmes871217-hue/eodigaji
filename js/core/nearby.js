@@ -352,23 +352,27 @@ export async function findShops(place, kind) {
     const items = await viaParking(place);
     return { items, source: 'kakao', fees: items.some((s) => s.fee) };
   }
-  // 승인된 맛집만 추천하는 기능이 켜져 있으면 맛집은 그 목록으로만 만든다(5곳 미만이면 그대로, 카카오 대체 목록으로 채우지 않는다).
+  // 또간집(승인된 전문 콘텐츠) 식당이 근처에 있으면 그 식당을 앞에 두고, 5곳이 안 되면 기존 순위로 나머지를 채워 5곳을 만든다.
+  // 근처에 또간집 식당이 없으면(승인 목록이 꺼져 있는 경우 포함) 기존 방식 그대로다.
   const eligible = kind === 'food' ? await loadEligible() : null;
-  if (eligible) {
-    let items = [];
-    if (GOOGLE_PLACES_KEY) items = await viaEligible(place, eligible, GOOGLE_PLACES_KEY).catch(() => []);
-    await Promise.race([matchNaverNames(items, kind).catch(() => {}), new Promise((r) => setTimeout(r, 4000))]);
-    return { items, source: 'google', verified: true };
-  }
+  const verified = eligible && GOOGLE_PLACES_KEY ? await viaEligible(place, eligible, GOOGLE_PLACES_KEY).catch(() => []) : [];
+  let base = null;
   if (GOOGLE_PLACES_KEY && SHOP_KINDS[kind].google) {
-    try {
-      const items = await viaGoogle(place, kind);
-      // 이름 맞추기는 덤이라, 오래 걸리거나 실패해도 결과는 그대로 보여 준다(4초까지만 기다림).
-      await Promise.race([matchNaverNames(items, kind).catch(() => {}), new Promise((r) => setTimeout(r, 4000))]);
-      return { items, source: 'google' };
-    } catch {
-      // 아래 카카오로 넘어간다
-    }
+    try { base = { items: await viaGoogle(place, kind), source: 'google' }; } catch { /* 아래 카카오로 넘어간다 */ }
   }
-  return { items: await viaKakao(place, kind), source: 'kakao' };
+  if (!base && !verified.length) return { items: await viaKakao(place, kind), source: 'kakao' };
+  if (!base) base = { items: [], source: 'google' };
+  const items = verified.length ? mergeFill(verified, base.items, 5) : base.items;
+  // 이름 맞추기는 덤이라, 오래 걸리거나 실패해도 결과는 그대로 보여 준다(4초까지만 기다림).
+  await Promise.race([matchNaverNames(items, kind).catch(() => {}), new Promise((r) => setTimeout(r, 4000))]);
+  return { items, source: base.source };
+}
+
+/** 또간집 식당(verified)을 앞에 두고 기존 순위(base)로 max 곳까지 채운다. 같은 식당은 한 번만 넣는다(구글 ID 또는 같은 이름·150m 안). */
+export function mergeFill(verified, base, max = 5) {
+  const out = [];
+  const dup = (a, b) => (a.gid && a.gid === b.gid) || (eName(cleanShopName(a.name)) === eName(cleanShopName(b.name)) && haversineKm(a, b) <= 0.15);
+  for (const r of verified) if (out.length < max && !out.some((o) => dup(o, r))) out.push(r);
+  for (const r of base) if (out.length < max && !out.some((o) => dup(o, r))) out.push(r);
+  return out;
 }
