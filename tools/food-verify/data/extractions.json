@@ -126,56 +126,411 @@
   "items": []
  },
  "yCQxgkJXI5E": {
-  "descHash": "eee6656b11640636",
-  "extractedAt": 1794919256035,
+  "descHash": "11f3281eba7c8f5e",
+  "extractedAt": 1794919337061,
   "region": "",
   "items": []
  },
  "Z6cPZiosZEo": {
-  "descHash": "a8d5fa553ced3c11",
-  "extractedAt": 1794919256035,
+  "descHash": "8579b48d20f09ede",
+  "extractedAt": 1794919337061,
   "region": "익산시",
-  "items": []
+  "items": [
+   {
+    "name": "부광족발",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "19049901",
+     "why": ""
+    }
+   },
+   {
+    "name": "동서네낙지",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "남부시장통닭",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "9159096",
+     "why": ""
+    }
+   },
+   {
+    "name": "태백칼국수",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "8623832",
+     "why": ""
+    }
+   },
+   {
+    "name": "어양토속순대",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "떡두껍집",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "16281376",
+     "why": ""
+    }
+   }
+  ]
  },
  "jSiLx_Ahh_s": {
-  "descHash": "dd0a2e8654bcc7a8",
-  "extractedAt": 1794919256035,
+  "descHash": "eea9199175012746",
+  "extractedAt": 1794919337061,
   "region": "정읍시",
   "items": []
  },
  "mVOW2N97Usk": {
-  "descHash": "e0b1c5eb3d603a30",
-  "extractedAt": 1794919256035,
+  "descHash": "1f3e490b00b8b583",
+  "extractedAt": 1794919337061,
   "region": "구리시",
-  "items": []
+  "items": [
+   {
+    "name": "마일드민트 1L x 3개 = 34,200원",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "아이시민트 1L x 3개 = 34,200원",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
  },
  "pSjLqki_oJ8": {
-  "descHash": "005521df48482a1c",
-  "extractedAt": 1794919256035,
+  "descHash": "1224eb7d916a39bb",
+  "extractedAt": 1794919337061,
   "region": "기장군",
   "items": []
  },
  "m9u4_9Uau8g": {
-  "descHash": "ab4bad3399b8669a",
-  "extractedAt": 1794919256035,
+  "descHash": "660f9ab364c87cc5",
+  "extractedAt": 1794919337061,
   "region": "",
   "items": []
  },
  "BE1CT-3362Y": {
-  "descHash": "47b69113eeedbc5f",
-  "extractedAt": 1794919256035,
+  "descHash": "4a021f5c40f7659a",
+  "extractedAt": 1794919337061,
   "region": "",
   "items": []
  },
  "nxukV1yfvCA": {
-  "descHash": "65fe2881da041eb2",
-  "extractedAt": 1794919256035,
+  "descHash": "3d3cff4f7aa46ae7",
+  "extractedAt": 1794919337061,
   "region": "영월군",
-  "items": []
+  "items": [
+   {
+    "name": "숨쉴틈도 없이 무례하네 ㅋㅋㅋㅋㅋㅋㅋㅋ",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "곱창김 캔김 30g x 5캔 = 16,900원",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "초원가든",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "14097524",
+     "why": ""
+    }
+   },
+   {
+    "name": "사랑방식당",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "26341186",
+     "why": ""
+    }
+   },
+   {
+    "name": "성호식당",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "해남식당",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "23009522",
+     "why": ""
+    }
+   },
+   {
+    "name": "한마음식당",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "10111845",
+     "why": ""
+    }
+   },
+   {
+    "name": "불티나닭갈비",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "9037566",
+     "why": ""
+    }
+   },
+   {
+    "name": "아서원",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "10596110",
+     "why": ""
+    }
+   },
+   {
+    "name": "뽕의전설",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "23437249",
+     "why": ""
+    }
+   },
+   {
+    "name": "원짬뽕",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1304023075",
+     "why": ""
+    }
+   },
+   {
+    "name": "금서베이커리",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "감자빵 등 원하시면 이달엔영월",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "어도횟집",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "8461347",
+     "why": ""
+    }
+   },
+   {
+    "name": "상록수",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "행운식당",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "16777886",
+     "why": ""
+    }
+   },
+   {
+    "name": "맛나분식",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "단골식당",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "15572391",
+     "why": ""
+    }
+   },
+   {
+    "name": "벌때식당",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "홍가네",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "서부순대",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "영흥칼국수",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "9319782",
+     "why": ""
+    }
+   },
+   {
+    "name": "갯마을바지락칼국수",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1425346983",
+     "why": ""
+    }
+   },
+   {
+    "name": "막내제수씨",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "928215763",
+     "why": ""
+    }
+   }
+  ]
  },
  "7vqYRXkPyTQ": {
-  "descHash": "54ebcec9ca64508f",
-  "extractedAt": 1794919256035,
+  "descHash": "81fd16aeabb5c143",
+  "extractedAt": 1794919337061,
   "region": "이천시",
   "items": [
    {
@@ -188,138 +543,406 @@
      "key": "",
      "why": ""
     }
+   },
+   {
+    "name": "가오리찜-한솔찜 ⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "생선구이-호운,오가생선구이⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "회-회모리 ⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "삼겹살-양탄집⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "목살-대왕육⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "한우-막퍼주⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "초밥-호타루⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "소곱창-동래곱창⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "닭발-가라와라⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "도토리묵보쌈-버드나무도토리⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "돼지막창-삽다리⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "설렁탕-푸주옥,우미정⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "가리비회-쭌조개구이 본점⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "중국집-만리성⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "쌈밥정식-예담골⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "버섯매운탕-대송버섯⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "막국수-응암리막국수⭐️",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
    }
   ]
  },
  "9LdSGv5wHec": {
-  "descHash": "a829128fd2070331",
-  "extractedAt": 1794919256035,
+  "descHash": "ff965998b2aceafe",
+  "extractedAt": 1794919337061,
   "region": "논산시",
   "items": []
  },
  "-vsNkVIRvt0": {
-  "descHash": "1e49f0c438baf702",
-  "extractedAt": 1794919256035,
+  "descHash": "6ba70dea9b0f11e2",
+  "extractedAt": 1794919337061,
   "region": "공주시",
   "items": []
  },
  "Uf8V4EvPKWk": {
-  "descHash": "997cc53455a266ba",
-  "extractedAt": 1794919256035,
+  "descHash": "18aebab48370602c",
+  "extractedAt": 1794919337061,
   "region": "진주시",
   "items": []
  },
  "1HExH6cy5BQ": {
-  "descHash": "bcac26808a7ecac8",
-  "extractedAt": 1794919256035,
+  "descHash": "766f3e4d580a67f7",
+  "extractedAt": 1794919337061,
   "region": "괴산군",
-  "items": []
+  "items": [
+   {
+    "name": "메디힐 BEST 상품 파격특가",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
  },
  "Ppt-Dr0QT_o": {
-  "descHash": "cbb4e535659cf962",
-  "extractedAt": 1794919256035,
+  "descHash": "fb5aece3019ad345",
+  "extractedAt": 1794919337061,
   "region": "",
   "items": []
  },
  "mNjTXSfQXnE": {
-  "descHash": "3429c9e4589cb9e0",
-  "extractedAt": 1794919256035,
+  "descHash": "8d075e584f488cf4",
+  "extractedAt": 1794919337061,
   "region": "김해시",
   "items": []
  },
  "-rdQxOZgQCE": {
-  "descHash": "95597123eed92f51",
-  "extractedAt": 1794919256035,
+  "descHash": "2b7a18906e6b594c",
+  "extractedAt": 1794919337061,
   "region": "",
   "items": []
  },
  "6a4GfDj_SYw": {
-  "descHash": "4777c9705bdb1097",
-  "extractedAt": 1794919256035,
+  "descHash": "bdfa528124b44ac5",
+  "extractedAt": 1794919337061,
   "region": "",
   "items": []
  },
  "uXq3hmDhpps": {
-  "descHash": "11b8f7e61526ce69",
-  "extractedAt": 1794919256035,
+  "descHash": "f5c2808c14a0f3ee",
+  "extractedAt": 1794919337061,
   "region": "노원구",
   "items": []
  },
  "2WLWFZ81k6E": {
-  "descHash": "e7a6ec9dd2d8a8e2",
-  "extractedAt": 1794919256035,
+  "descHash": "143af41e0e3147f4",
+  "extractedAt": 1794919337061,
   "region": "철원군",
-  "items": []
+  "items": [
+   {
+    "name": "리들샷 50",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "리들샷 700",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "PDRN 시카엑소좀 R5 퍼밍 앰플",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
  },
  "vAKeY1t_bLI": {
-  "descHash": "0cad7818a6844b81",
-  "extractedAt": 1794919256035,
+  "descHash": "9de9c30bf312f4de",
+  "extractedAt": 1794919337061,
   "region": "",
   "items": []
  },
  "5tV8wKaUxSA": {
-  "descHash": "1d55abb4902524fe",
-  "extractedAt": 1794919256035,
+  "descHash": "13a182cfb0b1c5a6",
+  "extractedAt": 1794919337061,
   "region": "광주시",
   "items": []
  },
  "Z-zG-6rynP8": {
-  "descHash": "3e6acfc35c9547af",
-  "extractedAt": 1794919256035,
+  "descHash": "065fe7be83a630f4",
+  "extractedAt": 1794919337061,
   "region": "해남군",
   "items": []
  },
  "fvD36nHVbhs": {
-  "descHash": "c85e0693d04b0286",
-  "extractedAt": 1794919256035,
+  "descHash": "17e5587e402b66be",
+  "extractedAt": 1794919337061,
   "region": "",
   "items": []
  },
  "4cCrjwgi54w": {
-  "descHash": "b74021f6b62685a1",
-  "extractedAt": 1794919256035,
+  "descHash": "8c2d5de97917d809",
+  "extractedAt": 1794919337061,
   "region": "안산시",
-  "items": []
+  "items": [
+   {
+    "name": "T괄사 아이크림 1+1 = 22,900원",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "블랙선크림 50ml 1+1 = 18,400원",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
  },
  "rqmIz5TAhwY": {
-  "descHash": "d984acbeecd59268",
-  "extractedAt": 1794919256035,
+  "descHash": "077bdad410936b60",
+  "extractedAt": 1794919337061,
   "region": "안산시",
   "items": []
  },
  "qqNFLhkYh04": {
-  "descHash": "8778ae4e3c6d4411",
-  "extractedAt": 1794919256035,
+  "descHash": "67f7e2fb9681ae9a",
+  "extractedAt": 1794919337061,
   "region": "남양주시",
   "items": []
  },
  "vbBYnmELwqk": {
-  "descHash": "cc383a28c09322fd",
-  "extractedAt": 1794919256035,
+  "descHash": "152a752aad48a842",
+  "extractedAt": 1794919337061,
   "region": "남양주시",
   "items": []
  },
  "y4rM8vnYsZc": {
-  "descHash": "d4d6d202e0b4f2f1",
-  "extractedAt": 1794919256035,
+  "descHash": "8eb5b9900982abc6",
+  "extractedAt": 1794919337061,
   "region": "강남구",
   "items": []
  },
  "xGzUPV1lqNw": {
-  "descHash": "db8a6a40391bbb18",
-  "extractedAt": 1794919256035,
+  "descHash": "db24604274289d07",
+  "extractedAt": 1794919337061,
   "region": "",
   "items": []
  },
  "qM4IliSpcrE": {
-  "descHash": "3a61ccd4cb9cd42b",
-  "extractedAt": 1794919256035,
+  "descHash": "d2e918708fe4595c",
+  "extractedAt": 1794919337061,
   "region": "",
-  "items": []
+  "items": [
+   {
+    "name": "김기범: 아이돌은 사회면에 나오면 안돼",
+    "role": "visited",
+    "cue": "",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
  },
  "LI-mgx3HL3I": {
-  "descHash": "80d73763622ed151",
-  "extractedAt": 1794919256035,
+  "descHash": "12fc8ba0f4a5738f",
+  "extractedAt": 1794919337061,
   "region": "평택시",
   "items": []
  }

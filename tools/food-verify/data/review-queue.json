@@ -1,10 +1,314 @@
 [
  {
   "kind": "series",
+  "videoId": "Z6cPZiosZEo",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "동서네낙지",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "Z6cPZiosZEo",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "어양토속순대",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "mVOW2N97Usk",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "마일드민트 1L x 3개 = 34,200원",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "mVOW2N97Usk",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "아이시민트 1L x 3개 = 34,200원",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "숨쉴틈도 없이 무례하네 ㅋㅋㅋㅋㅋㅋㅋㅋ",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "곱창김 캔김 30g x 5캔 = 16,900원",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "성호식당",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "금서베이커리",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "감자빵 등 원하시면 이달엔영월",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "상록수",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "맛나분식",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "벌때식당",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "홍가네",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "nxukV1yfvCA",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "서부순대",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
   "videoId": "7vqYRXkPyTQ",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "2025 올리브영 어워즈 토너",
   "role": "winner",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "가오리찜-한솔찜 ⭐️",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "생선구이-호운,오가생선구이⭐️",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "회-회모리 ⭐️",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "삼겹살-양탄집⭐️",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "목살-대왕육⭐️",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "한우-막퍼주⭐️",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "초밥-호타루⭐️",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "소곱창-동래곱창⭐️",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "닭발-가라와라⭐️",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "도토리묵보쌈-버드나무도토리⭐️",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "돼지막창-삽다리⭐️",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "설렁탕-푸주옥,우미정⭐️",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "가리비회-쭌조개구이 본점⭐️",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "중국집-만리성⭐️",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "쌈밥정식-예담골⭐️",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "버섯매운탕-대송버섯⭐️",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "7vqYRXkPyTQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "막국수-응암리막국수⭐️",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "1HExH6cy5BQ",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "메디힐 BEST 상품 파격특가",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "2WLWFZ81k6E",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "리들샷 50",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "2WLWFZ81k6E",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "리들샷 700",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "2WLWFZ81k6E",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "PDRN 시카엑소좀 R5 퍼밍 앰플",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "4cCrjwgi54w",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "T괄사 아이크림 1+1 = 22,900원",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "4cCrjwgi54w",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "블랙선크림 50ml 1+1 = 18,400원",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "qM4IliSpcrE",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "김기범: 아이돌은 사회면에 나오면 안돼",
+  "role": "visited",
   "why": "NO_MATCH"
  }
 ]
