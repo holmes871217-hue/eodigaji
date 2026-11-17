@@ -34,7 +34,7 @@ export function travelMin(a, b, mode = 'car') {
  * 방문 순서(places 배열 순서)대로 시각표를 만든다. 끝 시각을 넘으면 null.
  * @returns {{items:Array, endMin:number}|null}
  */
-export function schedule(origin, places, { startMin, endMin, mode, foods = [], cafes = [] }) {
+export function schedule(origin, places, { startMin, endMin, mode, foods = [], cafes = [], lunchIn = true }) {
   const items = [];
   const fq = foods.slice(), cq = cafes.slice(); // 식사 장소(맛집)·그 뒤에 들를 카페. 순서대로 쓴다
   let clock = startMin, pos = origin, sinceBreak = 0, lunch = false, dinner = false;
@@ -52,7 +52,7 @@ export function schedule(origin, places, { startMin, endMin, mode, foods = [], c
     clock += len; sinceBreak = 0;
   };
   const maybeMeals = () => {
-    if (!lunch && clock >= LUNCH.from && clock <= LUNCH.to) { eat('점심 식사', LUNCH.len, 'lunch'); lunch = true; }
+    if (!lunch && clock >= LUNCH.from && clock <= (lunchIn ? LUNCH.to : 15 * 60)) { eat('점심 식사', LUNCH.len, 'lunch'); lunch = true; }
     if (!dinner && clock >= DINNER.from) { eat('저녁 식사', DINNER.len, 'dinner'); dinner = true; }
   };
   for (const p of places) {
@@ -64,7 +64,7 @@ export function schedule(origin, places, { startMin, endMin, mode, foods = [], c
     const start = clock + t, end = start + dwell;
     const it = { type: 'visit', place: p, travel: t, start, end, dwell };
     // 점심 시간대에 걸쳐 오래(2시간 이상) 머무는 곳이면 점심은 그 안에서 먹는 것으로 본다(맛집을 정해 둔 경우는 제외)
-    if (!lunch && !fq.length && start < LUNCH.to && end > LUNCH.from && dwell >= 120) { it.lunchIn = true; lunch = true; }
+    if (lunchIn && !lunch && !fq.length && start < LUNCH.to && end > LUNCH.from && dwell >= 120) { it.lunchIn = true; lunch = true; }
     items.push(it);
     clock = end; pos = p; sinceBreak += t + dwell;
     maybeMeals();
@@ -123,7 +123,7 @@ export function validateCourse(course, { startMin, endMin }) {
  *   origin {lat,lng,name}, date 'YYYY-MM-DD', start 'HH:MM', end 'HH:MM', mode 'car'|'transit'
  *   candidates: [{ place, score, fav? }] 우선순위 순(찜 먼저). 최대 MAX_STOPS 곳을 고른다.
  */
-export function buildCourse({ origin, date, start = '09:00', end = '18:00', mode = 'car', candidates }) {
+export function buildCourse({ origin, date, start = '09:00', end = '18:00', mode = 'car', candidates, lunchIn = true }) {
   const startMin = toMin(start), endMin = toMin(end);
   const warnings = [];
   if (!(endMin - startMin >= 120)) return { ok: false, reason: '여행 시간이 너무 짧아요(최소 2시간).', items: [], warnings };
@@ -133,7 +133,7 @@ export function buildCourse({ origin, date, start = '09:00', end = '18:00', mode
   const sights = candidates.filter((c) => !c.place.shop);
   const chosen = [];
   const dropped = [];
-  const sch = (list) => schedule(origin, orderByTravel(origin, list, mode), { startMin, endMin, mode, foods, cafes });
+  const sch = (list) => schedule(origin, orderByTravel(origin, list, mode), { startMin, endMin, mode, foods, cafes, lunchIn });
   if (!sch([])) return { ok: false, reason: '이 시간 안에 맛집·카페까지 다녀올 수 없어요. 시간을 늘려 보세요.', items: [], dropped, warnings };
   for (const c of sights) {
     if (chosen.length >= MAX_STOPS) { dropped.push({ place: c.place, why: '코스에 넣을 수 있는 최대 곳 수(6곳)를 넘어요' }); continue; }
@@ -142,7 +142,7 @@ export function buildCourse({ origin, date, start = '09:00', end = '18:00', mode
   }
   if (!chosen.length && !foods.length && !cafes.length) return { ok: false, reason: '이 시간 안에 다녀올 수 있는 후보가 없어요. 시간을 늘리거나 가까운 곳을 찜해 보세요.', items: [], dropped, warnings };
   const order = orderByTravel(origin, chosen.map((x) => x.place), mode);
-  const done = schedule(origin, order, { startMin, endMin, mode, foods, cafes });
+  const done = schedule(origin, order, { startMin, endMin, mode, foods, cafes, lunchIn });
   const course = { ok: true, items: done.items, endMin: done.endMin, dropped, warnings, mode, startMin, date };
   const problems = validateCourse(course, { startMin, endMin });
   if (problems.length) return { ok: false, reason: `코스 검증에 실패했어요: ${problems.join(', ')}`, items: [], dropped, warnings };

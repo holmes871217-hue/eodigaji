@@ -241,6 +241,9 @@ async function addMeals(first, candidates, args) {
   const favFoods = candidates.filter((c) => c.place.shop && c.place.cat === 'food');
   const favCafes = candidates.filter((c) => c.place.shop && c.place.cat === 'cafe');
   const slots = first.items.filter((i) => i.type === 'meal' && i.near); // 식당을 못 정한 점심·저녁
+  // 오래 머무는 곳 안에서 점심을 먹는 것으로 처리된 코스도, 맛집이 없으면 그 근처 맛집으로 바꾼다
+  const inside = first.items.find((i) => i.type === 'visit' && i.lunchIn);
+  if (inside && !favFoods.length) slots.push({ near: { lat: inside.place.lat, lng: inside.place.lng, name: inside.place.name } });
   const autoFoods = [];
   for (const m of slots) { const f = await nearestShop(m.near, 'food', used); if (f) autoFoods.push(f); }
   const allFoods = [...favFoods.map((c) => c.place), ...autoFoods];
@@ -251,7 +254,7 @@ async function addMeals(first, candidates, args) {
     cafes.push(have || (await nearestShop(allFoods[i], 'cafe', used)));
   }
   const sights = candidates.filter((c) => !c.place.shop);
-  const mk = (foods, cafeList) => buildCourse({ ...args, candidates: [...sights, ...foods.map((place) => ({ place, score: 1e9, fav: true })), ...cafeList.filter(Boolean).map((place) => ({ place, score: 1e9, fav: true }))] });
+  const mk = (foods, cafeList) => buildCourse({ ...args, lunchIn: false, candidates: [...sights, ...foods.map((place) => ({ place, score: 1e9, fav: true })), ...cafeList.filter(Boolean).map((place) => ({ place, score: 1e9, fav: true }))] });
   // 모두 넣어 보고, 시간이 안 되면 점심 한 곳(+카페)만, 그래도 안 되면 맛집만
   for (const [f, c] of [[allFoods, cafes], [allFoods.slice(0, 1), cafes.slice(0, 1)], [allFoods.slice(0, 1), []]]) {
     const r = mk(f, c);
