@@ -670,7 +670,7 @@ root.addEventListener('change', (ev) => {
   } else if (field === 'jump') {
     // 지역을 고르면 그 지역의 지정 위치가 곧바로 검색 위치가 된다(안산·수원·오산·평택은 정해 둔 거점, 나머지는 도심).
     const city = CITIES.find((c) => c.name === el.value);
-    if (city) update(() => { state.profile.origin = { type: 'city', name: city.label || city.name, lat: city.lat, lng: city.lng }; state.ui.geoMsg = ''; state.ui.locResults = []; state.ui.locMsg = ''; });
+    if (city) update(() => { state.profile.origin = { type: 'city', name: city.name, lat: city.lat, lng: city.lng }; state.ui.geoMsg = ''; state.ui.locResults = []; state.ui.locMsg = ''; });
   }
 });
 
