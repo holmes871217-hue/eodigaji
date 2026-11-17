@@ -21,6 +21,9 @@ import { parkingInfo } from './sheet.js';
 import { heartBtn } from './util.js';
 import { favSet, favKey } from '../core/favs.js';
 
+/** 핫플 분류 중 카드에 보여 줄 것만(신규 발견·급상승·숨은 명소). 인기 유지·관심 감소는 화면을 어지럽히지 않게 표시하지 않는다. */
+const HOT_CHIP = { n: '🆕 신규 발견', r: '📈 급상승', h: '💎 숨은 명소' };
+
 /** 옆에 사진이 붙는 추천 카드 */
 function placeCard(r, i, favs) {
   const p = r.place;
@@ -40,6 +43,7 @@ function placeCard(r, i, favs) {
           <span class="pcard-meta"><span class="badge badge-${r.kind}">${KIND_LABEL[r.kind]}</span>${p.scale === 'small' ? `${esc(cat.label)} · ` : ''}${esc(p.region)} · ${tripLabel(r.km, r.min)}</span>
           <span class="pcard-chips">
             ${r.reasons.map((x) => `<span class="why why-${x.kind}">${esc(x.text)}</span>`).join('')}
+            ${HOT_CHIP[p.hot] ? `<span class="why why-hot is-${p.hot}">${HOT_CHIP[p.hot]}${p.hotQ === 0 ? ' · 자료 적음' : ''}</span>` : ''}
             ${park.short ? `<span class="why why-park ${park.state === 'no' ? 'is-no' : ''}"><i aria-hidden="true">P</i>${esc(park.short)}</span>` : ''}
           </span>
         </span>
