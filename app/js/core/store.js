@@ -69,6 +69,8 @@ export function loadState() {
     const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
     if (saved && saved.profile && Array.isArray(saved.profile.members) && saved.profile.members.length) {
       Object.assign(state.profile, saved.profile);
+      // 지역 선택으로 저장된 이름에 붙어 있던 "(거점 설명)"은 떼어 낸다
+      if (state.profile.origin?.type === 'city' && typeof state.profile.origin.name === 'string') state.profile.origin.name = state.profile.origin.name.replace(/\s*\([^)]*\)\s*$/, '');
       if (typeof saved.maxMin === 'number') state.ui.maxMin = saved.maxMin;
       if (saved.hint === false) state.ui.hint = false;
       if (['near', 'all', 'big'].includes(saved.scope)) state.ui.scope = saved.scope;
