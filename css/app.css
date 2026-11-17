@@ -626,3 +626,4 @@ svg { flex: none; }
 
 .fav-links { flex: 0 0 100%; display: flex; align-items: center; gap: 6px; padding: 0 8px 4px 42px; font-size: var(--fs-xs); color: var(--ink-2); }
 .fav-links .shop-g { background: var(--bg); box-shadow: none; }
+.fav-tools { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 6px; }

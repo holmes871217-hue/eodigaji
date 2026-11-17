@@ -482,6 +482,11 @@ root.addEventListener('click', (ev) => {
     case 'fav-remove':
       update(() => { state.favs.splice(Number(v), 1); });
       break;
+    case 'fav-clear':
+      if (!state.favs.length) break;
+      if (!window.confirm(`찜·코스 목록 ${state.favs.length}곳을 모두 지울까요?`)) break;
+      update(() => { state.favs = []; state.ui.course.result = null; });
+      break;
     case 'fav-auto':
       update(() => { autoRoute(state, state.profile.origin); });
       break;
