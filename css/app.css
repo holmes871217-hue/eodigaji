@@ -547,7 +547,7 @@ svg { flex: none; }
 .pin-fav { background: #f0326b; }
 .fav-list { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 10px; }
 .fav {
-  position: relative; display: flex; align-items: center; gap: 2px; padding: 8px 4px 8px 12px;
+  position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 8px 4px 8px 12px;
   background: var(--surface); border-radius: var(--radius-sm); box-shadow: var(--shadow);
 }
 .fav.is-dragging { z-index: 3; box-shadow: 0 12px 30px rgba(27, 37, 89, 0.28); }
@@ -623,3 +623,6 @@ svg { flex: none; }
 .course-body .card-meta { margin: 0; }
 
 .br-badge { font-style: normal; font-size: var(--fs-xs); font-weight: 800; color: #1d4fd8; background: #e3ecff; border-radius: 999px; padding: 2px 8px; margin-left: 6px; white-space: nowrap; }
+
+.fav-links { flex: 0 0 100%; display: flex; align-items: center; gap: 6px; padding: 0 8px 4px 42px; font-size: var(--fs-xs); color: var(--ink-2); }
+.fav-links .shop-g { background: var(--bg); box-shadow: none; }

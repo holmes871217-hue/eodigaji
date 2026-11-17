@@ -98,3 +98,9 @@ export function naverQuery(name, addr) {
 export function googleMapUrl(name, gid) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&query_place_id=${encodeURIComponent(gid)}`;
 }
+
+/** 카카오로 찾은 가게의 카카오맵 장소 번호(없으면 ''). 이름 검색이 안 되는 곳도 이 링크는 정확히 열린다. */
+export const kakaoId = (s) => (/^k-\d+$/.test(s.id || '') ? s.id.slice(2) : '');
+
+/** 카카오맵에서 이 가게를 여는 주소. 카카오로 찾은 가게는 장소 번호로, 아니면 이름+좌표로 그 자리에 핀을 꽂는다(이름 검색이 안 맞아도 열린다). */
+export const kakaoPinUrl = (s) => (kakaoId(s) ? `https://place.map.kakao.com/${kakaoId(s)}` : `https://map.kakao.com/link/map/${encodeURIComponent(s.name)},${s.lat},${s.lng}`);

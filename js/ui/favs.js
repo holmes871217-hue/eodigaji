@@ -2,7 +2,7 @@
 import { routeKm, FAV_MAX } from '../core/favs.js';
 import { haversineKm } from '../core/geo.js';
 import { SHOP_KINDS } from '../core/nearby.js';
-import { esc, naverQuery } from './util.js';
+import { esc, naverQuery, googleMapUrl, kakaoPinUrl } from './util.js';
 
 const kmText = (km) => (km < 1 ? `${Math.max(10, Math.round(km * 100) * 10)}m` : km < 10 ? `${km.toFixed(1)}km` : `${Math.round(km)}km`);
 
@@ -27,13 +27,20 @@ function favRow(f, i, favs, c) {
   const main = openable
     ? `<button type="button" class="fav-main" data-action="open-${f.type}" data-id="${esc(f.id)}">${body}</button>`
     : `<a class="fav-main" href="https://map.naver.com/p/search/${encodeURIComponent(naverQuery(f.nq || f.name, f.addr))}" target="_blank" rel="noopener noreferrer">${body}</a>`;
+  // 가게는 네이버 검색이 안 맞는 일이 있어서, 그 자리에 핀을 바로 꽂아 주는 카카오맵·구글 지도 링크를 같이 둔다.
+  const links = f.type === 'shop' ? `
+      <span class="fav-links">
+        <span>네이버에 안 나오면</span>
+        <a class="shop-g" href="${esc(kakaoPinUrl(f))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(f.name)} 카카오맵에서 보기">카카오맵</a>
+        ${f.gid ? `<a class="shop-g" href="${esc(googleMapUrl(f.name, f.gid))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(f.name)} 구글 지도에서 보기">구글 지도</a>` : ''}
+      </span>` : '';
   return `
     <li class="fav" data-key="${esc(f.key)}">
       ${main}
       <button type="button" class="heart is-on" data-action="fav-remove" data-v="${i}" aria-label="${esc(f.name)} 찜에서 빼기"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.3A4.4 4.4 0 0 1 12 7.4a4.4 4.4 0 0 1 7.5 2.8c0 5.700-7.500 10.300-7.500 10.300z"/></svg></button>
       <button type="button" class="fav-handle" data-drag aria-label="${esc(f.name)} 순서 바꾸기. 끌거나 위·아래 화살표를 누르세요">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" aria-hidden="true"><path d="M5 8h14M5 12h14M5 16h14"/></svg>
-      </button>
+      </button>${links}
     </li>`;
 }
 
