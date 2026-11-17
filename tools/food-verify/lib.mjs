@@ -106,7 +106,9 @@ const sigunOf = (addr) => (String(addr).match(/[가-힣]+[시군구]/) || [])[0]
  */
 export function matchScore(cand, place) {
   const a = normName(cand.name), b = normName(place.place_name);
-  const nameEq = a && a === b;
+  const toks = String(place.place_name || '').trim().split(/\s+/);
+  const branchForm = toks.length >= 2 && /점$/.test(toks[toks.length - 1]) && normName(toks[0]) === a; // "정각 서울망원본점" = 상호(정각) + 지점명
+  const nameEq = Boolean(a && (a === b || branchForm));
   const nameLike = !nameEq && a && b && (a.includes(b) || b.includes(a)) && Math.min(a.length, b.length) >= 3;
   const phoneEq = digits(cand.phone).length >= 8 && digits(cand.phone) === digits(place.phone);
   const idEq = cand.kakaoId && cand.kakaoId === String(place.id);

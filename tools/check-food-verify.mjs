@@ -62,6 +62,9 @@ ok(L.pickPlace({ name: '다른식당', addr: '경기 수원시', phone: '' }, [p
   ok(L.roadOf('경기 성남시 분당구 내정로7번길 13 1층') === '내정로7번길13' && L.roadOf('경기 성남시 분당구 내정로7번길 4') !== L.roadOf('경기 성남시 분당구 내정로7번길 13'), '같은 길의 다른 번지를 같은 주소로 보면 안 돼요');
 }
 
+ok(L.pickPlace({ name: '정각', addr: '서울 마포구 망원로6길 57 2층', phone: '' }, [{ id: '9', place_name: '정각 서울망원본점', phone: '', address_name: '서울 마포구 망원동 1', road_address_name: '서울 마포구 망원로6길 57', x: '126.9', y: '37.5' }]).level === 'linked', '"상호 + 지점명" 형태의 카카오 이름을 같은 상호로 인정해야 해요');
+ok(L.pickPlace({ name: '정각', addr: '서울 마포구 망원로6길 57', phone: '' }, [{ id: '9', place_name: '정각사', phone: '', address_name: '서울 마포구 망원동 1', road_address_name: '서울 마포구 망원로6길 57', x: '126.9', y: '37.5' }]).level !== 'linked', '이름이 다른 가게(정각사)를 같은 곳으로 보면 안 돼요');
+
 // 4) 판정
 const refs = (...ch) => ch.map((c, i) => ({ videoId: `v${i}`, channelId: c, publishedAt: '2026-10-01' }));
 ok(L.judge(refs('A'), new Set(['B'])).status === 'rejected', '승인되지 않은 채널만 추천하면 탈락이어야 해요');
