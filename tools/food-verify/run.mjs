@@ -12,7 +12,7 @@
 // 사용: node tools/food-verify/run.mjs
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { isSponsored, extractRestaurants, pickPlace, judge, DEFAULT_WEIGHTS, normName } from './lib.mjs';
+import { isSponsored, extractRestaurants, pickPlace, judge, DEFAULT_WEIGHTS, normName, roadOf } from './lib.mjs';
 import { collectSeries, processSeries } from './series.mjs';
 
 const ROOT = fileURLToPath(new URL('../..', import.meta.url));
@@ -58,12 +58,24 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
     let kakaoLeft = cfg.kakaoPerRun;
     const yt = (path, q) => getJson(`https://www.googleapis.com/youtube/v3/${path}?${new URLSearchParams({ ...q, key })}`, {}, http);
 
+    const kakaoSearch = async (query) => {
+      if (kakaoLeft <= 0) return [];
+      kakaoLeft--;
+      const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?${new URLSearchParams({ query, category_group_code: 'FD6', size: '15' })}`, { Authorization: `KakaoAK ${kakaoKey}` }, http).catch(() => ({ documents: [] }));
+      return j.documents || [];
+    };
     const identify = async (item, region) => {
       if (!kakaoKey || kakaoLeft <= 0) return { level: 'none', place: null, why: 'NO_KAKAO_BUDGET' };
-      kakaoLeft--;
-      const q = [shortRegion(region), item.name].join(' ');
-      const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?${new URLSearchParams({ query: q, category_group_code: 'FD6', size: '5' })}`, { Authorization: `KakaoAK ${kakaoKey}` }, http).catch(() => ({ documents: [] }));
-      return pickPlace(item, j.documents || []);
+      // 1차: "지역 상호", 2차: 주소에 도로명이 있으면 "도로명 상호"(이름이 흔한 가게도 그 자리에서 찾는다). 두 결과를 합쳐 판정한다.
+      const docs = await kakaoSearch([shortRegion(region), item.name].join(' '));
+      let pick = pickPlace(item, docs);
+      const road = roadOf(item.addr || '');
+      if (pick.level !== 'linked' && road) {
+        const more = await kakaoSearch(`${road} ${item.name}`);
+        const seen = new Set(docs.map((d) => d.id));
+        pick = pickPlace(item, [...docs, ...more.filter((d) => !seen.has(d.id))]);
+      }
+      return pick;
     };
 
     // 영상 상세(videos.list)를 받아 한 영상을 처리한다. 지우거나 저장한 결과를 반환.

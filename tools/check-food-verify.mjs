@@ -53,6 +53,15 @@ ok(L.pickPlace({ name: '맛있는집', addr: '', phone: '' }, [pl()]).level === 
 ok(L.pickPlace({ name: '맛있는집', addr: '경기 수원시 팔달구 행궁로 12', phone: '' }, [pl({ id: '1' }), pl({ id: '2', phone: '031-999-0000' })]).level === 'ambiguous', '같은 근거로 두 곳이 맞으면 검수로 보내야 해요');
 ok(L.pickPlace({ name: '다른식당', addr: '경기 수원시', phone: '' }, [pl()]).level === 'none', '이름이 다르면 연결하지 않아야 해요');
 
+// 3-b) 지점이 여럿이어도 도로명 주소가 정확히 맞는 곳이 하나면 확정, 번길까지 같아야 같은 주소
+{
+  const P = (id, road) => ({ id, place_name: '미락식당', phone: '', address_name: '경기 안산시 단원구 고잔동 1', road_address_name: road, x: '126.8', y: '37.3' });
+  const cand = { name: '미락식당', addr: '경기 안산시 단원구 고잔2길 71', phone: '' };
+  ok(L.pickPlace(cand, [P('1', '경기 안산시 단원구 고잔2길 71'), P('2', '경기 안산시 단원구 원곡로 34')]).place?.id === '1', '지점이 둘이어도 도로명 주소가 맞는 곳을 골라야 해요');
+  ok(L.pickPlace({ name: '미락식당', addr: '경기 안산시', phone: '' }, [P('1', '경기 안산시 단원구 고잔2길 71'), P('2', '경기 안산시 단원구 원곡로 34')]).level === 'ambiguous', '주소 근거가 없으면 지점이 여럿일 때 확정하면 안 돼요');
+  ok(L.roadOf('경기 성남시 분당구 내정로7번길 13 1층') === '내정로7번길13' && L.roadOf('경기 성남시 분당구 내정로7번길 4') !== L.roadOf('경기 성남시 분당구 내정로7번길 13'), '같은 길의 다른 번지를 같은 주소로 보면 안 돼요');
+}
+
 // 4) 판정
 const refs = (...ch) => ch.map((c, i) => ({ videoId: `v${i}`, channelId: c, publishedAt: '2026-10-01' }));
 ok(L.judge(refs('A'), new Set(['B'])).status === 'rejected', '승인되지 않은 채널만 추천하면 탈락이어야 해요');

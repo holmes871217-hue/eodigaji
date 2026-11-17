@@ -96,7 +96,7 @@ export function normName(s) {
 }
 const digits = (s) => String(s || '').replace(/\D/g, '');
 const dongOf = (addr) => (String(addr).match(/[가-힣0-9]+(?:동|읍|면|리)(?=\s|$|\d)/) || [])[0] || '';
-const roadOf = (addr) => (String(addr).match(/[가-힣0-9]+(?:로|길)(?:\s*\d+번길)?\s*\d+(?:-\d+)?/) || [])[0]?.replace(/\s/g, '') || ''; // 내정로7번길 13 처럼 번길·번지까지
+export const roadOf = (addr) => (String(addr).match(/[가-힣0-9]+(?:로|길)(?:\s*\d+번길)?\s*\d+(?:-\d+)?/) || [])[0]?.replace(/\s/g, '') || ''; // 내정로7번길 13 처럼 번길·번지까지
 const sigunOf = (addr) => (String(addr).match(/[가-힣]+[시군구]/) || [])[0] || '';
 
 /**
@@ -132,6 +132,8 @@ export function pickPlace(cand, places) {
   const scored = places.map((p) => ({ p, m: matchScore(cand, p) })).filter((x) => x.m.level !== 'none');
   const linked = scored.filter((x) => x.m.level === 'linked');
   if (linked.length === 1) return { level: 'linked', place: linked[0].p };
+  const strong = linked.filter((x) => x.m.roadEq || x.m.phoneEq || x.m.idEq); // 지점이 여럿이어도 도로명 주소·전화·장소 번호가 정확히 맞는 곳이 하나면 그곳
+  if (linked.length > 1 && strong.length === 1) return { level: 'linked', place: strong[0].p };
   if (linked.length > 1) return { level: 'ambiguous', place: null, why: 'MULTI_BRANCH' };
   if (scored.length) return { level: 'ambiguous', place: scored[0].p, why: 'WEAK_MATCH' };
   return { level: 'none', place: null };
