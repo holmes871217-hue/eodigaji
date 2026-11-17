@@ -243,19 +243,19 @@
   "items": []
  },
  "1HExH6cy5BQ": {
-  "descHash": "62814488c9b63dc7",
-  "extractedAt": 1794919984150,
-  "region": "괴산군",
+  "descHash": "07da71d048b2e38c",
+  "extractedAt": 1794920065399,
+  "region": "부산 강서구",
   "source": "manual",
   "items": [
    {
     "name": "천성삼거리장어구이",
     "role": "winner",
     "cue": "manual",
-    "addr": "",
+    "addr": "부산 강서구 가덕해안로 715 1층",
     "match": {
-     "level": "none",
-     "key": "",
+     "level": "linked",
+     "key": "638654703",
      "why": ""
     }
    }
@@ -321,8 +321,8 @@
   "items": []
  },
  "-rdQxOZgQCE": {
-  "descHash": "8aa360852366d55c",
-  "extractedAt": 1794919984150,
+  "descHash": "7c356f3c30209365",
+  "extractedAt": 1794920065399,
   "region": "경기 성남시",
   "source": "manual",
   "items": [
@@ -330,7 +330,7 @@
     "name": "예돈돈까스",
     "role": "winner",
     "cue": "manual",
-    "addr": "",
+    "addr": "경기 성남시 분당구 내정로7번길 13 1층",
     "match": {
      "level": "ambiguous",
      "key": "",
@@ -406,8 +406,8 @@
   "items": []
  },
  "5tV8wKaUxSA": {
-  "descHash": "b2ac09d672fb67b3",
-  "extractedAt": 1794919984150,
+  "descHash": "e1f556803348e7a8",
+  "extractedAt": 1794920065399,
   "region": "광주 서구",
   "source": "manual",
   "items": [
@@ -415,7 +415,7 @@
     "name": "진수식당",
     "role": "winner",
     "cue": "manual",
-    "addr": "",
+    "addr": "광주 서구 천변좌로254번길 8 2층",
     "match": {
      "level": "none",
      "key": "",
@@ -453,8 +453,8 @@
   "items": []
  },
  "fvD36nHVbhs": {
-  "descHash": "bc25309c616e53c6",
-  "extractedAt": 1794919984150,
+  "descHash": "fb9995e5275b7a55",
+  "extractedAt": 1794920065399,
   "region": "서울 마포구",
   "source": "manual",
   "items": [
@@ -462,7 +462,7 @@
     "name": "정각",
     "role": "winner",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 마포구 망원로6길 57 2층",
     "match": {
      "level": "none",
      "key": "",
@@ -479,8 +479,8 @@
   "items": []
  },
  "4cCrjwgi54w": {
-  "descHash": "35a5b400c7340b87",
-  "extractedAt": 1794919984150,
+  "descHash": "4fea29fec50fbd07",
+  "extractedAt": 1794920065399,
   "region": "경기 안산시",
   "source": "manual",
   "items": [
@@ -488,7 +488,7 @@
     "name": "미락식당",
     "role": "winner",
     "cue": "manual",
-    "addr": "",
+    "addr": "경기 안산시 단원구 고잔2길 71",
     "match": {
      "level": "ambiguous",
      "key": "",
