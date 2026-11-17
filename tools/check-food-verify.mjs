@@ -186,7 +186,12 @@ ok(!N.sameEligible({ name: '맛있는집', lat: 37.3, lng: 127.0 }, { n: '맛있
   const top = N.rankEligible(rows);
   ok(top[0].id === 'b' && top[1].id === 'c', '평점이 가장 높아도 전문 콘텐츠 점수가 낮으면 뒤에 와야 해요');
   ok(top.length === 5 && new Set(top.map((x) => x.id)).size === 5, '최대 5곳이고 같은 식당은 한 번만 나와야 해요');
-  ok(N.rankEligible(rows.slice(0, 2)).length === 2, '5곳이 안 되면 채우지 않고 그대로 보여 줘야 해요');
+  ok(N.rankEligible(rows.slice(0, 2)).length === 2, 'rankEligible 자체는 승인 식당만 돌려줘야 해요');
+  const base = ['x1', 'x2', 'x3', 'x4', 'x5', 'x6'].map((n, i) => ({ gid: n, name: `일반${i}`, lat: 35.9, lng: 126.9 }));
+  const filled = N.mergeFill([{ gid: 'a', name: '용수촌', lat: 35.96, lng: 126.93 }], [...base.slice(0, 2), { gid: 'a', name: '용수촌 본점', lat: 35.96, lng: 126.93 }, ...base.slice(2)]);
+  ok(filled.length === 5 && filled[0].name === '용수촌', '또간집 식당이 앞에 오고 기존 순위로 5곳까지 채워져야 해요');
+  ok(filled.filter((x) => /용수촌/.test(x.name)).length === 1 && filled[1].name === '일반0', '같은 식당은 한 번만 들어가고, 채우는 순서는 기존 순위대로여야 해요');
+  ok(N.mergeFill([], base).length === 5 && N.mergeFill(rows.slice(0, 5), base).every((x, i) => x === rows[i]), '또간집 식당이 5곳이면 기존 순위로 채우지 않아야 해요');
 }
 
 // ── 9) 시리즈 수집·매칭·최종 선정(가짜 네트워크, 임시 폴더) ───────────────────

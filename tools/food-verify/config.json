@@ -1,11 +1,11 @@
 {
   "collect": true,
-  "appEnabled": false,
+  "appEnabled": true,
   "minChannels": 1,
   "recentMonths": 12,
   "searchesPerRun": 90,
   "kakaoPerRun": 400,
-  "_설명": "collect: 유튜브 수집 전체 스위치(YOUTUBE_API_KEY 필요). regionSearch: '{지역} 맛집' 검색 수집(지금은 꺼 둠). 시리즈 채널(또간집)은 channels.json 의 series:true 항목이 수집된다. fetchReviews: 구글 리뷰(최대 5개)로 위험 신호를 분석(비용이 더 듦, GOOGLE_PLACES_SERVER_KEY 필요). appEnabled: 앱이 승인 식당만 노출(false면 기존 동작).",
+  "_설명": "collect: 유튜브 수집 전체 스위치(YOUTUBE_API_KEY 필요). regionSearch: '{지역} 맛집' 검색 수집(지금은 꺼 둠). 시리즈 채널(또간집)은 channels.json 의 series:true 항목이 수집된다. fetchReviews: 구글 리뷰(최대 5개)로 위험 신호를 분석(비용이 더 듦, GOOGLE_PLACES_SERVER_KEY 필요). appEnabled: 앱이 또간집 승인 식당을 앞에 두고 기존 순위로 5곳까지 채움(근처에 승인 식당이 없으면 기존 동작, false면 전부 기존 동작).",
   "regionSearch": false,
   "seriesMaxPages": 12,
   "fetchReviews": false
