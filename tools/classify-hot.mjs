@@ -18,6 +18,7 @@
 // 사용: node tools/classify-hot.mjs [--self-test]   (여러 번 돌려도 같은 날에는 기록이 중복되지 않는다)
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { isAmbiguousName } from './lib/names.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SPOTS = `${ROOT}app/data/spots.json`;
@@ -29,8 +30,10 @@ const daysBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 86400
 /** 한 장소의 분류. history 는 [[날짜, b], ...] 오래된 순. now 는 오늘 날짜. */
 export function classify(s, history, now) {
   const b = s.disc?.b;
-  const yearly = typeof s.yearly === 'number' ? s.yearly : null;
-  const trend = typeof s.trend === 'number' ? s.trend : null;
+  // 이름이 일반 단어와 겹치는데 아직 "지역+이름"으로 다시 재지 않은 곳은 검색량을 믿을 수 없어 쓰지 않는다
+  const legacy = isAmbiguousName(s) && s.ykw === s.name;
+  const yearly = typeof s.yearly === 'number' && !legacy ? s.yearly : null;
+  const trend = typeof s.trend === 'number' && !legacy ? s.trend : null;
   const first = s.m?.f;
   // 블로그 비교 기준: 7일 이상 전의 가장 가까운 기록
   const old = (history || []).filter(([d]) => daysBetween(d, now) >= 7).at(-1);

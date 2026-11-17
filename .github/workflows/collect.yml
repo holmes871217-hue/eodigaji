@@ -48,6 +48,9 @@ jobs:
       - name: 핫플 분류 (신규 발견·급상승·인기 유지·숨은 명소·관심 감소)
         run: node tools/classify-hot.mjs
 
+      - name: 전국 지역 트렌드 점수 (시·군·구별)
+        run: node tools/region-trends.mjs
+
       - name: 사이트 점검 (깨진 파일 주소·맨 앞 슬래시 경로·서비스 워커 목록)
         run: node tools/check-site.mjs # 문제가 있으면 여기서 멈춰 게시하지 않는다
 

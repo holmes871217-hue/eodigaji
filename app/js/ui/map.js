@@ -62,7 +62,10 @@ function destroy(map) {
   }
 }
 
+let trendMap = null;
+
 export function unmountMaps() {
+  if (trendMap) { destroy(trendMap); trendMap = null; }
   if (homeMap) { destroy(homeMap.map); homeMap = null; }
   // 지도를 없앨 때 나오는 마지막 "움직임" 신호가 새로 정한 위치를 옛 핀 위치로 덮어쓰지 않게, 먼저 신호 연결을 끊는다.
   if (pickMap) { pickMap.off(); destroy(pickMap); pickMap = null; pickMarker = null; }
@@ -198,4 +201,33 @@ export async function mountRoute(el, { origin, points }) {
   if (line.length > 1) map.fitBounds(line, { padding: [34, 34], animate: false, maxZoom: 15 });
   else if (line.length === 1) map.setView(line[0], zoomForKm(line[0][0], map.getSize().x, START_KM), { animate: false });
   else map.setView([origin.lat, origin.lng], zoomForKm(origin.lat, map.getSize().x, START_KM), { animate: false });
+}
+
+/** 전국 트렌드 지도: 지역별 점수를 색(파랑→빨강)과 크기로 보여 준다. 자료가 적은 지역(conf l)은 흐리게. */
+export async function mountTrendMap(el, { regions, onPick }) {
+  try {
+    await loadLeaflet();
+  } catch (e) {
+    failed(el);
+    return;
+  }
+  if (!el.isConnected) return;
+  const L = window.L;
+  const map = baseMap(el);
+  trendMap = map;
+  const color = (score) => `hsl(${Math.round(220 - 2.2 * score)}, 80%, 52%)`; // 0점 파랑 → 100점 빨강
+  for (const r of regions) {
+    const low = r.conf === 'l';
+    const c = L.circleMarker([r.lat, r.lng], {
+      radius: Math.max(6, Math.min(16, 4 + Math.sqrt(r.n))),
+      color: low ? '#9aa0bd' : color(r.score),
+      fillColor: low ? '#c5c9dc' : color(r.score),
+      fillOpacity: low ? 0.3 : 0.7,
+      weight: 1,
+    }).addTo(map);
+    const label = document.createElement('b');
+    label.textContent = `${r.key} ${low ? '(자료 적음)' : `${r.score}점`}`;
+    c.bindPopup(label);
+  }
+  map.setView([36.3, 127.8], 7, { animate: false });
 }

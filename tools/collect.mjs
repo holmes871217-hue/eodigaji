@@ -16,6 +16,7 @@
 // 매 요청에 기준 검색어(ANCHOR)를 함께 넣어 요청끼리 비교할 수 있게 맞춘다.
 
 import { MUST_HAVE } from './must-have.mjs';
+import { isAmbiguousName, narrowedKeyword } from './lib/names.mjs';
 import { MUST_EVENTS } from './must-events.mjs';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -846,7 +847,8 @@ const spotKeyword = (s) => (Array.isArray(s.kw) ? s.kw[0] : s.kw) || s.name.repl
 // must-have 의 kw 에 배열로 적은 이름 + 이름 끝의 호텔·리조트·콘도·본점·컨벤션센터를 뗀 이름을 한 그룹으로 보낸다.
 const NAME_TAIL = /\s*(호텔|리조트|콘도|본점|컨벤션센터)$/;
 function spotKeywords(s) {
-  const base = spotKeyword(s);
+  // 이름이 일반 단어와 겹치는 업종 장소(예: 키즈카페 "육아휴직")는 "지역 + 이름 + 종류"로 좁혀 잰다(tools/lib/names.mjs)
+  const base = !s.kw && isAmbiguousName(s) ? narrowedKeyword(s) : spotKeyword(s);
   const set = new Set([base, ...(Array.isArray(s.kw) ? s.kw : [])]);
   const cut = base.replace(NAME_TAIL, '').trim();
   if (cut && cut !== base && cut.length >= 3) set.add(cut);
@@ -857,7 +859,7 @@ async function collectSpotTrends(spots) {
   const stale = Date.now() - 14 * 86400000;
   const todo = spots
     .filter((s) => !s.popup && !(s.yAt && s.ykw === spotKeywords(s).join('|') && Date.parse(s.yAt) > stale))
-    .sort((a, b) => (b.must ? 1 : 0) - (a.must ? 1 : 0) || (b.base || 0) - (a.base || 0))
+    .sort((a, b) => (b.must ? 1 : 0) - (a.must ? 1 : 0) || ((isAmbiguousName(b) && b.ykw === b.name) ? 1 : 0) - ((isAmbiguousName(a) && a.ykw === a.name) ? 1 : 0) || (b.base || 0) - (a.base || 0))
     .slice(0, SPOT_TREND_CALLS * 4);
   if (!todo.length) { console.log('  동네 장소 검색량: 새로 받을 곳 없음'); return; }
   const start = new Date(today); start.setFullYear(start.getFullYear() - 1);

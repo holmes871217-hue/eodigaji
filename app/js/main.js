@@ -21,6 +21,8 @@ import { renderDeals } from './ui/deals.js';
 import { renderMy } from './ui/mypage.js';
 import { renderSheet } from './ui/sheet.js';
 import { mountRoute } from './ui/map.js';
+import { mountTrendMap } from './ui/map.js';
+import { getRegions } from './data/regions.js';
 import { mountMap, mountPicker, unmountMaps, resetMapView, fitMapAll, panPicker, mapWidthKm } from './ui/map.js';
 
 const root = document.getElementById('app');
@@ -103,6 +105,11 @@ function render() {
         onPick: (id) => openSheet({ type: 'place', id }),
       });
     }
+  }
+
+  if (state.ui.sheet?.type === 'trend') {
+    const el = document.getElementById('trend-map');
+    if (el) mountTrendMap(el, { regions: getRegions() });
   }
 
   if (tab === 'favs') {
@@ -416,6 +423,9 @@ root.addEventListener('click', (ev) => {
       break;
     case 'fav-auto':
       update(() => { autoRoute(state, state.profile.origin); });
+      break;
+    case 'open-trend':
+      openSheet({ type: 'trend' });
       break;
     case 'open-shops':
       if (!SHOP_KINDS[v]) break;
