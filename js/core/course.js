@@ -12,7 +12,7 @@
 //   - 체류시간은 분류별 평균을 "추정"으로 쓴다. 식사 장소는 정하지 않고 "근처 맛집 찾기"로 이어 준다.
 import { driveEstimate } from './geo.js';
 
-export const DWELL = { theme: 240, zoo: 150, museum: 90, gallery: 60, nature: 90, sea: 90, culture: 75, market: 60, shop: 120, cafe: 45, activity: 90, kids: 120, stage: 100, resort: 180, trend: 60, expo: 90, walk: 60 };
+export const DWELL = { food: 60, theme: 240, zoo: 150, museum: 90, gallery: 60, nature: 90, sea: 90, culture: 75, market: 60, shop: 120, cafe: 45, activity: 90, kids: 120, stage: 100, resort: 180, trend: 60, expo: 90, walk: 60 };
 export const DEFAULT_DWELL = 75;
 const LUNCH = { from: 11 * 60 + 30, to: 13 * 60 + 30, len: 60 };
 const DINNER = { from: 17 * 60 + 30, len: 60 };
@@ -34,35 +34,48 @@ export function travelMin(a, b, mode = 'car') {
  * 방문 순서(places 배열 순서)대로 시각표를 만든다. 끝 시각을 넘으면 null.
  * @returns {{items:Array, endMin:number}|null}
  */
-export function schedule(origin, places, { startMin, endMin, mode }) {
+export function schedule(origin, places, { startMin, endMin, mode, foods = [], cafes = [] }) {
   const items = [];
+  const fq = foods.slice(), cq = cafes.slice(); // 식사 장소(맛집)·그 뒤에 들를 카페. 순서대로 쓴다
   let clock = startMin, pos = origin, sinceBreak = 0, lunch = false, dinner = false;
   const push = (it) => { items.push(it); clock = it.end; };
-  const meal = (label, len, kind) => { push({ type: 'meal', kind, label, start: clock, end: clock + len }); sinceBreak = 0; };
+  const stop = (p, kind) => { // 장소 한 곳을 방문으로 넣는다
+    const t = travelMin(pos, p, mode), dwell = dwellOf(p);
+    push({ type: 'visit', place: p, travel: t, start: clock + t, end: clock + t + dwell, dwell, meal: kind });
+    pos = p; sinceBreak = 0;
+  };
+  // 식사: 찜한(또는 찾아 둔) 맛집이 있으면 거기로 가고 이어서 카페까지, 없으면 식사 시간만 넣는다.
+  const eat = (label, len, kind) => {
+    const f = fq.shift();
+    if (f) { stop(f, kind); const c = cq.shift(); if (c) stop(c, 'cafe'); return; }
+    items.push({ type: 'meal', kind, label, start: clock, end: clock + len, near: { lat: pos.lat, lng: pos.lng, name: pos.name } });
+    clock += len; sinceBreak = 0;
+  };
   const maybeMeals = () => {
-    if (!lunch && clock >= LUNCH.from && clock <= LUNCH.to) { meal('점심 식사', LUNCH.len, 'lunch'); lunch = true; }
-    if (!dinner && clock >= DINNER.from) { meal('저녁 식사', DINNER.len, 'dinner'); dinner = true; }
+    if (!lunch && clock >= LUNCH.from && clock <= LUNCH.to) { eat('점심 식사', LUNCH.len, 'lunch'); lunch = true; }
+    if (!dinner && clock >= DINNER.from) { eat('저녁 식사', DINNER.len, 'dinner'); dinner = true; }
   };
   for (const p of places) {
-    const t = travelMin(pos, p, mode);
-    let arrive = clock + t;
+    let t = travelMin(pos, p, mode);
     // 이동 도중에 점심 시간이 지나가면 이 장소에 가기 전에 먼저 먹는다
-    if (!lunch && arrive > LUNCH.to && clock <= LUNCH.to) { const at = Math.max(clock, LUNCH.from); clock = at; meal('점심 식사', LUNCH.len, 'lunch'); lunch = true; arrive = clock + t; }
-    if (sinceBreak + t >= REST.after) { push({ type: 'rest', label: '휴식', start: clock, end: clock + REST.len }); sinceBreak = 0; arrive = clock + t; }
+    if (!lunch && clock + t > LUNCH.to && clock <= LUNCH.to) { clock = Math.max(clock, LUNCH.from); eat('점심 식사', LUNCH.len, 'lunch'); lunch = true; t = travelMin(pos, p, mode); }
+    if (sinceBreak + t >= REST.after) { push({ type: 'rest', label: '휴식', start: clock, end: clock + REST.len }); sinceBreak = 0; }
     const dwell = dwellOf(p);
-    const start = arrive, end = arrive + dwell;
+    const start = clock + t, end = start + dwell;
     const it = { type: 'visit', place: p, travel: t, start, end, dwell };
-    // 점심 시간대에 걸쳐 오래(2시간 이상) 머무는 곳이면 점심은 그 안에서 먹는 것으로 본다(체류시간에 포함, 따로 식사 시간을 넣지 않음)
-    if (!lunch && start < LUNCH.to && end > LUNCH.from && dwell >= 120) { it.lunchIn = true; lunch = true; }
+    // 점심 시간대에 걸쳐 오래(2시간 이상) 머무는 곳이면 점심은 그 안에서 먹는 것으로 본다(맛집을 정해 둔 경우는 제외)
+    if (!lunch && !fq.length && start < LUNCH.to && end > LUNCH.from && dwell >= 120) { it.lunchIn = true; lunch = true; }
     items.push(it);
     clock = end; pos = p; sinceBreak += t + dwell;
     maybeMeals();
+  }
+  while (fq.length || cq.length) { // 아직 못 쓴 맛집·카페는 마지막에 이어서 간다
+    if (fq.length) eat('식사', 60, 'dinner'); else stop(cq.shift(), 'cafe');
   }
   const back = travelMin(pos, origin, mode);
   const home = clock + back;
   if (home > endMin) return null;
   items.push({ type: 'return', travel: back, start: clock, end: home });
-  // 끝 시각 전에 저녁 시간대를 지나는데 식사가 없으면 안내만 한다(일정은 건드리지 않음)
   return { items, endMin: home };
 }
 
@@ -114,18 +127,23 @@ export function buildCourse({ origin, date, start = '09:00', end = '18:00', mode
   const startMin = toMin(start), endMin = toMin(end);
   const warnings = [];
   if (!(endMin - startMin >= 120)) return { ok: false, reason: '여행 시간이 너무 짧아요(최소 2시간).', items: [], warnings };
+  // 맛집·카페(shop)는 식사 시간에 맞춰 넣고, 나머지(명소)만 순서를 최적화한다
+  const foods = candidates.filter((c) => c.place.shop && c.place.cat === 'food').map((c) => c.place);
+  const cafes = candidates.filter((c) => c.place.shop && c.place.cat === 'cafe').map((c) => c.place);
+  const sights = candidates.filter((c) => !c.place.shop);
   const chosen = [];
   const dropped = [];
-  for (const c of candidates) {
+  const sch = (list) => schedule(origin, orderByTravel(origin, list, mode), { startMin, endMin, mode, foods, cafes });
+  if (!sch([])) return { ok: false, reason: '이 시간 안에 맛집·카페까지 다녀올 수 없어요. 시간을 늘려 보세요.', items: [], dropped, warnings };
+  for (const c of sights) {
     if (chosen.length >= MAX_STOPS) { dropped.push({ place: c.place, why: '코스에 넣을 수 있는 최대 곳 수(6곳)를 넘어요' }); continue; }
-    const trial = orderByTravel(origin, [...chosen.map((x) => x.place), c.place], mode);
-    if (schedule(origin, trial, { startMin, endMin, mode })) chosen.push(c);
+    if (sch([...chosen.map((x) => x.place), c.place])) chosen.push(c);
     else dropped.push({ place: c.place, why: '시간 안에 다녀올 수 없어요' });
   }
-  if (!chosen.length) return { ok: false, reason: '이 시간 안에 다녀올 수 있는 후보가 없어요. 시간을 늘리거나 가까운 곳을 찜해 보세요.', items: [], dropped, warnings };
+  if (!chosen.length && !foods.length && !cafes.length) return { ok: false, reason: '이 시간 안에 다녀올 수 있는 후보가 없어요. 시간을 늘리거나 가까운 곳을 찜해 보세요.', items: [], dropped, warnings };
   const order = orderByTravel(origin, chosen.map((x) => x.place), mode);
-  const sch = schedule(origin, order, { startMin, endMin, mode });
-  const course = { ok: true, items: sch.items, endMin: sch.endMin, dropped, warnings, mode, startMin, date };
+  const done = schedule(origin, order, { startMin, endMin, mode, foods, cafes });
+  const course = { ok: true, items: done.items, endMin: done.endMin, dropped, warnings, mode, startMin, date };
   const problems = validateCourse(course, { startMin, endMin });
   if (problems.length) return { ok: false, reason: `코스 검증에 실패했어요: ${problems.join(', ')}`, items: [], dropped, warnings };
   // 안내(지어내지 않고 일반 사실만)
@@ -134,6 +152,6 @@ export function buildCourse({ origin, date, start = '09:00', end = '18:00', mode
   if (weekday === 1 && order.some((p) => ['museum', 'gallery'].includes(p.cat))) warnings.push('월요일은 쉬는 박물관·미술관이 많아요(이 장소들의 휴관일은 확인하지 못했어요).');
   if (mode === 'transit') warnings.push('대중교통 이동시간은 자동차 시간으로 어림한 추정이에요. 실제 환승·배차는 반영하지 못했어요.');
   warnings.push('영업시간·휴무일은 확인하지 못했어요. 가기 전에 꼭 확인해 주세요. 체류시간은 분류별 평균으로 어림한 추정이에요.');
-  if (sch.items.at(-1).end > DINNER.from && !sch.items.some((i) => i.kind === 'dinner')) warnings.push('저녁 시간대에 돌아와요. 식사 시간은 넣지 않았어요.');
+  if (done.items.at(-1).end > DINNER.from && !done.items.some((i) => i.meal === 'dinner' || i.kind === 'dinner')) warnings.push('저녁 시간대에 돌아와요. 식사 시간은 넣지 않았어요.');
   return course;
 }

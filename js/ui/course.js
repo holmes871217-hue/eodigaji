@@ -33,7 +33,7 @@ export function courseSheet(state) {
         <button type="button" class="chip ${cs.mode === 'transit' ? 'is-on' : ''}" data-action="course-mode" data-v="transit" aria-pressed="${cs.mode === 'transit'}">대중교통(추정)</button>
       </div>
     </div>
-    <div class="sheet-actions"><button type="button" class="btn-primary" data-action="course-make">코스 만들기</button></div>`;
+    <div class="sheet-actions"><button type="button" class="btn-primary" data-action="course-make" ${cs.busy ? 'disabled' : ''}>${cs.busy ? '맛집·카페 찾는 중…' : '코스 만들기'}</button></div>`;
   if (!r) return form;
   if (!r.ok) return `${form}<div class="empty"><b>${esc(r.reason)}</b></div>`;
   const visits = r.items.filter((i) => i.type === 'visit');
@@ -42,10 +42,14 @@ export function courseSheet(state) {
     <ol class="course-list">
       ${r.items.map((it) => {
         if (it.type === 'visit') {
-          const n = visits.indexOf(it) + 1;
-          return `<li class="course-visit"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>${n}. ${esc(it.place.name)}</b><span class="card-meta">이동 ${kmin(it.travel)} · 머무는 시간 약 ${kmin(it.dwell)}(추정) · 영업시간 미확인 · ${esc(parkingNote(it.place))}${it.lunchIn ? ' · 점심은 이 안에서' : ''}</span></span></li>`;
+          const n = visits.indexOf(it) + 1, p = it.place;
+          if (p.shop) {
+            const tag = it.meal === 'cafe' ? '☕ 카페' : `🍽 ${it.meal === 'lunch' ? '점심 · ' : it.meal === 'dinner' ? '저녁 · ' : ''}맛집`;
+            return `<li class="course-visit course-shop"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>${n}. ${esc(p.name)}</b><span class="card-meta">${tag}${p.auto ? ' · 근처에서 자동으로 찾았어요' : ' · 찜한 곳'} · 이동 ${kmin(it.travel)} · 약 ${kmin(it.dwell)}(추정)${p.rating ? ` · ★${p.rating.toFixed(1)}` : ''} · 영업시간 미확인</span></span></li>`;
+          }
+          return `<li class="course-visit"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>${n}. ${esc(p.name)}</b><span class="card-meta">이동 ${kmin(it.travel)} · 머무는 시간 약 ${kmin(it.dwell)}(추정) · 영업시간 미확인 · ${esc(parkingNote(p))}${it.lunchIn ? ' · 점심은 이 안에서' : ''}</span></span></li>`;
         }
-        if (it.type === 'meal') return `<li class="course-meal"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>${esc(it.label)} (${kmin(it.end - it.start)})</b><span class="card-meta">식당은 정하지 않았어요. 장소 상세의 "근처 맛집"에서 찾아보세요.</span></span></li>`;
+        if (it.type === 'meal') return `<li class="course-meal"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>${esc(it.label)} (${kmin(it.end - it.start)})</b><span class="card-meta">근처 맛집을 찾지 못해 식사 시간만 넣었어요. 장소 상세의 "근처 맛집"에서 찾아보세요.</span></span></li>`;
         if (it.type === 'rest') return `<li class="course-meal"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>휴식 (${kmin(it.end - it.start)})</b></span></li>`;
         return `<li class="course-return"><span class="course-time">${toHHMM(it.start)}</span><span class="course-body"><b>${esc(state.profile.origin.name)}로 돌아가기</b><span class="card-meta">이동 ${kmin(it.travel)} · 도착 ${toHHMM(it.end)}</span></span></li>`;
       }).join('')}

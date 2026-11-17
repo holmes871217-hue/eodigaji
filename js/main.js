@@ -219,6 +219,47 @@ window.addEventListener('popstate', (ev) => {
   if (goingBack) restoreSheetPos();
 });
 
+// ── 코스: 식사 장소 자동 찾기 ──────────────────────────────────
+const shopPlace = (s, kind) => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng, cat: kind === 'cafe' ? 'cafe' : 'food', shop: true, kind, sub: s.sub || s.type || '', addr: s.addr || '', nq: s.nq || s.name, gid: s.gid || '', rating: s.rating ?? null });
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+/** 이 지점 근처에서 가장 알맞은 가게 하나(이미 쓴 곳은 제외). 못 찾으면 null */
+async function nearestShop(near, kind, used) {
+  try {
+    const r = await withTimeout(findShops({ lat: near.lat, lng: near.lng, name: near.name }, kind), 9000);
+    const it = (r.items || []).find((x) => !used.has(x.id) && !used.has(x.name));
+    if (!it) return null;
+    used.add(it.id); used.add(it.name);
+    return { ...shopPlace(it, kind), auto: true };
+  } catch (e) { return null; }
+}
+/**
+ * 식사 시간에 정해 둔 맛집이 없으면 그 지점 근처 맛집을 찾아 넣고, 맛집마다 이어서 갈 카페도 붙인다.
+ * 찾지 못하거나 시간이 모자라면 처음 코스를 그대로 둔다(null).
+ */
+async function addMeals(first, candidates, args) {
+  const used = new Set(candidates.filter((c) => c.place.shop).flatMap((c) => [c.place.id, c.place.name]));
+  const favFoods = candidates.filter((c) => c.place.shop && c.place.cat === 'food');
+  const favCafes = candidates.filter((c) => c.place.shop && c.place.cat === 'cafe');
+  const slots = first.items.filter((i) => i.type === 'meal' && i.near); // 식당을 못 정한 점심·저녁
+  const autoFoods = [];
+  for (const m of slots) { const f = await nearestShop(m.near, 'food', used); if (f) autoFoods.push(f); }
+  const allFoods = [...favFoods.map((c) => c.place), ...autoFoods];
+  if (!allFoods.length) return null;
+  const cafes = [];
+  for (let i = 0; i < allFoods.length; i++) {
+    const have = favCafes[i]?.place;
+    cafes.push(have || (await nearestShop(allFoods[i], 'cafe', used)));
+  }
+  const sights = candidates.filter((c) => !c.place.shop);
+  const mk = (foods, cafeList) => buildCourse({ ...args, candidates: [...sights, ...foods.map((place) => ({ place, score: 1e9, fav: true })), ...cafeList.filter(Boolean).map((place) => ({ place, score: 1e9, fav: true }))] });
+  // 모두 넣어 보고, 시간이 안 되면 점심 한 곳(+카페)만, 그래도 안 되면 맛집만
+  for (const [f, c] of [[allFoods, cafes], [allFoods.slice(0, 1), cafes.slice(0, 1)], [allFoods.slice(0, 1), []]]) {
+    const r = mk(f, c);
+    if (r.ok && r.items.filter((i) => i.type === 'visit' && i.meal).length) return r;
+  }
+  return null;
+}
+
 // ── 근처 맛집·카페 ──────────────────────────────────────────
 // 맛집·카페 창이 맨 위에 있는데 아직 찾아 둔 결과가 없으면 찾기 시작한다.
 // 결과는 앱을 켜 둔 동안만 기억한다(state.ui 는 폰에 저장하지 않는다).
@@ -452,27 +493,45 @@ root.addEventListener('click', (ev) => {
       break;
     case 'course-make': {
       const cs = state.ui.course;
+      if (cs.busy) break;
       const c = compute();
       const placeById = new Map(PLACES.map((pl) => [pl.id, pl]));
       const favPlaces = state.favs.filter((f) => f.type === 'place').map((f) => placeById.get(f.id)).filter(Boolean);
       const favIds = new Set(favPlaces.map((pl) => pl.id));
+      // 찜해 둔 맛집·카페는 식사 시간에 맞춰 코스에 넣는다
+      const favShops = state.favs.filter((f) => f.type === 'shop' && (f.kind === 'food' || f.kind === 'cafe')).map((f) => shopPlace(f, f.kind));
       // 찜한 곳을 먼저, 그다음 추천 상위(이동시간 한도 안, 가족·취향이 반영된 순서) 15곳
       const candidates = [
         ...favPlaces.map((place) => ({ place, score: 1e9, fav: true })),
+        ...favShops.map((place) => ({ place, score: 1e9, fav: true })),
         ...c.ranked.filter((r) => !favIds.has(r.place.id)).slice(0, 15).map((r) => ({ place: r.place, score: r.raw })),
       ];
-      cs.result = buildCourse({ origin: state.profile.origin, date: state.profile.date, start: cs.start, end: cs.end, mode: cs.mode, candidates });
+      const args = { origin: state.profile.origin, date: state.profile.date, start: cs.start, end: cs.end, mode: cs.mode };
+      const first = buildCourse({ ...args, candidates });
+      cs.result = first;
+      cs.busy = first.ok; // 코스가 만들어졌으면 식사 장소를 찾는 동안 잠깐 "찾는 중"을 보여 준다
       update(() => {}, { persist: false });
+      if (first.ok) {
+        const token = (cs.token = (cs.token || 0) + 1);
+        addMeals(first, candidates, args).then((better) => { if (cs.token === token && better) cs.result = better; }).catch(() => {}).then(() => {
+          if (cs.token !== token) return;
+          cs.busy = false;
+          if (state.ui.sheet?.type === 'course') update(() => {}, { persist: false });
+        });
+      }
       break;
     }
     case 'course-save': {
       const cs = state.ui.course;
       const visits = (cs.result?.items || []).filter((i) => i.type === 'visit').map((i) => i.place);
       if (!visits.length) break;
-      const keep = state.favs.filter((f) => !(f.type === 'place' && visits.some((p) => p.id === f.id)));
+      const keep = state.favs.filter((f) => !visits.some((p) => p.id === f.id && f.type === (p.shop ? 'shop' : 'place')));
       const placed = visits.map((p) => {
-        const old = state.favs.find((f) => f.type === 'place' && f.id === p.id);
-        return old || { key: favKey('place', p.id), type: 'place', id: p.id, ...favSnapshot('place', p.id) };
+        const type = p.shop ? 'shop' : 'place';
+        const old = state.favs.find((f) => f.type === type && f.id === p.id);
+        if (old) return old;
+        if (p.shop) return { key: favKey('shop', p.id), type: 'shop', id: p.id, name: p.name, lat: p.lat, lng: p.lng, sub: p.sub || '', addr: p.addr || '', nq: p.nq || p.name, gid: p.gid || '', kind: p.kind };
+        return { key: favKey('place', p.id), type: 'place', id: p.id, ...favSnapshot('place', p.id) };
       });
       if (placed.length + keep.length > FAV_MAX) { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 찜·코스 탭에서 몇 곳을 빼 주세요.`); break; }
       state.favs = [...placed, ...keep]; // 코스 순서대로 맨 위에, 나머지 찜은 그 아래에 그대로 둔다
