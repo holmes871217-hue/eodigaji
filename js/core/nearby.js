@@ -303,7 +303,7 @@ async function googleFindOne(it, key) {
     rating: typeof r.rating === 'number' ? r.rating : null, reviews: r.userRatingCount || 0, closed: r.businessStatus && r.businessStatus !== 'OPERATIONAL',
   })).filter((r) => r.name && Number.isFinite(r.lat));
 }
-/** 승인된 식당 중 이 장소 근처(3km, 없으면 10km)의 곳을 구글에서 확인해 기준을 넘는 곳만 돌려준다. */
+/** 승인된 식당 중 이 장소 근처(3km, 5곳이 안 되면 10km)의 곳을 구글에서 확인해 영업 중인 곳을 돌려준다(평점 기준 없음). */
 async function viaEligible(place, list, key) {
   const withKm = list.map((it) => ({ it, km: haversineKm(place, it) }));
   let near = withKm.filter((x) => x.km <= 3);
@@ -313,7 +313,7 @@ async function viaEligible(place, list, key) {
   await Promise.all(near.map(async ({ it }) => {
     try {
       const hit = (await googleFindOne(it, key)).find((r) => (it.g && r.gid === it.g) || sameEligible(r, it));
-      if (hit && !hit.closed && passesRating(hit.rating, hit.reviews)) rows.push({ ...hit, km: haversineKm(place, hit), p: it.p });
+      if (hit && !hit.closed) rows.push({ ...hit, km: haversineKm(place, hit), p: it.p }); // 또간집에 나온 식당은 평점 기준 없이 넣는다(폐업한 곳만 뺀다)
     } catch { /* 한 곳 실패는 그 곳만 빠진다 */ }
   }));
   return rankEligible(rows);
