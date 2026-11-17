@@ -96,7 +96,7 @@ export function normName(s) {
 }
 const digits = (s) => String(s || '').replace(/\D/g, '');
 const dongOf = (addr) => (String(addr).match(/[가-힣0-9]+(?:동|읍|면|리)(?=\s|$|\d)/) || [])[0] || '';
-const roadOf = (addr) => (String(addr).match(/[가-힣0-9]+(?:로|길)\s*\d+/) || [])[0]?.replace(/\s/g, '') || '';
+const roadOf = (addr) => (String(addr).match(/[가-힣0-9]+(?:로|길)(?:\s*\d+번길)?\s*\d+(?:-\d+)?/) || [])[0]?.replace(/\s/g, '') || ''; // 내정로7번길 13 처럼 번길·번지까지
 const sigunOf = (addr) => (String(addr).match(/[가-힣]+[시군구]/) || [])[0] || '';
 
 /**
