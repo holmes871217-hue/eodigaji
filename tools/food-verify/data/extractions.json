@@ -2089,7 +2089,7 @@
  },
  "ep:60": {
   "descHash": "4e7bac3d20be2c5b",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921182742,
   "region": "충남 천안시",
   "source": "manual",
   "items": [
@@ -2110,9 +2110,9 @@
     "cue": "manual",
     "addr": "충남 천안시 서북구 성환읍 성환11길 15",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "9434250",
+     "why": ""
     }
    },
    {
@@ -2942,7 +2942,7 @@
  },
  "ep:38": {
   "descHash": "d55110668bd6661e",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921182742,
   "region": "전남 여수시",
   "source": "manual",
   "items": [
@@ -2974,9 +2974,9 @@
     "cue": "manual",
     "addr": "전남 여수시 봉산남4길 23-26 명동게장본관",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "26515232",
+     "why": ""
     }
    }
   ]
@@ -3508,7 +3508,7 @@
  },
  "ep:24": {
   "descHash": "4583c8c973728f22",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921182742,
   "region": "서울 강남구",
   "source": "manual",
   "items": [
@@ -3529,9 +3529,9 @@
     "cue": "manual",
     "addr": "",
     "match": {
-     "level": "linked",
-     "key": "27512695",
-     "why": ""
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
     }
    }
   ]
@@ -4011,7 +4011,7 @@
  },
  "ep:12": {
   "descHash": "9c933f33fa448c7b",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921182742,
   "region": "서울 용산구",
   "source": "manual",
   "items": [
@@ -4021,9 +4021,9 @@
     "cue": "manual",
     "addr": "서울 용산구 보광로59길 33",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "721715250",
+     "why": ""
     }
    },
    {
@@ -4238,7 +4238,7 @@
  },
  "ep:7": {
   "descHash": "59d8f12ea69f015c",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921182742,
   "region": "서울 마포구",
   "source": "manual",
   "items": [
@@ -4259,9 +4259,9 @@
     "cue": "manual",
     "addr": "",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "256064588",
+     "why": ""
     }
    },
    {
@@ -4424,7 +4424,7 @@
  },
  "ep:1": {
   "descHash": "29a34fadcccb61a8",
-  "extractedAt": 1794921060420,
+  "extractedAt": 1794921182742,
   "region": "서울 마포구",
   "source": "manual",
   "items": [
@@ -4456,9 +4456,9 @@
     "cue": "manual",
     "addr": "서울 마포구 동교로34길 3 1F 뉴오더클럽",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "1629395786",
+     "why": ""
     }
    }
   ]

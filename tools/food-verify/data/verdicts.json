@@ -251,6 +251,18 @@
    "Uf8V4EvPKWk"
   ]
  },
+ "9434250": {
+  "name": "진주회관 본관",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:60"
+  ]
+ },
  "9435012": {
   "name": "천안식당",
   "status": "eligible",
@@ -1583,6 +1595,18 @@
    "ep:28"
   ]
  },
+ "26515232": {
+  "name": "명동게장 본관",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:38"
+  ]
+ },
  "26545925": {
   "name": "토속촌삼계탕",
   "status": "eligible",
@@ -1701,18 +1725,6 @@
   "episodes": 1,
   "videos": [
    "ep:28"
-  ]
- },
- "27512695": {
-  "name": "길목",
-  "status": "eligible",
-  "reasons": [],
-  "channels": 1,
-  "score": 1,
-  "top": "visited",
-  "episodes": 1,
-  "videos": [
-   "ep:24"
   ]
  },
  "27571944": {
@@ -1881,6 +1893,18 @@
   "episodes": 1,
   "videos": [
    "ep:62"
+  ]
+ },
+ "256064588": {
+  "name": "소금집델리 망원",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:7"
   ]
  },
  "276672628": {
@@ -2061,6 +2085,18 @@
   "episodes": 1,
   "videos": [
    "ep:80"
+  ]
+ },
+ "721715250": {
+  "name": "쟈니덤플링 본관",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:12"
   ]
  },
  "735927047": {
@@ -2613,6 +2649,18 @@
   "episodes": 1,
   "videos": [
    "ep:22"
+  ]
+ },
+ "1629395786": {
+  "name": "뉴오더클럽 연남",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:1"
   ]
  },
  "1649911372": {

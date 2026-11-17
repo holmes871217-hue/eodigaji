@@ -241,14 +241,6 @@
  },
  {
   "kind": "series",
-  "videoId": "ep:60",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "진주회관",
-  "role": "visited",
-  "why": "WEAK_MATCH"
- },
- {
-  "kind": "series",
   "videoId": "ep:58",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "델리슈샤",
@@ -337,14 +329,6 @@
  },
  {
   "kind": "series",
-  "videoId": "ep:38",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "명동게장",
-  "role": "visited",
-  "why": "WEAK_MATCH"
- },
- {
-  "kind": "series",
   "videoId": "ep:31",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "이유식당",
@@ -382,6 +366,14 @@
   "name": "광평",
   "role": "winner",
   "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:24",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "길목",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
  },
  {
   "kind": "series",
@@ -467,14 +459,6 @@
   "kind": "series",
   "videoId": "ep:12",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "쟈니덤플링",
-  "role": "visited",
-  "why": "WEAK_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:12",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "더테이블키친",
   "role": "visited",
   "why": "NO_MATCH"
@@ -494,14 +478,6 @@
   "name": "원조전복죽",
   "role": "visited",
   "why": "MULTI_BRANCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:7",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "소금집델리",
-  "role": "visited",
-  "why": "WEAK_MATCH"
  },
  {
   "kind": "series",
@@ -542,13 +518,5 @@
   "name": "경향카츠",
   "role": "visited",
   "why": "NO_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:1",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "뉴오더클럽",
-  "role": "winner",
-  "why": "WEAK_MATCH"
  }
 ]
