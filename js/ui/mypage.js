@@ -116,7 +116,7 @@ export function renderMy(state) {
         <label class="jump">
           <span class="sr-only">지도를 옮길 지역</span>
           <select class="input sm" data-field="jump">
-            <option value="" selected>지역으로 이동</option>
+            <option value="" selected>지역 선택 (검색 위치로 지정)</option>
             ${CITIES.map((c) => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('')}
           </select>
         </label>
