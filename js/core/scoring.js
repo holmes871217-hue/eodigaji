@@ -192,13 +192,14 @@ function nearFactor(min, reachMin, amp) {
   return 1 + amp * nearWeight(reachMin) * p;
 }
 
-export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', { hideKids = true } = {}) {
+export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', { hideKids = true, taste = null, hideHidden = true } = {}) {
   const { members, mode, origin } = profile;
   const rows = [];
   const dropKids = hideKids && !hasChild(members); // 아이가 없는 가족에게는 아이 전용 장소를 추천하지 않는다
 
   for (const place of places) {
     if (dropKids && isKidsPlace(place)) continue;
+    if (taste && hideHidden && taste.hidden(place)) continue; // 사용자가 "관심 없음"으로 숨긴 곳(C 항목)
     const small = place.scale === 'small';
     if (scope === 'near' && !small) continue;
     if (scope === 'big' && small) continue;
@@ -254,6 +255,9 @@ export function rankPlaces(places, profile, tripEvents, maxMin, scope = 'all', {
     if (place.hot && place.hotQ !== 0) {
       raw *= place.hot === 'h' ? 1.2 : place.hot === 'n' ? 1.1 : place.hot === 'r' && mode !== 'calm' ? 1.08 : place.hot === 'f' && mode === 'calm' ? 1.08 : 1;
     }
+
+    // 개인 취향·행동 보정(C 항목): 직접 고른 취향과 찜·평가·방문 기록이 있을 때만 움직인다(없으면 1배).
+    if (taste) raw *= taste.factor(place);
 
     // 가는 날 20km 안에서 행사가 열리면 덧점 8%
     const eventNear = nearbyEvents(place, tripEvents)[0]?.e || null; // 상세 창 목록의 1번과 같은 행사
