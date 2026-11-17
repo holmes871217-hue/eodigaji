@@ -202,6 +202,7 @@ ok(!N.sameEligible({ name: '맛있는집', lat: 37.3, lng: 127.0 }, { n: '맛있
     const last = u.pathname.split('/').pop();
     if (u.hostname === 'www.googleapis.com') bump(last);
     if (last === 'channels') return j({ items: [{ id: 'UC_SUZE', snippet: { title: over.channelTitle || '스튜디오 수제' }, contentDetails: { relatedPlaylists: { uploads: 'UU_SUZE' } } }] });
+    if (last === 'commentThreads') return j({ items: [] });
     if (last === 'playlistItems') return j({ items: Object.entries(vids).reverse().map(([id, v]) => ({ snippet: { title: v.title, resourceId: { videoId: id } } })) });
     if (last === 'videos') { const ids = u.searchParams.get('id').split(','); return j({ items: ids.map((id) => vids[id] && ({ id, snippet: { channelId: 'UC_SUZE', channelTitle: '스튜디오 수제', title: vids[id].title, description: vids[id].desc, publishedAt: vids[id].date }, statistics: { viewCount: '1234567', ...(over.noLikes ? {} : { likeCount: '4321' }) }, ...(vids[id].ppp ? { paidProductPlacementDetails: { hasPaidProductPlacement: true } } : {}) })).filter(Boolean) }); }
     if (u.hostname === 'dapi.kakao.com') {

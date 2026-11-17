@@ -134,7 +134,7 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
       for (const ch of channels.approved.filter((c) => c.series && c.enabled !== false)) {
         const res = await collectSeries({ ch, yt, store: sv, now, maxPages: cfg.seriesMaxPages, log });
         if (res.resolved && (ch.id !== res.resolved.id || ch.uploads !== res.resolved.uploads)) { ch.id = res.resolved.id; ch.uploads = res.resolved.uploads; ch.title = res.resolved.title; chChanged = true; approved.add(ch.id); }
-        log(`  시리즈 "${ch.name}": 새 영상 ${res.newVideos} · 갱신 ${res.refreshed} · 삭제 ${res.removed} · 제작지원 제외 ${res.sponsored} · 제목 필터 밖 ${res.skippedTitle}${res.resolved ? '' : ' · 채널 확정 못 함'}`);
+        log(`  시리즈 "${ch.name}": 새 영상 ${res.newVideos} · 갱신 ${res.refreshed} · 삭제 ${res.removed} · 제작지원 제외 ${res.sponsored} · 제목 필터 밖 ${res.skippedTitle} · 댓글 수집 ${res.commentVideos}편(제작진 댓글 ${res.ownerComments}개, 댓글 꺼짐 ${res.commentsOff})${res.resolved ? '' : ' · 채널 확정 못 함'}`);
       }
       for (const [vid, x] of Object.entries(ext)) { // 구글 좌표는 30일 안에 다시 확인해야 하므로 오래되면 그 영상을 다시 매칭한다
         if (x.items.some((it) => it.match?.key?.startsWith('g:') && now - (restaurants[it.match.key]?.coordsAt || 0) > REFRESH_AFTER_DAYS * DAY)) delete ext[vid];

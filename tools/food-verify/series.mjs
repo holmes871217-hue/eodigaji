@@ -32,9 +32,25 @@ export async function resolveChannel(ch, yt, log = () => {}) {
   return { id: it.id, uploads: it.contentDetails?.relatedPlaylists?.uploads || '', title };
 }
 
+/**
+ * 영상 댓글(공식 commentThreads.list, 1유닛): 제작진(채널 주인)이 쓴 댓글과 좋아요 상위 댓글만 남긴다.
+ * 설명에 식당 정보가 없는 영상에서 식당 정보를 찾는 공식 경로다. 댓글을 끈 영상은 건너뛴다. 작성자 이름·ID 는 저장하지 않는다.
+ */
+export async function fetchComments(videoId, channelId, yt) {
+  let j;
+  try { j = await yt('commentThreads', { part: 'snippet', videoId, order: 'relevance', maxResults: '50', textFormat: 'plainText' }); }
+  catch (e) { return { off: true, list: [], why: e.status === 403 ? 'comments_disabled_or_forbidden' : `err:${e.status || e.message}` }; }
+  const all = (j.items || []).map((t) => t.snippet?.topLevelComment?.snippet).filter(Boolean).map((c) => ({
+    owner: c.authorChannelId?.value === channelId, likes: Number(c.likeCount || 0), text: String(c.textDisplay || c.textOriginal || '').slice(0, 1500), at: c.publishedAt || '',
+  }));
+  const owner = all.filter((c) => c.owner);
+  const top = all.filter((c) => !c.owner).sort((a, b) => b.likes - a.likes).slice(0, 5);
+  return { off: false, list: [...owner, ...top].map((c) => ({ by: c.owner ? 'owner' : 'top', likes: c.likes, text: c.text, at: c.at })), total: all.length };
+}
+
 /** 시리즈 영상 수집. 새 영상만 받고(이미 받은 영상을 만나면 멈춤), 25일 지난 영상은 갱신한다. */
-export async function collectSeries({ ch, yt, store, now, maxPages = 12, log = () => {} }) {
-  const out = { newVideos: 0, refreshed: 0, removed: 0, sponsored: 0, skippedTitle: 0 };
+export async function collectSeries({ ch, yt, store, now, maxPages = 12, maxCommentVideos = 40, log = () => {} }) {
+  const out = { newVideos: 0, refreshed: 0, removed: 0, sponsored: 0, skippedTitle: 0, commentVideos: 0, ownerComments: 0, commentsOff: 0 };
   const info = await resolveChannel(ch, yt, log);
   if (!info || !info.uploads) return { ...out, resolved: null };
   const re = new RegExp(ch.titleFilter || '.', 'i');
@@ -54,7 +70,7 @@ export async function collectSeries({ ch, yt, store, now, maxPages = 12, log = (
     page = j.nextPageToken || '';
     if (hitKnown || !page) break; // 이미 받은 영상을 만났으면 그 뒤는 옛 영상이므로 멈춘다
   }
-  const stale = Object.entries(known).filter(([, v]) => v.channelKey === ch.key && (now - v.fetchedAt > REFRESH_AFTER_DAYS * DAY || (v.sponsored && v.ruleV !== SPONSOR_RULE_V))).map(([id]) => id); // 판정 규칙이 바뀌었으면 제작지원 판정을 다시 확인한다
+  const stale = Object.entries(known).filter(([, v]) => v.channelKey === ch.key && (now - v.fetchedAt > REFRESH_AFTER_DAYS * DAY || (v.sponsored && v.ruleV !== SPONSOR_RULE_V) || (!v.sponsored && (v.description || '').length > 200 && v.comments === undefined))).map(([id]) => id); // 판정 규칙이 바뀌었으면 제작지원 판정을 다시 확인한다
   const ids = [...new Set([...wanted, ...stale])];
   for (let i = 0; i < ids.length; i += 50) {
     const batch = ids.slice(i, i + 50);
@@ -72,7 +88,13 @@ export async function collectSeries({ ch, yt, store, now, maxPages = 12, log = (
         viewCount: Number(v.statistics?.viewCount ?? NaN), likeCount: v.statistics?.likeCount != null ? Number(v.statistics.likeCount) : null, // 좋아요는 제공될 때만
         fetchedAt: now,
       };
-      rec.descHash = hash(rec.title + '\n' + rec.description);
+      // 정규 회차(설명이 긴 영상)는 댓글도 받는다. 한 번에 받는 영상 수는 maxCommentVideos 로 제한.
+      const prevC = known[id]?.comments;
+      if (rec.description.length > 200 && (isNew || !prevC) && out.commentVideos < maxCommentVideos) {
+        const c = await fetchComments(id, rec.channelId, yt); out.commentVideos++;
+        rec.comments = c.list; rec.commentsOff = c.off; if (c.off) out.commentsOff++; out.ownerComments += c.list.filter((x) => x.by === 'owner').length;
+      } else if (prevC) { rec.comments = prevC; rec.commentsOff = known[id].commentsOff; }
+      rec.descHash = hash(rec.title + '\n' + rec.description + '\n' + (rec.comments || []).map((c) => c.text).join('\n'));
       known[id] = rec;
       if (isNew) out.newVideos++; else out.refreshed++;
     }
@@ -118,7 +140,7 @@ export async function processSeries({ store, ext, restaurants, regionKeys, now, 
     if (v.sponsored) { delete ext[v.id]; continue; }
     if (ext[v.id]?.descHash === v.descHash) continue; // 변경 없음 → 반복 처리하지 않는다
     const ctx = regionContext(v, regionKeys);
-    const ex = extractSeries(v.description, ctx);
+    const ex = extractSeries(`${v.description}\n${(v.comments || []).map((c) => c.text).join('\n')}`, ctx);
     out.processed++;
     const items = [];
     for (const it of ex.items) {
