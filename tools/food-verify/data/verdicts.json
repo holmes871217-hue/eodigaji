@@ -71,6 +71,18 @@
    "ep:67"
   ]
  },
+ "8209640": {
+  "name": "광천식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:21"
+  ]
+ },
  "8245887": {
   "name": "논고을",
   "status": "eligible",
@@ -323,6 +335,18 @@
    "ep:48"
   ]
  },
+ "10119922": {
+  "name": "가원 망원본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:20"
+  ]
+ },
  "10162808": {
   "name": "고인돌",
   "status": "eligible",
@@ -393,6 +417,18 @@
   "episodes": 1,
   "videos": [
    "ep:19"
+  ]
+ },
+ "10371445": {
+  "name": "경춘자의라면땡기는날",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:26"
   ]
  },
  "10372117": {
@@ -633,6 +669,18 @@
   "episodes": 1,
   "videos": [
    "ep:60"
+  ]
+ },
+ "11945864": {
+  "name": "원조전복죽 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:9"
   ]
  },
  "11992908": {
@@ -969,6 +1017,18 @@
   "episodes": 1,
   "videos": [
    "4cCrjwgi54w"
+  ]
+ },
+ "15963316": {
+  "name": "걸리버막창",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:50"
   ]
  },
  "15996436": {
@@ -1607,6 +1667,18 @@
    "ep:81"
   ]
  },
+ "25037411": {
+  "name": "원조두꺼비집불오징어",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:62"
+  ]
+ },
  "25039571": {
   "name": "삼오불고기",
   "status": "eligible",
@@ -1943,6 +2015,18 @@
    "-vsNkVIRvt0"
   ]
  },
+ "118007880": {
+  "name": "와타요업 갈마본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:21"
+  ]
+ },
  "132500108": {
   "name": "이치젠",
   "status": "eligible",
@@ -2169,6 +2253,18 @@
   "episodes": 1,
   "videos": [
    "ep:35"
+  ]
+ },
+ "654481053": {
+  "name": "남산에",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:50"
   ]
  },
  "666964150": {

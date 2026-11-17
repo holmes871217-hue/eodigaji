@@ -1995,8 +1995,8 @@
   ]
  },
  "ep:62": {
-  "descHash": "786f95ba9b214c59",
-  "extractedAt": 1794921060420,
+  "descHash": "233b332411942f79",
+  "extractedAt": 1794921708300,
   "region": "서울 은평구",
   "source": "manual",
   "items": [
@@ -2004,11 +2004,11 @@
     "name": "두꺼비집",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 은평구 연서로28길 5 두꺼비집",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "25037411",
+     "why": ""
     }
    },
    {
@@ -2498,8 +2498,8 @@
   ]
  },
  "ep:50": {
-  "descHash": "22c8021f56231eb5",
-  "extractedAt": 1794921549484,
+  "descHash": "3a2be3e5384453dc",
+  "extractedAt": 1794921708300,
   "region": "대구",
   "source": "manual",
   "items": [
@@ -2529,22 +2529,22 @@
     "name": "남산에",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "대구 중구 중앙대로66길 20 효성해링턴 상가 1층 남산에",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "654481053",
+     "why": ""
     }
    },
    {
     "name": "걸리버막창",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "대구 북구 옥산로 53",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "15963316",
+     "why": ""
     }
    }
   ]
@@ -3403,8 +3403,8 @@
   ]
  },
  "ep:26": {
-  "descHash": "2231e149b0aff47b",
-  "extractedAt": 1794921060420,
+  "descHash": "82fe782f20b075dd",
+  "extractedAt": 1794921708300,
   "region": "서울 종로구",
   "source": "manual",
   "items": [
@@ -3412,11 +3412,11 @@
     "name": "라면땡기는날",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 종로구 율곡로3길 82",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "10371445",
+     "why": ""
     }
    },
    {
@@ -3619,8 +3619,8 @@
   ]
  },
  "ep:21": {
-  "descHash": "adb6c7e8691b0407",
-  "extractedAt": 1794921060420,
+  "descHash": "bcf95d35fb8348fb",
+  "extractedAt": 1794921708300,
   "region": "대전",
   "source": "manual",
   "items": [
@@ -3628,22 +3628,22 @@
     "name": "와타요업",
     "role": "winner",
     "cue": "manual",
-    "addr": "",
+    "addr": "대전 서구 갈마역로25번길 9-8 1층 와타요업",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "118007880",
+     "why": ""
     }
    },
    {
     "name": "광천식당",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "대전 중구 대종로505번길 29",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "8209640",
+     "why": ""
     }
    },
    {
@@ -3660,8 +3660,8 @@
   ]
  },
  "ep:20": {
-  "descHash": "6f1eecc02c2ffe8d",
-  "extractedAt": 1794921060420,
+  "descHash": "ae2e92a2d4d8a04e",
+  "extractedAt": 1794921708300,
   "region": "서울 마포구",
   "source": "manual",
   "items": [
@@ -3680,11 +3680,11 @@
     "name": "가원",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 마포구 월드컵로 65 양경회관 1층",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "10119922",
+     "why": ""
     }
    },
    {
@@ -4144,8 +4144,8 @@
   ]
  },
  "ep:9": {
-  "descHash": "a1fd2f6eef304d20",
-  "extractedAt": 1794921060420,
+  "descHash": "1cca1cdd61cdf7cf",
+  "extractedAt": 1794921708300,
   "region": "부산",
   "source": "manual",
   "items": [
@@ -4175,11 +4175,11 @@
     "name": "원조전복죽",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "부산 해운대구 해운대해변로298번길 24 팔레드시즈",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "11945864",
+     "why": ""
     }
    },
    {

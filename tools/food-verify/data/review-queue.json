@@ -139,14 +139,6 @@
   "kind": "series",
   "videoId": "ep:62",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "두꺼비집",
-  "role": "visited",
-  "why": "WEAK_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:62",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "옥경이네김밥",
   "role": "visited",
   "why": "NO_MATCH"
@@ -166,22 +158,6 @@
   "name": "감나무집",
   "role": "visited",
   "why": "WEAK_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:50",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "남산에",
-  "role": "visited",
-  "why": "MULTI_BRANCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:50",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "걸리버막창",
-  "role": "visited",
-  "why": "MULTI_BRANCH"
  },
  {
   "kind": "series",
@@ -233,43 +209,11 @@
  },
  {
   "kind": "series",
-  "videoId": "ep:26",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "라면땡기는날",
-  "role": "visited",
-  "why": "WEAK_MATCH"
- },
- {
-  "kind": "series",
   "videoId": "ep:24",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "광평",
   "role": "winner",
   "why": "NO_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:21",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "와타요업",
-  "role": "winner",
-  "why": "MULTI_BRANCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:21",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "광천식당",
-  "role": "visited",
-  "why": "MULTI_BRANCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:20",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "가원",
-  "role": "visited",
-  "why": "MULTI_BRANCH"
  },
  {
   "kind": "series",
@@ -334,14 +278,6 @@
   "name": "천진영감",
   "role": "visited",
   "why": "NO_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:9",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "원조전복죽",
-  "role": "visited",
-  "why": "MULTI_BRANCH"
  },
  {
   "kind": "series",

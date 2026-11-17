@@ -5,7 +5,7 @@
   "kakaoId": "7818113",
   "lat": 37.56839,
   "lng": 126.98892,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -15,7 +15,7 @@
   "kakaoId": "7982844",
   "lat": 35.82573,
   "lng": 128.62476,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -35,7 +35,7 @@
   "kakaoId": "8057957",
   "lat": 37.5418,
   "lng": 126.98742,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -55,7 +55,17 @@
   "kakaoId": "8189367",
   "lat": 34.7933,
   "lng": 126.38452,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
+  "level": "linked",
+  "open": null
+ },
+ "8209640": {
+  "key": "8209640",
+  "name": "광천식당",
+  "kakaoId": "8209640",
+  "lat": 36.32867,
+  "lng": 127.4236,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -85,7 +95,7 @@
   "kakaoId": "8425381",
   "lat": 35.15863,
   "lng": 129.17158,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -95,7 +105,7 @@
   "kakaoId": "8425892",
   "lat": 34.78078,
   "lng": 126.37068,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -115,7 +125,7 @@
   "kakaoId": "8571730",
   "lat": 34.84919,
   "lng": 127.55661,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -175,7 +185,7 @@
   "kakaoId": "9089301",
   "lat": 35.16202,
   "lng": 129.16288,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -269,6 +279,16 @@
   "level": "linked",
   "open": null
  },
+ "10119922": {
+  "key": "10119922",
+  "name": "가원 망원본점",
+  "kakaoId": "10119922",
+  "lat": 37.55491,
+  "lng": 126.91082,
+  "matchedAt": 1794921708300,
+  "level": "linked",
+  "open": null
+ },
  "10162808": {
   "key": "10162808",
   "name": "고인돌",
@@ -305,7 +325,7 @@
   "kakaoId": "10247172",
   "lat": 34.90417,
   "lng": 127.5078,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -315,7 +335,7 @@
   "kakaoId": "10248767",
   "lat": 34.78336,
   "lng": 126.3826,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -336,6 +356,16 @@
   "lat": 35.14613,
   "lng": 126.91568,
   "matchedAt": 1794921060420,
+  "level": "linked",
+  "open": null
+ },
+ "10371445": {
+  "key": "10371445",
+  "name": "경춘자의라면땡기는날",
+  "kakaoId": "10371445",
+  "lat": 37.57929,
+  "lng": 126.98227,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -375,7 +405,7 @@
   "kakaoId": "10619983",
   "lat": 37.55995,
   "lng": 126.97697,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -539,6 +569,16 @@
   "level": "linked",
   "open": null
  },
+ "11945864": {
+  "key": "11945864",
+  "name": "원조전복죽 본점",
+  "kakaoId": "11945864",
+  "lat": 35.16041,
+  "lng": 129.16596,
+  "matchedAt": 1794921708300,
+  "level": "linked",
+  "open": null
+ },
  "11992908": {
   "key": "11992908",
   "name": "남정부일기사식당",
@@ -585,7 +625,7 @@
   "kakaoId": "12265528",
   "lat": 36.33981,
   "lng": 127.4168,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -605,7 +645,7 @@
   "kakaoId": "12460195",
   "lat": 37.66123,
   "lng": 127.07464,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -625,7 +665,7 @@
   "kakaoId": "12771116",
   "lat": 37.55258,
   "lng": 126.92236,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -645,7 +685,7 @@
   "kakaoId": "13053446",
   "lat": 37.57028,
   "lng": 127.00112,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -675,7 +715,7 @@
   "kakaoId": "13141353",
   "lat": 37.52717,
   "lng": 126.90611,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -685,7 +725,7 @@
   "kakaoId": "13336630",
   "lat": 37.57917,
   "lng": 126.98666,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -695,7 +735,7 @@
   "kakaoId": "13639001",
   "lat": 34.57387,
   "lng": 126.59251,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -819,13 +859,23 @@
   "level": "linked",
   "open": null
  },
+ "15963316": {
+  "key": "15963316",
+  "name": "걸리버막창",
+  "kakaoId": "15963316",
+  "lat": 35.88551,
+  "lng": 128.58152,
+  "matchedAt": 1794921708300,
+  "level": "linked",
+  "open": null
+ },
  "15996436": {
   "key": "15996436",
   "name": "강촌마을",
   "kakaoId": "15996436",
   "lat": 37.52205,
   "lng": 126.90454,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -865,7 +915,7 @@
   "kakaoId": "16443155",
   "lat": 37.55979,
   "lng": 127.04048,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -905,7 +955,7 @@
   "kakaoId": "16722795",
   "lat": 35.16336,
   "lng": 129.16559,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -955,7 +1005,7 @@
   "kakaoId": "17505297",
   "lat": 37.55832,
   "lng": 126.93473,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -965,7 +1015,7 @@
   "kakaoId": "17652954",
   "lat": 37.58418,
   "lng": 126.99718,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -995,7 +1045,7 @@
   "kakaoId": "17794415",
   "lat": 34.74739,
   "lng": 127.67473,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1025,7 +1075,7 @@
   "kakaoId": "18508179",
   "lat": 37.54563,
   "lng": 126.98594,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1035,7 +1085,7 @@
   "kakaoId": "18755777",
   "lat": 37.5706,
   "lng": 127.00072,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1065,7 +1115,7 @@
   "kakaoId": "19037502",
   "lat": 37.5031,
   "lng": 127.02778,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1105,7 +1155,7 @@
   "kakaoId": "20438571",
   "lat": 37.48368,
   "lng": 126.89542,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1195,7 +1245,7 @@
   "kakaoId": "21292784",
   "lat": 34.73979,
   "lng": 127.73442,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1245,7 +1295,7 @@
   "kakaoId": "21412672",
   "lat": 37.62658,
   "lng": 127.07568,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1255,7 +1305,7 @@
   "kakaoId": "21722720",
   "lat": 37.57064,
   "lng": 127.00007,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1265,7 +1315,7 @@
   "kakaoId": "21928434",
   "lat": 37.48296,
   "lng": 126.92669,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1295,7 +1345,7 @@
   "kakaoId": "23346761",
   "lat": 37.23965,
   "lng": 127.05851,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1349,6 +1399,16 @@
   "level": "linked",
   "open": null
  },
+ "25037411": {
+  "key": "25037411",
+  "name": "원조두꺼비집불오징어",
+  "kakaoId": "25037411",
+  "lat": 37.6181,
+  "lng": 126.921,
+  "matchedAt": 1794921708300,
+  "level": "linked",
+  "open": null
+ },
  "25039571": {
   "key": "25039571",
   "name": "삼오불고기",
@@ -1365,7 +1425,7 @@
   "kakaoId": "25040254",
   "lat": 34.89261,
   "lng": 127.50897,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1395,7 +1455,7 @@
   "kakaoId": "26515232",
   "lat": 34.73293,
   "lng": 127.72194,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1405,7 +1465,7 @@
   "kakaoId": "26545925",
   "lat": 37.57772,
   "lng": 126.97149,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1445,7 +1505,7 @@
   "kakaoId": "26904390",
   "lat": 37.65665,
   "lng": 127.06302,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1465,7 +1525,7 @@
   "kakaoId": "27184517",
   "lat": 37.50873,
   "lng": 127.10495,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1495,7 +1555,7 @@
   "kakaoId": "27441753",
   "lat": 37.36083,
   "lng": 127.11377,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1515,7 +1575,7 @@
   "kakaoId": "27512695",
   "lat": 37.51903,
   "lng": 127.05646,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1535,7 +1595,7 @@
   "kakaoId": "27571944",
   "lat": 35.26303,
   "lng": 128.87025,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1565,7 +1625,7 @@
   "kakaoId": "57913604",
   "lat": 37.61955,
   "lng": 126.92239,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1585,7 +1645,7 @@
   "kakaoId": "64633006",
   "lat": 37.55391,
   "lng": 126.9055,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1595,7 +1655,7 @@
   "kakaoId": "105571085",
   "lat": 37.50001,
   "lng": 127.02767,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1629,6 +1689,16 @@
   "level": "linked",
   "open": null
  },
+ "118007880": {
+  "key": "118007880",
+  "name": "와타요업 갈마본점",
+  "kakaoId": "118007880",
+  "lat": 36.35256,
+  "lng": 127.37348,
+  "matchedAt": 1794921708300,
+  "level": "linked",
+  "open": null
+ },
  "132500108": {
   "key": "132500108",
   "name": "이치젠",
@@ -1655,7 +1725,7 @@
   "kakaoId": "159889294",
   "lat": 37.5593,
   "lng": 126.92576,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1665,7 +1735,7 @@
   "kakaoId": "170803401",
   "lat": 37.61844,
   "lng": 126.9213,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1705,7 +1775,7 @@
   "kakaoId": "353333104",
   "lat": 37.5005,
   "lng": 127.02808,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1735,7 +1805,7 @@
   "kakaoId": "497931179",
   "lat": 37.58302,
   "lng": 127.00043,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1765,7 +1835,7 @@
   "kakaoId": "558503389",
   "lat": 37.52486,
   "lng": 127.03799,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1775,7 +1845,7 @@
   "kakaoId": "559525400",
   "lat": 35.22229,
   "lng": 128.68339,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1785,7 +1855,7 @@
   "kakaoId": "574281696",
   "lat": 37.55939,
   "lng": 127.04028,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1819,6 +1889,16 @@
   "level": "linked",
   "open": null
  },
+ "654481053": {
+  "key": "654481053",
+  "name": "남산에",
+  "kakaoId": "654481053",
+  "lat": 35.86088,
+  "lng": 128.59423,
+  "matchedAt": 1794921708300,
+  "level": "linked",
+  "open": null
+ },
  "666964150": {
   "key": "666964150",
   "name": "일직식당",
@@ -1835,7 +1915,7 @@
   "kakaoId": "721715250",
   "lat": 37.53383,
   "lng": 126.99213,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1845,7 +1925,7 @@
   "kakaoId": "735927047",
   "lat": 34.78742,
   "lng": 126.37926,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1885,7 +1965,7 @@
   "kakaoId": "792642248",
   "lat": 37.57877,
   "lng": 126.98172,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1935,7 +2015,7 @@
   "kakaoId": "846005317",
   "lat": 37.54371,
   "lng": 126.98726,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -1965,7 +2045,7 @@
   "kakaoId": "866282268",
   "lat": 37.56112,
   "lng": 127.04097,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2035,7 +2115,7 @@
   "kakaoId": "975253879",
   "lat": 35.24298,
   "lng": 128.8641,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2045,7 +2125,7 @@
   "kakaoId": "1012202600",
   "lat": 35.22358,
   "lng": 128.68453,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2055,7 +2135,7 @@
   "kakaoId": "1024788121",
   "lat": 37.57067,
   "lng": 127.00041,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2065,7 +2145,7 @@
   "kakaoId": "1025832828",
   "lat": 37.55822,
   "lng": 126.93483,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2145,7 +2225,7 @@
   "kakaoId": "1189631661",
   "lat": 37.48592,
   "lng": 126.89734,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2175,7 +2255,7 @@
   "kakaoId": "1282309711",
   "lat": 37.54342,
   "lng": 127.05429,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2185,7 +2265,7 @@
   "kakaoId": "1317927211",
   "lat": 37.56186,
   "lng": 126.92613,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2215,7 +2295,7 @@
   "kakaoId": "1386103900",
   "lat": 37.48277,
   "lng": 126.89996,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2245,7 +2325,7 @@
   "kakaoId": "1526604428",
   "lat": 37.58132,
   "lng": 126.88855,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2285,7 +2365,7 @@
   "kakaoId": "1550268637",
   "lat": 35.83755,
   "lng": 128.57816,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2305,7 +2385,7 @@
   "kakaoId": "1615184494",
   "lat": 37.52507,
   "lng": 127.04034,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2315,7 +2395,7 @@
   "kakaoId": "1618885386",
   "lat": 37.51027,
   "lng": 127.11086,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2355,7 +2435,7 @@
   "kakaoId": "1629395786",
   "lat": 37.56107,
   "lng": 126.92457,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2385,7 +2465,7 @@
   "kakaoId": "1694999007",
   "lat": 37.55681,
   "lng": 126.90824,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2475,7 +2555,7 @@
   "kakaoId": "1812550076",
   "lat": 37.38665,
   "lng": 127.12189,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2555,7 +2635,7 @@
   "kakaoId": "2002173821",
   "lat": 35.5358,
   "lng": 129.33487,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2575,7 +2655,7 @@
   "kakaoId": "2008349332",
   "lat": 37.56049,
   "lng": 126.97771,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2585,7 +2665,7 @@
   "kakaoId": "2036183426",
   "lat": 37.55464,
   "lng": 126.93055,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2605,7 +2685,7 @@
   "kakaoId": "2050202932",
   "lat": 37.58101,
   "lng": 126.88871,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2655,7 +2735,7 @@
   "kakaoId": "2140799580",
   "lat": 34.57647,
   "lng": 126.59314,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2665,7 +2745,7 @@
   "kakaoId": "2143988257",
   "lat": 37.56856,
   "lng": 126.98611,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  },
@@ -2675,7 +2755,7 @@
   "kakaoId": "2144193869",
   "lat": 37.46816,
   "lng": 126.93779,
-  "matchedAt": 1794921549484,
+  "matchedAt": 1794921708300,
   "level": "linked",
   "open": null
  }
