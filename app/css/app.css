@@ -597,3 +597,12 @@ svg { flex: none; }
 .trend-body { flex: 1; min-width: 0; display: grid; gap: 1px; }
 .trend-body .card-meta { margin: 0; }
 .trend-score { flex: none; font-family: var(--font-display); font-size: 22px; }
+
+/* 내 기록(다녀왔어요·관심 없음·별점)과 취향 */
+.taste-row { display: flex; gap: 8px; margin-top: 12px; }
+.taste-btn { flex: 1; padding: 10px; border: 2px solid transparent; border-radius: var(--radius-sm); background: var(--bg); color: var(--ink); font-weight: 700; }
+.taste-btn.is-on { border-color: var(--ink); background: #fff; }
+.taste-stars { display: flex; align-items: center; gap: 4px; margin-top: 8px; color: var(--ink-2); font-size: var(--fs-sm); }
+.taste-stars .star { border: 0; background: none; font-size: 26px; line-height: 1; color: #cfd3e6; padding: 0 2px; }
+.taste-stars .star.is-on { color: #f5a400; }
+.link-btn { border: 0; background: none; padding: 0 4px; color: var(--ink); font-weight: 700; text-decoration: underline; }

@@ -57,6 +57,9 @@ jobs:
       - name: 같은 장소가 목록에 두 번 나오는지 점검 (app/js/data/dedupe.js 규칙)
         run: node tools/check-dupes.mjs # 겹치는 장소가 있으면 여기서 멈춰 게시하지 않는다
 
+      - name: 개인 취향·행동 규칙 점검 (새 저장 키만 쓰는지, 숨김·평가 반영)
+        run: node tools/check-taste.mjs
+
       - name: 추천 점수 규칙 점검 (이동시간 한도가 길수록 거리 영향이 줄어드는지)
         run: node tools/check-scoring.mjs
 

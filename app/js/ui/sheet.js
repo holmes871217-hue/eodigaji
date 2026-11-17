@@ -119,7 +119,7 @@ function shopsSheet(place, kind, data, favs) {
       : kind === 'park' ? `카카오맵에 등록된 주차장을 가까운 순으로 보여 드려요("전용"이 붙은 곳은 뺐어요). ${data.fees ? '요금·운영 정보는 서울 열린데이터광장(서울시 관리 주차장) 기준이에요. ' : ''}가기 전에 현장 안내를 꼭 확인해 주세요.` : '지금은 평점을 불러올 수 없어서 카카오맵 기준 가까운 순으로 보여 드려요.'} 거리는 직선거리예요.</p>`;
 }
 
-function placeSheet(r, tripEvents, gp) {
+function placeSheet(r, tripEvents, gp, tr) {
   const p = r.place;
   const cat = CATEGORIES[p.cat] || { label: '', icon: '📍' };
   const pct = trendPct(p.trend);
@@ -231,6 +231,15 @@ function placeSheet(r, tripEvents, gp) {
       ? '연습용 숫자예요. 실제 데이터 연결 전이라 참고만 해 주세요.'
       : `검색 인기·추세·블로그 수는 네이버 검색 데이터("${esc(p.keyword || p.name)}" 기준)예요.${p.local ? ' 사람별 점수는 1년 인기에 장소 분류별 경향을 더한 추정이에요.' : ''} 혼잡 예측은 아직 예시 값이에요.`}${photo ? ` <a href="${esc(photo.page)}" target="_blank" rel="noopener noreferrer">사진 출처: ${esc(photo.label || '위키미디어 공용')}</a>` : ''}${gPhotos.length ? ` 일부 사진은 Google 지도에서 그때그때 불러왔어요${gBy.length ? `(${esc(gBy.join(', '))})` : ''}.` : ''}</p>
 
+    <div class="taste-row" role="group" aria-label="내 기록">
+      <button type="button" class="taste-btn ${tr?.d ? 'is-on' : ''}" data-action="taste-visit" data-id="${esc(p.id)}" aria-pressed="${tr?.d ? 'true' : 'false'}">${tr?.d ? '✓ 다녀왔어요' : '다녀왔어요'}</button>
+      <button type="button" class="taste-btn ${tr?.h ? 'is-on' : ''}" data-action="taste-hide" data-id="${esc(p.id)}" aria-pressed="${tr?.h ? 'true' : 'false'}">${tr?.h ? '숨김 해제' : '관심 없음'}</button>
+    </div>
+    ${tr?.d ? `<div class="taste-stars" role="group" aria-label="별점">
+      <span>어땠어요?</span>
+      ${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="star ${tr.r >= n ? 'is-on' : ''}" data-action="taste-rate" data-id="${esc(p.id)}" data-v="${n}" aria-label="${n}점">★</button>`).join('')}
+    </div>` : ''}
+    ${tr?.h ? '<p class="muted">관심 없음으로 숨긴 곳이에요. 추천 목록에는 나오지 않아요.</p>' : ''}
     <div class="sheet-actions">
       <a class="btn-primary" href="https://map.naver.com/p/search/${q}" target="_blank" rel="noopener noreferrer">네이버 지도에서 보기</a>
       <a class="btn-secondary" href="https://map.kakao.com/link/to/${q},${p.lat},${p.lng}" target="_blank" rel="noopener noreferrer">카카오맵 길찾기</a>
@@ -279,7 +288,7 @@ export function renderSheet(state, c) {
   let inner = '';
   if (s.type === 'place') {
     const row = c.rankedAll.find((r) => r.place.id === s.id);
-    if (row) inner = placeSheet(row, c.tripEvents, state.ui.gphotos?.[s.id]);
+    if (row) inner = placeSheet(row, c.tripEvents, state.ui.gphotos?.[s.id], state.ui.taste?.places?.[s.id]);
   } else if (s.type === 'event') {
     const ev = (c.eventsAll || [...c.tripEvents, ...c.upcoming]).find((e) => e.id === s.id);
     if (ev) inner = eventSheet(ev);

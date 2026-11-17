@@ -9,6 +9,7 @@ import { nearestLabel } from './core/locate.js';
 import { searchLocation } from './core/search.js';
 import { findShops, SHOP_KINDS } from './core/nearby.js';
 import { findGooglePhotos } from './core/gphotos.js';
+import { loadTaste, saveTaste, togglePref, recordView, setHidden, setVisited, setRating, clearHidden, makeTasteScorer } from './core/taste.js';
 import { photosOf } from './data/photos.js';
 import { isValidISO, todayISO } from './core/dates.js';
 import { tripRange, rangeText } from './ui/util.js';
@@ -27,6 +28,10 @@ import { mountMap, mountPicker, unmountMaps, resetMapView, fitMapAll, panPicker,
 
 const root = document.getElementById('app');
 const state = loadState();
+// 개인 취향·행동 데이터(C 항목): 새 키 eodigaji.taste.v1 에 따로 저장한다. 화면이 읽을 수 있게 state.ui 에 걸어 둔다(state.ui 는 폰에 저장되지 않는다).
+const taste = loadTaste();
+state.ui.taste = taste;
+const tasteScorer = () => makeTasteScorer(taste, PLACES, state.favs.filter((f) => f.type === 'place').map((f) => f.id));
 let EVENTS = getEvents();
 let liveUpdatedAt = null; // 실제 데이터를 모은 시각 (없으면 연습용 데이터)
 let installEvent = null; // 브라우저가 건네준 "설치 창 띄우기" 손잡이
@@ -50,10 +55,12 @@ function compute() {
   const upcoming = upcomingEvents(shownEvents, end, p.origin);
   // 상세 창·찜 목록이 행사를 찾을 때는 뺀 행사도 포함한다(예전에 찜했거나 직접 열 수 있게)
   const eventsAll = hideKids ? [...eventsForTrip(EVENTS, start, end, p.origin), ...upcomingEvents(EVENTS, end, p.origin)] : [...tripEvents, ...upcoming];
-  const ranked = rankPlaces(PLACES, p, tripEvents, state.ui.maxMin, state.ui.scope);
+  const scorer = tasteScorer();
+  const ranked = rankPlaces(PLACES, p, tripEvents, state.ui.maxMin, state.ui.scope, { taste: scorer });
   // 상세 창은 이동시간 필터와 상관없이 열 수 있어야 해서 전체 순위도 계산해 둔다.
   // 상세 창·찜 목록이 장소를 찾을 때 쓰는 전체 순위: 아이 전용 장소도 빼지 않는다(예전에 찜했거나 직접 열 수 있게)
-  const rankedAll = hasChild(p.members) && state.ui.maxMin >= 9999 && state.ui.scope === 'all' ? ranked : rankPlaces(PLACES, p, tripEvents, 9999, 'all', { hideKids: false });
+  // 상세 창은 숨긴 곳도 열 수 있어야 해서(hideHidden:false) 취향 보정이 있으면 전체 순위를 따로 계산한다.
+  const rankedAll = !scorer.active && hasChild(p.members) && state.ui.maxMin >= 9999 && state.ui.scope === 'all' ? ranked : rankPlaces(PLACES, p, tripEvents, 9999, 'all', { hideKids: false, taste: scorer, hideHidden: false });
   return { tripEvents, upcoming, eventsAll, ranked, rankedAll };
 }
 
@@ -388,6 +395,7 @@ root.addEventListener('click', (ev) => {
       update(() => { state.ui.evType = v; });
       break;
     case 'open-place':
+      recordView(taste, id); saveTaste(taste); // 조회 기록(C 항목)
       openSheet({ type: 'place', id });
       break;
     case 'open-event':
@@ -423,6 +431,26 @@ root.addEventListener('click', (ev) => {
       break;
     case 'fav-auto':
       update(() => { autoRoute(state, state.profile.origin); });
+      break;
+    case 'taste-pref':
+      togglePref(taste, v); saveTaste(taste);
+      update(() => {}, { persist: false });
+      break;
+    case 'taste-hide':
+      setHidden(taste, id, !taste.places[id]?.h); saveTaste(taste);
+      update(() => {}, { persist: false });
+      break;
+    case 'taste-visit':
+      setVisited(taste, id, !taste.places[id]?.d); saveTaste(taste);
+      update(() => {}, { persist: false });
+      break;
+    case 'taste-rate':
+      setRating(taste, id, Number(v)); saveTaste(taste);
+      update(() => {}, { persist: false });
+      break;
+    case 'taste-unhide-all':
+      clearHidden(taste); saveTaste(taste);
+      update(() => {}, { persist: false });
       break;
     case 'open-trend':
       openSheet({ type: 'trend' });
