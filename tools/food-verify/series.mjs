@@ -54,7 +54,7 @@ export async function collectSeries({ ch, yt, store, now, maxPages = 12, log = (
     page = j.nextPageToken || '';
     if (hitKnown || !page) break; // 이미 받은 영상을 만났으면 그 뒤는 옛 영상이므로 멈춘다
   }
-  const stale = Object.entries(known).filter(([, v]) => v.channelKey === ch.key && (now - v.fetchedAt > REFRESH_AFTER_DAYS * DAY || (v.sponsored && v.ruleV !== SPONSOR_RULE_V))).map(([id]) => id); // 판정 규칙이 바뀌었으면 제작지원 판정을 다시 확인한다
+  const stale = Object.entries(known).filter(([, v]) => v.channelKey === ch.key && (!v.pseudo && (now - v.fetchedAt > REFRESH_AFTER_DAYS * DAY || (v.sponsored && v.ruleV !== SPONSOR_RULE_V)))).map(([id]) => id); // 판정 규칙이 바뀌었으면 제작지원 판정을 다시 확인한다
   const ids = [...new Set([...wanted, ...stale])];
   for (let i = 0; i < ids.length; i += 50) {
     const batch = ids.slice(i, i + 50);

@@ -23,7 +23,7 @@ export const REFRESH_AFTER_DAYS = 25; // 30일 규칙보다 일찍 갱신한다
 const read = (p, d) => { try { return JSON.parse(readFileSync(p, 'utf8')); } catch { return d; } };
 const write = (p, v) => { mkdirSync(p.replace(/\/[^/]*$/, ''), { recursive: true }); writeFileSync(p, JSON.stringify(v, null, 1)); };
 
-export const DEFAULT_CONFIG = { collect: false, regionSearch: true, appEnabled: false, minChannels: 1, recentMonths: 12, searchesPerRun: 90, kakaoPerRun: 400, seriesMaxPages: 12, fetchReviews: false };
+export const DEFAULT_CONFIG = { collect: false, regionSearch: true, appEnabled: false, minChannels: 1, recentMonths: 12, searchesPerRun: 90, kakaoPerRun: 2500, seriesMaxPages: 12, fetchReviews: false };
 
 async function getJson(url, headers, http) {
   const r = await http(url, { headers });
@@ -58,10 +58,10 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
     let kakaoLeft = cfg.kakaoPerRun;
     const yt = (path, q) => getJson(`https://www.googleapis.com/youtube/v3/${path}?${new URLSearchParams({ ...q, key })}`, {}, http);
 
-    const kakaoSearch = async (query) => {
+    const kakaoSearch = async (query, code = 'FD6') => {
       if (kakaoLeft <= 0) return [];
       kakaoLeft--;
-      const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?${new URLSearchParams({ query, category_group_code: 'FD6', size: '15' })}`, { Authorization: `KakaoAK ${kakaoKey}` }, http).catch(() => ({ documents: [] }));
+      const j = await getJson(`https://dapi.kakao.com/v2/local/search/keyword.json?${new URLSearchParams({ query, category_group_code: code, size: '15' })}`, { Authorization: `KakaoAK ${kakaoKey}` }, http).catch(() => ({ documents: [] }));
       return j.documents || [];
     };
     const identify = async (item, region) => {
@@ -74,6 +74,11 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
         const more = await kakaoSearch(`${road} ${item.name}`);
         const seen = new Set(docs.map((d) => d.id));
         pick = pickPlace(item, [...docs, ...more.filter((d) => !seen.has(d.id))]);
+      }
+      if (pick.level === 'none') { // 음식점으로 안 나오면 카페로도 찾는다(방송에 나온 카페·빵집)
+        const cafe = await kakaoSearch([shortRegion(region), item.name].join(' '), 'CE7');
+        const p2 = pickPlace(item, cafe);
+        if (p2.level !== 'none') pick = p2;
       }
       return pick;
     };
@@ -153,6 +158,13 @@ export async function run({ env = process.env, http = fetch, now = Date.now(), d
       }
       const manualFile = read(`${data}manual-episodes.json`, { episodes: [] });
       const manual = Object.fromEntries((manualFile.episodes || []).filter((e) => e.videoId).map((e) => [e.videoId, e]));
+      // 영상이 수집되지 않은 옛 회차(ep:N)는 수기 입력만으로 처리할 수 있게 가짜 영상으로 등록한다(YouTube 갱신·삭제 대상이 아님).
+      const chSeries = channels.approved.find((c) => c.series && c.enabled !== false && c.id);
+      if (chSeries) for (const e of manualFile.episodes || []) {
+        if (!e.videoId || sv.videos[e.videoId] || !String(e.videoId).startsWith('ep:') || !(e.restaurants || []).length) continue;
+        sv.videos[e.videoId] = { id: e.videoId, pseudo: true, channelKey: chSeries.key, channelId: chSeries.id, title: `EP.${e.ep}`, description: '', publishedAt: e.publishedAt || '', fetchedAt: now, descHash: 'manual' };
+      }
+      for (const v of Object.values(sv.videos)) if (v.pseudo) v.fetchedAt = now; // 가짜 영상은 항상 최신으로 둔다
       const g = env.GOOGLE_PLACES_SERVER_KEY ? { key: env.GOOGLE_PLACES_SERVER_KEY, http, fetchReviews: cfg.fetchReviews } : null;
       const ps = await processSeries({ store: sv, ext, restaurants, regionKeys: regionList(root), now, identifyKakao: kakaoKey ? (it, ctx) => identify(it, ctx) : null, google: g, manual, log });
       log(`  시리즈 식당 추출: 영상 ${ps.processed}편 처리 · 식당 ${ps.items}곳(자동 연결 ${ps.linked} · 검수 ${ps.ambiguous + ps.none}) · 식당 못 뽑은 영상 ${ps.noItems}${g ? ' · 구글 업체 매칭 사용' : ' · 구글 서버 키 없음(카카오로만 매칭)'}`);
