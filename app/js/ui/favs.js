@@ -79,7 +79,10 @@ export function renderFavs(state, c) {
 
     <div class="row-between">
       <h2 class="h2">가는 순서 <span class="count">${favs.length}</span>곳</h2>
-      ${favs.length > 2 ? '<button type="button" class="btn-secondary sm" data-action="fav-auto">가까운 순으로 정리</button>' : ''}
+    </div>
+    <div class="fav-tools">
+        ${favs.length > 2 ? '<button type="button" class="btn-secondary sm" data-action="fav-auto">가까운 순으로 정리</button>' : ''}
+        <button type="button" class="btn-secondary sm" data-action="fav-clear">목록 비우기</button>
     </div>
     <p class="muted">${favs.length > 1 ? `순서대로 이으면 직선거리로 약 ${kmText(km)}예요. ` : ''}오른쪽 손잡이(≡)를 잡고 끌면 순서가 바뀌어요.</p>
     <ol class="fav-list" id="fav-list">
