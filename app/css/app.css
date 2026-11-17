@@ -579,3 +579,15 @@ svg { flex: none; }
   background: #f0326b; color: #fff; font-size: 11px; font-weight: 800; line-height: 1;
 }
 .tab.is-on .tab-count { position: static; }
+
+/* 정보 신뢰도 상자(출처·최근 확인·미확인 표시) */
+.trust { margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--bg); font-size: var(--fs-sm); color: var(--ink-2); }
+.trust.is-stale { background: #fff3d6; }
+.trust-head { display: flex; align-items: center; gap: 8px; color: var(--ink); }
+.trust-warn { padding: 1px 8px; border-radius: 999px; background: #ffd9a8; color: #7a3d00; font-size: var(--fs-xs); font-weight: 700; }
+.trust-line { margin: 4px 0 0; overflow-wrap: anywhere; }
+.trust-line b, .trust-est b { color: var(--ink); margin-right: 4px; }
+.trust-flags { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.trust-flags b { display: inline-block; padding: 0 6px; border-radius: 999px; font-size: var(--fs-xs); background: #d6f2de; color: #146c2e; }
+.trust-flags .is-unknown b { background: #ececf4; color: #5b6285; }
+.trust-est { margin: 6px 0 0; font-size: var(--fs-xs); }

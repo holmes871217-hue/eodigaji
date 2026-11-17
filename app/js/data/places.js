@@ -223,6 +223,7 @@ export function spotToPlace(s) {
   const row = [s.id, s.name, s.region, cat, s.lat, s.lng, lvl, peak, spread, fBias, kid, hasN && s.trend > 0 ? s.trend : 1.0, lvl, 40, 0];
   return {
     ...expand(row),
+    meta: s.m || null, // 출처·최초 발견일·최근 확인일·확인 여부(tools/stamp-meta.mjs)
     scale: 'small', local: true, spot: true, naver: hasN, kto: Boolean(s.kto), sample: false,
     sub: s.sub, kakaoUrl: s.url, overview: s.overview || '', std: Boolean(s.std), stdOverview: s.stdOverview || '',
     parking: s.parking || '', parkingFee: s.parkingFee || '',

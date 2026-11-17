@@ -42,6 +42,9 @@ jobs:
         continue-on-error: true # 빠져 있어도 게시는 계속하되, 실행 화면에 경고가 남는다
         run: node tools/check-coverage.mjs
 
+      - name: 장소 신뢰도 메타 기록 (출처·최초 발견일·최근 확인일·확인 여부)
+        run: node tools/stamp-meta.mjs
+
       - name: 사이트 점검 (깨진 파일 주소·맨 앞 슬래시 경로·서비스 워커 목록)
         run: node tools/check-site.mjs # 문제가 있으면 여기서 멈춰 게시하지 않는다
 
