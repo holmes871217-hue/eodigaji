@@ -101,9 +101,6 @@ export function renderHome(state, c) {
       ? '요즘 검색이 늘고 있는 곳을 먼저 추천해요.'
       : '많은 사람이 찾던 곳이지만 요즘 검색이 뜸해진 곳을 먼저 추천해요.'}</p>
 
-    <button type="button" class="trend-open" data-action="open-trend">🔥 전국 지역 트렌드 지도 보기</button>
-    <button type="button" class="trend-open" data-action="open-course">🗺 여행 코스 자동 만들기 (시간표)</button>
-
     <div class="row-between tight">
       <span class="label">어디까지 볼까요?</span>
     </div>

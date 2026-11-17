@@ -1,7 +1,7 @@
 // C 항목: 개인 취향 프로필과 행동 데이터(조회·찜·관심 없음·방문 완료·평가).
 // 저장: localStorage 의 새 키 "eodigaji.taste.v1" 하나. 기존 설정 키(eodigaji.v1)는 읽지도 쓰지도 않는다.
 // 원칙: 성별·나이로 취향을 단정하지 않는다. 사용자가 직접 고른 취향과 실제 행동만 쓴다.
-//   직접 고른 취향 → 취향에 맞는 장소 최대 +35%
+//   직접 고른 취향(함께 가는 사람마다 따로, 사람의 가중치로 평균) → 취향에 맞는 장소 최대 +35%
 //   행동(찜·좋은 평가·방문 → 그 분류에 대한 호감 / 관심 없음·나쁜 평가 → 비호감) → 분류별 ±25%
 //   관심 없음으로 숨긴 장소는 추천 목록에서 뺀다(마이 탭에서 되돌릴 수 있다)
 //   다녀온 장소는 같은 곳이 또 위에 오지 않게 조금 낮춘다(좋게 평가한 곳은 덜 낮춤)
@@ -42,7 +42,7 @@ export function tastesOf(place) {
   return [...set];
 }
 
-const empty = () => ({ prefs: [], places: {}, v: 1 });
+const empty = () => ({ prefs: [], mp: {}, places: {}, v: 1 }); // prefs: 예전 방식(전체 공통), mp: 함께 가는 사람(id)별 취향
 
 let storage = (typeof localStorage !== 'undefined' ? localStorage : null);
 export function _setStorage(s) { storage = s; } // 시험용
@@ -68,9 +68,17 @@ const trim = (t) => { // 기록이 끝없이 커지지 않게: 조회만 한 오
   for (const id of viewOnly.slice(0, ids.length - 600)) delete t.places[id];
 };
 
-export function togglePref(t, v) {
-  const i = t.prefs.indexOf(v);
-  if (i >= 0) t.prefs.splice(i, 1); else t.prefs.push(v);
+export function togglePref(t, v, memberId) {
+  const list = memberId ? ((t.mp ||= {})[memberId] ||= []) : t.prefs;
+  const i = list.indexOf(v);
+  if (i >= 0) list.splice(i, 1); else list.push(v);
+  if (memberId && !list.length) delete t.mp[memberId];
+}
+export const prefsOf = (t, memberId) => (memberId ? t.mp?.[memberId] : t.prefs) || [];
+/** 예전에 전체 공통으로 골라 둔 취향은 첫 번째 사람(나)의 취향으로 옮긴다. 옮겼으면 true */
+export function migratePrefs(t, firstMemberId) {
+  if (!t.prefs?.length || !firstMemberId || t.mp?.[firstMemberId]?.length) return false;
+  (t.mp ||= {})[firstMemberId] = t.prefs.slice(); t.prefs = []; return true;
 }
 export function recordView(t, id) { const r = rec(t, id); r.v = (r.v || 0) + 1; r.t = Date.now(); trim(t); }
 export function setHidden(t, id, on) { const r = rec(t, id); if (on) r.h = 1; else delete r.h; }
@@ -99,23 +107,32 @@ export function categoryAffinity(t, places, favIds = []) {
 }
 
 /** 추천 점수에 곱할 취향 보정기를 만든다. rankPlaces 의 opts.taste 로 넘긴다. */
-export function makeTasteScorer(t, places, favIds = []) {
+export function makeTasteScorer(t, places, favIds = [], members = []) {
   const aff = categoryAffinity(t, places, favIds);
-  const prefs = new Set(t.prefs);
+  // 사람마다 취향이 다르다: 사람별 보정값을 구해 가중치(1~5)로 평균낸다. 취향을 고르지 않은 사람은 1배(중립)로 센다.
+  const groups = members.length ? members.map((m) => ({ w: Math.max(1, m.weight || 1), set: new Set(t.mp?.[m.id] || []) })) : [{ w: 1, set: new Set(t.prefs) }];
+  const anyPref = groups.some((g) => g.set.size) || (members.length > 0 && t.prefs.length > 0);
+  if (members.length && t.prefs.length) groups.push({ w: 1, set: new Set(t.prefs) }); // 아직 옮기지 않은 예전 공통 취향
+  const wsum = groups.reduce((a, g) => a + g.w, 0);
+  const one = (set, mine) => { // 취향 하나 묶음에 대한 배수
+    if (!set.size) return 1;
+    if (!mine.length) return 0.97;
+    const hit = mine.filter((k) => set.has(k)).length;
+    return 1 + (hit >= 2 ? 0.35 : hit === 1 ? 0.25 : 0); // 고른 취향 1개에 맞으면 +25%, 2개 이상 +35%
+  };
   return {
     hidden: (p) => Boolean(t.places[p.id]?.h),
     factor(p) {
       let f = 1;
-      if (prefs.size) {
+      if (anyPref) {
         const mine = tastesOf(p);
-        if (mine.length) { const hit = mine.filter((k) => prefs.has(k)).length; f *= 1 + (hit >= 2 ? 0.35 : hit === 1 ? 0.25 : 0); } // 고른 취향 1개에 맞으면 +25%, 2개 이상 +35%
-        else f *= 0.97;
+        f *= groups.reduce((a, g) => a + g.w * one(g.set, mine), 0) / wsum;
       }
       if (aff[p.cat]) f *= 1 + 0.25 * aff[p.cat];
       const r = t.places[p.id];
       if (r?.d) f *= r.r >= 4 ? 0.9 : r.r && r.r <= 2 ? 0.5 : 0.8; // 다녀온 곳은 조금 낮춤(좋게 평가했으면 덜), 나쁘게 평가했으면 크게
       return f;
     },
-    active: prefs.size > 0 || Object.keys(aff).length > 0 || Object.values(t.places).some((r) => r.h || r.d),
+    active: anyPref || Object.keys(aff).length > 0 || Object.values(t.places).some((r) => r.h || r.d),
   };
 }

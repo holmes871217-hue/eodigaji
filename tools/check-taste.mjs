@@ -44,6 +44,16 @@ const mem = () => { const d = {}; return { getItem: (k) => (k in d ? d[k] : null
   const tg = { prefs: [], places: { nat: { d: '2026-11-01', r: 5 } }, v: 1 };
   const tb = { prefs: [], places: { nat: { d: '2026-11-01', r: 1 } }, v: 1 };
   ok(raw(T.makeTasteScorer(tg, [a, b])).nat > raw(T.makeTasteScorer(tb, [a, b])).nat, '좋게 평가한 곳이 나쁘게 평가한 곳보다 높아야 해요');
+  // 사람별 취향: 가중치가 큰 사람의 취향이 더 반영되고, 취향을 안 고른 사람은 중립이어야 한다
+  const two = [{ id: 'm', weight: 1 }, { id: 'k', weight: 1 }];
+  const tm = { prefs: [], mp: { m: ['nature'] }, places: {}, v: 1 };
+  const f1 = T.makeTasteScorer(tm, [a, b], [], two).factor(a);
+  ok(f1 > 1 && f1 < 1.25, '한 사람만 취향을 골랐으면 그 효과가 평균으로 줄어야 해요(' + f1 + ')');
+  const heavy = T.makeTasteScorer(tm, [a, b], [], [{ id: 'm', weight: 5 }, { id: 'k', weight: 1 }]).factor(a);
+  ok(heavy > f1, '가중치가 큰 사람의 취향이 더 반영돼야 해요');
+  ok(T.makeTasteScorer(tm, [a, b], [], [{ id: 'z', weight: 1 }]).factor(a) === 1, '취향이 없는 사람만 있으면 점수가 그대로여야 해요');
+  const mig = { prefs: ['nature'], mp: {}, places: {}, v: 1 };
+  ok(T.migratePrefs(mig, 'm') && mig.mp.m[0] === 'nature' && !mig.prefs.length, '예전 공통 취향은 첫 사람에게 옮겨져야 해요');
   const aff = T.categoryAffinity({ prefs: [], places: { nat: { r: 5, d: 'x' } }, v: 1 }, [a, b], ['nat']);
   ok(aff.nature > 0 && aff.shop === undefined, '찜·좋은 평가는 그 분류의 호감을 올려야 해요');
 }
