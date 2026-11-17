@@ -96,7 +96,8 @@ async function googleNearby(place, kind, radius, key) {
  * 1km 멀어질 때마다 0.15점씩 깎는다.
  */
 export function pickBest(rows) {
-  const score = (r) => (r.rating == null ? 0 : (r.rating * r.reviews + 4.0 * 20) / (r.reviews + 20)) - 0.15 * r.km + (r.br ? 2 : 0); // 블루리본 선정은 평점보다 우선
+  // 평점(보통 점수) 2배 + 리뷰가 많을수록 가산(리뷰 1000개 ≈ +0.75) − 멀수록 감점(1km당 0.15) + 블루리본 선정 보너스(+4)
+  const score = (r) => (r.rating == null ? 0 : 2 * ((r.rating * r.reviews + 4.0 * 20) / (r.reviews + 20)) + 0.25 * Math.log10(1 + r.reviews)) - 0.15 * r.km + (r.br ? 4 : 0);
   return rows.slice().sort((a, b) => score(b) - score(a)).slice(0, 5);
 }
 
