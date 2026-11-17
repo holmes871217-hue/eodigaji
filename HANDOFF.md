@@ -153,3 +153,8 @@ git push origin "$(git subtree split --prefix app origin/main)":refs/heads/gh-pa
 - **D 코스 생성**: `app/js/core/course.js`, 화면 `ui/course.js`(추천·찜 탭 버튼). 영업시간·휴무일은 앱에 자료가 없어 전부 "미확인", 체류시간·대중교통 시간은 "추정". 점검 `tools/check-course.mjs`.
 - **외부 API**: `tools/adapters/*`(YouTube·Google Trends·Foursquare·Tripadvisor 모두 `unapproved`, TikTok 제외), 실행기 `tools/run-adapters.mjs`, 점검 `tools/check-adapters.mjs`. 사용자 승인 전에는 호출·저장·표시하지 않는다.
 - 자동 실행(collect.yml·discover.yml) 순서: 수집 → stamp-meta → classify-hot → region-trends → run-adapters → check-site → check-dupes → check-taste·check-course·check-adapters → check-scoring → 게시.
+
+## 운영자 지시 원칙 (2026-11-17, 반드시 지킬 것)
+- 막히는 일이 생기면 "못 한다"로 시작하지 말고, **할 수 있는 합법적 방법을 먼저 찾아 보고**한다(공식 제공 경로, 제휴·허가 요청, 대체 데이터, 약관 안에서 가능한 기능 먼저 구현 등).
+- 제약(약관·법)은 방법을 고르는 조건으로만 짧게 알리고, 거부의 근거로 앞세우지 않는다. 운영자는 법을 어기라고 한 적이 없다.
+- 보고는 "가능한 방법 → 지금 만든 것 → 필요한 것" 순서로, 짧고 존중하는 말투로 한다.
