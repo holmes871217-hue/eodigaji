@@ -124,6 +124,7 @@ export function matchScore(cand, place) {
   const cityEq = Boolean(!sg && bigCity && String(place.address_name || '').startsWith(bigCity) && a.length >= 4); // 광역시만 알 때는 4자 이상 이름만(후보가 하나일 때 pickPlace 가 인정)
   let level = 'none';
   if (nameEq && (phoneEq || idEq || roadEq || dongEq || sigunEq || cityEq)) level = 'linked'; // sigunEq: 영상이 소개한 지역(시·군·구)과 업체 주소가 같음. 같은 이름 지점이 그 지역에 둘 이상이면 pickPlace 가 모호로 돌린다
+  else if (nameLike && (phoneEq || roadEq)) level = 'linked'; // 상호가 조금 다르게 등록돼 있어도(되뫼골부대찌개 → 되뫼골부대찌개닭갈비) 도로명 주소·전화가 같으면 같은 가게
   else if (idEq && (nameEq || nameLike)) level = 'linked';
   else if (nameEq || nameLike || (idEq)) level = 'ambiguous';
   return { level, nameEq, nameLike, phoneEq, idEq, roadEq, dongEq, sigunEq };
