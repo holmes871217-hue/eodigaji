@@ -23,6 +23,7 @@ import { renderMy } from './ui/mypage.js';
 import { renderSheet } from './ui/sheet.js';
 import { mountRoute } from './ui/map.js';
 import { mountTrendMap } from './ui/map.js';
+import { buildCourse } from './core/course.js';
 import { getRegions } from './data/regions.js';
 import { mountMap, mountPicker, unmountMaps, resetMapView, fitMapAll, panPicker, mapWidthKm } from './ui/map.js';
 
@@ -31,6 +32,7 @@ const state = loadState();
 // 개인 취향·행동 데이터(C 항목): 새 키 eodigaji.taste.v1 에 따로 저장한다. 화면이 읽을 수 있게 state.ui 에 걸어 둔다(state.ui 는 폰에 저장되지 않는다).
 const taste = loadTaste();
 state.ui.taste = taste;
+state.ui.course = { start: '09:00', end: '18:00', mode: 'car', result: null }; // 코스 만들기 입력과 결과(저장하지 않음)
 const tasteScorer = () => makeTasteScorer(taste, PLACES, state.favs.filter((f) => f.type === 'place').map((f) => f.id));
 let EVENTS = getEvents();
 let liveUpdatedAt = null; // 실제 데이터를 모은 시각 (없으면 연습용 데이터)
@@ -112,6 +114,12 @@ function render() {
         onPick: (id) => openSheet({ type: 'place', id }),
       });
     }
+  }
+
+  if (state.ui.sheet?.type === 'course' && state.ui.course.result?.ok) {
+    const el = document.getElementById('course-map');
+    const pts = state.ui.course.result.items.filter((i) => i.type === 'visit').map((i) => ({ lat: i.place.lat, lng: i.place.lng, name: i.place.name }));
+    if (el) mountRoute(el, { origin: state.profile.origin, points: pts, key: 'course' });
   }
 
   if (state.ui.sheet?.type === 'trend') {
@@ -432,6 +440,47 @@ root.addEventListener('click', (ev) => {
     case 'fav-auto':
       update(() => { autoRoute(state, state.profile.origin); });
       break;
+    case 'open-course':
+      state.ui.course.result = null;
+      openSheet({ type: 'course' });
+      break;
+    case 'course-mode':
+      state.ui.course.mode = v === 'transit' ? 'transit' : 'car';
+      state.ui.course.result = null;
+      update(() => {}, { persist: false });
+      break;
+    case 'course-make': {
+      const cs = state.ui.course;
+      const c = compute();
+      const placeById = new Map(PLACES.map((pl) => [pl.id, pl]));
+      const favPlaces = state.favs.filter((f) => f.type === 'place').map((f) => placeById.get(f.id)).filter(Boolean);
+      const favIds = new Set(favPlaces.map((pl) => pl.id));
+      // 찜한 곳을 먼저, 그다음 추천 상위(이동시간 한도 안, 가족·취향이 반영된 순서) 15곳
+      const candidates = [
+        ...favPlaces.map((place) => ({ place, score: 1e9, fav: true })),
+        ...c.ranked.filter((r) => !favIds.has(r.place.id)).slice(0, 15).map((r) => ({ place: r.place, score: r.raw })),
+      ];
+      cs.result = buildCourse({ origin: state.profile.origin, date: state.profile.date, start: cs.start, end: cs.end, mode: cs.mode, candidates });
+      update(() => {}, { persist: false });
+      break;
+    }
+    case 'course-save': {
+      const cs = state.ui.course;
+      const visits = (cs.result?.items || []).filter((i) => i.type === 'visit').map((i) => i.place);
+      if (!visits.length) break;
+      const keep = state.favs.filter((f) => !(f.type === 'place' && visits.some((p) => p.id === f.id)));
+      const placed = visits.map((p) => {
+        const old = state.favs.find((f) => f.type === 'place' && f.id === p.id);
+        return old || { key: favKey('place', p.id), type: 'place', id: p.id, ...favSnapshot('place', p.id) };
+      });
+      if (placed.length + keep.length > FAV_MAX) { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 찜 탭에서 몇 곳을 빼 주세요.`); break; }
+      state.favs = [...placed, ...keep]; // 코스 순서대로 맨 위에, 나머지 찜은 그 아래에 그대로 둔다
+      saveState(state);
+      sheets = [];
+      try { history.replaceState(null, ''); } catch (e) { /* 무시 */ }
+      update(() => { syncSheets(); state.ui.tab = 'favs'; });
+      break;
+    }
     case 'taste-pref':
       togglePref(taste, v); saveTaste(taste);
       update(() => {}, { persist: false });
@@ -550,6 +599,10 @@ root.addEventListener('change', (ev) => {
     update(() => {
       if (isValidISO(el.value) && el.value >= todayISO()) state.profile.date = el.value;
     });
+  } else if (field === 'course-start' || field === 'course-end') {
+    state.ui.course[field === 'course-start' ? 'start' : 'end'] = el.value;
+    state.ui.course.result = null;
+    update(() => {}, { persist: false });
   } else if (field === 'jump') {
     // 지도만 그 지역으로 옮긴다(검색 위치는 "이 위치로 정하기"를 눌러야 바뀜).
     const city = CITIES.find((c) => c.name === el.value);

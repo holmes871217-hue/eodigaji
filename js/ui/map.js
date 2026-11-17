@@ -63,9 +63,11 @@ function destroy(map) {
 }
 
 let trendMap = null;
+let courseMap = null;
 
 export function unmountMaps() {
   if (trendMap) { destroy(trendMap); trendMap = null; }
+  if (courseMap) { destroy(courseMap); courseMap = null; }
   if (homeMap) { destroy(homeMap.map); homeMap = null; }
   // 지도를 없앨 때 나오는 마지막 "움직임" 신호가 새로 정한 위치를 옛 핀 위치로 덮어쓰지 않게, 먼저 신호 연결을 끊는다.
   if (pickMap) { pickMap.off(); destroy(pickMap); pickMap = null; pickMarker = null; }
@@ -168,7 +170,7 @@ export function panPicker(lat, lng) {
 }
 
 /** 찜 지도: 검색 위치 + 찜한 곳을 번호 핀으로 찍고, 가는 순서대로 선을 잇는다. */
-export async function mountRoute(el, { origin, points }) {
+export async function mountRoute(el, { origin, points, key = 'fav' }) {
   try {
     await loadLeaflet();
   } catch (e) {
@@ -179,7 +181,7 @@ export async function mountRoute(el, { origin, points }) {
 
   const L = window.L;
   const map = baseMap(el);
-  favMap = map;
+  if (key === 'course') { if (courseMap) destroy(courseMap); courseMap = map; } else { favMap = map; }
 
   L.marker([origin.lat, origin.lng], {
     icon: L.divIcon({ className: '', html: '<span class="pin pin-me">검색 위치</span>', iconSize: [64, 28], iconAnchor: [32, 14] }),
