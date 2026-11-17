@@ -1,117 +1,204 @@
 {
- "_설명": "관리자가 영상을 보고 restaurants 를 채운다. role: winner|final|visited|mentioned. 예: { \"name\": \"부광족발\", \"role\": \"winner\" }",
+ "_설명": "관리자(또는 Claude)가 공개 자료로 채운 회차별 식당. role: winner|final|visited|mentioned. regionKey: 매칭에 쓰는 지역(시도 시군구). 출처는 각 식당의 src.",
  "episodes": [
   {
    "videoId": "yCQxgkJXI5E",
    "ep": 112,
    "publishedAt": "2026-11-06",
    "region": "신당",
-   "restaurants": []
+   "restaurants": [],
+   "note": "또갈집 선정 보류(최종 선정 식당 없음)"
   },
   {
    "videoId": "Z6cPZiosZEo",
    "ep": 111,
    "publishedAt": "2026-10-23",
    "region": "익산",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "용수촌",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "전북 익산시"
   },
   {
    "videoId": "jSiLx_Ahh_s",
    "ep": 110,
    "publishedAt": "2026-10-09",
    "region": "정읍",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "아들딸사랑한다",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "전북 정읍시"
   },
   {
    "videoId": "mVOW2N97Usk",
    "ep": 109,
    "publishedAt": "2026-09-18",
    "region": "구리",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "밀향기",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "경기 구리시"
   },
   {
    "videoId": "pSjLqki_oJ8",
    "ep": 108,
    "publishedAt": "2026-09-04",
    "region": "부산",
-   "restaurants": []
+   "restaurants": [],
+   "note": "또갈집 선정 보류(최종 선정 식당 없음)"
   },
   {
    "videoId": "m9u4_9Uau8g",
    "ep": 107,
    "publishedAt": "2026-08-21",
    "region": "부산",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "주문진 막국수",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "부산"
   },
   {
    "videoId": "BE1CT-3362Y",
    "ep": 106,
    "publishedAt": "2026-08-07",
    "region": "세종",
-   "restaurants": []
+   "restaurants": [],
+   "note": "또갈집 선정 보류(최종 선정 식당 없음)"
   },
   {
    "videoId": "nxukV1yfvCA",
    "ep": 105,
    "publishedAt": "2026-07-24",
    "region": "영월",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "박가네",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "강원 영월군"
   },
   {
    "videoId": "7vqYRXkPyTQ",
    "ep": 104,
    "publishedAt": "2026-07-10",
    "region": "이천",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "경림수산",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "경기 이천시"
   },
   {
    "videoId": "9LdSGv5wHec",
    "ep": 103,
    "publishedAt": "2026-06-19",
    "region": "논산",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "다락가든",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "충남 논산시"
   },
   {
    "videoId": "-vsNkVIRvt0",
    "ep": 102,
    "publishedAt": "2026-06-05",
    "region": "공주",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "북경탕수육",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "충남 공주시"
   },
   {
    "videoId": "Uf8V4EvPKWk",
    "ep": 101,
    "publishedAt": "2026-05-22",
    "region": "진주",
-   "restaurants": []
+   "restaurants": [],
+   "note": "또갈집 선정 보류(최종 선정 식당 없음)"
   },
   {
    "videoId": "1HExH6cy5BQ",
    "ep": 100,
    "publishedAt": "2026-05-08",
    "region": "복불복",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "천성삼거리장어구이",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ]
   },
   {
    "videoId": "Ppt-Dr0QT_o",
    "ep": 99,
    "publishedAt": "2026-04-24",
    "region": "울산",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "갓포이찌",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "울산"
   },
   {
    "videoId": "mNjTXSfQXnE",
    "ep": 98,
    "publishedAt": "2026-04-10",
    "region": "김해",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "부엌",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "경남 김해시"
   },
   {
    "videoId": "-rdQxOZgQCE",
    "ep": 97,
    "publishedAt": "2026-03-27",
    "region": "경기",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "예돈돈까스",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "경기 성남시"
   },
   {
    "videoId": "6a4GfDj_SYw",
@@ -125,70 +212,128 @@
    "ep": 96,
    "publishedAt": "2026-03-13",
    "region": "서울",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "원조이모네연탄불곱창",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "서울 노원구"
   },
   {
    "videoId": "2WLWFZ81k6E",
    "ep": 95,
    "publishedAt": "2026-02-27",
    "region": "강원도",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "동송칡냉면",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "강원 철원군"
   },
   {
    "videoId": "vAKeY1t_bLI",
    "ep": 94,
    "publishedAt": "2026-02-06",
    "region": "상암",
-   "restaurants": []
+   "restaurants": [],
+   "note": "또갈집 선정 보류(최종 선정 식당 없음)"
   },
   {
    "videoId": "5tV8wKaUxSA",
    "ep": 93,
    "publishedAt": "2026-01-23",
    "region": "광주",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "진수식당",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "광주 서구"
   },
   {
    "videoId": "Z-zG-6rynP8",
    "ep": 92,
    "publishedAt": "2026-01-09",
    "region": "해남맛집",
-   "restaurants": []
+   "restaurants": [],
+   "note": "또갈집 선정 보류(최종 선정 식당 없음)"
   },
   {
    "videoId": "fvD36nHVbhs",
    "ep": 91,
    "publishedAt": "2025-12-19",
    "region": "",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "정각",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "서울 마포구"
   },
   {
    "videoId": "4cCrjwgi54w",
    "ep": 90,
    "publishedAt": "2025-12-05",
    "region": "",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "미락식당",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "경기 안산시"
   },
   {
    "videoId": "rqmIz5TAhwY",
    "ep": 89,
    "publishedAt": "2025-11-21",
    "region": "",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "뚱이네포차",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "충남 서산시"
   },
   {
    "videoId": "qqNFLhkYh04",
    "ep": 88,
    "publishedAt": "2025-11-07",
    "region": "",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "오리촌",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "경기 남양주시"
   },
   {
    "videoId": "vbBYnmELwqk",
    "ep": 87,
    "publishedAt": "2025-10-24",
    "region": "",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "사직로서울",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "서울 종로구"
   },
   {
    "videoId": "y4rM8vnYsZc",
@@ -202,7 +347,14 @@
    "ep": 86,
    "publishedAt": "2025-10-10",
    "region": "",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "막내회집",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "서울 중구"
   },
   {
    "videoId": "qM4IliSpcrE",
@@ -216,7 +368,14 @@
    "ep": 85,
    "publishedAt": "2025-09-19",
    "region": "",
-   "restaurants": []
+   "restaurants": [
+    {
+     "name": "호성식당",
+     "role": "winner",
+     "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    }
+   ],
+   "regionKey": "경기 평택시"
   }
  ]
 }

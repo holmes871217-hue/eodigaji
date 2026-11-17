@@ -114,9 +114,14 @@ export function matchScore(cand, place) {
   const roadEq = road && pRoad && road === pRoad;
   const dong = dongOf(cand.addr);
   const dongEq = dong && (String(place.address_name || '').includes(dong) || String(place.road_address_name || '').includes(dong));
-  const sigunEq = sigunOf(cand.addr) && String(place.address_name || '').includes(sigunOf(cand.addr));
+  const sg = sigunOf(cand.addr);
+  const pre = (String(cand.addr).match(/([가-힣]{2,})\s+[가-힣]+[시군구](?:\s|$)/) || [])[1] || ''; // "광주 서구"의 "광주": 같은 이름의 구·시가 다른 도시에도 있어서 함께 맞아야 한다
+  const addrAll = `${place.address_name || ''} ${place.road_address_name || ''}`;
+  const sigunEq = Boolean(sg && addrAll.includes(sg) && (!pre || addrAll.includes(pre)));
+  const bigCity = (String(cand.addr).trim().match(/^(서울|부산|대구|인천|광주|대전|울산|세종)(?=\s|$)/) || [])[1];
+  const cityEq = Boolean(!sg && bigCity && String(place.address_name || '').startsWith(bigCity) && a.length >= 4); // 광역시만 알 때는 4자 이상 이름만(후보가 하나일 때 pickPlace 가 인정)
   let level = 'none';
-  if (nameEq && (phoneEq || idEq || roadEq || dongEq || sigunEq)) level = 'linked'; // sigunEq: 영상이 소개한 지역(시·군·구)과 업체 주소가 같음. 같은 이름 지점이 그 지역에 둘 이상이면 pickPlace 가 모호로 돌린다
+  if (nameEq && (phoneEq || idEq || roadEq || dongEq || sigunEq || cityEq)) level = 'linked'; // sigunEq: 영상이 소개한 지역(시·군·구)과 업체 주소가 같음. 같은 이름 지점이 그 지역에 둘 이상이면 pickPlace 가 모호로 돌린다
   else if (idEq && (nameEq || nameLike)) level = 'linked';
   else if (nameEq || nameLike || (idEq)) level = 'ambiguous';
   return { level, nameEq, nameLike, phoneEq, idEq, roadEq, dongEq, sigunEq };

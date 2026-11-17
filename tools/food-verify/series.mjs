@@ -119,8 +119,8 @@ export async function processSeries({ store, ext, restaurants, regionKeys, now, 
     const man = manual[v.id]; // 관리자가 영상을 보고 적은 식당(설명에 식당명이 없는 시리즈용)
     const sig = hash(v.descHash + JSON.stringify(man || null));
     if (ext[v.id]?.descHash === sig) continue; // 변경 없음 → 반복 처리하지 않는다
-    const ctx = regionContext(v, regionKeys) || man?.region || '';
-    const ex = man?.restaurants?.length ? { items: man.restaurants.filter((r) => r.name).map((r) => ({ name: String(r.name).trim(), role: ROLE_RANK[r.role] ? r.role : 'visited', cue: 'manual', addr: r.addr || '', phone: r.phone || '', hint: '' })) } : extractSeries(v.description, ctx);
+    const ctx = man?.regionKey || regionContext(v, regionKeys) || '';
+    const ex = man?.restaurants?.length ? { items: man.restaurants.filter((r) => r.name).map((r) => ({ name: String(r.name).trim(), role: ROLE_RANK[r.role] ? r.role : 'visited', cue: 'manual', addr: r.addr || '', phone: r.phone || '', hint: '', src: r.src || '' })) } : extractSeries(v.description, ctx);
     out.processed++;
     const items = [];
     for (const it of ex.items) {
