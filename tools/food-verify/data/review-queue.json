@@ -1,34 +1,10 @@
 [
  {
   "kind": "series",
-  "videoId": "-rdQxOZgQCE",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "예돈돈까스",
-  "role": "winner",
-  "why": "MULTI_BRANCH"
- },
- {
-  "kind": "series",
-  "videoId": "5tV8wKaUxSA",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "진수식당",
-  "role": "winner",
-  "why": "NO_MATCH"
- },
- {
-  "kind": "series",
   "videoId": "fvD36nHVbhs",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "정각",
   "role": "winner",
   "why": "NO_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "4cCrjwgi54w",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "미락식당",
-  "role": "winner",
-  "why": "MULTI_BRANCH"
  }
 ]
