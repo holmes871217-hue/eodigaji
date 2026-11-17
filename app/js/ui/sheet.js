@@ -5,6 +5,7 @@ import { EVENT_TYPES } from '../data/events.js';
 import { KIND_LABEL, crowdLabel, trendPct, nearbyEvents } from '../core/scoring.js';
 import { trustBox } from './trust.js';
 import { trendSheet } from './trendmap.js';
+import { courseSheet } from './course.js';
 import { formatMin, tripLabel } from '../core/geo.js';
 import { memberLabel } from '../core/segments.js';
 import { SHOP_KINDS } from '../core/nearby.js';
@@ -294,6 +295,8 @@ export function renderSheet(state, c) {
     if (ev) inner = eventSheet(ev);
   } else if (s.type === 'trend') {
     inner = trendSheet();
+  } else if (s.type === 'course') {
+    inner = courseSheet(state);
   } else if (s.type === 'shops' && SHOP_KINDS[s.kind]) {
     const row = c.rankedAll.find((r) => r.place.id === s.id);
     if (row) inner = shopsSheet(row.place, s.kind, state.ui.shops?.[`${s.id}|${s.kind}`], favSet(state));

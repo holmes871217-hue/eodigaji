@@ -58,6 +58,7 @@ export function renderFavs(state, c) {
     <div class="headline fav-head">
       <h1>찜한 곳 동선</h1>
     </div>
+    <button type="button" class="trend-open" data-action="open-course">🗺 코스 자동 만들기 (시간표)</button>
     <div class="map-wrap">
       <div id="fav-map" class="map map-fav" role="application" aria-label="찜한 곳 지도. 번호는 가는 순서예요"></div>
     </div>

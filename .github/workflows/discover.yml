@@ -64,6 +64,9 @@ jobs:
       - name: 개인 취향·행동 규칙 점검 (새 저장 키만 쓰는지, 숨김·평가 반영)
         run: node tools/check-taste.mjs
 
+      - name: 여행 코스 생성 규칙 점검 (시간 안·겹침 없음·영업시간 지어내지 않음)
+        run: node tools/check-course.mjs
+
       - name: 추천 점수 규칙 점검
         run: node tools/check-scoring.mjs
 
