@@ -19,6 +19,9 @@ for (const w of ['본 영상은 OO의 제작지원을 받아', '업체로부터 
 ok(!L.isSponsored({ snippet: { title: '수원 갈비 맛집', description: '내돈내산입니다. 광고 아님, 협찬 없음' } }).yes, '"광고 아님·협찬 없음" 같은 부정 표현은 제외하면 안 돼요');
 ok(!L.isSponsored({ snippet: { title: '수원 갈비 맛집', description: '📍 맛있는집 : 경기 수원시 팔달구 행궁로 12' }, paidProductPlacementDetails: { hasPaidProductPlacement: false } }).yes, '평범한 영상은 제외하면 안 돼요');
 
+ok(!L.isSponsored({ snippet: { title: '또간집 EP.1', description: '[ 또간집 선서 ]\n✋🏻맛집 광고✋🏻 ✋🏻맛집 협찬✋🏻 ✋🏻맛집 비즈니스✋🏻 안 받겠습니다. 하지만.. 풍자가 쫌..\n00:00 오프닝' } }).yes, '"광고·협찬 안 받겠습니다"(또간집 선서)는 협찬 표시가 아니에요(실제 데이터에서 31편이 잘못 걸렸음)');
+ok(L.isSponsored({ snippet: { title: '또간집', description: '[ 또간집 선서 ]\n맛집 광고 안 받겠습니다\n\n본 영상은 OO의 제작지원을 받아 제작되었습니다' } }).yes, '선서 줄이 있어도 별도의 제작지원 문구가 있으면 제외해야 해요');
+
 // 2) 정보란 추출
 const desc = [
   '오늘은 수원 갈비 맛집!', '',

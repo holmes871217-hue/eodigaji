@@ -7,7 +7,7 @@
 //   extractions.json    영상별 식당 추출 결과(역할 포함)와 업체 매칭 결과
 //   restaurants.json    실제 업체 정보(식별자·좌표·확인일). 구글 업체의 이름·주소는 약관상 저장하지 않는다
 import { createHash } from 'node:crypto';
-import { extractSeries, isSponsored, pickPlace, normName } from './lib.mjs';
+import { extractSeries, isSponsored, pickPlace, normName, SPONSOR_RULE_V } from './lib.mjs';
 
 const DAY = 86400000;
 export const REFRESH_AFTER_DAYS = 25;
@@ -54,7 +54,7 @@ export async function collectSeries({ ch, yt, store, now, maxPages = 12, log = (
     page = j.nextPageToken || '';
     if (hitKnown || !page) break; // 이미 받은 영상을 만났으면 그 뒤는 옛 영상이므로 멈춘다
   }
-  const stale = Object.entries(known).filter(([, v]) => v.channelKey === ch.key && (now - v.fetchedAt > REFRESH_AFTER_DAYS * DAY || (v.sponsored && !v.ctx))).map(([id]) => id); // 점검 정보(ctx)가 없는 제작지원 판정은 한 번 다시 받는다
+  const stale = Object.entries(known).filter(([, v]) => v.channelKey === ch.key && (now - v.fetchedAt > REFRESH_AFTER_DAYS * DAY || (v.sponsored && v.ruleV !== SPONSOR_RULE_V))).map(([id]) => id); // 판정 규칙이 바뀌었으면 제작지원 판정을 다시 확인한다
   const ids = [...new Set([...wanted, ...stale])];
   for (let i = 0; i < ids.length; i += 50) {
     const batch = ids.slice(i, i + 50);
@@ -65,7 +65,7 @@ export async function collectSeries({ ch, yt, store, now, maxPages = 12, log = (
       const isNew = !known[id];
       if (!v) { if (!isNew) { delete known[id]; out.removed++; } continue; } // 삭제·비공개 영상은 지운다
       const sp = isSponsored(v);
-      if (sp.yes) { known[id] = { id, channelKey: ch.key, channelId: v.snippet?.channelId || info.id, sponsored: true, why: sp.why, ctx: sp.ctx || (v.paidProductPlacementDetails?.hasPaidProductPlacement ? '(유료 광고 표시 플래그)' : ''), title: v.snippet?.title || '', publishedAt: v.snippet?.publishedAt || '', fetchedAt: now }; out.sponsored++; continue; } // 제작지원은 설명도 저장하지 않는다
+      if (sp.yes) { known[id] = { id, channelKey: ch.key, channelId: v.snippet?.channelId || info.id, sponsored: true, ruleV: SPONSOR_RULE_V, why: sp.why, ctx: sp.ctx || (v.paidProductPlacementDetails?.hasPaidProductPlacement ? '(유료 광고 표시 플래그)' : ''), title: v.snippet?.title || '', publishedAt: v.snippet?.publishedAt || '', fetchedAt: now }; out.sponsored++; continue; } // 제작지원은 설명도 저장하지 않는다
       const rec = {
         id, channelKey: ch.key, url: `https://www.youtube.com/watch?v=${id}`, title: v.snippet?.title || '', channelId: v.snippet?.channelId || info.id, channelTitle: v.snippet?.channelTitle || info.title,
         publishedAt: v.snippet?.publishedAt || '', description: v.snippet?.description || '',
