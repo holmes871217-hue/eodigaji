@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import * as L from './food-verify/lib.mjs';
 import { run } from './food-verify/run.mjs';
+import { buildSkeleton } from './food-verify/manual-skeleton.mjs';
 import * as N from '../app/js/core/nearby.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -202,7 +203,6 @@ ok(!N.sameEligible({ name: '맛있는집', lat: 37.3, lng: 127.0 }, { n: '맛있
     const last = u.pathname.split('/').pop();
     if (u.hostname === 'www.googleapis.com') bump(last);
     if (last === 'channels') return j({ items: [{ id: 'UC_SUZE', snippet: { title: over.channelTitle || '스튜디오 수제' }, contentDetails: { relatedPlaylists: { uploads: 'UU_SUZE' } } }] });
-    if (last === 'commentThreads') return j({ items: [] });
     if (last === 'playlistItems') return j({ items: Object.entries(vids).reverse().map(([id, v]) => ({ snippet: { title: v.title, resourceId: { videoId: id } } })) });
     if (last === 'videos') { const ids = u.searchParams.get('id').split(','); return j({ items: ids.map((id) => vids[id] && ({ id, snippet: { channelId: 'UC_SUZE', channelTitle: '스튜디오 수제', title: vids[id].title, description: vids[id].desc, publishedAt: vids[id].date }, statistics: { viewCount: '1234567', ...(over.noLikes ? {} : { likeCount: '4321' }) }, ...(vids[id].ppp ? { paidProductPlacementDetails: { hasPaidProductPlacement: true } } : {}) })).filter(Boolean) }); }
     if (u.hostname === 'dapi.kakao.com') {
@@ -242,12 +242,21 @@ ok(!N.sameEligible({ name: '맛있는집', lat: 37.3, lng: 127.0 }, { n: '맛있
   await run({ env, http: mk(), now: NOW + 3600000, dir, root, log: quiet });
   ok(!calls.videos, `변경 없는 영상은 videos.list 를 다시 부르면 안 돼요(${calls.videos})`);
   ok(JSON.stringify(f('extractions.json')) === before, '설명이 같으면 추출·매칭을 다시 하면 안 돼요');
+  // (c2) 설명에 식당명이 없는 회차는 관리자가 적은 식당(수기 입력)으로 같은 검증을 거친다
+  vids.e4 = { title: '풍자의 또간집 EP.4 김해 3탄', desc: ['소개글만 있고 식당 이름은 없는 설명입니다. 김해 로컬 맛집 대공개', '#풍자 #또간집 #김해 #맛집', ''.padEnd(220, '가')].join('\n'), date: '2026-10-28T00:00:00Z' };
+  writeFileSync(`${dir}data/manual-episodes.json`, JSON.stringify({ episodes: [{ videoId: 'e4', region: '김해시', restaurants: [{ name: '둘째국수', role: 'winner' }, { name: '이름모를집', role: 'visited' }] }] }));
+  r = await run({ env, http: mk(), now: NOW + 3600000, dir, root, log: quiet });
+  const e4 = f('extractions.json').e4;
+  ok(e4 && e4.source === 'manual' && e4.items.length === 2, '수기 입력 식당이 추출 결과로 들어가야 해요');
+  ok(e4.items.find((i) => i.name === '이름모를집').match.level === 'none', '실제 업체와 매칭되지 않은 수기 식당은 연결되지 않아야 해요');
+  ok(r.items.find((i) => i.k === '102')?.p === 7, `수기 입력 회차도 반복 소개로 점수에 반영돼야 해요(${JSON.stringify(r.items.map((i) => [i.k, i.p]))})`);
+  ok(!r.items.some((i) => /이름모를집/.test(i.n)), '매칭 안 된 식당은 추천 목록에 들어가면 안 돼요');
   // (d) 25일 뒤에는 갱신하고, 설명이 바뀌면 다시 추출한다
   vids.e2.desc = ['또간집 김해 2탄', '02:10 맛있는집', '12:00 마지막식당', '30:00 최종 선정 - 둘째국수'].join('\n');
   r = await run({ env, http: mk(), now: NOW + 26 * 86400000, dir, root, log: process.env.DBG ? console.log : quiet });
   ok(f('extractions.json').e2.items.some((i) => i.name === '둘째국수' && i.role === 'final'), '설명이 바뀐 영상은 다시 추출해야 해요');
   // (e) 영상이 사라지면 지우고, 그 영상에만 의존한 식당은 빠진다
-  delete vids.e1; delete vids.e2;
+  delete vids.e1; delete vids.e2; delete vids.e4;
   r = await run({ env, http: mk(), now: NOW + 52 * 86400000, dir, root, log: quiet });
   ok(!f('series-videos.json').videos.e1 && r.items.length === 0, '사라진 영상은 지우고 그에 의존한 식당도 빠져야 해요');
   // (f) 구글 서버 키가 있으면 구글 업체 ID 로 매칭하고 g 를 남긴다
@@ -261,6 +270,14 @@ ok(!N.sameEligible({ name: '맛있는집', lat: 37.3, lng: 127.0 }, { n: '맛있
   for (const k of Object.keys(calls)) delete calls[k];
   await run({ env: {}, http: mk(), now: NOW, dir, root, log: quiet });
   ok(Object.keys(calls).length === 0, 'YOUTUBE_API_KEY 가 없는데 호출했어요');
+}
+
+// 수기 입력 틀 생성: 정규 회차만, 이미 입력한 회차는 보존
+{
+  const vs = { a: { id: 'a', title: '또간집 EP.7', description: ''.padEnd(300, '가') + '\n#풍자 #또간집 #익산 #맛집', publishedAt: '2026-10-01T00:00:00Z' }, s: { id: 's', title: '쇼츠', description: '#또간집', publishedAt: '2026-10-02T00:00:00Z' } };
+  const sk = buildSkeleton(vs, { episodes: [{ videoId: 'b', restaurants: [{ name: 'X', role: 'winner' }] }] });
+  ok(sk.episodes.length === 2 && sk.episodes.find((e) => e.videoId === 'a')?.region === '익산' && sk.episodes.find((e) => e.videoId === 'a')?.ep === 7, '정규 회차만 틀에 들어가고 지역·회차 번호가 채워져야 해요');
+  ok(sk.episodes.find((e) => e.videoId === 'b').restaurants.length === 1 && buildSkeleton(vs, sk).episodes.length === 2, '이미 입력한 내용은 보존하고 다시 만들어도 중복되지 않아야 해요');
 }
 
 // 7) 저장소의 실제 설정: 승인·키가 확인되기 전에는 꺼져 있어야 한다
