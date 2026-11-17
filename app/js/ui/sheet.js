@@ -9,7 +9,7 @@ import { courseSheet } from './course.js';
 import { formatMin, tripLabel } from '../core/geo.js';
 import { memberLabel } from '../core/segments.js';
 import { SHOP_KINDS } from '../core/nearby.js';
-import { esc, icon, rangeText, heartBtn, naverQuery, googleMapUrl } from './util.js';
+import { esc, icon, rangeText, heartBtn, naverQuery, googleMapUrl, kakaoPinUrl, kakaoId } from './util.js';
 import { favSet, favKey } from '../core/favs.js';
 
 const DOW = ['일', '월', '화', '수', '목', '금', '토'];
@@ -58,11 +58,6 @@ export function parkingInfo(p) {
 
 const distText = (km) => (km < 1 ? `${Math.max(10, Math.round(km * 100) * 10)}m` : `${km.toFixed(1)}km`);
 
-/** 카카오로 찾은 가게의 카카오맵 장소 번호(없으면 ''). 이름 검색이 안 되는 곳도 이 링크는 정확히 열린다. */
-const kakaoId = (s) => (/^k-\d+$/.test(s.id || '') ? s.id.slice(2) : '');
-
-/** 카카오맵에서 이 가게를 여는 주소. 카카오로 찾은 가게는 장소 번호로, 아니면 이름+좌표로 그 자리에 핀을 꽂는다(이름 검색이 안 맞아도 열린다). */
-const kakaoPinUrl = (s) => (kakaoId(s) ? `https://place.map.kakao.com/${kakaoId(s)}` : `https://map.kakao.com/link/map/${encodeURIComponent(s.name)},${s.lat},${s.lng}`);
 
 /** 장소 근처 맛집·카페 5곳. 가게를 누르면 네이버 지도로 간다. */
 function shopsSheet(place, kind, data, favs) {
