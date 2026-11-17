@@ -51,6 +51,10 @@ jobs:
       - name: 전국 지역 트렌드 점수 (시·군·구별)
         run: node tools/region-trends.mjs
 
+      - name: 신규 외부 공급원 (승인된 것만 호출, 실패해도 계속)
+        continue-on-error: true
+        run: node tools/run-adapters.mjs
+
       - name: 사이트 점검 (깨진 파일 주소·맨 앞 슬래시 경로·서비스 워커 목록)
         run: node tools/check-site.mjs # 문제가 있으면 여기서 멈춰 게시하지 않는다
 
@@ -62,6 +66,9 @@ jobs:
 
       - name: 여행 코스 생성 규칙 점검 (시간 안·겹침 없음·영업시간 지어내지 않음)
         run: node tools/check-course.mjs
+
+      - name: 외부 공급원 규칙 점검 (승인 전에는 호출·저장·표시 안 함)
+        run: node tools/check-adapters.mjs
 
       - name: 추천 점수 규칙 점검 (이동시간 한도가 길수록 거리 영향이 줄어드는지)
         run: node tools/check-scoring.mjs

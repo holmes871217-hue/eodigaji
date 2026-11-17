@@ -143,3 +143,13 @@ git push origin "$(git subtree split --prefix app origin/main)":refs/heads/gh-pa
 5. 이동시간을 카카오모빌리티 길찾기로(키를 숨길 중계 서버 필요).
 6. 실제 안드로이드 폰에서 설치·현재 위치·검색·뒤로 가기·사진 넘기기 확인(아직 미검수. 뒤로 가기와 사진은 앱 안 브라우저에서만 확인).
 7. 관광공사에 없는 곳(롯데월드 등 42곳 + 카카오 미등록 장소)은 사진이 1장이거나 없음. 더 채우려면 구글 Places 사진(1번)이 후보.
+
+## 고도화(2026-11-17, 지시서 A~E) — 새 기능 위치
+자세한 분석·계획은 `docs/고도화-분석과-계획.md`. 모두 기존 코드·키·저장 키(`eodigaji.v1`)를 바꾸지 않고 덧붙였다.
+- **E 신뢰도**: `tools/stamp-meta.mjs` → `spots.json`의 `m`(출처·최초 발견일·최근 확인일·확인 비트), `app/data/first-seen.json`. 화면에는 45일 넘게 확인 안 됨·출처 불분명일 때만 한 줄 경고(`ui/trust.js`, 2026-11-17 사용자 요청으로 상자 제거).
+- **A 핫플 5분류**: `tools/classify-hot.mjs` → `spots.json`의 `hot`(n 신규·r 급상승·k 유지·h 숨은 명소·f 감소)·`hq`(0=근거 부족), `app/data/hot-history.json`. 카드 칩은 신규·급상승·숨은 명소만. 점수 가산은 최대 +20%(`scoring.js`). 일반 단어 이름 방지: `tools/lib/names.mjs`, `merge-discovered.mjs`의 `isPlaceName`.
+- **B 지역 트렌드**: `tools/region-trends.mjs` → `app/data/region-trends.json`, 화면 `ui/trendmap.js`(추천 탭 "전국 지역 트렌드 지도"). 규모는 지역 간 백분위로 보정, 검색 변화와 블로그 변화를 분리, 블로그 기록이 7일 치 쌓이기 전에는 블로그 변화 없음.
+- **C 취향·행동**: `app/js/core/taste.js`, 저장 키 `eodigaji.taste.v1`(새 키). 마이 탭 취향 8종, 상세 창 "다녀왔어요/관심 없음/별점". 점검 `tools/check-taste.mjs`.
+- **D 코스 생성**: `app/js/core/course.js`, 화면 `ui/course.js`(추천·찜 탭 버튼). 영업시간·휴무일은 앱에 자료가 없어 전부 "미확인", 체류시간·대중교통 시간은 "추정". 점검 `tools/check-course.mjs`.
+- **외부 API**: `tools/adapters/*`(YouTube·Google Trends·Foursquare·Tripadvisor 모두 `unapproved`, TikTok 제외), 실행기 `tools/run-adapters.mjs`, 점검 `tools/check-adapters.mjs`. 사용자 승인 전에는 호출·저장·표시하지 않는다.
+- 자동 실행(collect.yml·discover.yml) 순서: 수집 → stamp-meta → classify-hot → region-trends → run-adapters → check-site → check-dupes → check-taste·check-course·check-adapters → check-scoring → 게시.
