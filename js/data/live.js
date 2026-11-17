@@ -2,6 +2,7 @@
 // 연습용 숫자를 실제 값으로 바꾼다. 파일이 없거나 못 읽으면 연습용 데이터 그대로 동작한다.
 
 import { PLACES, LOCAL_BASE, spotToPlace } from './places.js';
+import { setRegions } from './regions.js';
 import { setLivePhotos, addLivePhotos, setLivePhotoLists, addLivePhotoLists, addLiveSources } from './photos.js';
 import { makeDupIndex } from './dedupe.js';
 
@@ -78,6 +79,13 @@ export async function loadLive() {
     addLivePhotoLists(lists);
   } catch {
     // 파일이 없으면 기존 장소만 쓴다.
+  }
+
+  // 전국 지역 트렌드(없으면 트렌드 창만 빈 안내)
+  try {
+    setRegions((await getJson('data/region-trends.json')).regions);
+  } catch {
+    // 파일이 없으면 지역 트렌드만 빠진다.
   }
 
   let events = null;
