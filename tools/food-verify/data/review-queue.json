@@ -1,1 +1,554 @@
-[]
+[
+ {
+  "kind": "series",
+  "videoId": "Uf8V4EvPKWk",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "진양호짬뽕",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "Ppt-Dr0QT_o",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "장터순대숙",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "Ppt-Dr0QT_o",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "형제식당",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "mNjTXSfQXnE",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "마창수산횟집",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "-rdQxOZgQCE",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "돈멜",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "uXq3hmDhpps",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "쭈꾸미달인",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "uXq3hmDhpps",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "칠성해물짬뽕",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "vAKeY1t_bLI",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "다가이순대국",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "Z-zG-6rynP8",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "우래정",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "fvD36nHVbhs",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "얼큰이왕냉면",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "fvD36nHVbhs",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "망원동즉석우동",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "y4rM8vnYsZc",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "원조누드김밥",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "y4rM8vnYsZc",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "찹쌀꽈배기",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "y4rM8vnYsZc",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "순대",
+  "role": "winner",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "xGzUPV1lqNw",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "막내회집",
+  "role": "winner",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:83",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "샛별식당",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:81",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "선산순대",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:74",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "별장",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:74",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "목포수산",
+  "role": "winner",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:71",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "권선동황소곱창",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:70",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "초당",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:70",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "효제동소마리국밥",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:70",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "구렌몽골",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:69",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "울트라반점",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:68",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "되뫼골부대찌개",
+  "role": "winner",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:67",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "우정식육식당",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:65",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "먹깨비하우스",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:64",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "돼지박사",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:62",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "두꺼비집",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:62",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "옥경이네김밥",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:60",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "진주회관",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:58",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "델리슈샤",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:55",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "감나무집",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:50",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "앞산큰골집",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:50",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "남산에",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:50",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "걸리버막창",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:46",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "스마일떡볶이",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:43",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "함박웃음순대숙",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:43",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "우육면관",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:40",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "무한자금성",
+  "role": "winner",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:39",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "소라편의점",
+  "role": "winner",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:38",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "밀터",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:38",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "명동게장",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:31",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "이유식당",
+  "role": "winner",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:30",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "가양칼국수",
+  "role": "winner",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:28",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "표선우동가게",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:26",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "라면땡기는날",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:24",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "광평",
+  "role": "winner",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:23",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "송정희어머니",
+  "role": "winner",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:21",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "와타요업",
+  "role": "winner",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:21",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "광천식당",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:20",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "가원",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:18",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "태동반점",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:17",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "칼리프하우스",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:16",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "조박사순대국",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:15",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "대가",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:15",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "유동골뱅이",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:13",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "후계동",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:12",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "쟈니덤플링",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:12",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "더테이블키친",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:10",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "천진영감",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:9",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "원조전복죽",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:7",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "소금집델리",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:5",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "맘맘테이블",
+  "role": "visited",
+  "why": "WEAK_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:5",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "유아케도쿄",
+  "role": "winner",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:4",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "소바식당",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:4",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "돈앤돈",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:1",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "경향카츠",
+  "role": "visited",
+  "why": "NO_MATCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "ep:1",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "뉴오더클럽",
+  "role": "winner",
+  "why": "WEAK_MATCH"
+ }
+]

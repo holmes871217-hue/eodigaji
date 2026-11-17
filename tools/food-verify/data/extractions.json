@@ -203,8 +203,8 @@
   ]
  },
  "-vsNkVIRvt0": {
-  "descHash": "80250cf328a037f2",
-  "extractedAt": 1794919984150,
+  "descHash": "60c29bd5c147865f",
+  "extractedAt": 1794921060420,
   "region": "충남 공주시",
   "source": "manual",
   "items": [
@@ -218,15 +218,71 @@
      "key": "20296394",
      "why": ""
     }
+   },
+   {
+    "name": "진토랑",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "115615227",
+     "why": ""
+    }
+   },
+   {
+    "name": "숙골순대",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1652998911",
+     "why": ""
+    }
    }
   ]
  },
  "Uf8V4EvPKWk": {
-  "descHash": "67f249d54acadb09",
-  "extractedAt": 1794919984150,
-  "region": "진주시",
-  "source": "description",
-  "items": []
+  "descHash": "c83bf54e0d755e44",
+  "extractedAt": 1794921060420,
+  "region": "경남 진주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "진양호짬뽕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "장수촌",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "9367371",
+     "why": ""
+    }
+   },
+   {
+    "name": "숙이네국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "14974801",
+     "why": ""
+    }
+   }
+  ]
  },
  "6At2MaORhlM": {
   "descHash": "7a676a3f0c0d5a6a",
@@ -243,8 +299,8 @@
   "items": []
  },
  "1HExH6cy5BQ": {
-  "descHash": "07da71d048b2e38c",
-  "extractedAt": 1794920065399,
+  "descHash": "98123afa765bc61f",
+  "extractedAt": 1794921060420,
   "region": "부산 강서구",
   "source": "manual",
   "items": [
@@ -258,6 +314,28 @@
      "key": "638654703",
      "why": ""
     }
+   },
+   {
+    "name": "밀양산내돼지국밥",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1533481993",
+     "why": ""
+    }
+   },
+   {
+    "name": "1966정원",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "911186024",
+     "why": ""
+    }
    }
   ]
  },
@@ -269,8 +347,8 @@
   "items": []
  },
  "Ppt-Dr0QT_o": {
-  "descHash": "247ea58ad5985420",
-  "extractedAt": 1794919984150,
+  "descHash": "a2393aab290cf498",
+  "extractedAt": 1794921060420,
   "region": "울산",
   "source": "manual",
   "items": [
@@ -284,12 +362,34 @@
      "key": "2002173821",
      "why": ""
     }
+   },
+   {
+    "name": "장터순대숙",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "형제식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
    }
   ]
  },
  "mNjTXSfQXnE": {
-  "descHash": "4bdb49feda6f14d2",
-  "extractedAt": 1794919984150,
+  "descHash": "1ecfe0d190f6ba3f",
+  "extractedAt": 1794921060420,
   "region": "경남 김해시",
   "source": "manual",
   "items": [
@@ -301,6 +401,28 @@
     "match": {
      "level": "linked",
      "key": "27571944",
+     "why": ""
+    }
+   },
+   {
+    "name": "쫀삼곱",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "975253879",
+     "why": ""
+    }
+   },
+   {
+    "name": "마창수산횟집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
      "why": ""
     }
    }
@@ -321,8 +443,8 @@
   "items": []
  },
  "-rdQxOZgQCE": {
-  "descHash": "7c356f3c30209365",
-  "extractedAt": 1794920165231,
+  "descHash": "baf63702160d01ae",
+  "extractedAt": 1794921060420,
   "region": "경기 성남시",
   "source": "manual",
   "items": [
@@ -335,6 +457,28 @@
      "level": "linked",
      "key": "12042028",
      "why": ""
+    }
+   },
+   {
+    "name": "봄날에청국장",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "17143020",
+     "why": ""
+    }
+   },
+   {
+    "name": "돈멜",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
     }
    }
   ]
@@ -361,8 +505,8 @@
   "items": []
  },
  "uXq3hmDhpps": {
-  "descHash": "15d2ccf78360ebba",
-  "extractedAt": 1794919984150,
+  "descHash": "0b36efba4def4e92",
+  "extractedAt": 1794921060420,
   "region": "서울 노원구",
   "source": "manual",
   "items": [
@@ -376,12 +520,45 @@
      "key": "21412672",
      "why": ""
     }
+   },
+   {
+    "name": "쭈꾸미달인",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "돈까스먹는용만이",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "12460195",
+     "why": ""
+    }
+   },
+   {
+    "name": "칠성해물짬뽕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
    }
   ]
  },
  "2WLWFZ81k6E": {
-  "descHash": "109b9a9f27baacca",
-  "extractedAt": 1794919984150,
+  "descHash": "cc21148b034212ca",
+  "extractedAt": 1794921060420,
   "region": "강원 철원군",
   "source": "manual",
   "items": [
@@ -395,15 +572,71 @@
      "key": "18285734",
      "why": ""
     }
+   },
+   {
+    "name": "화강송어회",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "16828557",
+     "why": ""
+    }
+   },
+   {
+    "name": "든든한추어탕 힘나는낙지볶음",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1132071803",
+     "why": ""
+    }
    }
   ]
  },
  "vAKeY1t_bLI": {
-  "descHash": "cd95b9d2faa1b7d1",
-  "extractedAt": 1794919984150,
-  "region": "",
-  "source": "description",
-  "items": []
+  "descHash": "f667aa65540d93b2",
+  "extractedAt": 1794921060420,
+  "region": "서울 마포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "다가이순대국",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "온타이키친",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1526604428",
+     "why": ""
+    }
+   },
+   {
+    "name": "류정닭개장",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "2050202932",
+     "why": ""
+    }
+   }
+  ]
  },
  "5tV8wKaUxSA": {
   "descHash": "e1f556803348e7a8",
@@ -425,11 +658,45 @@
   ]
  },
  "Z-zG-6rynP8": {
-  "descHash": "43a22dd4d3a02111",
-  "extractedAt": 1794919984150,
-  "region": "해남군",
-  "source": "description",
-  "items": []
+  "descHash": "b3d5c0f9b1249ddd",
+  "extractedAt": 1794921060420,
+  "region": "전남 해남군",
+  "source": "manual",
+  "items": [
+   {
+    "name": "우래정",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "영심횟집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "2140799580",
+     "why": ""
+    }
+   },
+   {
+    "name": "서성식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "13639001",
+     "why": ""
+    }
+   }
+  ]
  },
  "HcPyN7nsJDE": {
   "descHash": "9b06b9906ec93c26",
@@ -453,8 +720,8 @@
   "items": []
  },
  "fvD36nHVbhs": {
-  "descHash": "fb9995e5275b7a55",
-  "extractedAt": 1794920214887,
+  "descHash": "c1feb531706442ca",
+  "extractedAt": 1794921060420,
   "region": "서울 마포구",
   "source": "manual",
   "items": [
@@ -468,6 +735,61 @@
      "key": "889810020",
      "why": ""
     }
+   },
+   {
+    "name": "얼큰이왕냉면",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "이치젠",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "132500108",
+     "why": ""
+    }
+   },
+   {
+    "name": "망원돈까스",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "740043035",
+     "why": ""
+    }
+   },
+   {
+    "name": "망원동즉석우동",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "일등식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "16050121",
+     "why": ""
+    }
    }
   ]
  },
@@ -479,8 +801,8 @@
   "items": []
  },
  "4cCrjwgi54w": {
-  "descHash": "4fea29fec50fbd07",
-  "extractedAt": 1794920165231,
+  "descHash": "008d5d744887ba6a",
+  "extractedAt": 1794921060420,
   "region": "경기 안산시",
   "source": "manual",
   "items": [
@@ -494,12 +816,34 @@
      "key": "15350685",
      "why": ""
     }
+   },
+   {
+    "name": "마마교자관",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 안산시 단원구 원곡로 34 1층 마마교자관",
+    "match": {
+     "level": "linked",
+     "key": "15480316",
+     "why": ""
+    }
+   },
+   {
+    "name": "미오또닭강정",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 안산시 단원구 원초로 30 보성프라자 118호",
+    "match": {
+     "level": "linked",
+     "key": "15861351",
+     "why": ""
+    }
    }
   ]
  },
  "rqmIz5TAhwY": {
-  "descHash": "7c5b4843906a03f5",
-  "extractedAt": 1794919984150,
+  "descHash": "5ce1a5d1b25a1b4b",
+  "extractedAt": 1794921060420,
   "region": "충남 서산시",
   "source": "manual",
   "items": [
@@ -513,12 +857,45 @@
      "key": "114122314",
      "why": ""
     }
+   },
+   {
+    "name": "풍전뚝집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "충남 서산시 인지면 풍전2길 67-30",
+    "match": {
+     "level": "linked",
+     "key": "14918446",
+     "why": ""
+    }
+   },
+   {
+    "name": "촌식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "충남 서산시 잠동4길 34 촌식당",
+    "match": {
+     "level": "linked",
+     "key": "22470620",
+     "why": ""
+    }
+   },
+   {
+    "name": "옥경이네",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "충남 서산시 부석면 간월도1길 83 1층 2호(옥경이네)",
+    "match": {
+     "level": "linked",
+     "key": "1917191882",
+     "why": ""
+    }
    }
   ]
  },
  "qqNFLhkYh04": {
-  "descHash": "42d88b5be91a4bad",
-  "extractedAt": 1794919984150,
+  "descHash": "bbd8aea490277649",
+  "extractedAt": 1794921060420,
   "region": "경기 남양주시",
   "source": "manual",
   "items": [
@@ -532,6 +909,28 @@
      "key": "9317412",
      "why": ""
     }
+   },
+   {
+    "name": "pud",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 남양주시 다산중앙로123번길 21-7 신해센트럴타워1 111호",
+    "match": {
+     "level": "linked",
+     "key": "1151395158",
+     "why": ""
+    }
+   },
+   {
+    "name": "피렌체테이블",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 남양주시 별내중앙로 84 동익미라벨 3904동 1층코너",
+    "match": {
+     "level": "linked",
+     "key": "1496311890",
+     "why": ""
+    }
    }
   ]
  },
@@ -543,8 +942,8 @@
   "items": []
  },
  "vbBYnmELwqk": {
-  "descHash": "d5c2e5525a812d38",
-  "extractedAt": 1794919984150,
+  "descHash": "1883a6abc99f94b8",
+  "extractedAt": 1794921060420,
   "region": "서울 종로구",
   "source": "manual",
   "items": [
@@ -558,6 +957,28 @@
      "key": "1832568835",
      "why": ""
     }
+   },
+   {
+    "name": "체부동잔치집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 종로구 자하문로1길 16",
+    "match": {
+     "level": "linked",
+     "key": "14951761",
+     "why": ""
+    }
+   },
+   {
+    "name": "영화루",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 종로구 자하문로7길 65",
+    "match": {
+     "level": "linked",
+     "key": "10635098",
+     "why": ""
+    }
    }
   ]
  },
@@ -569,11 +990,78 @@
   "items": []
  },
  "y4rM8vnYsZc": {
-  "descHash": "fcfc79c0a96b0adb",
-  "extractedAt": 1794919520725,
-  "region": "강남구",
-  "source": "description",
-  "items": []
+  "descHash": "9092f2e33ab0878b",
+  "extractedAt": 1794921060420,
+  "region": "서울 종로구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "모녀김밥",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 종로구 동호로 403-23",
+    "match": {
+     "level": "linked",
+     "key": "13053446",
+     "why": ""
+    }
+   },
+   {
+    "name": "원조누드김밥",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "순희네빈대떡",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 종로구 종로32길 5",
+    "match": {
+     "level": "linked",
+     "key": "18755777",
+     "why": ""
+    }
+   },
+   {
+    "name": "찹쌀꽈배기",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 종로구 종로32길 2 105호",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "순대",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "형제육회",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 종로구 종로 200-1",
+    "match": {
+     "level": "linked",
+     "key": "21722720",
+     "why": ""
+    }
+   }
+  ]
  },
  "JGDG3_EFL0k": {
   "descHash": "023791667ee01716",
@@ -583,8 +1071,8 @@
   "items": []
  },
  "xGzUPV1lqNw": {
-  "descHash": "6122180c5d20a11c",
-  "extractedAt": 1794919984150,
+  "descHash": "5f37379b4e0a7942",
+  "extractedAt": 1794921060420,
   "region": "서울 중구",
   "source": "manual",
   "items": [
@@ -594,23 +1082,79 @@
     "cue": "manual",
     "addr": "",
     "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "곰냉면",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 중구 남대문시장길 29 1층 1호",
+    "match": {
      "level": "linked",
-     "key": "10335617",
+     "key": "2008349332",
+     "why": ""
+    }
+   },
+   {
+    "name": "왕성식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 중구 남대문시장길 18-2",
+    "match": {
+     "level": "linked",
+     "key": "10619983",
      "why": ""
     }
    }
   ]
  },
  "qM4IliSpcrE": {
-  "descHash": "ecc2c0d0cff3057f",
-  "extractedAt": 1794919520725,
-  "region": "간절한입",
-  "source": "description",
-  "items": []
+  "descHash": "2b66170bff7afb07",
+  "extractedAt": 1794921060420,
+  "region": "서울 용산구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "한남부대찌개",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 용산구 대사관로5길 36",
+    "match": {
+     "level": "linked",
+     "key": "21328419",
+     "why": ""
+    }
+   },
+   {
+    "name": "올드페리도넛",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1751324133",
+     "why": ""
+    }
+   },
+   {
+    "name": "라도집",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 용산구 독서당로20길 9 1층",
+    "match": {
+     "level": "linked",
+     "key": "972557256",
+     "why": ""
+    }
+   }
+  ]
  },
  "LI-mgx3HL3I": {
-  "descHash": "0fa9cb5c184c04ba",
-  "extractedAt": 1794919984150,
+  "descHash": "5688f57ede3d1b7e",
+  "extractedAt": 1794921060420,
   "region": "경기 평택시",
   "source": "manual",
   "items": [
@@ -623,6 +1167,3298 @@
      "level": "linked",
      "key": "1202480492",
      "why": ""
+    }
+   },
+   {
+    "name": "된장박이진성집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 평택시 조개터로26번길 20",
+    "match": {
+     "level": "linked",
+     "key": "8954969",
+     "why": ""
+    }
+   },
+   {
+    "name": "포호치민",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 평택시 쇼핑로 7 2층",
+    "match": {
+     "level": "linked",
+     "key": "23734496",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:84": {
+  "descHash": "3bfaf6ba3a8d6ecc",
+  "extractedAt": 1794921060420,
+  "region": "전북 남원시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "남원밀면",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전북 남원시 요천로 1399-1",
+    "match": {
+     "level": "linked",
+     "key": "1371314948",
+     "why": ""
+    }
+   },
+   {
+    "name": "금생춘",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전북 남원시 가방뜰길 117 금생춘",
+    "match": {
+     "level": "linked",
+     "key": "10209539",
+     "why": ""
+    }
+   },
+   {
+    "name": "명문제과",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "전북 남원시 용성로 56",
+    "match": {
+     "level": "linked",
+     "key": "9765440",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:83": {
+  "descHash": "d75a6889c7633cac",
+  "extractedAt": 1794921060420,
+  "region": "전남 여수시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "웅천부일식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전남 여수시 웅남2길 12-2",
+    "match": {
+     "level": "linked",
+     "key": "17794415",
+     "why": ""
+    }
+   },
+   {
+    "name": "샛별식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "풀뿌리흑두부",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "전남 여수시 율촌면 서부로 1474",
+    "match": {
+     "level": "linked",
+     "key": "8571730",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:82": {
+  "descHash": "1faa893d892cc853",
+  "extractedAt": 1794921060420,
+  "region": "경기 파주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "신간짬뽕",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경기 파주시 문화로 32 1층 신간짬뽕 금촌점",
+    "match": {
+     "level": "linked",
+     "key": "20304354",
+     "why": ""
+    }
+   },
+   {
+    "name": "일호집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 파주시 금정로 44-2 103호",
+    "match": {
+     "level": "linked",
+     "key": "854495817",
+     "why": ""
+    }
+   },
+   {
+    "name": "심학산도토리국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 파주시 교하로681번길 12",
+    "match": {
+     "level": "linked",
+     "key": "21284482",
+     "why": ""
+    }
+   },
+   {
+    "name": "심학산닭갈비",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 파주시 교하로 623 심학산닭갈비",
+    "match": {
+     "level": "linked",
+     "key": "899767628",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:81": {
+  "descHash": "34419a36edb10ed1",
+  "extractedAt": 1794921060420,
+  "region": "경북 구미시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "한채쭈꾸미",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경북 구미시 공원로 328",
+    "match": {
+     "level": "linked",
+     "key": "24472814",
+     "why": ""
+    }
+   },
+   {
+    "name": "선산순대",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경북 구미시 고아읍 들성로 199",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "푸차이로오",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경북 구미시 금오산로22길 29",
+    "match": {
+     "level": "linked",
+     "key": "846414873",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:80": {
+  "descHash": "b55d00973d78d684",
+  "extractedAt": 1794921060420,
+  "region": "경북 안동시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "길풍",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "17739848",
+     "why": ""
+    }
+   },
+   {
+    "name": "일직식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "666964150",
+     "why": ""
+    }
+   },
+   {
+    "name": "안동서문찜닭",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "148377340",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:79": {
+  "descHash": "2cff8f361c3132a4",
+  "extractedAt": 1794921060420,
+  "region": "경기 안양시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "동해오징어보쌈",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경기 안양시 만안구 장내로139번길 56-12 스타프라자",
+    "match": {
+     "level": "linked",
+     "key": "16529267",
+     "why": ""
+    }
+   },
+   {
+    "name": "홍두깨손칼국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 안양시 만안구 안양로291번길 5 홍두깨손칼국수",
+    "match": {
+     "level": "linked",
+     "key": "19016749",
+     "why": ""
+    }
+   },
+   {
+    "name": "얼룩말식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 안양시 만안구 안양로329번길 23 1층",
+    "match": {
+     "level": "linked",
+     "key": "813864270",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:76": {
+  "descHash": "c65a6753bf139d60",
+  "extractedAt": 1794921060420,
+  "region": "경기 김포시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "성원농장",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경기 김포시 고촌읍 김포대로451번길 114-25",
+    "match": {
+     "level": "linked",
+     "key": "14835165",
+     "why": ""
+    }
+   },
+   {
+    "name": "통영해물뚝배기",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 김포시 김포한강4로212번길 29",
+    "match": {
+     "level": "linked",
+     "key": "1150232594",
+     "why": ""
+    }
+   },
+   {
+    "name": "육더쿠",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 김포시 김포한강8로 420 106호,107호",
+    "match": {
+     "level": "linked",
+     "key": "844701705",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:74": {
+  "descHash": "3137404efb1f9055",
+  "extractedAt": 1794921060420,
+  "region": "서울 관악구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "오삼숙이",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 관악구 대학길 57",
+    "match": {
+     "level": "linked",
+     "key": "2144193869",
+     "why": ""
+    }
+   },
+   {
+    "name": "별장",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "목포수산",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 관악구 관천로 39 1층 목포수산",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   }
+  ]
+ },
+ "ep:73": {
+  "descHash": "15a75e57843b6b2d",
+  "extractedAt": 1794921060420,
+  "region": "경남 창원시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "아구훈감",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경남 창원시 진해구 중원로73번길 6-1 1층 아구훈감",
+    "match": {
+     "level": "linked",
+     "key": "434241112",
+     "why": ""
+    }
+   },
+   {
+    "name": "고향",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "13068929",
+     "why": ""
+    }
+   },
+   {
+    "name": "부산문현곱창",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경남 창원시 진해구 냉천로 53",
+    "match": {
+     "level": "linked",
+     "key": "26898559",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:72": {
+  "descHash": "208f2aaefe6d076c",
+  "extractedAt": 1794921060420,
+  "region": "경남 창원시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "어전",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경남 창원시 마산합포구 오동동10길 12",
+    "match": {
+     "level": "linked",
+     "key": "26777853",
+     "why": ""
+    }
+   },
+   {
+    "name": "본질닭도리탕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경남 창원시 마산회원구 양덕남2길 2 1층",
+    "match": {
+     "level": "linked",
+     "key": "1825790295",
+     "why": ""
+    }
+   },
+   {
+    "name": "부산이화양곱창",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경남 창원시 마산회원구 양덕북18길 35 주택",
+    "match": {
+     "level": "linked",
+     "key": "8327534",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:71": {
+  "descHash": "ec28077b5a9a2c46",
+  "extractedAt": 1794921060420,
+  "region": "경기 화성시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "육돈",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 화성시 동탄반송길 23 1층",
+    "match": {
+     "level": "linked",
+     "key": "453923553",
+     "why": ""
+    }
+   },
+   {
+    "name": "농가의하루",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경기 화성시 왕배산1길 3-16 1층",
+    "match": {
+     "level": "linked",
+     "key": "1120377366",
+     "why": ""
+    }
+   },
+   {
+    "name": "권선동황소곱창",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 수원시 권선구 덕영대로1207번길 26-21 권선동 1195-2번지 1층 황소곱창",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   }
+  ]
+ },
+ "ep:70": {
+  "descHash": "3fb1d1a65ffe51e8",
+  "extractedAt": 1794921060420,
+  "region": "서울 동대문구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "초당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "효제동소마리국밥",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "구렌몽골",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   }
+  ]
+ },
+ "ep:69": {
+  "descHash": "a0b814710bcf748a",
+  "extractedAt": 1794921060420,
+  "region": "경남 창원시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "울트라반점",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "청춘키친",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1012202600",
+     "why": ""
+    }
+   },
+   {
+    "name": "상남수제돈까스",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "559525400",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:68": {
+  "descHash": "6d2056f98a0865c6",
+  "extractedAt": 1794921060420,
+  "region": "경남 통영시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "되뫼골부대찌개",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경남 통영시 무전1길 64-11 되뫼골부대찌개",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "밥상마당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경남 통영시 동충4길 1 (항남동)",
+    "match": {
+     "level": "linked",
+     "key": "11265787",
+     "why": ""
+    }
+   },
+   {
+    "name": "강변다찌",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경남 통영시 항남1길 19",
+    "match": {
+     "level": "linked",
+     "key": "796191587",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:67": {
+  "descHash": "1b02c2d343599d85",
+  "extractedAt": 1794921060420,
+  "region": "전남 목포시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "곰집갈비",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전남 목포시 호남로58번길 14",
+    "match": {
+     "level": "linked",
+     "key": "8189367",
+     "why": ""
+    }
+   },
+   {
+    "name": "우정식육식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전남 목포시 신흥로69번길 18-1",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "대명관",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "전남 목포시 유동로16번길 17 대명관",
+    "match": {
+     "level": "linked",
+     "key": "10248767",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:66": {
+  "descHash": "59549545a5727f01",
+  "extractedAt": 1794921060420,
+  "region": "경기 고양시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "일산칼국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 고양시 일산동구 경의로 467",
+    "match": {
+     "level": "linked",
+     "key": "8045618",
+     "why": ""
+    }
+   },
+   {
+    "name": "포폴로피자",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 고양시 일산동구 정발산로 43-20 센트럴플라자 102호, 103호",
+    "match": {
+     "level": "linked",
+     "key": "108763820",
+     "why": ""
+    }
+   },
+   {
+    "name": "굴토리",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 고양시 일산서구 호수로856번길 7-13 1층",
+    "match": {
+     "level": "linked",
+     "key": "1786357122",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:65": {
+  "descHash": "0f577d113f82b0ab",
+  "extractedAt": 1794921060420,
+  "region": "서울 용산구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "면마루",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 용산구 신흥로 86",
+    "match": {
+     "level": "linked",
+     "key": "18508179",
+     "why": ""
+    }
+   },
+   {
+    "name": "먹깨비하우스",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "세몰리나클럽",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 용산구 신흥로 59 1층",
+    "match": {
+     "level": "linked",
+     "key": "846005317",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:64": {
+  "descHash": "329e8837d2a3025f",
+  "extractedAt": 1794921060420,
+  "region": "전북 전주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "스시미라이",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전북 전주시 완산구 충경로 29",
+    "match": {
+     "level": "linked",
+     "key": "1030321881",
+     "why": ""
+    }
+   },
+   {
+    "name": "돼지박사",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전북 전주시 완산구 전주객사3길 49",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "또순이네집",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "전북 전주시 완산구 전주객사3길 11-8",
+    "match": {
+     "level": "linked",
+     "key": "10372117",
+     "why": ""
+    }
+   },
+   {
+    "name": "큰집피순대",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전북 전주시 덕진구 덕용4길 4",
+    "match": {
+     "level": "linked",
+     "key": "522898168",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:63": {
+  "descHash": "637f236962371fd8",
+  "extractedAt": 1794921060420,
+  "region": "전북 군산시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "군산소바 청사초롱",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1777037747",
+     "why": ""
+    }
+   },
+   {
+    "name": "조촌이층집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1754772551",
+     "why": ""
+    }
+   },
+   {
+    "name": "빈해원",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "11053604",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:62": {
+  "descHash": "786f95ba9b214c59",
+  "extractedAt": 1794921060420,
+  "region": "서울 은평구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "두꺼비집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "떡산",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "57913604",
+     "why": ""
+    }
+   },
+   {
+    "name": "옥경이네김밥",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "고향순대국밥",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "170803401",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:61": {
+  "descHash": "eeb38695851c5ea9",
+  "extractedAt": 1794921060420,
+  "region": "대전",
+  "source": "manual",
+  "items": [
+   {
+    "name": "성심당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "대전 중구 대종로480번길 15",
+    "match": {
+     "level": "linked",
+     "key": "17733090",
+     "why": ""
+    }
+   },
+   {
+    "name": "하레하레",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "대전 서구 둔산로 155 크로바아파트 제상가동 1층",
+    "match": {
+     "level": "linked",
+     "key": "10093756",
+     "why": ""
+    }
+   },
+   {
+    "name": "하루팡",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "대전 유성구 문화원로 77 예성그랑펠리체 1층 109호",
+    "match": {
+     "level": "linked",
+     "key": "2059217223",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:60": {
+  "descHash": "4e7bac3d20be2c5b",
+  "extractedAt": 1794921060420,
+  "region": "충남 천안시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "충남집순대",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "충남 천안시 동남구 병천면 충절로 1748",
+    "match": {
+     "level": "linked",
+     "key": "11892365",
+     "why": ""
+    }
+   },
+   {
+    "name": "진주회관",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "충남 천안시 서북구 성환읍 성환11길 15",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "긍정식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "충남 천안시 서북구 불당21로 40 상가 109호 긍정식당",
+    "match": {
+     "level": "linked",
+     "key": "1323525676",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:59": {
+  "descHash": "b97ddb542a5a9751",
+  "extractedAt": 1794921060420,
+  "region": "서울 동작구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "복돈이부추삼겹살",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 관악구 남현1길 68-14 1층",
+    "match": {
+     "level": "linked",
+     "key": "20745677",
+     "why": ""
+    }
+   },
+   {
+    "name": "논고을",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 동작구 남부순환로269길 12",
+    "match": {
+     "level": "linked",
+     "key": "8245887",
+     "why": ""
+    }
+   },
+   {
+    "name": "쭈꾸미술관",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 동작구 사당로14길 13 골든빌딩",
+    "match": {
+     "level": "linked",
+     "key": "783645830",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:58": {
+  "descHash": "b44aff2667b4131f",
+  "extractedAt": 1794921060420,
+  "region": "경기 성남시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "델리슈샤",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 성남시 분당구 정자일로 136 1층 C109호",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "돌판하나",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경기 성남시 분당구 내정로7번길 8 1층",
+    "match": {
+     "level": "linked",
+     "key": "27441753",
+     "why": ""
+    }
+   },
+   {
+    "name": "미가",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1812550076",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:57": {
+  "descHash": "49e91a54fec6e591",
+  "extractedAt": 1794921060420,
+  "region": "강원 강릉시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "장안회집",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "10727290",
+     "why": ""
+    }
+   },
+   {
+    "name": "버드나무 브루어리",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "강원 강릉시 경강로 1961",
+    "match": {
+     "level": "linked",
+     "key": "27152913",
+     "why": ""
+    }
+   },
+   {
+    "name": "옛카나리아",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "강원 강릉시 성산면 구산길 74 옛카나리아",
+    "match": {
+     "level": "linked",
+     "key": "11193147",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:56": {
+  "descHash": "8e766fa4db9bdf63",
+  "extractedAt": 1794921060420,
+  "region": "강원 양양군",
+  "source": "manual",
+  "items": [
+   {
+    "name": "상운메밀촌",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "강원 양양군 손양면 상운길 44-33 상운메밀촌",
+    "match": {
+     "level": "linked",
+     "key": "11663356",
+     "why": ""
+    }
+   },
+   {
+    "name": "물치손칼국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "강원 양양군 양양읍 남문로 12-7 물치손칼국수",
+    "match": {
+     "level": "linked",
+     "key": "8987935",
+     "why": ""
+    }
+   },
+   {
+    "name": "함경면옥",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "강원 양양군 양양읍 남문2길 7",
+    "match": {
+     "level": "linked",
+     "key": "10021689",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:55": {
+  "descHash": "c8cc81778d0a59c3",
+  "extractedAt": 1794921060420,
+  "region": "서울 영등포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "강촌마을",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "15996436",
+     "why": ""
+    }
+   },
+   {
+    "name": "감나무집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "태양생고기",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "13141353",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:54": {
+  "descHash": "e9e4edc475cae001",
+  "extractedAt": 1794921060420,
+  "region": "강원 춘천시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "1.5닭갈비",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "강원 춘천시 후만로 77 1.5닭갈비",
+    "match": {
+     "level": "linked",
+     "key": "46094792",
+     "why": ""
+    }
+   },
+   {
+    "name": "우성닭갈비",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "강원 춘천시 우묵들길 33 우성닭갈비",
+    "match": {
+     "level": "linked",
+     "key": "11532220",
+     "why": ""
+    }
+   },
+   {
+    "name": "학곡리막국수닭갈비",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "강원 춘천시 공지로 29 학곡리막국수닭갈비",
+    "match": {
+     "level": "linked",
+     "key": "23373114",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:53": {
+  "descHash": "8901fcd49a68ab36",
+  "extractedAt": 1794921060420,
+  "region": "충북 청주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "용용생고기",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "충북 청주시 상당구 대성로 88",
+    "match": {
+     "level": "linked",
+     "key": "1570871760",
+     "why": ""
+    }
+   },
+   {
+    "name": "진천집생고기",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "충북 청주시 상당구 수영로 303 1층",
+    "match": {
+     "level": "linked",
+     "key": "868867844",
+     "why": ""
+    }
+   },
+   {
+    "name": "봉용불고기",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "충북 청주시 청원구 중앙로 108",
+    "match": {
+     "level": "linked",
+     "key": "16507806",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:52": {
+  "descHash": "33e1916f178559ce",
+  "extractedAt": 1794921060420,
+  "region": "서울 성동구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "버섯집",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 성동구 왕십리로5길 9-10 1층",
+    "match": {
+     "level": "linked",
+     "key": "929060385",
+     "why": ""
+    }
+   },
+   {
+    "name": "대성갈비",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 성동구 상원1길 26 서울숲 A타워 101호~103호",
+    "match": {
+     "level": "linked",
+     "key": "12055448",
+     "why": ""
+    }
+   },
+   {
+    "name": "레츠잇치킨",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 성동구 왕십리로4길 12 1층",
+    "match": {
+     "level": "linked",
+     "key": "1797543049",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:51": {
+  "descHash": "ba0610751eb3a946",
+  "extractedAt": 1794921060420,
+  "region": "부산",
+  "source": "manual",
+  "items": [
+   {
+    "name": "밀양집",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "부산 중구 중구로47번길 35",
+    "match": {
+     "level": "linked",
+     "key": "20534752",
+     "why": ""
+    }
+   },
+   {
+    "name": "합천식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "부산 연제구 고분로 9 1층",
+    "match": {
+     "level": "linked",
+     "key": "16669475",
+     "why": ""
+    }
+   },
+   {
+    "name": "합천일류돼지국밥",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "부산 사상구 광장로 34 윌로펌프",
+    "match": {
+     "level": "linked",
+     "key": "10928210",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:50": {
+  "descHash": "7895e20d3e41e8b7",
+  "extractedAt": 1794921060420,
+  "region": "대구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "앞산큰골집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "아리조나막창",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "7982844",
+     "why": ""
+    }
+   },
+   {
+    "name": "남산에",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "걸리버막창",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   }
+  ]
+ },
+ "ep:49": {
+  "descHash": "a80195dde59df38e",
+  "extractedAt": 1794921060420,
+  "region": "서울 중구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "란주칼면",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 중구 소공로 64 1층 란주칼면",
+    "match": {
+     "level": "linked",
+     "key": "12793877",
+     "why": ""
+    }
+   },
+   {
+    "name": "소공바지락칼국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 중구 남대문로 64-1",
+    "match": {
+     "level": "linked",
+     "key": "1697089554",
+     "why": ""
+    }
+   },
+   {
+    "name": "신세계떡볶이",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 중구 명동9길 10",
+    "match": {
+     "level": "linked",
+     "key": "27281774",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:48": {
+  "descHash": "7a02c672f582cfa6",
+  "extractedAt": 1794921060420,
+  "region": "경기 의정부시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "돈까스갤러리",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "27594538",
+     "why": ""
+    }
+   },
+   {
+    "name": "정통부대고기",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 의정부시 호국로 1102",
+    "match": {
+     "level": "linked",
+     "key": "16097868",
+     "why": ""
+    }
+   },
+   {
+    "name": "황포연탄구이",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 의정부시 시민로132번길 14 1층 황포연탄구이",
+    "match": {
+     "level": "linked",
+     "key": "10105529",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:47": {
+  "descHash": "c6dd65e7e051e800",
+  "extractedAt": 1794921060420,
+  "region": "충북 충주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "오뚜기분식",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "충북 충주시 자유시장길 31 1층",
+    "match": {
+     "level": "linked",
+     "key": "8485487",
+     "why": ""
+    }
+   },
+   {
+    "name": "고추장송어",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "충북 충주시 금봉대로 521",
+    "match": {
+     "level": "linked",
+     "key": "12615036",
+     "why": ""
+    }
+   },
+   {
+    "name": "이씨식당",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "충북 충주시 능바우길 15",
+    "match": {
+     "level": "linked",
+     "key": "27362568",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:46": {
+  "descHash": "faac461ade3ba601",
+  "extractedAt": 1794921060420,
+  "region": "서울 성동구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "한양양곱창",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 성동구 마조로 17 51, 52호",
+    "match": {
+     "level": "linked",
+     "key": "574281696",
+     "why": ""
+    }
+   },
+   {
+    "name": "유태",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 성동구 마조로9길 3 1층",
+    "match": {
+     "level": "linked",
+     "key": "866282268",
+     "why": ""
+    }
+   },
+   {
+    "name": "스마일떡볶이",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "일번지",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 성동구 마조로 19-10 2층 일번지",
+    "match": {
+     "level": "linked",
+     "key": "16443155",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:45": {
+  "descHash": "64e0d8b5ed253bc1",
+  "extractedAt": 1794921060420,
+  "region": "울산",
+  "source": "manual",
+  "items": [
+   {
+    "name": "함경면옥",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "울산 남구 돋질로183번길 24",
+    "match": {
+     "level": "linked",
+     "key": "20308398",
+     "why": ""
+    }
+   },
+   {
+    "name": "성원분식",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "울산 동구 상진길 118 성원분식",
+    "match": {
+     "level": "linked",
+     "key": "14738400",
+     "why": ""
+    }
+   },
+   {
+    "name": "하동식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "울산 동구 동해안로 30-7",
+    "match": {
+     "level": "linked",
+     "key": "1649911372",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:44": {
+  "descHash": "b9153cbc836543c1",
+  "extractedAt": 1794921060420,
+  "region": "경북 포항시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "철규분식",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경북 포항시 남구 구룡포읍 구룡포길 62-2",
+    "match": {
+     "level": "linked",
+     "key": "11234352",
+     "why": ""
+    }
+   },
+   {
+    "name": "인천식당",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경북 포항시 북구 중앙로 328",
+    "match": {
+     "level": "linked",
+     "key": "14076429",
+     "why": ""
+    }
+   },
+   {
+    "name": "시장식육식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경북 포항시 북구 청하면 청하로200번길 10-1",
+    "match": {
+     "level": "linked",
+     "key": "11892119",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:43": {
+  "descHash": "ab54a37a6695b8ea",
+  "extractedAt": 1794921060420,
+  "region": "서울 종로구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "대련집",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 종로구 종로16길 37",
+    "match": {
+     "level": "linked",
+     "key": "7818113",
+     "why": ""
+    }
+   },
+   {
+    "name": "함박웃음순대숙",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "우육면관",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 종로구 청계천로 75-2 진중 우육면관 본점 (Niuroumianguan)",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   }
+  ]
+ },
+ "ep:40": {
+  "descHash": "c332184ebb9c6aaf",
+  "extractedAt": 1794921060420,
+  "region": "서울 구로구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "낭만부대찌개",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 구로구 디지털로 288 B104호",
+    "match": {
+     "level": "linked",
+     "key": "20438571",
+     "why": ""
+    }
+   },
+   {
+    "name": "금성관나주곰탕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 구로구 디지털로32길 92 1층 101호",
+    "match": {
+     "level": "linked",
+     "key": "1386103900",
+     "why": ""
+    }
+   },
+   {
+    "name": "무한자금성",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "하이탕마라탕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 구로구 디지털로 306 지1층 B132호",
+    "match": {
+     "level": "linked",
+     "key": "1189631661",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:39": {
+  "descHash": "0a8f46217120d478",
+  "extractedAt": 1794921060420,
+  "region": "전남 순천시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "강변장어",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전남 순천시 순천만길 436",
+    "match": {
+     "level": "linked",
+     "key": "25040254",
+     "why": ""
+    }
+   },
+   {
+    "name": "소라편의점",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "전남 순천시 덕월길 68",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "대숲골농원",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전남 순천시 학동길 54 대숲골농원",
+    "match": {
+     "level": "linked",
+     "key": "10247172",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:38": {
+  "descHash": "d55110668bd6661e",
+  "extractedAt": 1794921060420,
+  "region": "전남 여수시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "백금식당",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "전남 여수시 교동남1길 5-15",
+    "match": {
+     "level": "linked",
+     "key": "21292784",
+     "why": ""
+    }
+   },
+   {
+    "name": "밀터",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전남 여수시 소호로 253",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "명동게장",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전남 여수시 봉산남4길 23-26 명동게장본관",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   }
+  ]
+ },
+ "ep:37": {
+  "descHash": "87997141185039a2",
+  "extractedAt": 1794921060420,
+  "region": "서울 마포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "낭만식탁",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 마포구 토정로 31 1층",
+    "match": {
+     "level": "linked",
+     "key": "1922405272",
+     "why": ""
+    }
+   },
+   {
+    "name": "담택",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 마포구 동교로12안길 51 1층",
+    "match": {
+     "level": "linked",
+     "key": "1534943798",
+     "why": ""
+    }
+   },
+   {
+    "name": "신김치생삼겹살",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 마포구 양화로 50",
+    "match": {
+     "level": "linked",
+     "key": "12264769",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:36": {
+  "descHash": "3a96f4e3b8ccc978",
+  "extractedAt": 1794921060420,
+  "region": "경기 용인시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "엄마손칼국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 용인시 처인구 금학로 343",
+    "match": {
+     "level": "linked",
+     "key": "21289304",
+     "why": ""
+    }
+   },
+   {
+    "name": "명태인생",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 용인시 수지구 수지로342번길 7 수지외식타운",
+    "match": {
+     "level": "linked",
+     "key": "1232653942",
+     "why": ""
+    }
+   },
+   {
+    "name": "산사랑",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경기 용인시 수지구 샘말로89번길 9",
+    "match": {
+     "level": "linked",
+     "key": "12405307",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:35": {
+  "descHash": "f8020b3e11c80702",
+  "extractedAt": 1794921060420,
+  "region": "서울 광진구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "대흥양다리바베큐",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 광진구 아차산로30길 39 1층",
+    "match": {
+     "level": "linked",
+     "key": "14663453",
+     "why": ""
+    }
+   },
+   {
+    "name": "봉자마라탕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 광진구 동일로18길 22",
+    "match": {
+     "level": "linked",
+     "key": "21312920",
+     "why": ""
+    }
+   },
+   {
+    "name": "하리",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "646150607",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:34": {
+  "descHash": "f478634a92892941",
+  "extractedAt": 1794921060420,
+  "region": "부산",
+  "source": "manual",
+  "items": [
+   {
+    "name": "부산갈매기",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "부산 금정구 체육공원로 565",
+    "match": {
+     "level": "linked",
+     "key": "15250444",
+     "why": ""
+    }
+   },
+   {
+    "name": "삼오불고기",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "부산 수영구 수영로610번길 24-2",
+    "match": {
+     "level": "linked",
+     "key": "25039571",
+     "why": ""
+    }
+   },
+   {
+    "name": "세정",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "부산 중구 중구로33번길 45",
+    "match": {
+     "level": "linked",
+     "key": "21337353",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:33": {
+  "descHash": "cab02c8d2fdbb710",
+  "extractedAt": 1794921060420,
+  "region": "경북 경주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "남정부일기사식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경북 경주시 배리1길 3",
+    "match": {
+     "level": "linked",
+     "key": "11992908",
+     "why": ""
+    }
+   },
+   {
+    "name": "승진식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경북 경주시 안강읍 비화동길 22",
+    "match": {
+     "level": "linked",
+     "key": "11667759",
+     "why": ""
+    }
+   },
+   {
+    "name": "빼돌린뒷고기",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경북 경주시 충효중앙길 78",
+    "match": {
+     "level": "linked",
+     "key": "2006190067",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:32": {
+  "descHash": "4103c7914f112ff4",
+  "extractedAt": 1794921060420,
+  "region": "전북 전주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "길거리야",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "전북 전주시 완산구 백마산길 28",
+    "match": {
+     "level": "linked",
+     "key": "10205560",
+     "why": ""
+    }
+   },
+   {
+    "name": "우정식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전북 전주시 완산구 풍남문2길 55 남부시장",
+    "match": {
+     "level": "linked",
+     "key": "10693451",
+     "why": ""
+    }
+   },
+   {
+    "name": "본소바",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전북 전주시 완산구 안행7길 3",
+    "match": {
+     "level": "linked",
+     "key": "21284459",
+     "why": ""
+    }
+   },
+   {
+    "name": "다가양조장",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전북 전주시 완산구 전주객사1길 5",
+    "match": {
+     "level": "linked",
+     "key": "1544371560",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:31": {
+  "descHash": "98f39eb30f693459",
+  "extractedAt": 1794921060420,
+  "region": "서울 종로구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "이유식당",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "혜화도담",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 종로구 대명1길 16-6 혜화도담",
+    "match": {
+     "level": "linked",
+     "key": "497931179",
+     "why": ""
+    }
+   },
+   {
+    "name": "성균관감자탕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 종로구 창경궁로29길 37",
+    "match": {
+     "level": "linked",
+     "key": "17652954",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:30": {
+  "descHash": "2dcf2ca8ba6cf791",
+  "extractedAt": 1794921060420,
+  "region": "서울 영등포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "진주집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 영등포구 국제금융로6길 33 지하 1층",
+    "match": {
+     "level": "linked",
+     "key": "8094563",
+     "why": ""
+    }
+   },
+   {
+    "name": "가양칼국수",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 영등포구 국제금융로 78 홍우빌딩 지하 1층",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "천안식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 영등포구 여의대방로 383 경도빌딩",
+    "match": {
+     "level": "linked",
+     "key": "9435012",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:28": {
+  "descHash": "c9f0ee3de9c2df63",
+  "extractedAt": 1794921060420,
+  "region": "제주 서귀포시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "희신이네",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "제주 서귀포시 서홍로 175",
+    "match": {
+     "level": "linked",
+     "key": "27449497",
+     "why": ""
+    }
+   },
+   {
+    "name": "표선칼국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "제주 서귀포시 표선면 민속해안로 578-3 표선칼국수",
+    "match": {
+     "level": "linked",
+     "key": "26065200",
+     "why": ""
+    }
+   },
+   {
+    "name": "표선우동가게",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "제주 서귀포시 표선면 표선관정로 105-1",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   }
+  ]
+ },
+ "ep:27": {
+  "descHash": "62fde668b284e266",
+  "extractedAt": 1794921060420,
+  "region": "제주 제주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "명물",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "제주 제주시 탑동로11길 2-1 명물",
+    "match": {
+     "level": "linked",
+     "key": "23149701",
+     "why": ""
+    }
+   },
+   {
+    "name": "다담",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "제주 제주시 서광로2길 11-18",
+    "match": {
+     "level": "linked",
+     "key": "13130451",
+     "why": ""
+    }
+   },
+   {
+    "name": "신해바라기",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "800075169",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:26": {
+  "descHash": "2231e149b0aff47b",
+  "extractedAt": 1794921060420,
+  "region": "서울 종로구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "라면땡기는날",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "이태리재",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "792642248",
+     "why": ""
+    }
+   },
+   {
+    "name": "토속촌삼계탕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "26545925",
+     "why": ""
+    }
+   },
+   {
+    "name": "밀양손만두",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "13336630",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:25": {
+  "descHash": "3e8607c9b1356263",
+  "extractedAt": 1794921060420,
+  "region": "강원 원주시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "장군본가",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "8768666",
+     "why": ""
+    }
+   },
+   {
+    "name": "신혼부부",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "10613857",
+     "why": ""
+    }
+   },
+   {
+    "name": "고향칼국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "21344093",
+     "why": ""
+    }
+   },
+   {
+    "name": "대복추어탕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "11269715",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:24": {
+  "descHash": "4583c8c973728f22",
+  "extractedAt": 1794921060420,
+  "region": "서울 강남구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "광평",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "길목",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "27512695",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:23": {
+  "descHash": "c90f249bf4406ff9",
+  "extractedAt": 1794921060420,
+  "region": "강원 속초시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "돈우마을",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "강원 속초시 청초호반로 56 돈우마을",
+    "match": {
+     "level": "linked",
+     "key": "24069103",
+     "why": ""
+    }
+   },
+   {
+    "name": "도문집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "강원 속초시 수복로 199",
+    "match": {
+     "level": "linked",
+     "key": "8910935",
+     "why": ""
+    }
+   },
+   {
+    "name": "송정희어머니",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "강원 속초시 원암학사평길 192 송정희어머니순두부",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   }
+  ]
+ },
+ "ep:22": {
+  "descHash": "5556d37e0c2a02f4",
+  "extractedAt": 1794921060420,
+  "region": "인천",
+  "source": "manual",
+  "items": [
+   {
+    "name": "에픽",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "인천 부평구 경원대로1363번길 8",
+    "match": {
+     "level": "linked",
+     "key": "26643011",
+     "why": ""
+    }
+   },
+   {
+    "name": "일미화평동냉면",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "인천 동구 화평로 18",
+    "match": {
+     "level": "linked",
+     "key": "10745398",
+     "why": ""
+    }
+   },
+   {
+    "name": "남동어시장",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "인천 남동구 하촌로71번길 45 1층 남동어시장",
+    "match": {
+     "level": "linked",
+     "key": "1627641819",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:21": {
+  "descHash": "adb6c7e8691b0407",
+  "extractedAt": 1794921060420,
+  "region": "대전",
+  "source": "manual",
+  "items": [
+   {
+    "name": "와타요업",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "광천식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "현암뚝방구이",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "12265528",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:20": {
+  "descHash": "6f1eecc02c2ffe8d",
+  "extractedAt": 1794921060420,
+  "region": "서울 마포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "육장",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "64633006",
+     "why": ""
+    }
+   },
+   {
+    "name": "가원",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "코랏",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1694999007",
+     "why": ""
+    }
+   },
+   {
+    "name": "나나",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "159889294",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:19": {
+  "descHash": "c09d026069bcd52d",
+  "extractedAt": 1794921060420,
+  "region": "광주",
+  "source": "manual",
+  "items": [
+   {
+    "name": "꾸꾸붕어빵",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "광주 동구 충장로 77-1 꾸꾸붕어빵",
+    "match": {
+     "level": "linked",
+     "key": "1622030130",
+     "why": ""
+    }
+   },
+   {
+    "name": "맛삼",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "광주 동구 서석로7번길 6-46",
+    "match": {
+     "level": "linked",
+     "key": "10343783",
+     "why": ""
+    }
+   },
+   {
+    "name": "엄마네돼지찌개",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "광주 동구 문화전당로23번길 33",
+    "match": {
+     "level": "linked",
+     "key": "10575386",
+     "why": ""
+    }
+   },
+   {
+    "name": "25시참숯구이",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "광주 북구 연양로105번길 7 1층",
+    "match": {
+     "level": "linked",
+     "key": "2083224089",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:18": {
+  "descHash": "5bad23f8b2c0d6e4",
+  "extractedAt": 1794921060420,
+  "region": "전남 목포시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "마지아레스토",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전남 목포시 유달로97번길 2 1층",
+    "match": {
+     "level": "linked",
+     "key": "735927047",
+     "why": ""
+    }
+   },
+   {
+    "name": "선경준치회집",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "전남 목포시 해안로57번길 2",
+    "match": {
+     "level": "linked",
+     "key": "8425892",
+     "why": ""
+    }
+   },
+   {
+    "name": "태동반점",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "전남 목포시 마인계터로40번길 10-1",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:17": {
+  "descHash": "108c7badb5b20fd2",
+  "extractedAt": 1794921060420,
+  "region": "서울 강남구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "우정",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1615184494",
+     "why": ""
+    }
+   },
+   {
+    "name": "까폼",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "558503389",
+     "why": ""
+    }
+   },
+   {
+    "name": "칼리프하우스",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:16": {
+  "descHash": "80ed609f73d3c80e",
+  "extractedAt": 1794921060420,
+  "region": "서울 송파구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "조박사순대국",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "더빛남",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 송파구 오금로18길 5 104호",
+    "match": {
+     "level": "linked",
+     "key": "1618885386",
+     "why": ""
+    }
+   },
+   {
+    "name": "그리지하우스",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 송파구 백제고분로41길 43-17 1층",
+    "match": {
+     "level": "linked",
+     "key": "27184517",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:15": {
+  "descHash": "36bd3ebd8e7830c3",
+  "extractedAt": 1794921060420,
+  "region": "경기 수원시",
+  "source": "manual",
+  "items": [
+   {
+    "name": "대가",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "유동골뱅이",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "경기 수원시 팔달구 매산로 1-10",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "정철황소곱창",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "경기 수원시 영통구 영통로130번길 42",
+    "match": {
+     "level": "linked",
+     "key": "23346761",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:14": {
+  "descHash": "0b57ac72f57a8b0b",
+  "extractedAt": 1794921060420,
+  "region": "서울 용산구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "섬집",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 용산구 한강대로14길 8 2층 3층 4층 섬집",
+    "match": {
+     "level": "linked",
+     "key": "18821272",
+     "why": ""
+    }
+   },
+   {
+    "name": "정성손칼국수",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 용산구 한강대로48길 18",
+    "match": {
+     "level": "linked",
+     "key": "11162581",
+     "why": ""
+    }
+   },
+   {
+    "name": "어항로",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "607203857",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:13": {
+  "descHash": "7848cd9881916927",
+  "extractedAt": 1794921060420,
+  "region": "서울 마포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "후계동",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "카미야",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 마포구 와우산로21길 28-6",
+    "match": {
+     "level": "linked",
+     "key": "12771116",
+     "why": ""
+    }
+   },
+   {
+    "name": "산울림1992",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 마포구 서강로9길 60 산울림1992",
+    "match": {
+     "level": "linked",
+     "key": "2036183426",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:12": {
+  "descHash": "9c933f33fa448c7b",
+  "extractedAt": 1794921060420,
+  "region": "서울 용산구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "쟈니덤플링",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 용산구 보광로59길 33",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "더테이블키친",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "자코비버거",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 용산구 신흥로 38 1층 자코비버거",
+    "match": {
+     "level": "linked",
+     "key": "8057957",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:11": {
+  "descHash": "999bc6800001120c",
+  "extractedAt": 1794921060420,
+  "region": "서울 중구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "토리카미",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 중구 충무로5길 21 1층 102호 토리카미",
+    "match": {
+     "level": "linked",
+     "key": "1732828194",
+     "why": ""
+    }
+   },
+   {
+    "name": "청와옥",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 중구 을지로 110 1층 1호",
+    "match": {
+     "level": "linked",
+     "key": "502452137",
+     "why": ""
+    }
+   },
+   {
+    "name": "화육계",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 중구 을지로14길 21 1층",
+    "match": {
+     "level": "linked",
+     "key": "345283033",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:10": {
+  "descHash": "f895f0b86b009856",
+  "extractedAt": 1794921060420,
+  "region": "서울 강남구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "천진영감",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 강남구 봉은사로6길 26 1층",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "브릭오븐",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 강남구 강남대로102길 31 2층",
+    "match": {
+     "level": "linked",
+     "key": "19037502",
+     "why": ""
+    }
+   },
+   {
+    "name": "떡도리탕",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 강남구 테헤란로1길 28-9 1층",
+    "match": {
+     "level": "linked",
+     "key": "353333104",
+     "why": ""
+    }
+   },
+   {
+    "name": "고메스시",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 강남구 테헤란로1길 26 2층 고메스시",
+    "match": {
+     "level": "linked",
+     "key": "105571085",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:9": {
+  "descHash": "a1fd2f6eef304d20",
+  "extractedAt": 1794921060420,
+  "region": "부산",
+  "source": "manual",
+  "items": [
+   {
+    "name": "아저씨대구탕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "8425381",
+     "why": ""
+    }
+   },
+   {
+    "name": "해운대밀면",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "16722795",
+     "why": ""
+    }
+   },
+   {
+    "name": "원조전복죽",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "MULTI_BRANCH"
+    }
+   },
+   {
+    "name": "상국이네",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "9089301",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:8": {
+  "descHash": "0cf611f11dc09896",
+  "extractedAt": 1794921060420,
+  "region": "대구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "여원찜갈비",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "대구 북구 복현로 182-27",
+    "match": {
+     "level": "linked",
+     "key": "1922232972",
+     "why": ""
+    }
+   },
+   {
+    "name": "왕거미식당",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "대구 중구 국채보상로 696-8",
+    "match": {
+     "level": "linked",
+     "key": "21227823",
+     "why": ""
+    }
+   },
+   {
+    "name": "고인돌",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "대구 동구 아양로9길 5 1층고인돌",
+    "match": {
+     "level": "linked",
+     "key": "10162808",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:7": {
+  "descHash": "59d8f12ea69f015c",
+  "extractedAt": 1794921060420,
+  "region": "서울 마포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "순대일번지",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "16931682",
+     "why": ""
+    }
+   },
+   {
+    "name": "소금집델리",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "산청엔흑돼지",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "1878843042",
+     "why": ""
+    }
+   },
+   {
+    "name": "망원동칼짬뽕",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "linked",
+     "key": "752232889",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:6": {
+  "descHash": "994391aa5f6a5ee7",
+  "extractedAt": 1794921060420,
+  "region": "서울 영등포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "오복순대국",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 영등포구 도림로 465",
+    "match": {
+     "level": "linked",
+     "key": "24040605",
+     "why": ""
+    }
+   },
+   {
+    "name": "무슨클럽",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 영등포구 도림로139길 4 4층",
+    "match": {
+     "level": "linked",
+     "key": "1875869791",
+     "why": ""
+    }
+   },
+   {
+    "name": "골목집",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 영등포구 도림로125길 34 1층",
+    "match": {
+     "level": "linked",
+     "key": "62149761",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:5": {
+  "descHash": "02f700854c4ed6ea",
+  "extractedAt": 1794921060420,
+  "region": "서울 서대문구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "맘맘테이블",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
+    }
+   },
+   {
+    "name": "카라멘야",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 서대문구 연세로7안길 34-1 1층",
+    "match": {
+     "level": "linked",
+     "key": "1025832828",
+     "why": ""
+    }
+   },
+   {
+    "name": "유아케도쿄",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "고삼이",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 서대문구 연세로7안길 38 고삼이",
+    "match": {
+     "level": "linked",
+     "key": "17505297",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:4": {
+  "descHash": "2cfff05d938aec0f",
+  "extractedAt": 1794921060420,
+  "region": "서울 성동구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "소바식당",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 성동구 연무장7가길 6 1층",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "돈앤돈",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "성수부두",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 성동구 연무장길 41-26 지하1층",
+    "match": {
+     "level": "linked",
+     "key": "1282309711",
+     "why": ""
+    }
+   }
+  ]
+ },
+ "ep:1": {
+  "descHash": "29a34fadcccb61a8",
+  "extractedAt": 1794921060420,
+  "region": "서울 마포구",
+  "source": "manual",
+  "items": [
+   {
+    "name": "경향카츠",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "",
+    "match": {
+     "level": "none",
+     "key": "",
+     "why": ""
+    }
+   },
+   {
+    "name": "카쿠시타",
+    "role": "visited",
+    "cue": "manual",
+    "addr": "서울 마포구 동교로38길 33-15 지하1층",
+    "match": {
+     "level": "linked",
+     "key": "1317927211",
+     "why": ""
+    }
+   },
+   {
+    "name": "뉴오더클럽",
+    "role": "winner",
+    "cue": "manual",
+    "addr": "서울 마포구 동교로34길 3 1F 뉴오더클럽",
+    "match": {
+     "level": "ambiguous",
+     "key": "",
+     "why": "WEAK_MATCH"
     }
    }
   ]

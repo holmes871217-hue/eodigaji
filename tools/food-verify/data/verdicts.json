@@ -1,4 +1,160 @@
 {
+ "7818113": {
+  "name": "대련집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:43"
+  ]
+ },
+ "7982844": {
+  "name": "아리조나막창",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:50"
+  ]
+ },
+ "8045618": {
+  "name": "일산칼국수 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:66"
+  ]
+ },
+ "8057957": {
+  "name": "자코비버거 이태원점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:12"
+  ]
+ },
+ "8094563": {
+  "name": "진주집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:30"
+  ]
+ },
+ "8189367": {
+  "name": "곰집갈비",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:67"
+  ]
+ },
+ "8245887": {
+  "name": "논고을",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:59"
+  ]
+ },
+ "8327534": {
+  "name": "부산이화양곱창",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:72"
+  ]
+ },
+ "8425381": {
+  "name": "아저씨대구탕",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:9"
+  ]
+ },
+ "8425892": {
+  "name": "선경준치회집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:18"
+  ]
+ },
+ "8485487": {
+  "name": "오뚜기분식",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:47"
+  ]
+ },
+ "8571730": {
+  "name": "풀뿌리흑두부 1호점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:83"
+  ]
+ },
+ "8768666": {
+  "name": "장군본가",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:25"
+  ]
+ },
  "8844408": {
   "name": "다락가든",
   "status": "eligible",
@@ -9,6 +165,54 @@
   "episodes": 1,
   "videos": [
    "9LdSGv5wHec"
+  ]
+ },
+ "8910935": {
+  "name": "도문집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:23"
+  ]
+ },
+ "8954969": {
+  "name": "된장박이 진성집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "LI-mgx3HL3I"
+  ]
+ },
+ "8987935": {
+  "name": "물치손칼국수",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:56"
+  ]
+ },
+ "9089301": {
+  "name": "상국이네",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:9"
   ]
  },
  "9204068": {
@@ -35,16 +239,400 @@
    "qqNFLhkYh04"
   ]
  },
- "10335617": {
-  "name": "막내회집 본점",
+ "9367371": {
+  "name": "장수촌",
   "status": "eligible",
   "reasons": [],
   "channels": 1,
-  "score": 5.5,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "Uf8V4EvPKWk"
+  ]
+ },
+ "9435012": {
+  "name": "천안식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:30"
+  ]
+ },
+ "9765440": {
+  "name": "명문제과",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
   "top": "winner",
   "episodes": 1,
   "videos": [
+   "ep:84"
+  ]
+ },
+ "10021689": {
+  "name": "함경면옥",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:56"
+  ]
+ },
+ "10093756": {
+  "name": "하레하레 둔산점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:61"
+  ]
+ },
+ "10105529": {
+  "name": "황포연탄구이 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:48"
+  ]
+ },
+ "10162808": {
+  "name": "고인돌",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:8"
+  ]
+ },
+ "10205560": {
+  "name": "길거리야 전주대점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:32"
+  ]
+ },
+ "10209539": {
+  "name": "금생춘",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:84"
+  ]
+ },
+ "10247172": {
+  "name": "대숲골농원",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:39"
+  ]
+ },
+ "10248767": {
+  "name": "대명관",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:67"
+  ]
+ },
+ "10343783": {
+  "name": "맛삼",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:19"
+  ]
+ },
+ "10372117": {
+  "name": "또순이네집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:64"
+  ]
+ },
+ "10575386": {
+  "name": "엄마네돼지찌개",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:19"
+  ]
+ },
+ "10613857": {
+  "name": "신혼부부",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:25"
+  ]
+ },
+ "10619983": {
+  "name": "왕성식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
    "xGzUPV1lqNw"
+  ]
+ },
+ "10635098": {
+  "name": "영화루",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "vbBYnmELwqk"
+  ]
+ },
+ "10693451": {
+  "name": "우정식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:32"
+  ]
+ },
+ "10727290": {
+  "name": "장안회집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:57"
+  ]
+ },
+ "10745398": {
+  "name": "일미화평동냉면",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:22"
+  ]
+ },
+ "10928210": {
+  "name": "합천일류돼지국밥 사상점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:51"
+  ]
+ },
+ "11053604": {
+  "name": "빈해원",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:63"
+  ]
+ },
+ "11162581": {
+  "name": "정성손칼국수",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:14"
+  ]
+ },
+ "11193147": {
+  "name": "옛카나리아",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:57"
+  ]
+ },
+ "11234352": {
+  "name": "철규분식",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:44"
+  ]
+ },
+ "11265787": {
+  "name": "밥상마당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:68"
+  ]
+ },
+ "11269715": {
+  "name": "대복추어탕",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:25"
+  ]
+ },
+ "11532220": {
+  "name": "우성닭갈비 퇴계점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:54"
+  ]
+ },
+ "11663356": {
+  "name": "상운메밀촌",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:56"
+  ]
+ },
+ "11667759": {
+  "name": "승진식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:33"
+  ]
+ },
+ "11892119": {
+  "name": "시장식육식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:44"
+  ]
+ },
+ "11892365": {
+  "name": "충남집순대",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:60"
+  ]
+ },
+ "11992908": {
+  "name": "남정부일기사식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:33"
   ]
  },
  "12042028": {
@@ -59,6 +647,270 @@
    "-rdQxOZgQCE"
   ]
  },
+ "12055448": {
+  "name": "대성갈비",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:52"
+  ]
+ },
+ "12264769": {
+  "name": "신김치생삼겹살",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:37"
+  ]
+ },
+ "12265528": {
+  "name": "현암뚝방구이",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:21"
+  ]
+ },
+ "12405307": {
+  "name": "산사랑",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:36"
+  ]
+ },
+ "12460195": {
+  "name": "돈까스먹는용만이",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "uXq3hmDhpps"
+  ]
+ },
+ "12615036": {
+  "name": "고추장송어",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:47"
+  ]
+ },
+ "12771116": {
+  "name": "카미야",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:13"
+  ]
+ },
+ "12793877": {
+  "name": "란주칼면",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:49"
+  ]
+ },
+ "13053446": {
+  "name": "모녀김밥",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "y4rM8vnYsZc"
+  ]
+ },
+ "13068929": {
+  "name": "고향",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:73"
+  ]
+ },
+ "13130451": {
+  "name": "다담",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:27"
+  ]
+ },
+ "13141353": {
+  "name": "태양생고기",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:55"
+  ]
+ },
+ "13336630": {
+  "name": "밀양손만두",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:26"
+  ]
+ },
+ "13639001": {
+  "name": "서성식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "Z-zG-6rynP8"
+  ]
+ },
+ "14076429": {
+  "name": "인천식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:44"
+  ]
+ },
+ "14663453": {
+  "name": "대흥양다리바베큐 건대점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:35"
+  ]
+ },
+ "14738400": {
+  "name": "성원분식",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:45"
+  ]
+ },
+ "14835165": {
+  "name": "성원농장",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:76"
+  ]
+ },
+ "14918446": {
+  "name": "풍전뚝집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "rqmIz5TAhwY"
+  ]
+ },
+ "14951761": {
+  "name": "체부동잔치집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "vbBYnmELwqk"
+  ]
+ },
+ "14974801": {
+  "name": "숙이네국수",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "Uf8V4EvPKWk"
+  ]
+ },
+ "15250444": {
+  "name": "부산갈매기",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:34"
+  ]
+ },
  "15350685": {
   "name": "미락식당",
   "status": "eligible",
@@ -71,6 +923,66 @@
    "4cCrjwgi54w"
   ]
  },
+ "15480316": {
+  "name": "마마교자관",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "4cCrjwgi54w"
+  ]
+ },
+ "15861351": {
+  "name": "미오또닭강정",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "4cCrjwgi54w"
+  ]
+ },
+ "15996436": {
+  "name": "강촌마을",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:55"
+  ]
+ },
+ "16050121": {
+  "name": "일등식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "fvD36nHVbhs"
+  ]
+ },
+ "16097868": {
+  "name": "정통부대고기",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:48"
+  ]
+ },
  "16182544": {
   "name": "경림수산",
   "status": "eligible",
@@ -81,6 +993,162 @@
   "episodes": 1,
   "videos": [
    "7vqYRXkPyTQ"
+  ]
+ },
+ "16443155": {
+  "name": "일번지",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:46"
+  ]
+ },
+ "16507806": {
+  "name": "봉용불고기 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:53"
+  ]
+ },
+ "16529267": {
+  "name": "동해오징어보쌈",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:79"
+  ]
+ },
+ "16669475": {
+  "name": "합천식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:51"
+  ]
+ },
+ "16722795": {
+  "name": "해운대밀면",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:9"
+  ]
+ },
+ "16828557": {
+  "name": "화강송어회",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "2WLWFZ81k6E"
+  ]
+ },
+ "16931682": {
+  "name": "순대일번지",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:7"
+  ]
+ },
+ "17143020": {
+  "name": "봄날에청국장",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "-rdQxOZgQCE"
+  ]
+ },
+ "17505297": {
+  "name": "고삼이 신촌점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:5"
+  ]
+ },
+ "17652954": {
+  "name": "성균관감자탕",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:31"
+  ]
+ },
+ "17733090": {
+  "name": "성심당 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:61"
+  ]
+ },
+ "17739848": {
+  "name": "길풍",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:80"
+  ]
+ },
+ "17794415": {
+  "name": "웅천부일식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:83"
   ]
  },
  "17959212": {
@@ -107,6 +1175,66 @@
    "2WLWFZ81k6E"
   ]
  },
+ "18508179": {
+  "name": "면마루",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:65"
+  ]
+ },
+ "18755777": {
+  "name": "순희네빈대떡",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "y4rM8vnYsZc"
+  ]
+ },
+ "18821272": {
+  "name": "섬집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:14"
+  ]
+ },
+ "19016749": {
+  "name": "홍두깨손칼국수 2호점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:79"
+  ]
+ },
+ "19037502": {
+  "name": "브릭오븐",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:10"
+  ]
+ },
  "20296394": {
   "name": "북경탕수육 공주점",
   "status": "eligible",
@@ -117,6 +1245,174 @@
   "episodes": 1,
   "videos": [
    "-vsNkVIRvt0"
+  ]
+ },
+ "20304354": {
+  "name": "신간짬뽕 금촌점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:82"
+  ]
+ },
+ "20308398": {
+  "name": "함경면옥",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:45"
+  ]
+ },
+ "20438571": {
+  "name": "낭만부대찌개",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:40"
+  ]
+ },
+ "20534752": {
+  "name": "밀양집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:51"
+  ]
+ },
+ "20745677": {
+  "name": "복돈이부추삼겹살 사당본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:59"
+  ]
+ },
+ "21227823": {
+  "name": "왕거미식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:8"
+  ]
+ },
+ "21284459": {
+  "name": "본소바",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:32"
+  ]
+ },
+ "21284482": {
+  "name": "심학산도토리국수 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:82"
+  ]
+ },
+ "21289304": {
+  "name": "엄마손칼국수",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:36"
+  ]
+ },
+ "21292784": {
+  "name": "백금식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:38"
+  ]
+ },
+ "21312920": {
+  "name": "봉자마라탕",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:35"
+  ]
+ },
+ "21328419": {
+  "name": "한남부대찌개",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "qM4IliSpcrE"
+  ]
+ },
+ "21337353": {
+  "name": "세정",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:34"
+  ]
+ },
+ "21344093": {
+  "name": "고향칼국수",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:25"
   ]
  },
  "21412672": {
@@ -131,6 +1427,138 @@
    "uXq3hmDhpps"
   ]
  },
+ "21722720": {
+  "name": "형제육회 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "y4rM8vnYsZc"
+  ]
+ },
+ "22470620": {
+  "name": "촌식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "rqmIz5TAhwY"
+  ]
+ },
+ "23149701": {
+  "name": "명물",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:27"
+  ]
+ },
+ "23346761": {
+  "name": "정철황소곱창 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:15"
+  ]
+ },
+ "23373114": {
+  "name": "학곡리막국수닭갈비",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:54"
+  ]
+ },
+ "23734496": {
+  "name": "포호치민",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "LI-mgx3HL3I"
+  ]
+ },
+ "24040605": {
+  "name": "오복순대국",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:6"
+  ]
+ },
+ "24069103": {
+  "name": "돈우마을 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:23"
+  ]
+ },
+ "24472814": {
+  "name": "한채쭈꾸미",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:81"
+  ]
+ },
+ "25039571": {
+  "name": "삼오불고기",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:34"
+  ]
+ },
+ "25040254": {
+  "name": "강변장어",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:39"
+  ]
+ },
  "25969289": {
   "name": "용수촌",
   "status": "eligible",
@@ -141,6 +1569,150 @@
   "episodes": 1,
   "videos": [
    "Z6cPZiosZEo"
+  ]
+ },
+ "26065200": {
+  "name": "표선칼국수",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:28"
+  ]
+ },
+ "26545925": {
+  "name": "토속촌삼계탕",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:26"
+  ]
+ },
+ "26643011": {
+  "name": "에픽",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:22"
+  ]
+ },
+ "26777853": {
+  "name": "어전",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:72"
+  ]
+ },
+ "26898559": {
+  "name": "부산문현곱창",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:73"
+  ]
+ },
+ "27152913": {
+  "name": "버드나무브루어리",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:57"
+  ]
+ },
+ "27184517": {
+  "name": "그리지하우스",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:16"
+  ]
+ },
+ "27281774": {
+  "name": "신세계떡볶이",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:49"
+  ]
+ },
+ "27362568": {
+  "name": "이씨식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:47"
+  ]
+ },
+ "27441753": {
+  "name": "돌판하나",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:58"
+  ]
+ },
+ "27449497": {
+  "name": "희신이네",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:28"
+  ]
+ },
+ "27512695": {
+  "name": "길목",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:24"
   ]
  },
  "27571944": {
@@ -155,6 +1727,90 @@
    "mNjTXSfQXnE"
   ]
  },
+ "27594538": {
+  "name": "돈까스갤러리",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:48"
+  ]
+ },
+ "46094792": {
+  "name": "1.5닭갈비",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:54"
+  ]
+ },
+ "57913604": {
+  "name": "떡산",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:62"
+  ]
+ },
+ "62149761": {
+  "name": "골목집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:6"
+  ]
+ },
+ "64633006": {
+  "name": "육장",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:20"
+  ]
+ },
+ "105571085": {
+  "name": "고메스시",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:10"
+  ]
+ },
+ "108763820": {
+  "name": "포폴로피자",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:66"
+  ]
+ },
  "114122314": {
   "name": "뚱이네포차",
   "status": "eligible",
@@ -165,6 +1821,66 @@
   "episodes": 1,
   "videos": [
    "rqmIz5TAhwY"
+  ]
+ },
+ "115615227": {
+  "name": "진토랑",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "-vsNkVIRvt0"
+  ]
+ },
+ "132500108": {
+  "name": "이치젠",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "fvD36nHVbhs"
+  ]
+ },
+ "148377340": {
+  "name": "안동서문찜닭",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:80"
+  ]
+ },
+ "159889294": {
+  "name": "나나",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:20"
+  ]
+ },
+ "170803401": {
+  "name": "고향순대국밥",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:62"
   ]
  },
  "276672628": {
@@ -179,6 +1895,138 @@
    "mVOW2N97Usk"
   ]
  },
+ "345283033": {
+  "name": "화육계",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:11"
+  ]
+ },
+ "353333104": {
+  "name": "떡도리탕 강남본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:10"
+  ]
+ },
+ "434241112": {
+  "name": "아구훈감",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:73"
+  ]
+ },
+ "453923553": {
+  "name": "육돈 동탄점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:71"
+  ]
+ },
+ "497931179": {
+  "name": "혜화도담",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:31"
+  ]
+ },
+ "502452137": {
+  "name": "청와옥 을지로3가직영점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:11"
+  ]
+ },
+ "522898168": {
+  "name": "큰집피순대",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:64"
+  ]
+ },
+ "558503389": {
+  "name": "까폼 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:17"
+  ]
+ },
+ "559525400": {
+  "name": "상남수제돈까스",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:69"
+  ]
+ },
+ "574281696": {
+  "name": "한양양곱창",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:46"
+  ]
+ },
+ "607203857": {
+  "name": "어항로",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:14"
+  ]
+ },
  "638654703": {
   "name": "천성삼거리장어구이",
   "status": "eligible",
@@ -189,6 +2037,198 @@
   "episodes": 1,
   "videos": [
    "1HExH6cy5BQ"
+  ]
+ },
+ "646150607": {
+  "name": "하리",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:35"
+  ]
+ },
+ "666964150": {
+  "name": "일직식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:80"
+  ]
+ },
+ "735927047": {
+  "name": "마지아레스토",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:18"
+  ]
+ },
+ "740043035": {
+  "name": "망원돈까스 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "fvD36nHVbhs"
+  ]
+ },
+ "752232889": {
+  "name": "망원동칼짬뽕",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:7"
+  ]
+ },
+ "783645830": {
+  "name": "쭈꾸미술관",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:59"
+  ]
+ },
+ "792642248": {
+  "name": "이태리재",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:26"
+  ]
+ },
+ "796191587": {
+  "name": "강변다찌",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:68"
+  ]
+ },
+ "800075169": {
+  "name": "신해바라기 제2호점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:27"
+  ]
+ },
+ "813864270": {
+  "name": "얼룩말식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:79"
+  ]
+ },
+ "844701705": {
+  "name": "육더쿠 김포구래점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:76"
+  ]
+ },
+ "846005317": {
+  "name": "세몰리나클럽",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:65"
+  ]
+ },
+ "846414873": {
+  "name": "푸차이로오 금오산본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:81"
+  ]
+ },
+ "854495817": {
+  "name": "일호집 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:82"
+  ]
+ },
+ "866282268": {
+  "name": "유태",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:46"
+  ]
+ },
+ "868867844": {
+  "name": "진천집생고기",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:53"
   ]
  },
  "889810020": {
@@ -203,6 +2243,150 @@
    "fvD36nHVbhs"
   ]
  },
+ "899767628": {
+  "name": "심학산닭갈비",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:82"
+  ]
+ },
+ "911186024": {
+  "name": "1966정원 대항점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "1HExH6cy5BQ"
+  ]
+ },
+ "929060385": {
+  "name": "버섯집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:52"
+  ]
+ },
+ "972557256": {
+  "name": "라도집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5.5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "qM4IliSpcrE"
+  ]
+ },
+ "975253879": {
+  "name": "쫀삼곱 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "mNjTXSfQXnE"
+  ]
+ },
+ "1012202600": {
+  "name": "청춘키친",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:69"
+  ]
+ },
+ "1025832828": {
+  "name": "카라멘야",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:5"
+  ]
+ },
+ "1030321881": {
+  "name": "스시미라이",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:64"
+  ]
+ },
+ "1120377366": {
+  "name": "농가의하루 동탄본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:71"
+  ]
+ },
+ "1132071803": {
+  "name": "든든한추어탕 힘나는낙지볶음",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "2WLWFZ81k6E"
+  ]
+ },
+ "1150232594": {
+  "name": "통영해물뚝배기 장기점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:76"
+  ]
+ },
+ "1151395158": {
+  "name": "PUD",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "qqNFLhkYh04"
+  ]
+ },
  "1167825274": {
   "name": "진수식당",
   "status": "eligible",
@@ -213,6 +2397,18 @@
   "episodes": 1,
   "videos": [
    "5tV8wKaUxSA"
+  ]
+ },
+ "1189631661": {
+  "name": "하이탕마라탕",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:40"
   ]
  },
  "1202480492": {
@@ -227,6 +2423,342 @@
    "LI-mgx3HL3I"
   ]
  },
+ "1232653942": {
+  "name": "명태인생",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:36"
+  ]
+ },
+ "1282309711": {
+  "name": "성수부두",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:4"
+  ]
+ },
+ "1317927211": {
+  "name": "카쿠시타",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:1"
+  ]
+ },
+ "1323525676": {
+  "name": "긍정식당 불당점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:60"
+  ]
+ },
+ "1371314948": {
+  "name": "남원밀면",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:84"
+  ]
+ },
+ "1386103900": {
+  "name": "금성관 나주곰탕 구로직영점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:40"
+  ]
+ },
+ "1496311890": {
+  "name": "피렌체테이블",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "qqNFLhkYh04"
+  ]
+ },
+ "1526604428": {
+  "name": "온타이키친",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "vAKeY1t_bLI"
+  ]
+ },
+ "1533481993": {
+  "name": "밀양산내돼지국밥",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "1HExH6cy5BQ"
+  ]
+ },
+ "1534943798": {
+  "name": "담택 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:37"
+  ]
+ },
+ "1544371560": {
+  "name": "다가양조장",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:32"
+  ]
+ },
+ "1570871760": {
+  "name": "용용생고기",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:53"
+  ]
+ },
+ "1615184494": {
+  "name": "우정",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:17"
+  ]
+ },
+ "1618885386": {
+  "name": "더빛남",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:16"
+  ]
+ },
+ "1622030130": {
+  "name": "꾸꾸붕어빵",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:19"
+  ]
+ },
+ "1627641819": {
+  "name": "남동어시장",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:22"
+  ]
+ },
+ "1649911372": {
+  "name": "하동식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:45"
+  ]
+ },
+ "1652998911": {
+  "name": "숙골순대",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "-vsNkVIRvt0"
+  ]
+ },
+ "1694999007": {
+  "name": "코랏",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:20"
+  ]
+ },
+ "1697089554": {
+  "name": "소공바지락칼국수",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:49"
+  ]
+ },
+ "1732828194": {
+  "name": "토리카미",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:11"
+  ]
+ },
+ "1751324133": {
+  "name": "올드페리도넛 용산아이파크몰점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "qM4IliSpcrE"
+  ]
+ },
+ "1754772551": {
+  "name": "조촌이층집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:63"
+  ]
+ },
+ "1777037747": {
+  "name": "군산소바청사초롱 군산직영점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:63"
+  ]
+ },
+ "1786357122": {
+  "name": "굴토리",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:66"
+  ]
+ },
+ "1797543049": {
+  "name": "레츠잇치킨",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:52"
+  ]
+ },
+ "1812550076": {
+  "name": "미가 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:58"
+  ]
+ },
+ "1825790295": {
+  "name": "본질닭도리탕",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:72"
+  ]
+ },
  "1832568835": {
   "name": "사직로 서울",
   "status": "eligible",
@@ -237,6 +2769,66 @@
   "episodes": 1,
   "videos": [
    "vbBYnmELwqk"
+  ]
+ },
+ "1875869791": {
+  "name": "무슨클럽",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:6"
+  ]
+ },
+ "1878843042": {
+  "name": "산청엔흑돼지 서울1호점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:7"
+  ]
+ },
+ "1917191882": {
+  "name": "옥경이네",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "rqmIz5TAhwY"
+  ]
+ },
+ "1922232972": {
+  "name": "여원찜갈비",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:8"
+  ]
+ },
+ "1922405272": {
+  "name": "낭만식탁",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:37"
   ]
  },
  "2002173821": {
@@ -251,6 +2843,78 @@
    "Ppt-Dr0QT_o"
   ]
  },
+ "2006190067": {
+  "name": "빼돌린뒷고기",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:33"
+  ]
+ },
+ "2008349332": {
+  "name": "곰냉면 남대문본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "xGzUPV1lqNw"
+  ]
+ },
+ "2036183426": {
+  "name": "산울림1992",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:13"
+  ]
+ },
+ "2050202932": {
+  "name": "류정 닭개장",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "vAKeY1t_bLI"
+  ]
+ },
+ "2059217223": {
+  "name": "하루팡",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:61"
+  ]
+ },
+ "2083224089": {
+  "name": "25시참숯구이",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:19"
+  ]
+ },
  "2097320989": {
   "name": "박가네",
   "status": "eligible",
@@ -261,6 +2925,30 @@
   "episodes": 1,
   "videos": [
    "nxukV1yfvCA"
+  ]
+ },
+ "2140799580": {
+  "name": "영심횟집",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "Z-zG-6rynP8"
+  ]
+ },
+ "2144193869": {
+  "name": "오삼숙이",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:74"
   ]
  }
 }
