@@ -1338,6 +1338,74 @@
     "at": 1795433350436,
     "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVkRPGh4SCjIwMjYtMTItMTRqBwgBEgNWRE9yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
+  },
+  "UTH": {
+   "iata": "UTH",
+   "date": "2026-12-10",
+   "at": 1795435277000,
+   "transfer": {
+    "min": 640,
+    "via": "BKK"
+   },
+   "fare": {
+    "min": 944742,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795435277000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVVRIGh4SCjIwMjYtMTItMTRqBwgBEgNVVEhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "KKC": {
+   "iata": "KKC",
+   "date": "2026-12-10",
+   "at": 1795435277000,
+   "transfer": {
+    "min": 690,
+    "via": "BKK"
+   },
+   "fare": {
+    "min": 1074100,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795435277000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0tDGh4SCjIwMjYtMTItMTRqBwgBEgNLS0NyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "HDY": {
+   "iata": "HDY",
+   "date": "2026-12-10",
+   "at": 1795435277000,
+   "transfer": {
+    "min": 665,
+    "via": "BKK"
+   },
+   "fare": {
+    "min": 729692,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795435277000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSERZGh4SCjIwMjYtMTItMTRqBwgBEgNIRFlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "URT": {
+   "iata": "URT",
+   "date": "2026-12-10",
+   "at": 1795435277000,
+   "transfer": {
+    "min": 1480,
+    "via": "BKK"
+   },
+   "fare": {
+    "min": 896000,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795435277000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVVJUGh4SCjIwMjYtMTItMTRqBwgBEgNVUlRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
   }
  }
 }

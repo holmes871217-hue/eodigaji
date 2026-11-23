@@ -212,7 +212,7 @@ function courseCard(c) {
           <span class="card-meta">${esc(placeText(c))}</span>
           ${c.rating ? `<span class="mt-rate"><b>★ ${c.rating}</b> <small>(${Number(c.reviews || 0).toLocaleString('ko-KR')})</small></span>` : ''}
           <span class="mt-price">${c.price ? `<small>1인당</small><b>${won(c.price)}</b>` : `<small>${c.agency ? '예약 대행(그린피 별도 안내)' : '가격 정보 없음'}</small>`}</span>
-          ${withAir ? `<span class="mt-air">항공 포함 약 ${won(withAir)}</span>` : ''}
+          ${withAir ? `<span class="mt-air">항공 포함 약 ${won(withAir)}</span>` : c.air?.fare ? `<span class="mt-air">왕복 항공권 약 ${won(c.air.fare)}~</span>` : ''}
         </span>
       </button>
     </li>`;
