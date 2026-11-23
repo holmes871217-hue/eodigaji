@@ -6,8 +6,15 @@
    "ep": 112,
    "publishedAt": "2026-11-06",
    "region": "신당",
-   "restaurants": [],
-   "note": "또갈집 선정 보류(최종 선정 식당 없음)"
+   "restaurants": [
+    {
+     "name": "하오카오스탠",
+     "role": "visited",
+     "src": "식당 공식 인스타그램 게시글(또간집 신당편 소개 안내) https://www.instagram.com/reel/DfmfIYvhpAE/"
+    }
+   ],
+   "note": "또갈집 선정 보류(최종 선정 식당 없음)",
+   "regionKey": "서울 중구"
   },
   {
    "videoId": "Z6cPZiosZEo",
@@ -19,6 +26,16 @@
      "name": "용수촌",
      "role": "winner",
      "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    },
+    {
+     "name": "부광족발",
+     "role": "visited",
+     "src": "[확실하지 않음] 인스타그램 게시글이 \"또간집 다녀가신 곳\"으로 적음 https://www.instagram.com/reel/DfD4mQ3vR6z/"
+    },
+    {
+     "name": "땡초화끈이",
+     "role": "visited",
+     "src": "[확실하지 않음] 인스타그램 게시글이 \"또간집 다녀가신 곳\"으로 적음 https://www.instagram.com/reel/DfD4mQ3vR6z/"
     }
    ],
    "regionKey": "전북 익산시"
@@ -33,6 +50,18 @@
      "name": "아들딸사랑한다",
      "role": "winner",
      "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    },
+    {
+     "name": "한우통큰소곱창",
+     "role": "visited",
+     "src": "공개 게시글(인스타그램·네이버 블로그 후기, 2026-11 확인) https://www.instagram.com/reel/DeRsykeIUkJ/",
+     "addr": "전북 정읍시 수성택지7길 16-7"
+    },
+    {
+     "name": "청면옥",
+     "role": "visited",
+     "src": "공개 게시글(인스타그램·네이버 블로그 후기, 2026-11 확인) https://www.instagram.com/reel/DeRsykeIUkJ/",
+     "addr": "전북 정읍시 상동중앙로 24-18"
     }
    ],
    "regionKey": "전북 정읍시"
@@ -47,6 +76,12 @@
      "name": "밀향기",
      "role": "winner",
      "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    },
+    {
+     "name": "잉꼬칼국수",
+     "role": "visited",
+     "src": "공개 게시글(인스타그램·네이버 블로그 후기, 2026-11 확인) https://www.instagram.com/p/DdsvUCJk1yI/",
+     "addr": "경기 구리시 체육관로171번길 11-4"
     }
    ],
    "regionKey": "경기 구리시"
@@ -69,6 +104,16 @@
      "name": "주문진 막국수",
      "role": "winner",
      "src": "나무위키 '또간집' 문서 방영 목록 표의 '또갈집'(최종 선정) 열, 2026-11-17 확인 https://namu.wiki/w/%EB%98%90%EA%B0%84%EC%A7%91"
+    },
+    {
+     "name": "쌍둥이돼지국밥",
+     "role": "visited",
+     "src": "공개 게시글(인스타그램·네이버 블로그 후기, 2026-11 확인) https://www.threads.com/@topstarnews/post/DcU0sPEGjWw"
+    },
+    {
+     "name": "삼천포횟집",
+     "role": "visited",
+     "src": "공개 게시글(인스타그램·네이버 블로그 후기, 2026-11 확인) https://www.threads.com/@topstarnews/post/DcU0sPEGjWw"
     }
    ],
    "regionKey": "부산"
