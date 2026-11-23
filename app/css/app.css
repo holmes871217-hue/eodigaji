@@ -693,3 +693,7 @@ svg { flex: none; }
 .golf-stay-body { display: grid; gap: 2px; min-width: 0; }
 .golf-stay-body b { font-size: var(--fs-sm); line-height: 1.35; }
 .golf-stay-body small { font-size: 12px; color: var(--ink-2); }
+
+.golf-stay-btn { width: 100%; margin-top: 14px; }
+.golf-cities { margin-top: 10px; }
+.golf-staychips { margin-top: 10px; margin-bottom: 18px; }

@@ -145,7 +145,26 @@ function abroad(state, data) {
       <button type="button" class="chip ${kind === 'course' ? 'is-on' : ''}" data-action="golf-kind" data-v="course" aria-pressed="${kind === 'course'}">골프장</button>
       <button type="button" class="chip ${kind === 'pack' ? 'is-on' : ''}" data-action="golf-kind" data-v="pack" aria-pressed="${kind === 'pack'}">패키지 상품</button>
     </div>`;
-  return seg + (kind === 'pack' ? abroadPacks(state, data) : abroadCourses(state, data));
+  const t = abroadTrip(state);
+  const when = `
+    <label class="field mt">
+      <span class="field-label">가는 날짜</span>
+      <input type="date" class="input" id="golf-ab-date" value="${esc(t.dep)}" min="${todayISO()}" data-field="golf-ab-date">
+    </label>
+    <div class="chips golf-staychips" role="group" aria-label="일정">
+      ${AB_STAYS.map(([n, d]) => `<button type="button" class="chip ${n === t.nights && d === t.days ? 'is-on' : ''}" data-action="golf-ab-stay" data-v="${n}-${d}" aria-pressed="${n === t.nights && d === t.days}">${n}박 ${d}일</button>`).join('')}
+    </div>`;
+  return seg + when + (kind === 'pack' ? abroadPacks(state, data) : abroadCourses(state, data));
+}
+
+/** 해외 일정: 가는 날짜(처음엔 마이 탭 가는 날짜)와 몇 박 며칠 → 돌아오는 날·체크아웃 날 */
+const AB_STAYS = [[2, 3], [3, 4], [3, 5], [4, 6]];
+const addDays = (iso, n) => { const d = new Date(`${iso}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+export function abroadTrip(state) {
+  const g = state.ui.golf;
+  const dep = g.abDate && g.abDate >= todayISO() ? g.abDate : state.profile.date;
+  const [nights, days] = AB_STAYS.find(([n, d]) => `${n}-${d}` === g.abStay) || [3, 5];
+  return { dep, nights, days, ret: addDays(dep, days - 1), out: addDays(dep, nights) };
 }
 
 /** 해외 골프장(몽키트래블처럼): 대륙 → 나라 → 도시, 사진 카드, 1인당 가격 */
@@ -164,7 +183,7 @@ function abroadCourses(state, data) {
   return `
     <div class="chips chips-wrap" role="group" aria-label="대륙">${chip('golf-cont', '', '전체', !cont)}${conts.map((c) => chip('golf-cont', c, c, c === cont)).join('')}</div>
     ${countries.length ? `<div class="chips chips-wrap" role="group" aria-label="나라">${chip('golf-country', '', `${cont} 전체`, !country)}${countries.map((c) => chip('golf-country', c, c, c === country)).join('')}</div>` : ''}
-    ${cities.length > 1 ? `<div class="chips chips-wrap" role="group" aria-label="도시">${chip('golf-city', '', `${country} 전체`, !city)}${cities.map(([n, k]) => chip('golf-city', n, `${n} ${k}`, n === city)).join('')}</div>` : ''}
+    ${cities.length > 1 ? `<div class="chips golf-cities" role="group" aria-label="도시">${chip('golf-city', '', `${country} 전체`, !city)}${cities.map(([n, k]) => chip('golf-city', n, `${n} ${k}`, n === city)).join('')}</div>` : ''}
     <h2 class="h2 mt">골프장 · 총 <span data-golf-total>${rows.length}</span>곳</h2>
     ${rows.length ? `<ol class="list golf-list">${shown.map((c) => courseCard(c)).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}곳 (남은 ${rows.length - shown.length}곳)</button>` : ''}`
@@ -174,7 +193,13 @@ function abroadCourses(state, data) {
 const gradeText = (n) => (n ? `${Number.isInteger(n) ? n : n.toFixed(1)}성급` : '');
 /** [나라-도시] 이름: 일본은 지역이 넓어 시·현(town) 이름을 쓴다 */
 const cityOfCourse = (c) => (c.country === '일본' && c.town ? c.town.replace(/\(.*\)/, '') : c.city);
-export const courseTitle = (c) => `[${c.country}${cityOfCourse(c) ? `-${cityOfCourse(c)}` : ''}] ${c.name}`;
+export const courseTitle = (c) => {
+  // 이름 앞에 "[우돈 타니]"처럼 지역이 붙어 있으면 그 지역을 도시로 쓰고 이름에서는 뗀다
+  const m = /^\[([^\]]+)\]\s*(.+)$/.exec(c.name);
+  const city = m ? m[1] : cityOfCourse(c);
+  const name = m ? m[2] : c.name;
+  return `[${c.country}${city && city !== '기타' ? `-${city}` : ''}] ${name}`;
+};
 const placeText = (c) => [c.city, c.town].filter((x, i, a) => x && a.indexOf(x) === i).join(' · ');
 
 function courseCard(c) {
@@ -196,9 +221,10 @@ function courseCard(c) {
 }
 
 /** 해외 골프장 상세 창 */
-export function golfCourseSheet(data, id) {
+export function golfCourseSheet(state, data, id) {
   const c = (data?.courses || []).find((x) => x.id === id);
   if (!c) return '';
+  const trip = abroadTrip(state);
   const cur = COUNTRY_CUR[c.country];
   const local = c.price && cur && cur !== 'KRW' ? localPrice(data.fx, c.price, cur) : null;
   const a = c.air;
@@ -230,37 +256,61 @@ export function golfCourseSheet(data, id) {
     <div class="golf-fare">
       <p>왕복 항공권 <b>약 ${won(a.fare)}~</b>${a.fareDirect && a.fareDirect !== a.fare ? ` · 직항 약 ${won(a.fareDirect)}~` : ''}</p>
       ${c.price ? `<p>골프 1인당 + 항공권 = <b>약 ${won(c.price + a.fare)}~</b></p>` : ''}
-      <p class="muted">${md(a.fareDep)} 출발 · ${md(a.fareRet)} 귀국, 1인 기준 구글 항공편 조회</p>
+      <p class="muted">금액은 ${md(a.fareDep)} 출발 · ${md(a.fareRet)} 귀국 1인 조회값이에요. 고른 날짜(${md(trip.dep)} 출발 · ${md(trip.ret)} 귀국)는 아래 버튼으로 비교해 보세요.</p>
     </div>` : ''}
-    ${a ? `<div class="golf-fly">${flyLinks(a).map(([n, u]) => `<a class="golf-src" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>`).join('')}</div>` : ''}
-    ${stayList(c, data)}
+    ${a ? `<div class="golf-fly">${flyLinks(a, trip).map(([n, u]) => `<a class="golf-src" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>`).join('')}</div>` : ''}
+    ${c.stays?.length ? `<button type="button" class="shop-btn golf-stay-btn" data-action="golf-stays" data-id="${esc(c.id)}"><span class="shop-btn-icon" aria-hidden="true">🏨</span><span><b>근처 숙소</b><small>평점 높은 순 ${c.stays.length}곳</small></span></button>` : ''}
     <div class="sheet-actions golf-actions">
-      <a class="btn-primary" href="${esc(c.url)}" target="_blank" rel="noopener noreferrer">예약하러 가기(몽키트래블)</a>
+      <a class="btn-primary" href="${esc(`${c.url}&checkInDate=${trip.dep}`)}" target="_blank" rel="noopener noreferrer">예약하러 가기(몽키트래블)</a>
     </div>
     <p class="sample-note">1인당 가격·등급·평점·사진은 ${esc(kst((data.sources || []).find((x) => x.id === 'mt')?.at || data.updatedAt))}에 몽키트래블에 올라온 값이에요(${esc(md((data.sources || []).find((x) => x.id === 'mt')?.checkIn || ''))} 라운드 기준). 포함 내역(그린피·캐디·카트)은 예약 화면에서 확인해 주세요. 항공권은 구글 항공편 조회값이라 날짜에 따라 달라져요.</p>`;
 }
 
-/** 항공권 최저가 비교 바로가기(인천 출발, 항공권 조회와 같은 날짜) */
-function flyLinks(a) {
-  const dep = (a.fareDep || '2026-12-10').replace(/-/g, '');
-  const ret = (a.fareRet || '2026-12-14').replace(/-/g, '');
+/** 항공권 최저가 비교 바로가기(인천 출발, 고른 날짜) */
+function flyLinks(a, t) {
+  const d1 = t.dep.replace(/-/g, ''), d2 = t.ret.replace(/-/g, '');
   const i = a.iata.toLowerCase();
-  const out = [];
-  if (a.fareUrl) out.push(['구글 항공편', a.fareUrl]);
-  out.push(['스카이스캐너', `https://www.skyscanner.co.kr/transport/flights/icn/${i}/${dep.slice(2)}/${ret.slice(2)}/`]);
-  out.push(['네이버 항공권', `https://flight.naver.com/flights/international/ICN-${a.iata}-${dep}/${a.iata}-ICN-${ret}?adult=1&fareType=Y`]);
-  return out;
+  return [
+    ['구글 항공편', `https://www.google.com/travel/flights?q=${encodeURIComponent(`Flights from ICN to ${a.iata} on ${t.dep} through ${t.ret}`)}&hl=ko&gl=KR&curr=KRW`],
+    ['스카이스캐너', `https://www.skyscanner.co.kr/transport/flights/icn/${i}/${d1.slice(2)}/${d2.slice(2)}/`],
+    ['네이버 항공권', `https://flight.naver.com/flights/international/ICN-${a.iata}-${d1}/${a.iata}-ICN-${d2}?adult=1&fareType=Y`],
+  ];
 }
 
-/** 근처 숙소 5곳(부킹닷컴 평점 높은 순) */
-function stayList(c, data) {
-  const hs = (c.stays || []).map(([id, km]) => ({ ...(data.hotels || {})[id], km })).filter((h) => h.n);
-  if (!hs.length) return '';
-  return `<h3 class="golf-sub">근처 숙소 · 평점 높은 순</h3>
-    <ul class="golf-stays">${hs.map((h) => `<li><a href="${esc(h.url)}" target="_blank" rel="noopener noreferrer">
+/** 근처 숙소 창(추천 탭 맛집처럼 한 단계 안쪽): 부킹닷컴 평점 높은 순 5곳 */
+export function golfStaysSheet(state, data, id) {
+  const c = (data?.courses || []).find((x) => x.id === id);
+  if (!c) return '';
+  const t = abroadTrip(state);
+  const hs = (c.stays || []).map(([hid, km]) => ({ ...(data.hotels || {})[hid], km })).filter((h) => h.n);
+  const md = (iso) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
+  return `
+    <div class="sheet-head">
+      <div>
+        <h2 class="sheet-title" id="sheet-title">${esc(courseTitle(c))} 근처 숙소</h2>
+        <p class="card-meta">평점 높은 순 ${hs.length}곳 · 시내와 가까운 숙소 중 골프장에서 가까운 곳</p>
+      </div>
+    </div>
+    ${hs.length ? `<ul class="golf-stays">${hs.map((h) => `<li><a href="${esc(`${h.url}?checkin=${t.dep}&checkout=${t.out}&group_adults=2&no_rooms=1`)}" target="_blank" rel="noopener noreferrer">
       ${h.ph ? `<img src="${esc(h.ph)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '<span class="golf-stay-ph"></span>'}
       <span class="golf-stay-body"><b>${esc(h.n)}</b><small>★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''} · 골프장에서 ${h.km}km</small><small>${esc(h.loc || '')}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''}</small></span></a></li>`).join('')}</ul>
-    <p class="muted">숙소 평점·가격은 부킹닷컴(${esc((data.hotelsCheckin || '').slice(5).replace('-', '/'))} 1박·성인 2명 기준) 조회값이에요.</p>`;
+    <p class="sample-note">숙소를 누르면 부킹닷컴에서 ${md(t.dep)} 체크인 · ${md(t.out)} 체크아웃(${t.nights}박, 성인 2명)으로 열려요. 평점·1박 가격은 ${esc(md(data.hotelsCheckin || t.dep))} 1박 기준 조회값이라 고른 날짜와 다를 수 있어요.</p>`
+      : '<div class="empty"><b>이 골프장 근처 숙소 정보가 아직 없어요.</b></div>'}`;
+}
+
+/** 패키지 출발 기간에 고른 날짜가 들어가는지(기간 정보가 없으면 보여 준다) */
+export function departsOn(t, dep) {
+  const ranges = (t.options || []).map((o) => {
+    const a = /(\d{4})\.(\d{2})\.(\d{2})/.exec(o.from || ''), b = /(\d{4})\.(\d{2})\.(\d{2})/.exec(o.to || '');
+    if (a && b) return [`${a[1]}-${a[2]}-${a[3]}`, `${b[1]}-${b[2]}-${b[3]}`];
+    const m = /(\d{2})\.(\d{2})\s*~\s*(\d{2})\.(\d{2})/.exec(o.name || '');
+    if (!m) return null;
+    const y = Number(dep.slice(0, 4));
+    let from = `${y}-${m[1]}-${m[2]}`, to = `${y}-${m[3]}-${m[4]}`;
+    if (to < from) { if (dep.slice(5) >= `${m[1]}-${m[2]}`) to = `${y + 1}-${m[3]}-${m[4]}`; else from = `${y - 1}-${m[1]}-${m[2]}`; }
+    return [from, to];
+  }).filter(Boolean);
+  return !ranges.length || ranges.some(([f, to]) => dep >= f && dep <= to);
 }
 
 /** 해외 패키지 상품(골프몬·티스캐너) */
@@ -271,7 +321,8 @@ function abroadPacks(state, data) {
   const country = countries.some((c) => c.name === g.country) ? g.country : '';
   const cities = countries.find((c) => c.name === country)?.cities || [];
   const city = cities.some((c) => c.name === g.city) ? g.city : '';
-  const rows = golfAbroad(data, { country, city });
+  const trip = abroadTrip(state);
+  const rows = golfAbroad(data, { country, city }).filter((x) => departsOn(x, trip.dep));
   const shown = rows.slice(0, g.max || 20);
   return `
     <h2 class="h2 mt">나라</h2>

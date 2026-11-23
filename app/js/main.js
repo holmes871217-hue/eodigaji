@@ -456,6 +456,12 @@ root.addEventListener('click', (ev) => {
     case 'golf-course':
       openSheet({ type: 'golf-course', id });
       break;
+    case 'golf-stays':
+      openSheet({ type: 'golf-stays', id });
+      break;
+    case 'golf-ab-stay':
+      update(() => { state.ui.golf.abStay = v; }, { persist: false });
+      break;
     case 'golf-kind':
       update(() => { state.ui.golf.kind = v === 'pack' ? 'pack' : 'course'; state.ui.golf.cont = ''; state.ui.golf.country = ''; state.ui.golf.city = ''; state.ui.golf.max = 20; }, { persist: false });
       break;
@@ -718,6 +724,9 @@ root.addEventListener('change', (ev) => {
     state.ui.course[field === 'course-start' ? 'start' : 'end'] = el.value;
     state.ui.course.result = null;
     update(() => {}, { persist: false });
+  } else if (field === 'golf-ab-date') {
+    // 해외 가는 날짜
+    if (isValidISO(el.value) && el.value >= todayISO()) update(() => { state.ui.golf.abDate = el.value; state.ui.golf.max = 20; }, { persist: false });
   } else if (field === 'golf-date') {
     // 골픽 치는 날짜(달력에서 고름)
     if (isValidISO(el.value) && el.value >= todayISO()) update(() => { state.ui.golf.day = el.value; state.ui.golf.max = 20; }, { persist: false });
