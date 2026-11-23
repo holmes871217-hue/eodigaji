@@ -48,8 +48,9 @@ function defaults() {
     },
     favs: [], // 찜한 곳(담은 순서 = 동선 순서). core/favs.js 참고
     ui: {
-      tab: 'home', // home | events | favs | deals | my
+      tab: 'home', // home | events | favs | deals | golf | my
       maxMin: 120,
+      golf: { mode: 'dom', maxMin: 120, day: null, country: '', city: '', max: 20 }, // 골프 탭(국내 차 시간 기본 2시간)
       scope: 'all', // near(가까운 소소한 곳) | all(전체) | big(큰 나들이)
       view: 'list', // list | map
       evType: 'all',
@@ -72,6 +73,10 @@ export function loadState() {
       // 지역 선택으로 저장된 이름에 붙어 있던 "(거점 설명)"은 떼어 낸다
       if (state.profile.origin?.type === 'city' && typeof state.profile.origin.name === 'string') state.profile.origin.name = state.profile.origin.name.replace(/\s*\([^)]*\)\s*$/, '');
       if (typeof saved.maxMin === 'number') state.ui.maxMin = saved.maxMin;
+      if (saved.golf && typeof saved.golf === 'object') {
+        if ([60, 90, 120, 150, 180].includes(saved.golf.maxMin)) state.ui.golf.maxMin = saved.golf.maxMin;
+        if (saved.golf.mode === 'abroad') state.ui.golf.mode = 'abroad';
+      }
       if (saved.hint === false) state.ui.hint = false;
       if (['near', 'all', 'big'].includes(saved.scope)) state.ui.scope = saved.scope;
       if (Array.isArray(saved.favs)) {
@@ -94,7 +99,7 @@ export function saveState(state) {
   try {
     localStorage.setItem(
       KEY,
-      JSON.stringify({ profile: state.profile, maxMin: state.ui.maxMin, hint: state.ui.hint, scope: state.ui.scope, favs: state.favs })
+      JSON.stringify({ profile: state.profile, maxMin: state.ui.maxMin, hint: state.ui.hint, scope: state.ui.scope, favs: state.favs, golf: { mode: state.ui.golf.mode, maxMin: state.ui.golf.maxMin } })
     );
   } catch (e) {
     // 저장 실패는 무시 (앱은 계속 동작)

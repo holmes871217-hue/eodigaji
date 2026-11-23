@@ -480,8 +480,8 @@ svg { flex: none; }
   position: fixed; left: 50%; bottom: 0; z-index: 10;
   transform: translateX(-50%);
   width: 100%; max-width: 480px;
-  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px;
-  padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px;
+  padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
   background: var(--surface); border-radius: 28px 28px 0 0;
   box-shadow: 0 -4px 18px rgba(27, 37, 89, 0.08);
 }
@@ -627,3 +627,17 @@ svg { flex: none; }
 .fav-links { flex: 0 0 100%; display: flex; align-items: center; gap: 6px; padding: 0 8px 4px 42px; font-size: var(--fs-xs); color: var(--ink-2); }
 .fav-links .shop-g { background: var(--bg); box-shadow: none; }
 .fav-tools { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 6px; }
+
+/* 골프 탭 */
+.golf-from { margin-top: 14px; font-size: var(--fs-sm); color: var(--ink-2); }
+.golf-note { margin-top: 8px; }
+.golf-foot { margin-top: 18px; }
+.golf-card .card-body { gap: 4px; }
+.golf-price b { font-family: var(--font-display); font-size: 21px; font-weight: 400; color: var(--ink); }
+.golf-price small { font-size: var(--fs-xs); font-weight: 700; color: var(--ink-2); }
+.golf-drive em { font-style: normal; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px; background: var(--bg); }
+.golf-drive.kakao em { background: var(--calm-soft); color: var(--calm-ink); }
+.golf-offers { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.golf-src { display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border-radius: 999px; background: var(--bg); font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; }
+.golf-clubs { display: grid; gap: 2px; font-size: 13px; color: var(--ink-2); }
+.tab.is-on { padding: 0 8px; }
