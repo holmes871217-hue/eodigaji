@@ -82,6 +82,7 @@ function render() {
   ensureShops();
   ensureGooglePhotos();
   const c = compute();
+  c.golf = golfData; // 골픽 상세 창이 쓴다
   const tab = state.ui.tab;
   const view =
     tab === 'events' ? renderEvents(state, c)
@@ -448,6 +449,12 @@ root.addEventListener('click', (ev) => {
       break;
     case 'golf-city':
       update(() => { state.ui.golf.city = v || ''; state.ui.golf.max = 20; }, { persist: false });
+      break;
+    case 'golf-open':
+      openSheet({ type: 'golf', id });
+      break;
+    case 'golf-tour':
+      openSheet({ type: 'golf-tour', id });
       break;
     case 'golf-more':
       update(() => { state.ui.golf.max = (state.ui.golf.max || 20) + 20; }, { persist: false });
