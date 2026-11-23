@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   unescapeHtml, nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost,
-  haversineKm, nextSaturday0600, is18Tee, cityOf, flightIncluded, coordsFromGoogleUrl,
+  haversineKm, nextSaturday0600, is18Tee, isPar3, cartIncludedText, median, cityOf, flightIncluded, coordsFromGoogleUrl,
 } from './lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -97,7 +97,7 @@ async function collectTeescanner(dates, courses, stat) {
         const tees = (d.teeTimeList || []).filter(is18Tee);
         if (tees.length) {
           const best = tees.reduce((a, b) => (b.min_cost < a.min_cost ? b : a));
-          (co.offers[day] ||= []).push({ src: 'ts', price: best.min_cost, count: tees.length, noCaddie: /노캐디|셀프/.test(best.caddie_name || '') });
+          (co.offers[day] ||= []).push({ src: 'ts', price: best.min_cost, count: tees.length, noCaddie: /노캐디|셀프/.test(best.caddie_name || ''), cartIncluded: cartIncludedText(`${best.course_name || ''} ${best.benefit_comment || ''} ${best.condition_text || ''} ${best.product_tag_nm || ''}`) });
           stat.offers++;
         } else stat.only9++;
       } catch { stat.errors = (stat.errors || 0) + 1; }
@@ -160,7 +160,7 @@ async function collectGolfpang(dates, stat) {
           const k = `${nameKey(row.name)}|${day}`;
           const a = agg.get(k) || { name: row.name, key: nameKey(row.name), region, day, price: Infinity, count: 0 };
           a.count++;
-          if (row.price < a.price) { a.price = row.price; a.noCaddie = /노캐디/.test(row.caddie || ''); }
+          if (row.price < a.price) { a.price = row.price; a.noCaddie = /노캐디/.test(row.caddie || ''); a.cartIncluded = /카트/.test(row.incl || ''); }
           agg.set(k, a);
         }
         if (rows.length < 100 || page * 100 >= total) break;
@@ -211,7 +211,7 @@ async function mergeGolfpang(gpRows, courses, stat) {
       }
     }
     if (!co) { stat.unplaced.add(g.name); continue; }
-    (co.offers[g.day] ||= []).push({ src: 'gp', price: g.price, count: g.count, name: g.name, noCaddie: g.noCaddie });
+    (co.offers[g.day] ||= []).push({ src: 'gp', price: g.price, count: g.count, name: g.name, noCaddie: g.noCaddie, cartIncluded: g.cartIncluded });
     stat.merged++;
   }
   writeJson('gp-geo.json', geo);
@@ -377,7 +377,7 @@ async function collectAbroad(stat) {
         if (!(ck in cache)) { cache[ck] = await resolveMapUrl(g.map_url); await sleep(300); }
         const pos = cache[ck];
         let route = null;
-        if (pos && city) {
+        if (pos && city && city.airport) {
           const rk = `${ck}|${city.iata}`;
           if (!(rk in cache)) { cache[rk] = await osrmRoute(city.airport, pos); await sleep(1100); }
           route = cache[rk];
@@ -402,6 +402,7 @@ async function collectAbroad(stat) {
       flightIncl: flightIncluded(`${title} ${options.map((o) => o.name).join(' ')} ${t.keywords || ''}`),
       options, clubs,
       flight: fl,
+      site: '티스캐너',
       seller: unescapeHtml(t.import_company_name || '') || '티스캐너',
       photo: t.thmbn_file_url || '',
       url: `https://www.teescanner.com/tour/detail?tab=product&tour_seq=${t.tour_seq}`,
@@ -409,6 +410,20 @@ async function collectAbroad(stat) {
     stat.abroad++;
   }
   writeJson('abroad-clubs.json', cache);
+  // 골프몬 해외 상품: 한국 밖 접속을 막는 사이트라 GitHub 에서는 못 받고, 한국 위치로 연 화면을 정리한 저장본을 쓴다(수집 시각 표시).
+  const gm = readJson('golfmon-abroad.json', null);
+  if (gm?.items?.length) {
+    for (const it of gm.items) {
+      const city = cityOf(it.city);
+      out.push({
+        id: `gm-${out.length}`, title: it.title, country: city?.country || ['말레이시아', '인도네시아', '일본', '태국', '베트남', '필리핀', '중국'].find((c) => it.city.includes(c)) || '', city: city?.city || '', iata: city?.iata || '',
+        price: it.price, cur: 'KRW', flightIncl: flightIncluded(it.title), options: it.from ? [{ name: `${it.from} ~ ${it.to} 출발`, cost: it.price }] : [], clubs: [],
+        flight: city ? flights.airports[city.iata] || null : null, airline: it.air && it.air !== '실시간 최저가' ? it.air : '',
+        site: '골프몬', seller: '골프몬', photo: it.img || '', url: 'https://www.golfmon.net/overseas/tour', collectedAt: gm.collectedAt,
+      });
+    }
+    stat.golfmon = gm.items.length;
+  }
   return { list: out, flightsAt: flights.observedAt || null, flightsSource: flights.source || null };
 }
 
@@ -454,19 +469,36 @@ catch (e) { meta.sources.push({ id: 'tst', name: '티스캐너 해외 골프', o
 
 const rate = await fx();
 
-// 앱에 내보낼 모양: 가격이 하나라도 있는 골프장만, 1인 총비용 계산을 붙인다.
+// 앱에 내보낼 모양: 가격이 하나라도 있는 골프장만, 1인 총비용(같은 기준: 카트·캐디피 포함 예상가)을 붙인다.
+// 카트·캐디피를 모르는 골프장은 같은 지역(티스캐너 지역 1단계) 골프장들의 중간값을 예상값으로 쓴다.
+const areaOf = (co) => String(co.area || '').split('>')[0].trim();
+const feeByArea = new Map();
+for (const co of courses.values()) {
+  const a = areaOf(co);
+  const e = feeByArea.get(a) || { cart: [], caddie: [] };
+  if (co.cartFee) e.cart.push(co.cartFee);
+  if (co.caddieFee) e.caddie.push(co.caddieFee);
+  feeByArea.set(a, e);
+}
+const allCart = median([...courses.values()].map((c) => c.cartFee || 0));
+const allCaddie = median([...courses.values()].map((c) => c.caddieFee || 0));
+const estFor = (co) => { const e = feeByArea.get(areaOf(co)); return { estCart: (e && e.cart.length >= 3 && median(e.cart)) || allCart, estCaddie: (e && e.caddie.length >= 3 && median(e.caddie)) || allCaddie }; };
+let par3 = 0;
 const list = [];
 for (const co of courses.values()) {
+  if (isPar3(co.name)) { par3++; continue; }
+  const est = estFor(co);
   const days = {};
   for (const [day, offers] of Object.entries(co.offers)) {
-    const best = offers.reduce((a, b) => (b.price < a.price ? b : a));
-    const cost = perPersonCost(best.price, co.cartFee, co.caddieFee, { noCaddie: best.noCaddie });
-    days[day] = { ...cost, src: best.src, offers: offers.map((o) => [o.src, o.price, o.count]) }; // 링크는 앱이 만든다(파일 크기 줄이기)
+    const priced = offers.map((o) => ({ o, cost: perPersonCost(o.price, co.cartFee, co.caddieFee, { noCaddie: o.noCaddie, cartIncluded: o.cartIncluded, ...est }) }));
+    const best = priced.reduce((a, b) => (b.cost.total < a.cost.total ? b : a));
+    days[day] = { ...best.cost, src: best.o.src, offers: priced.map(({ o, cost }) => [o.src, o.price, o.count, cost.total]) }; // 링크는 앱이 만든다(파일 크기 줄이기)
   }
   if (!Object.keys(days).length) continue;
   if (co.holes && co.holes < 18) continue; // 9홀 골프장은 18홀 가격과 비교되지 않아 뺀다
   list.push({ id: co.id, name: co.name, area: co.area || '', addr: co.addr || '', tel: co.tel || '', lat: Math.round(co.lat * 1e5) / 1e5, lng: Math.round(co.lng * 1e5) / 1e5, grade: co.grade || null, holes: co.holes || null, type: co.type || '', kakaoId: co.kakaoId || '', ids: co.ids || {}, photo: co.photo || '', drive: co.drive || {}, days });
 }
+log(`파3 골프장 제외 ${par3}곳`);
 list.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
 
 const out = {

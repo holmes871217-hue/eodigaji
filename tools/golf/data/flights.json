@@ -445,6 +445,202 @@
     "min": 490,
     "via": "HKG"
    }
+  },
+  "MMY": {
+   "iata": "MMY",
+   "date": "2026-12-10",
+   "at": 1795425608670,
+   "transfer": {
+    "min": 380,
+    "via": "NGO"
+   }
+  },
+  "NKG": {
+   "iata": "NKG",
+   "date": "2026-12-10",
+   "at": 1795425608609,
+   "direct": {
+    "min": 140,
+    "airlines": [
+     "Asiana Airlines"
+    ]
+   },
+   "transfer": {
+    "min": 390,
+    "via": "SHE"
+   }
+  },
+  "OKA": {
+   "iata": "OKA",
+   "date": "2026-12-10",
+   "at": 1795425608713,
+   "direct": {
+    "min": 140,
+    "airlines": [
+     "Jin Air",
+     "Jeju Air",
+     "Trinity Airways",
+     "EASTAR JET"
+    ]
+   },
+   "transfer": {
+    "min": 505,
+    "via": "TPE"
+   }
+  },
+  "HAK": {
+   "iata": "HAK",
+   "date": "2026-12-10",
+   "at": 1795425608701,
+   "transfer": {
+    "min": 505,
+    "via": "SZX"
+   }
+  },
+  "HPH": {
+   "iata": "HPH",
+   "date": "2026-12-10",
+   "at": 1795425608903,
+   "direct": {
+    "min": 325,
+    "airlines": [
+     "Vietjet"
+    ]
+   },
+   "transfer": {
+    "min": 605,
+    "via": "SGN"
+   }
+  },
+  "BTH": {
+   "iata": "BTH",
+   "date": "2026-12-10",
+   "at": 1795425609177,
+   "transfer": {
+    "min": 1095,
+    "via": "CGK"
+   }
+  },
+  "HUI": {
+   "iata": "HUI",
+   "date": "2026-12-10",
+   "at": 1795425608978,
+   "transfer": {
+    "min": 555,
+    "via": "HAN"
+   }
+  },
+  "OKJ": {
+   "iata": "OKJ",
+   "date": "2026-12-10",
+   "at": 1795425608727,
+   "direct": {
+    "min": 100,
+    "airlines": [
+     "Korean Air"
+    ]
+   },
+   "transfer": {
+    "min": 675,
+    "via": "HND"
+   }
+  },
+  "FOC": {
+   "iata": "FOC",
+   "date": "2026-12-10",
+   "at": 1795425608749,
+   "direct": {
+    "min": 195,
+    "airlines": [
+     "Korean Air"
+    ]
+   },
+   "transfer": {
+    "min": 440,
+    "via": "TNA"
+   }
+  },
+  "CGK": {
+   "iata": "CGK",
+   "date": "2026-12-10",
+   "at": 1795425608816,
+   "direct": {
+    "min": 445,
+    "airlines": [
+     "Garuda Indonesia"
+    ]
+   },
+   "transfer": {
+    "min": 555,
+    "via": "SIN"
+   }
+  },
+  "TNA": {
+   "iata": "TNA",
+   "date": "2026-12-10",
+   "at": 1795425608556,
+   "direct": {
+    "min": 110,
+    "airlines": [
+     "Shandong",
+     "Trinity Airways"
+    ]
+   },
+   "transfer": {
+    "min": 1460,
+    "via": "HRB"
+   }
+  },
+  "UBJ": {
+   "iata": "UBJ",
+   "date": "2026-12-10",
+   "at": 1795425608556,
+   "transfer": {
+    "min": 625,
+    "via": "KIX,HND"
+   }
+  },
+  "TAK": {
+   "iata": "TAK",
+   "date": "2026-12-10",
+   "at": 1795425608556,
+   "direct": {
+    "min": 100,
+    "airlines": [
+     "Jin Air",
+     "Air Seoul"
+    ]
+   },
+   "transfer": {
+    "min": 645,
+    "via": "HND"
+   }
+  },
+  "FSZ": {
+   "iata": "FSZ",
+   "date": "2026-12-10",
+   "at": 1795425608556,
+   "direct": {
+    "min": 115,
+    "airlines": [
+     "Jeju Air"
+    ]
+   }
+  },
+  "OIT": {
+   "iata": "OIT",
+   "date": "2026-12-10",
+   "at": 1795425608556,
+   "direct": {
+    "min": 115,
+    "airlines": [
+     "Jeju Air"
+    ]
+   },
+   "transfer": {
+    "min": 510,
+    "via": "KIX"
+   }
   }
  }
 }

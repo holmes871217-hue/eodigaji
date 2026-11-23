@@ -34,7 +34,7 @@ export function parseGolfpangRows(html) {
     if (tds.length < 11) continue;
     const price = Number(String(tds[7]).replace(/[^\d]/g, ''));
     if (!price) continue;
-    out.push({ id: m[1], region: tds[0], time: tds[2], name: tds[4], holes: tds[5], price, caddie: tds[9], kind: tds[10] });
+    out.push({ id: m[1], region: tds[0], time: tds[2], incl: tds[3], name: tds[4], holes: tds[5], price, caddie: tds[9], kind: tds[10] });
   }
   return out;
 }
@@ -46,19 +46,37 @@ export function golfpangTotal(html) {
 }
 
 /**
- * 1인 총비용 = 1인 그린피 + 카트비/4 + 캐디피/4 (카트·캐디피는 팀(4인) 요금으로 표시되는 것을 4인 기준으로 나눈다).
- * 노캐디 티타임이면 캐디피는 0원으로 본다.
- * 카트비나 캐디피를 모르면 그린피만 더하고 complete=false 로 표시한다(지어내지 않는다).
+ * 1인 총비용 = 1인 그린피 + 카트비÷4 + 캐디피÷4 (카트·캐디피는 팀(4인) 요금을 4인 기준으로 나눈다).
+ * 같은 기준으로 비교하려고, 카트비가 이미 포함된 상품(cartIncluded)이면 더하지 않고,
+ * 골프장 카트·캐디피를 모르면 같은 지역 골프장들의 중간값(est*)으로 "예상 포함가"를 만든다(estimated 에 표시).
+ * 노캐디 티타임이면 캐디피는 0원이다.
  */
-export function perPersonCost(greenFee, cartFee, caddieFee, { noCaddie = false } = {}) {
+export function perPersonCost(greenFee, cartFee, caddieFee, { noCaddie = false, cartIncluded = false, estCart = 0, estCaddie = 0 } = {}) {
   const g = Number(greenFee) || 0;
-  const cart = Number(cartFee) || 0;
-  const caddie = noCaddie ? 0 : Number(caddieFee) || 0;
+  const estimated = [];
+  let cart = cartIncluded ? 0 : Number(cartFee) || 0;
+  if (!cartIncluded && !cart && estCart) { cart = estCart; estimated.push('카트비'); }
+  let caddie = noCaddie ? 0 : Number(caddieFee) || 0;
+  if (!noCaddie && !caddie && estCaddie) { caddie = estCaddie; estimated.push('캐디피'); }
   const missing = [];
-  if (!cart) missing.push('카트비');
-  if (!caddie && !noCaddie) missing.push('캐디피');
+  if (!cartIncluded && !cart) missing.push('카트비');
+  if (!noCaddie && !caddie) missing.push('캐디피');
   const total = Math.round(g + cart / 4 + caddie / 4);
-  return { green: g, cart: cart ? Math.round(cart / 4) : null, caddie: caddie ? Math.round(caddie / 4) : null, noCaddie: noCaddie || undefined, total, complete: missing.length === 0, missing };
+  return { green: g, cart: cart ? Math.round(cart / 4) : null, caddie: caddie ? Math.round(caddie / 4) : null, noCaddie: noCaddie || undefined, cartIncluded: cartIncluded || undefined, estimated: estimated.length ? estimated : undefined, total, complete: missing.length === 0 && !estimated.length, missing };
+}
+
+/** 파3(숏게임) 골프장인지: 18홀 정규 코스와 비교되지 않아 검색에서 뺀다 */
+export const isPar3 = (name) => /파\s*3|par\s*3|숏\s*코스|숏게임/i.test(String(name || ''));
+
+/** 상품 설명에 카트비 포함이 적혀 있는지 */
+export const cartIncludedText = (s) => /카트\s*(비|피)?\s*포함|카트포함|카캐비\s*포함|그린피\s*\+\s*카트/.test(String(s || ''));
+
+/** 값 목록의 중간값 */
+export function median(arr) {
+  const a = arr.filter((x) => x > 0).sort((x, y) => x - y);
+  if (!a.length) return 0;
+  const m = Math.floor(a.length / 2);
+  return a.length % 2 ? a[m] : Math.round((a[m - 1] + a[m]) / 2);
 }
 
 export function haversineKm(a, b) {
@@ -83,8 +101,23 @@ export function nextSaturday0600(now = new Date()) {
 
 /** 해외 상품 제목·지역 → 도착 공항. 표에 없는 곳은 null(항공 정보 확인 불가로 표시). */
 export const CITY_AIRPORTS = [
+  { kw: ['미야코지마'], city: '미야코지마', country: '일본', iata: 'MMY', airport: null },
+  { kw: ['남경', '난징'], city: '난징', country: '중국', iata: 'NKG', airport: null },
+  { kw: ['오키나와'], city: '오키나와', country: '일본', iata: 'OKA', airport: null },
+  { kw: ['하이난', '해남도', '하이커우'], city: '하이난', country: '중국', iata: 'HAK', airport: null },
+  { kw: ['하이퐁', '하롱'], city: '하이퐁', country: '베트남', iata: 'HPH', airport: null },
+  { kw: ['바탐'], city: '바탐', country: '인도네시아', iata: 'BTH', airport: null },
+  { kw: ['후에'], city: '후에', country: '베트남', iata: 'HUI', airport: null },
+  { kw: ['오카야마'], city: '오카야마', country: '일본', iata: 'OKJ', airport: null },
+  { kw: ['푸저우', '복주', '푸조우'], city: '푸저우', country: '중국', iata: 'FOC', airport: null },
+  { kw: ['자카르타'], city: '자카르타', country: '인도네시아', iata: 'CGK', airport: null },
+  { kw: ['제남'], city: '지난(제남)', country: '중국', iata: 'TNA', airport: null },
+  { kw: ['야마구치', '우베'], city: '야마구치', country: '일본', iata: 'UBJ', airport: null },
+  { kw: ['다카마쓰', '다카마츠'], city: '다카마쓰', country: '일본', iata: 'TAK', airport: null },
+  { kw: ['시즈오카'], city: '시즈오카', country: '일본', iata: 'FSZ', airport: null },
+  { kw: ['뱃부', '벳부', '오이타'], city: '오이타', country: '일본', iata: 'OIT', airport: null },
   { kw: ['치앙마이'], city: '치앙마이', country: '태국', iata: 'CNX', airport: { lat: 18.7668, lng: 98.9626 } },
-  { kw: ['방콕', '파타야', '후아힌'], city: '방콕', country: '태국', iata: 'BKK', airport: { lat: 13.69, lng: 100.7501 } },
+  { kw: ['방콕', '파타야', '후아힌', '아유타야', '카오야이'], city: '방콕', country: '태국', iata: 'BKK', airport: { lat: 13.69, lng: 100.7501 } },
   { kw: ['세부'], city: '세부', country: '필리핀', iata: 'CEB', airport: { lat: 10.3075, lng: 123.9794 } },
   { kw: ['클락'], city: '클락', country: '필리핀', iata: 'CRK', airport: { lat: 15.186, lng: 120.5603 } },
   { kw: ['마닐라'], city: '마닐라', country: '필리핀', iata: 'MNL', airport: { lat: 14.5086, lng: 121.0198 } },
@@ -100,11 +133,11 @@ export const CITY_AIRPORTS = [
   { kw: ['미야자키'], city: '미야자키', country: '일본', iata: 'KMI', airport: { lat: 31.8772, lng: 131.4486 } },
   { kw: ['후쿠오카'], city: '후쿠오카', country: '일본', iata: 'FUK', airport: { lat: 33.5859, lng: 130.4507 } },
   { kw: ['사가'], city: '사가', country: '일본', iata: 'HSG', airport: { lat: 33.1497, lng: 130.3022 } },
-  { kw: ['기타큐슈'], city: '기타큐슈', country: '일본', iata: 'KKJ', airport: { lat: 33.8459, lng: 131.035 } },
+  { kw: ['기타큐슈', '시모노세키', '간몬'], city: '기타큐슈', country: '일본', iata: 'KKJ', airport: { lat: 33.8459, lng: 131.035 } },
   { kw: ['구마모토'], city: '구마모토', country: '일본', iata: 'KMJ', airport: { lat: 32.8373, lng: 130.8551 } },
   { kw: ['나가사키'], city: '나가사키', country: '일본', iata: 'NGS', airport: { lat: 32.9169, lng: 129.9136 } },
   { kw: ['오사카', '간사이', '간사히'], city: '오사카', country: '일본', iata: 'KIX', airport: { lat: 34.4347, lng: 135.244 } },
-  { kw: ['도쿄', '이타코'], city: '도쿄', country: '일본', iata: 'NRT', airport: { lat: 35.772, lng: 140.3929 } },
+  { kw: ['도쿄', '이타코', '나리타'], city: '도쿄', country: '일본', iata: 'NRT', airport: { lat: 35.772, lng: 140.3929 } },
   { kw: ['히로시마'], city: '히로시마', country: '일본', iata: 'HIJ', airport: { lat: 34.4361, lng: 132.9194 } },
   { kw: ['마쓰야마', '마츠야마'], city: '마쓰야마', country: '일본', iata: 'MYJ', airport: { lat: 33.8272, lng: 132.6997 } },
   { kw: ['광저우'], city: '광저우', country: '중국', iata: 'CAN', airport: { lat: 23.3924, lng: 113.2988 } },
@@ -113,6 +146,7 @@ export const CITY_AIRPORTS = [
   { kw: ['괌'], city: '괌', country: '괌(미국)', iata: 'GUM', airport: { lat: 13.4834, lng: 144.7959 } },
   { kw: ['사이판'], city: '사이판', country: '사이판(미국)', iata: 'SPN', airport: { lat: 15.119, lng: 145.7294 } },
   { kw: ['마나도'], city: '마나도', country: '인도네시아', iata: 'MDC', airport: { lat: 1.5493, lng: 124.9259 } },
+  { kw: ['큐슈'], city: '후쿠오카', country: '일본', iata: 'FUK', airport: { lat: 33.5859, lng: 130.4507 } },
 ];
 
 export function cityOf(title) {

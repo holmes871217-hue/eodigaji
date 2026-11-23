@@ -1,7 +1,7 @@
 // 골프 탭 규칙 점검: node tools/check-golf.mjs
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import { nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost, nextSaturday0600, cityOf, flightIncluded, coordsFromGoogleUrl, unescapeHtml, is18Tee } from './golf/lib.mjs';
+import { nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost, nextSaturday0600, cityOf, flightIncluded, coordsFromGoogleUrl, unescapeHtml, is18Tee, isPar3, cartIncludedText, median } from './golf/lib.mjs';
 import { golfDomestic, golfDrive, golfAbroad, golfCountries, golfDays, localPrice } from '../app/js/core/golf.js';
 
 let n = 0;
@@ -40,6 +40,15 @@ t('1인 총비용', () => {
   const nc = perPersonCost(100000, 80000, 140000, { noCaddie: true });
   assert.equal(nc.total, 120000);
   assert.ok(nc.complete, '노캐디는 캐디피 없어도 완전');
+  const est = perPersonCost(90000, 0, 0, { estCart: 100000, estCaddie: 140000 });
+  assert.equal(est.total, 90000 + 25000 + 35000, '모르는 카트·캐디피는 지역 중간값으로 예상 포함');
+  assert.deepEqual(est.estimated, ['카트비', '캐디피']);
+  assert.equal(est.complete, false);
+  const inc = perPersonCost(120000, 100000, 140000, { cartIncluded: true });
+  assert.equal(inc.total, 120000 + 35000, '카트비 포함 상품은 카트비를 더하지 않음');
+  assert.ok(isPar3('한림광릉퍼블릭(PAR3)') && isPar3('파인파크 AT 군산 파3') && !isPar3('뉴서울'));
+  assert.ok(cartIncludedText('그린피+카트비 포함') && !cartIncludedText('정규캐디'));
+  assert.equal(median([0, 100, 300, 200]), 200);
 });
 
 t('18홀 티타임만', () => {
@@ -104,8 +113,8 @@ if (fs.existsSync(f)) {
         assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(day));
         assert.ok(d.total >= d.green && d.green > 0, `가격 이상 ${c.name}`);
         assert.ok(d.offers.length >= 1 && d.offers.every((o) => ['ts', 'gp', 'tu'].includes(o[0]) && o[1] > 0 && o[2] > 0), `출처 없음 ${c.name}`);
-        assert.ok(d.green === Math.min(...d.offers.map((o) => o[1])), `최저가 아님 ${c.name}`);
-        assert.equal(d.complete, d.missing.length === 0);
+        assert.ok(d.total === Math.min(...d.offers.map((o) => o[3])), `총비용 최저 아님 ${c.name}`);
+        assert.ok(!isPar3(c.name), `파3 포함됨 ${c.name}`);
       }
     }
     for (const t2 of j.abroad) assert.ok(t2.title && t2.price > 0 && t2.url, `해외 상품 이상 ${t2.title}`);

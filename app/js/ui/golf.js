@@ -5,7 +5,7 @@ import { formatMin } from '../core/geo.js';
 import { todayISO } from '../core/dates.js';
 
 const GOLF_TIMES = [60, 90, 120, 150, 180];
-const SRC = { ts: '티스캐너', gp: '골팡', tu: '티업엔조이' };
+const SRC = { ts: '티스캐너', gp: '골팡', tu: '티업엔조이', gm: '골프몬' };
 const WD = ['일', '월', '화', '수', '목', '금', '토'];
 
 const dayLabel = (iso) => { const d = new Date(`${iso}T00:00:00`); return `${d.getMonth() + 1}/${d.getDate()} (${WD[d.getDay()]})`; };
@@ -36,8 +36,7 @@ function domestic(state, data) {
   const origin = state.profile.origin;
   const rows = golfDomestic(data, { origin, day, maxMin: g.maxMin });
   const shown = rows.slice(0, g.max || 20);
-  const kakao = data.drive?.source === 'kakao-future' && rows.some((r) => r.drive.kind === 'kakao');
-  const srcs = (data.sources || []).filter((s) => s.id === 'ts' || s.id === 'gp');
+  const srcs = (data.sources || []).filter((s) => ['ts', 'gp', 'tu', 'gm'].includes(s.id));
   return `
     <p class="golf-from">출발: <b>${esc(origin.name || '내 위치')}</b> <button type="button" class="link-btn" data-action="tab" data-v="my">바꾸기</button></p>
     <h2 class="h2 mt">날짜</h2>
@@ -48,7 +47,6 @@ function domestic(state, data) {
     <div class="chips" role="group" aria-label="이동시간">
       ${GOLF_TIMES.map((m) => `<button type="button" class="chip ${m === g.maxMin ? 'is-on' : ''}" data-action="golf-time" data-v="${m}" aria-pressed="${m === g.maxMin}">${hm(m)}</button>`).join('')}
     </div>
-    <p class="muted golf-note">${kakao ? `이동시간: 카카오 길찾기 ${esc(depLabel(rows.find((r) => r.drive.kind === 'kakao')?.drive.dep))} 기준.` : '이동시간: 직선거리로 계산한 추정값이에요(실제 도로 기준 아님).'}</p>
     <h2 class="h2 mt">${esc(dayLabel(day))} · 총 <span data-golf-total>${rows.length}</span>곳</h2>
     <p class="muted">1인 총비용 낮은 순 · 수집 ${esc(kst(data.updatedAt))} · 출처 ${srcs.map((s) => `${esc(s.name)}${s.ok ? '' : '(실패)'}`).join('·')}</p>
     ${rows.length ? `<ol class="list golf-list">${shown.map((r, i) => domCard(r, day, i + 1)).join('')}</ol>
@@ -73,26 +71,27 @@ const naverUrl = (name) => `https://m.search.naver.com/search.naver?query=${enco
 const thumb = (url) => `<span class="golf-thumb">${url ? `<img src="${esc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 21V3.5l10 4-10 4"/><path d="M4 21h10"/></svg></span>`;
 
 function domCard({ c, cost, drive }, day, rank) {
-  const offers = [...cost.offers].sort((a, b) => a[1] - b[1]);
-  const parts = [`그린피 ${won(cost.green)}`];
-  if (cost.cart) parts.push(`카트 ${won(cost.cart)}`);
-  if (cost.caddie) parts.push(`캐디 ${won(cost.caddie)}`);
+  const offers = [...cost.offers].sort((a, b) => (a[3] ?? a[1]) - (b[3] ?? b[1]));
+  const parts = [`그린피 ${won(cost.green)}${cost.cartIncluded ? '(카트 포함)' : ''}`];
+  const est = (k) => (cost.estimated?.includes(k) ? '(예상)' : '');
+  if (cost.cart) parts.push(`카트 ${won(cost.cart)}${est('카트비')}`);
+  if (cost.caddie) parts.push(`캐디 ${won(cost.caddie)}${est('캐디피')}`);
   if (cost.noCaddie) parts.push('노캐디');
   const best = offers[0];
   return `
     <li class="card golf-card">
       <a class="golf-main" href="${esc(offerUrl(c, best[0], day))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(c.name)} ${SRC[best[0]] || ''} 예약 화면 열기">
         <span class="card-body">
-          <span class="golf-rank">${rank}위</span>
+          <span class="golf-top"><span class="golf-rank">${rank}위</span></span>
           <span class="card-title">${esc(c.name)}</span>
           <span class="card-meta">${esc(c.area.replace('>', '·'))}${c.holes ? ` · ${c.holes}홀` : ''}${c.grade ? ` · 평점 ${c.grade}` : ''}</span>
-          <span class="card-meta golf-drive ${drive.kind}">차로 ${drive.kind === 'kakao' ? '' : '약 '}${esc(formatMin(drive.min))} · ${drive.km}km <em>${drive.kind === 'kakao' ? '카카오 길찾기' : '직선거리 추정'}</em></span>
-          <span class="golf-price"><b>${won(cost.total)}</b> <small>1인 ${cost.complete ? '총비용' : `· ${esc(cost.missing.join('·'))} 미포함`}</small></span>
+          <span class="card-meta golf-drive ${drive.kind}">차로 ${drive.kind === 'kakao' ? '' : '약 '}${esc(formatMin(drive.min))} · ${drive.km}km ${drive.kind === 'kakao' ? '' : '<em>추정</em>'}</span>
+          <span class="golf-price"><b>${won(cost.total)}</b> <small>1인 ${cost.missing?.length ? `· ${esc(cost.missing.join('·'))} 미포함` : cost.estimated ? '· 예상 포함가' : '총비용'}</small></span>
           <span class="card-meta">${esc(parts.join(' + '))}</span>
         </span>
         ${thumb(c.photo)}
       </a>
-      <span class="golf-offers">${offers.map(([src, price, count]) => `<a class="golf-src" href="${esc(offerUrl(c, src, day))}" target="_blank" rel="noopener noreferrer">${SRC[src] || esc(src)} ${won(price)} · ${count}타임</a>`).join('')}<a class="golf-src naver" href="${esc(naverUrl(c.name))}" target="_blank" rel="noopener noreferrer">네이버에서 찾기</a></span>
+      <span class="golf-offers">${offers.map(([src, price, count]) => `<a class="golf-src" href="${esc(offerUrl(c, src, day))}" target="_blank" rel="noopener noreferrer">${SRC[src] || esc(src)} 그린피 ${won(price)} · ${count}타임</a>`).join('')}<a class="golf-src naver" href="${esc(naverUrl(c.name))}" target="_blank" rel="noopener noreferrer">네이버에서 찾기</a></span>
     </li>`;
 }
 
@@ -115,7 +114,6 @@ function abroad(state, data) {
       ${cities.map((c) => `<button type="button" class="chip ${c.name === city ? 'is-on' : ''}" data-action="golf-city" data-v="${esc(c.name)}">${esc(c.name)} ${c.n}</button>`).join('')}
     </div>` : ''}
     <h2 class="h2 mt">골프 상품 · 총 <span data-golf-total>${rows.length}</span>개</h2>
-    <p class="muted">가격 낮은 순 · 수집 ${esc(kst(data.updatedAt))} · 출처 티스캐너 해외골프${data.fx ? ` · 환율 ${esc(data.fx.source)} ${esc(String(data.fx.at || '').replace(/ \+0000$/, ' UTC'))}` : ''}</p>
     ${rows.length ? `<ol class="list golf-list">${shown.map((t, i) => abroadCard(t, data, i + 1)).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}개 (남은 ${rows.length - shown.length}개)</button>` : ''}`
       : '<div class="empty"><b>이 지역 상품이 아직 없어요.</b></div>'}
@@ -124,7 +122,7 @@ function abroad(state, data) {
 
 function flightText(f) {
   if (!f) return '항공 정보 확인 불가';
-  const when = f.date ? ` · ${Number(f.date.slice(5, 7))}/${Number(f.date.slice(8, 10))}편 기준` : '';
+  const when = '';
   if (f.direct) return `인천→${esc(f.iata)} 직항 ${hm(f.direct.min)}${f.direct.airlines?.length ? ` (${esc(f.direct.airlines.slice(0, 3).join('·'))})` : ''}${when}`;
   if (f.transfer) return `인천→${esc(f.iata)} 경유 ${hm(f.transfer.min)}${f.transfer.via ? ` (${esc(f.transfer.via)} 경유)` : ''} · 그날 직항 없음${when}`;
   return '항공 정보 확인 불가';
@@ -138,16 +136,29 @@ function abroadCard(t, data, rank) {
     <li class="card golf-card">
       <a class="golf-main" href="${esc(t.url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(t.title)} 상품 화면 열기">
         <span class="card-body">
-          <span class="golf-rank">${rank}위</span>
+          <span class="golf-top"><span class="golf-rank">${rank}위</span>${stay(t) ? `<span class="golf-stay">${esc(stay(t))}</span>` : ''}</span>
           <span class="card-title">${esc(t.title)}</span>
-          <span class="card-meta">${esc(t.country)}${t.city ? ` · ${esc(t.city)}` : ''} · 판매 ${esc(t.seller)}</span>
+          <span class="card-meta">${esc(t.country)}${t.city ? ` · ${esc(t.city)}` : ''}</span>
           <span class="golf-price"><b>${won(t.price)}~</b> <small>상품가 · ${esc(incl)}</small></span>
           ${local ? `<span class="card-meta">≈ ${local} ${cur} (환율 환산)</span>` : ''}
-          <span class="card-meta">✈ ${flightText(t.flight)}</span>
+          <span class="card-meta">✈ ${flightText(t.flight)}${t.airline ? ` · ${esc(t.airline)}` : ''}</span>
           ${t.clubs.length ? `<span class="golf-clubs">${t.clubs.map((c) => `<span>⛳ ${esc(c.name)}${c.airport ? ` · 공항에서 ${c.airport.km}km, 차로 약 ${hm(c.airport.min)}` : ' · 공항 거리 확인 불가'}</span>`).join('')}</span>` : ''}
           ${t.options?.length ? `<span class="card-meta">${t.options.slice(0, 3).map((o) => `${esc(o.name.slice(0, 40))} ${won(o.cost)}`).join(' / ')}</span>` : ''}
         </span>
         ${thumb(t.photo)}
       </a>
+      <span class="golf-offers"><a class="golf-src" href="${esc(t.url)}" target="_blank" rel="noopener noreferrer">상품 보기(${esc(siteOf(t))})</a></span>
     </li>`;
 }
+
+/** 일정: 제목·옵션에서 "3박5일"처럼 적힌 것만 읽는다(없으면 표시 안 함) */
+export function stay(t) {
+  const txt = `${t.title} ${(t.options || []).map((o) => o.name).join(' ')}`;
+  const m = /(\d{1,2})\s*박\s*(\d{1,2})\s*일/.exec(txt);
+  if (m) return `${m[1]}박 ${m[2]}일`;
+  const d = /(\d{1,2})\s*일(?!\s*[~\-])/.exec(t.title);
+  return d && Number(d[1]) <= 15 ? `${d[1]}일` : '';
+}
+
+/** 어느 사이트 상품인지: 수집한 사이트(티스캐너 등)와 실제 판매사가 다르면 같이 적는다 */
+const siteOf = (t) => { const site = t.site || '티스캐너'; return t.seller && t.seller !== site ? `${site}·${t.seller}` : site; };
