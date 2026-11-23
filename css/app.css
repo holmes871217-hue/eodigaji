@@ -697,3 +697,9 @@ svg { flex: none; }
 .golf-stay-btn { width: 100%; margin-top: 14px; }
 .golf-cities { margin-top: 10px; }
 .golf-staychips { margin-top: 10px; margin-bottom: 18px; }
+
+.golf-fare-list { display: grid; gap: 4px; margin: 4px 0; }
+.golf-fare-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; font-size: 13px; color: var(--ink-2); }
+.golf-fare-list li b { color: var(--ink); white-space: nowrap; }
+.golf-fare-list li.is-pick span, .golf-fare-list li.is-pick b { color: var(--calm-ink); font-weight: 800; }
+.golf-fare-cmp-t { margin-top: 6px !important; font-size: 13px; font-weight: 800; }

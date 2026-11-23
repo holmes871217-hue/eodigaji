@@ -252,9 +252,13 @@ export function golfCourseSheet(state, data, id) {
     </ul>
     ${a?.fare ? `<h3 class="golf-sub">항공권 더하면</h3>
     <div class="golf-fare">
-      <p>왕복 항공권 <b>약 ${won(a.fare)}~</b>${a.fareDirect && a.fareDirect !== a.fare ? ` · 직항 약 ${won(a.fareDirect)}~` : ''}</p>
-      ${c.price ? `<p>골프 1인당 + 항공권 = <b>약 ${won(c.price + a.fare)}~</b></p>` : ''}
-      <p class="muted">금액은 ${md(a.fareDep)} 출발 · ${md(a.fareRet)} 귀국 1인 조회값이에요. 고른 날짜(${md(trip.dep)} 출발 · ${md(trip.ret)} 귀국)는 아래 버튼으로 비교해 보세요.</p>
+      <p>추천 왕복 항공권 <b>약 ${won(a.fare)}</b> <small>(${esc(a.name)} ${esc(a.iata)})</small></p>
+      ${c.price ? `<p>골프 1인당 + 항공권 = <b>약 ${won(c.price + a.fare)}</b></p>` : ''}
+      <ul class="golf-fare-list">
+        ${(a.fareSamples || []).map(([d1, d2, v]) => `<li><span>${md(d1)} 출발 · ${md(d2)} 귀국 조회</span><b>${won(v)}</b></li>`).join('')}
+      </ul>
+      ${(c.airCmp || []).length > 1 ? `<p class="golf-fare-cmp-t">주변 공항 비교</p><ul class="golf-fare-list">${c.airCmp.map(([iata, name, km, rec, dir]) => `<li class="${iata === a.iata ? 'is-pick' : ''}"><span>${esc(name)}(${esc(iata)}) · 골프장에서 ${km}km${dir ? ' · 직항' : ' · 경유'}</span><b>${won(rec)}${iata === a.iata ? ' 추천' : ''}</b></li>`).join('')}</ul>` : ''}
+      <p class="muted">${a.fareN > 1 ? `구글 항공편에서 날짜를 바꿔 ${a.fareN}번 조회해 비교했어요(1인 왕복). 두 값이 크게 다르면 비싼 날은 그날 직항이 없던 경우라 싼 쪽을, 비슷하면 평균을 추천가로 썼어요.` : '구글 항공편 1인 왕복 조회값이에요. 주변 공항끼리 비교해 가장 합리적인 공항을 추천했어요.'} 고른 날짜(${md(trip.dep)} 출발 · ${md(trip.ret)} 귀국)는 아래 버튼으로 확인해 보세요.</p>
     </div>` : ''}
     ${a ? `<div class="golf-fly">${flyLinks(a, trip).map(([n, u]) => `<a class="golf-src" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>`).join('')}</div>` : ''}
     ${c.stays?.length ? `<button type="button" class="shop-btn golf-stay-btn" data-action="golf-stays" data-id="${esc(c.id)}"><span class="shop-btn-icon" aria-hidden="true">🏨</span><span><b>근처 숙소</b><small>평점 높은 순 ${c.stays.length}곳</small></span></button>` : ''}
