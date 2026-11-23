@@ -356,6 +356,7 @@ async function driveTimes(courses, hubs, meta) {
   const deadline = Date.now() + DRIVE_BUDGET_MIN * 60e3;
   const errCodes = {};
   let lastLog = 0;
+  let failRun = 0;
   let i = 0;
   const worker = async () => {
     while (KAKAO && i < jobs.length && meta.drive.status === 'ok' && meta.drive.calls < DRIVE_CAP && Date.now() < deadline) {
@@ -368,8 +369,13 @@ async function driveTimes(courses, hubs, meta) {
         else if (r.status === 429) { meta.drive.status = '카카오모빌리티 하루 사용량 초과(429)'; meta.drive.errors++; }
         else if (r.ok) {
           const s = (await r.json()).routes?.[0];
+          failRun = 0;
           cache[keyOf(co, h)] = s && s.result_code === 0 ? { at: now, min: Math.round(s.summary.duration / 60), km: Math.round(s.summary.distance / 100) / 10, dep } : { at: now, fail: s?.result_code ?? 'x' };
-        } else { meta.drive.errors++; errCodes[r.status] = (errCodes[r.status] || 0) + 1; }
+        } else {
+          meta.drive.errors++; errCodes[r.status] = (errCodes[r.status] || 0) + 1;
+          if (!meta.drive.firstError) meta.drive.firstError = `${r.status} ${(await r.text().catch(() => '')).slice(0, 160)}`;
+          if (++failRun >= 30) meta.drive.status = `카카오모빌리티 연속 실패로 중단(${meta.drive.firstError})`;
+        }
       } catch (e) { meta.drive.errors++; errCodes[e.name || 'x'] = (errCodes[e.name || 'x'] || 0) + 1; }
       if (meta.drive.calls % 500 === 0 && meta.drive.calls !== lastLog) { lastLog = meta.drive.calls; log(`카카오 길찾기 ${meta.drive.calls}건 진행`); }
       await sleep(120);
