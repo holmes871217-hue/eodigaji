@@ -30,7 +30,8 @@ jobs:
       - name: 키 설정 여부 확인 (값은 출력하지 않음)
         env:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
-        run: if [ -n "$KAKAO_REST_KEY" ]; then echo "KAKAO_REST_KEY: 설정됨"; else echo "KAKAO_REST_KEY: 없음"; fi
+        run: |
+          if [ -n "$KAKAO_REST_KEY" ]; then echo "KAKAO_REST_KEY: 설정됨"; else echo "KAKAO_REST_KEY: 없음"; fi
 
       - name: 규칙 점검
         run: node tools/check-golf.mjs
