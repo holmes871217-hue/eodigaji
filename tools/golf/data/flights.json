@@ -149,6 +149,14 @@
    "transfer": {
     "min": 560,
     "via": "TNA"
+   },
+   "fare": {
+    "min": 403800,
+    "direct": 403800,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795431165000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ0FOGh4SCjIwMjYtMTItMTRqBwgBEgNDQU5yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "YNT": {
@@ -309,6 +317,14 @@
    "transfer": {
     "min": 510,
     "via": "HKG"
+   },
+   "fare": {
+    "min": 545300,
+    "direct": 734500,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795431165000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ05YGh4SCjIwMjYtMTItMTRqBwgBEgNDTlhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "CXR": {
@@ -342,6 +358,14 @@
    "transfer": {
     "min": 505,
     "via": "HKG"
+   },
+   "fare": {
+    "min": 368966,
+    "direct": 400746,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795431165000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSEFOGh4SCjIwMjYtMTItMTRqBwgBEgNIQU5yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "KOJ": {
@@ -359,6 +383,14 @@
    "transfer": {
     "min": 360,
     "via": "FUK"
+   },
+   "fare": {
+    "min": 498104,
+    "direct": 498104,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795431165000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS09KGh4SCjIwMjYtMTItMTRqBwgBEgNLT0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "BKI": {
@@ -375,6 +407,14 @@
    "transfer": {
     "min": 555,
     "via": "CAN"
+   },
+   "fare": {
+    "min": 454318,
+    "direct": 454318,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795431165000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQktJGh4SCjIwMjYtMTItMTRqBwgBEgNCS0lyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "CEB": {
@@ -410,6 +450,14 @@
    "transfer": {
     "min": 570,
     "via": "HKG"
+   },
+   "fare": {
+    "min": 512900,
+    "direct": 682872,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795431165000,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQktLGh4SCjIwMjYtMTItMTRqBwgBEgNCS0tyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "SGN": {
