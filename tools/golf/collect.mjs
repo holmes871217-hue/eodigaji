@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   unescapeHtml, nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost,
-  haversineKm, nextSaturday0600, is18Tee, isPar3, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
+  haversineKm, nextSaturday0600, is18Tee, pickAirport, AIRPORTS, isPar3, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
 } from './lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -393,6 +393,79 @@ async function driveTimes(courses, hubs, meta) {
   log(`카카오 길찾기 호출 ${meta.drive.calls}건, 오류 ${meta.drive.errors} ${JSON.stringify(errCodes)}, 남은 것 ${meta.drive.pending}건(다음 실행 때 이어서), 상태: ${meta.drive.status}`);
 }
 
+// ── 몽키트래블 해외 골프장: 공개 목록 API(robots.txt 에서 productList.php 허용) + 상세 화면 제목의 홀 수 ─────────
+const MT = 'https://www.monkeytravel.com';
+const MT_BRANCHES = [['1', 'th', 'golf'], ['2', 'tw', 'golf'], ['3', 'ph', 'golf'], ['4', 'vn', 'golf'], ['5', 'gu', 'guam-golf'], ['5', 'gu', 'saipan-golf'], ['7', 'jp', '']];
+
+async function mtList(branch, m2, checkInDate) {
+  // startNum 은 건너뛸 개수(오프셋). 한 번에 500개까지 받고, 더 있으면 이어서 받는다.
+  const seen = new Map();
+  for (let page = 0; page < 10; page++) {
+    const body = { checkInDate, currency: 'KRW', m1: 'golf', m2, m3: '', site: 'monkey', lang: 'ko', branch, filter: { 'selected-filter': 'sortNoAsc' }, sort: 'sortNoAsc', isStopSale: false, startNum: seen.size, searchAfter: '', isSearch: false, pageSize: 500, size: 500 };
+    const r = await fetch(`${MT}/api/search/productList.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0' }, body: JSON.stringify(body) });
+    if (!r.ok) break;
+    const d = (await r.json())?.data;
+    let added = 0;
+    for (const p of d?.productDataList || []) if (!seen.has(p.product_id)) { seen.set(p.product_id, p); added++; }
+    if (!added || seen.size >= (d.totalCount || 0)) break;
+    await sleep(500);
+  }
+  return [...seen.values()];
+}
+
+async function mtHoles(url) {
+  const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+  const reader = r.body.getReader(); const dec = new TextDecoder(); let buf = '';
+  while (buf.length < 60000) { const { done, value } = await reader.read(); if (done) break; buf += dec.decode(value, { stream: true }); if (/<\/title>/i.test(buf)) break; }
+  try { reader.cancel(); } catch {}
+  const title = /<title>([^<]+)<\/title>/i.exec(buf)?.[1] || '';
+  const h = /(\d{1,3})\s*홀/.exec(title); const par = /파\s*(\d{2,3})/.exec(title);
+  return { holes: h ? Number(h[1]) : null, par: par ? Number(par[1]) : null };
+}
+
+async function collectMonkey(stat) {
+  const checkIn = new Date(Date.now() + 9 * 3600e3 + 14 * 864e5).toISOString().slice(0, 10); // 2주 뒤 날짜 기준 1인당 가격
+  const cache = readJson('mt-holes.json', {});
+  const out = [];
+  for (const [branch, cc, m2] of MT_BRANCHES) {
+    let list = [];
+    try { list = await mtList(branch, m2, checkIn); } catch (e) { stat.errors++; log('몽키트래블 목록 실패', cc, m2, e.message); }
+    for (const p of list) {
+      // 골프장이 아닌 상품(골프채 렌탈·캠프·맞춤 견적·조인 모집 등)은 뺀다
+      if (/렌탈|캠프|맞춤골프|맞춤 골프|조인 골프|기타 지역 골프장/.test(p.productName || '')) { stat.skipped = (stat.skipped || 0) + 1; continue; }
+      const menu = p.menuJson?.[0] || { m1: 'golf', m2: m2 || 'golf', m3: '' };
+      const url = `${MT}/${cc}/ko/${menu.m1 || 'golf'}/${menu.m2}/${menu.m3 ? `${menu.m3}/` : ''}product/product_detail.php?product_id=${p.product_id}`;
+      // "[예약 대행]" 상품의 가격은 그린피가 아니라 예약 대행 수수료라 1인당 가격에서 뺀다(대행 수수료는 따로 둔다).
+      const rawName = unescapeHtml(p.productName);
+      const agency = /예약\s*대행/.test(rawName);
+      out.push({
+        id: `mt-${p.product_id}`, pid: p.product_id, name: rawName.replace(/\s*\[예약\s*대행\]\s*/g, ' ').trim(), agency, agencyFee: agency ? Number(p.lowPrice) || 0 : 0, country: p.region?.country || '', city: p.region?.city || '', town: p.region?.town || '',
+        lat: Number(p.latitude) || null, lng: Number(p.longitude) || null, grade: Number(p.grade) || null, rating: Number(p.reviewRatingAvg) || null, reviews: p.reviewCount || 0,
+        where: unescapeHtml(p.displayDistanceStringSimple || ''), photo: p.mainImg || '', price: agency ? 0 : Number(p.lowPrice) || 0, cur: p.lowPriceCurrency || 'KRW', url,
+      });
+    }
+    log(`몽키트래블 ${cc} ${m2 || '전체'}: ${list.length}곳`);
+  }
+  // 홀 수: 처음 보는 골프장만 상세 화면 제목을 읽어 보관(한 번 받으면 다시 안 받음)
+  const need = out.filter((g) => !(g.pid in cache));
+  let i = 0;
+  const worker = async () => { while (i < need.length) { const g = need[i++]; try { cache[g.pid] = await mtHoles(g.url); } catch { cache[g.pid] = { holes: null }; } await sleep(400); } };
+  await Promise.all([worker(), worker(), worker()]);
+  writeJson('mt-holes.json', cache);
+  const flights = readJson('flights.json', { airports: {} }).airports;
+  for (const g of out) {
+    g.holes = cache[g.pid]?.holes || null; g.par = cache[g.pid]?.par || null;
+    // 가까운 공항과 인천 왕복 항공권(구글 항공편 조회값). 못 찾으면 비워 두고 화면에 "확인 불가"로 표시한다.
+    // 좌표가 없는 골프장은 도시로 공항을 정한다(괌·사이판·클락 등)
+    const CITY_AIR = { 괌: 'GUM', 사이판: 'SPN', '수빅ㆍ클락': 'CRK', 방콕: 'BKK', '마닐라 근교': 'MNL' };
+    const a = pickAirport(g, flights) || (CITY_AIR[g.city] ? { ...AIRPORTS.find((x) => x.iata === CITY_AIR[g.city]), km: null } : null);
+    const f = a ? flights[a.iata] : null;
+    g.air = a ? { iata: a.iata, name: a.name, km: Math.round(a.km), direct: f?.direct?.min || null, airlines: f?.direct?.airlines?.slice(0, 3) || [], transfer: f?.direct ? null : f?.transfer?.min || null, via: f?.direct ? '' : f?.transfer?.via || '', fare: f?.fare?.min || null, fareDirect: f?.fare?.direct || null, fareDep: f?.fare?.dep || '', fareRet: f?.fare?.ret || '', fareUrl: f?.fare?.url || '' } : null;
+  }
+  stat.count = out.length; stat.priced = out.filter((g) => g.price > 0).length; stat.newHoles = need.length; stat.checkIn = checkIn;
+  return out;
+}
+
 // ── 해외: 티스캐너 해외 골프 상품 ─────────────────────────────
 async function resolveMapUrl(u) {
   if (!u) return null;
@@ -473,7 +546,7 @@ async function collectAbroad(stat) {
       const city = cityOf(it.city);
       out.push({
         id: `gm-${out.length}`, title: it.title, country: city?.country || ['말레이시아', '인도네시아', '일본', '태국', '베트남', '필리핀', '중국'].find((c) => it.city.includes(c)) || '', city: city?.city || '', iata: city?.iata || '',
-        price: it.price, cur: 'KRW', flightIncl: flightIncluded(it.title), options: it.from ? [{ name: `${it.from} ~ ${it.to} 출발`, cost: it.price }] : [], clubs: [],
+        price: it.price, cur: 'KRW', flightIncl: flightIncluded(it.title) === 'no' ? 'no' : it.air ? 'yes' : 'unknown', // 골프몬 목록은 항공 포함 상품에 비행기 표시와 항공사를 붙인다 options: it.from ? [{ name: `${it.from} ~ ${it.to} 출발`, cost: it.price }] : [], clubs: [],
         flight: city ? flights.airports[city.iata] || null : null, airline: it.air && it.air !== '실시간 최저가' ? it.air : '',
         site: '골프몬', seller: '골프몬', photo: it.img || '', url: 'https://www.golfmon.net/overseas/tour', collectedAt: gm.collectedAt,
       });
@@ -490,12 +563,23 @@ async function fx() {
     const j = await r.json();
     if (j.result !== 'success') return null;
     const pick = {};
-    for (const c of ['USD', 'JPY', 'THB', 'VND', 'PHP', 'MYR', 'CNY']) if (j.rates[c]) pick[c] = 1 / j.rates[c];
+    for (const c of ['USD', 'JPY', 'THB', 'VND', 'PHP', 'MYR', 'CNY', 'TWD']) if (j.rates[c]) pick[c] = 1 / j.rates[c];
     return { base: 'KRW', perUnit: pick, source: 'ExchangeRate-API (open.er-api.com)', at: j.time_last_update_utc };
   } catch { return null; }
 }
 
 // ── 실행 ──────────────────────────────────────────────────
+// 해외 골프장(몽키트래블)만 다시 받을 때: GOLF_ONLY_MT=1 node tools/golf/collect.mjs (나머지 자료는 그대로 둔다)
+if (process.env.GOLF_ONLY_MT) {
+  const prev = JSON.parse(fs.readFileSync(OUT, 'utf8'));
+  const st = { errors: 0 };
+  prev.courses = await collectMonkey(st);
+  prev.sources = [...(prev.sources || []).filter((x) => x.id !== 'mt'), { id: 'mt', name: '몽키트래블 골프장', ok: prev.courses.length > 0, ...st, at: new Date().toISOString() }];
+  fs.writeFileSync(OUT, JSON.stringify(prev));
+  log(`몽키트래블만 저장: ${prev.courses.length}곳`, st);
+  process.exit(0);
+}
+
 const dates = kstDates(DAYS);
 const hubs = await loadHubs();
 const courses = new Map();
@@ -532,6 +616,11 @@ await driveTimes(courses, hubs, meta);
 let abroad = { list: [] };
 try { abroad = await collectAbroad(abStat); meta.sources.push({ id: 'tst', name: '티스캐너 해외 골프', ok: true, count: abStat.abroad, errors: abStat.errors, at: new Date().toISOString() }); }
 catch (e) { meta.sources.push({ id: 'tst', name: '티스캐너 해외 골프', ok: false, error: e.message }); log('해외 실패', e.message); }
+
+const mtStat = { errors: 0 };
+let monkey = [];
+try { monkey = await collectMonkey(mtStat); meta.sources.push({ id: 'mt', name: '몽키트래블 골프장', ok: monkey.length > 0, ...mtStat, at: new Date().toISOString() }); }
+catch (e) { meta.sources.push({ id: 'mt', name: '몽키트래블 골프장', ok: false, error: e.message }); log('몽키트래블 실패', e.message); }
 
 const rate = await fx();
 
@@ -578,6 +667,7 @@ const out = {
   fx: rate,
   domestic: list,
   abroad: abroad.list,
+  courses: monkey,
   flightsAt: abroad.flightsAt,
   flightsSource: abroad.flightsSource,
   notes: {

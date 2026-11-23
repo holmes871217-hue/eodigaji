@@ -6,63 +6,107 @@
   "KMI": {
    "iata": "KMI",
    "date": "2026-12-10",
-   "at": 1795418526551,
+   "at": 1795433351009,
    "transfer": {
-    "min": 280,
+    "min": 270,
     "via": "FUK"
+   },
+   "fare": {
+    "min": 653800,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433351009,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS01JGh4SCjIwMjYtMTItMTRqBwgBEgNLTUlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "FUK": {
    "iata": "FUK",
    "date": "2026-12-10",
-   "at": 1795418526515,
+   "at": 1795433301898,
    "direct": {
     "min": 80,
     "airlines": [
+     "Jin Air",
      "EASTAR JET",
      "Asiana Airlines",
-     "Air Seoul",
-     "Trinity Airways",
-     "Jeju Air"
+     "Jeju Air",
+     "Air Seoul"
     ]
+   },
+   "fare": {
+    "min": 365000,
+    "direct": 365000,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301898,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDRlVLGh4SCjIwMjYtMTItMTRqBwgBEgNGVUtyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "HSG": {
    "iata": "HSG",
    "date": "2026-12-10",
-   "at": 1795418526309,
+   "at": 1795433350232,
    "transfer": {
     "min": 475,
     "via": "KIX,HND"
+   },
+   "fare": {
+    "min": 508024,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350232,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSFNHGh4SCjIwMjYtMTItMTRqBwgBEgNIU0dyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "KKJ": {
    "iata": "KKJ",
    "date": "2026-12-10",
-   "at": 1795418525922,
+   "at": 1795433322093,
    "direct": {
     "min": 85,
     "airlines": [
      "Jin Air"
     ]
+   },
+   "transfer": {
+    "min": 465,
+    "via": "NGS,HND"
+   },
+   "fare": {
+    "min": 329800,
+    "direct": 329800,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433322093,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0tKGh4SCjIwMjYtMTItMTRqBwgBEgNLS0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "KMJ": {
    "iata": "KMJ",
    "date": "2026-12-10",
-   "at": 1795418526240,
+   "at": 1795433301836,
    "direct": {
     "min": 95,
     "airlines": [
      "Trinity Airways",
      "Korean Air"
     ]
+   },
+   "fare": {
+    "min": 351800,
+    "direct": 351800,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301836,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS01KGh4SCjIwMjYtMTItMTRqBwgBEgNLTUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "NGS": {
    "iata": "NGS",
    "date": "2026-12-10",
-   "at": 1795418526212,
+   "at": 1795433322176,
    "direct": {
     "min": 90,
     "airlines": [
@@ -72,42 +116,64 @@
    "transfer": {
     "min": 430,
     "via": "KIX"
+   },
+   "fare": {
+    "min": 463100,
+    "direct": 463100,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433322176,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTkdTGh4SCjIwMjYtMTItMTRqBwgBEgNOR1NyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "KIX": {
    "iata": "KIX",
    "date": "2026-12-10",
-   "at": 1795418526759,
+   "at": 1795433301828,
    "direct": {
     "min": 100,
     "airlines": [
      "Air Seoul",
      "Peach Aviation",
-     "Jeju Air",
      "Air Busan",
      "EASTAR JET"
     ]
+   },
+   "fare": {
+    "min": 351058,
+    "direct": 351058,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301828,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0lYGh4SCjIwMjYtMTItMTRqBwgBEgNLSVhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "NRT": {
    "iata": "NRT",
    "date": "2026-12-10",
-   "at": 1795418526871,
+   "at": 1795433301816,
    "direct": {
     "min": 135,
     "airlines": [
      "EASTAR JET",
      "Air Seoul",
-     "Asiana Airlines",
      "Jeju Air",
-     "Jin Air"
+     "Asiana Airlines"
     ]
+   },
+   "fare": {
+    "min": 336870,
+    "direct": 336870,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301816,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTlJUGh4SCjIwMjYtMTItMTRqBwgBEgNOUlRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "HIJ": {
    "iata": "HIJ",
    "date": "2026-12-10",
-   "at": 1795418526302,
+   "at": 1795433322065,
    "direct": {
     "min": 95,
     "airlines": [
@@ -117,12 +183,20 @@
    "transfer": {
     "min": 375,
     "via": "SDJ"
+   },
+   "fare": {
+    "min": 546700,
+    "direct": 546700,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433322065,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSElKGh4SCjIwMjYtMTItMTRqBwgBEgNISUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "MYJ": {
    "iata": "MYJ",
    "date": "2026-12-10",
-   "at": 1795418526753,
+   "at": 1795433333614,
    "direct": {
     "min": 95,
     "airlines": [
@@ -130,8 +204,16 @@
     ]
    },
    "transfer": {
-    "min": 400,
-    "via": "FUK"
+    "min": 305,
+    "via": "KOJ"
+   },
+   "fare": {
+    "min": 435300,
+    "direct": 435300,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333614,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTVlKGh4SCjIwMjYtMTItMTRqBwgBEgNNWUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "CAN": {
@@ -195,7 +277,7 @@
   "GUM": {
    "iata": "GUM",
    "date": "2026-12-10",
-   "at": 1795418547675,
+   "at": 1795433333329,
    "direct": {
     "min": 255,
     "airlines": [
@@ -203,12 +285,32 @@
      "Korean Air",
      "Air Seoul"
     ]
+   },
+   "fare": {
+    "min": 317953,
+    "direct": 317953,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333329,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDR1VNGh4SCjIwMjYtMTItMTRqBwgBEgNHVU1yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "SPN": {
    "iata": "SPN",
    "date": "2026-12-10",
-   "at": 1795418547452
+   "at": 1795433350166,
+   "transfer": {
+    "min": 660,
+    "via": "NRT"
+   },
+   "fare": {
+    "min": 2199600,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350166,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDU1BOGh4SCjIwMjYtMTItMTRqBwgBEgNTUE5yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
   },
   "MDC": {
    "iata": "MDC",
@@ -228,18 +330,25 @@
   "MNL": {
    "iata": "MNL",
    "date": "2026-12-10",
-   "at": 1795418548222,
+   "at": 1795433301777,
    "direct": {
-    "min": 255,
+    "min": 260,
     "airlines": [
-     "Philippine Airlines",
      "Cebu Pacific",
      "Jeju Air"
     ]
    },
    "transfer": {
-    "min": 430,
-    "via": "TPE"
+    "min": 495,
+    "via": "CAN"
+   },
+   "fare": {
+    "min": 452800,
+    "direct": 579000,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301777,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTU5MGh4SCjIwMjYtMTItMTRqBwgBEgNNTkxyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "KUL": {
@@ -286,19 +395,27 @@
   "DAD": {
    "iata": "DAD",
    "date": "2026-12-10",
-   "at": 1795418509000,
+   "at": 1795433321866,
    "direct": {
     "min": 285,
     "airlines": [
      "Air Seoul",
-     "Vietjet",
      "Vietnam Airlines",
-     "Jeju Air"
+     "Jeju Air",
+     "EASTAR JET"
     ]
    },
    "transfer": {
     "min": 440,
     "via": "HKG"
+   },
+   "fare": {
+    "min": 389831,
+    "direct": 442831,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433321866,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDREFEGh4SCjIwMjYtMTItMTRqBwgBEgNEQURyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "CNX": {
@@ -330,18 +447,25 @@
   "CXR": {
    "iata": "CXR",
    "date": "2026-12-10",
-   "at": 1795418509000,
+   "at": 1795433322131,
    "direct": {
-    "min": 330,
+    "min": 305,
     "airlines": [
+     "Vietnam Airlines",
+     "Vietjet",
+     "Jeju Air",
      "Air Seoul",
      "Air Busan",
      "EASTAR JET"
     ]
    },
-   "transfer": {
-    "min": 655,
-    "via": "HAN"
+   "fare": {
+    "min": 516901,
+    "direct": 516901,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433322131,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ1hSGh4SCjIwMjYtMTItMTRqBwgBEgNDWFJyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "HAN": {
@@ -420,11 +544,10 @@
   "CEB": {
    "iata": "CEB",
    "date": "2026-12-10",
-   "at": 1795418509000,
+   "at": 1795433333546,
    "direct": {
-    "min": 275,
+    "min": 290,
     "airlines": [
-     "Korean Air",
      "Jeju Air",
      "Cebu Pacific"
     ]
@@ -432,75 +555,103 @@
    "transfer": {
     "min": 490,
     "via": "MNL"
+   },
+   "fare": {
+    "min": 584600,
+    "direct": 595700,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333546,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ0VCGh4SCjIwMjYtMTItMTRqBwgBEgNDRUJyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "BKK": {
    "iata": "BKK",
    "date": "2026-12-10",
-   "at": 1795418509000,
+   "at": 1795433350635,
+   "fare": {
+    "min": 446100,
+    "direct": 682872,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350635,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQktLGh4SCjIwMjYtMTItMTRqBwgBEgNCS0tyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   },
    "direct": {
     "min": 370,
     "airlines": [
      "Thai Vietjet Air",
-     "Air Premia",
-     "Trinity Airways",
      "EASTAR JET"
     ]
    },
    "transfer": {
-    "min": 570,
-    "via": "HKG"
-   },
-   "fare": {
-    "min": 512900,
-    "direct": 682872,
-    "dep": "2026-12-10",
-    "ret": "2026-12-14",
-    "at": 1795431165000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQktLGh4SCjIwMjYtMTItMTRqBwgBEgNCS0tyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "min": 495,
+    "via": "CAN"
    }
   },
   "SGN": {
    "iata": "SGN",
    "date": "2026-12-10",
-   "at": 1795418509000,
+   "at": 1795433301649,
    "direct": {
-    "min": 325,
+    "min": 330,
     "airlines": [
-     "Vietnam Airlines",
      "Vietjet",
      "Air Premia",
      "Sun PhuQuoc Airways"
     ]
    },
    "transfer": {
-    "min": 475,
-    "via": "CAN"
+    "min": 580,
+    "via": "HAN"
+   },
+   "fare": {
+    "min": 368158,
+    "direct": 384391,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301649,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDU0dOGh4SCjIwMjYtMTItMTRqBwgBEgNTR05yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "CRK": {
    "iata": "CRK",
    "date": "2026-12-10",
-   "at": 1795418509000,
+   "at": 1795433321591,
    "direct": {
     "min": 245,
     "airlines": [
-     "Jeju Air",
-     "Jin Air"
+     "Jeju Air"
     ]
    },
    "transfer": {
     "min": 490,
     "via": "HKG"
+   },
+   "fare": {
+    "min": 406200,
+    "direct": 781500,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433321591,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ1JLGh4SCjIwMjYtMTItMTRqBwgBEgNDUktyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "MMY": {
    "iata": "MMY",
    "date": "2026-12-10",
-   "at": 1795425608670,
+   "at": 1795433350903,
    "transfer": {
     "min": 380,
     "via": "NGO"
+   },
+   "fare": {
+    "min": 1072100,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350903,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTU1ZGh4SCjIwMjYtMTItMTRqBwgBEgNNTVlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "NKG": {
@@ -521,19 +672,24 @@
   "OKA": {
    "iata": "OKA",
    "date": "2026-12-10",
-   "at": 1795425608713,
+   "at": 1795433322050,
    "direct": {
     "min": 140,
     "airlines": [
      "Jin Air",
      "Jeju Air",
      "Trinity Airways",
-     "EASTAR JET"
+     "EASTAR JET",
+     "Asiana Airlines"
     ]
    },
-   "transfer": {
-    "min": 505,
-    "via": "TPE"
+   "fare": {
+    "min": 407392,
+    "direct": 407392,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433322050,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDT0tBGh4SCjIwMjYtMTItMTRqBwgBEgNPS0FyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "HAK": {
@@ -548,7 +704,7 @@
   "HPH": {
    "iata": "HPH",
    "date": "2026-12-10",
-   "at": 1795425608903,
+   "at": 1795433322117,
    "direct": {
     "min": 325,
     "airlines": [
@@ -558,6 +714,14 @@
    "transfer": {
     "min": 605,
     "via": "SGN"
+   },
+   "fare": {
+    "min": 338133,
+    "direct": 338133,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433322117,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSFBIGh4SCjIwMjYtMTItMTRqBwgBEgNIUEhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "BTH": {
@@ -581,7 +745,7 @@
   "OKJ": {
    "iata": "OKJ",
    "date": "2026-12-10",
-   "at": 1795425608727,
+   "at": 1795433333620,
    "direct": {
     "min": 100,
     "airlines": [
@@ -591,6 +755,14 @@
    "transfer": {
     "min": 675,
     "via": "HND"
+   },
+   "fare": {
+    "min": 1196800,
+    "direct": 1196800,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333620,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDT0tKGh4SCjIwMjYtMTItMTRqBwgBEgNPS0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "FOC": {
@@ -642,16 +814,24 @@
   "UBJ": {
    "iata": "UBJ",
    "date": "2026-12-10",
-   "at": 1795425608556,
+   "at": 1795433350670,
    "transfer": {
-    "min": 625,
+    "min": 660,
     "via": "KIX,HND"
+   },
+   "fare": {
+    "min": 1978900,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350670,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVUJKGh4SCjIwMjYtMTItMTRqBwgBEgNVQkpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "TAK": {
    "iata": "TAK",
    "date": "2026-12-10",
-   "at": 1795425608556,
+   "at": 1795433321094,
    "direct": {
     "min": 100,
     "airlines": [
@@ -660,25 +840,41 @@
     ]
    },
    "transfer": {
-    "min": 645,
+    "min": 695,
     "via": "HND"
+   },
+   "fare": {
+    "min": 374500,
+    "direct": 374500,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433321094,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVEFLGh4SCjIwMjYtMTItMTRqBwgBEgNUQUtyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "FSZ": {
    "iata": "FSZ",
    "date": "2026-12-10",
-   "at": 1795425608556,
+   "at": 1795433301249,
    "direct": {
     "min": 115,
     "airlines": [
      "Jeju Air"
     ]
+   },
+   "fare": {
+    "min": 377400,
+    "direct": 377400,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301249,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDRlNaGh4SCjIwMjYtMTItMTRqBwgBEgNGU1pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   },
   "OIT": {
    "iata": "OIT",
    "date": "2026-12-10",
-   "at": 1795425608556,
+   "at": 1795433333573,
    "direct": {
     "min": 115,
     "airlines": [
@@ -686,8 +882,461 @@
     ]
    },
    "transfer": {
-    "min": 510,
+    "min": 460,
     "via": "KIX"
+   },
+   "fare": {
+    "min": 375300,
+    "direct": 375300,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333573,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDT0lUGh4SCjIwMjYtMTItMTRqBwgBEgNPSVRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "CTS": {
+   "iata": "CTS",
+   "date": "2026-12-10",
+   "at": 1795433301892,
+   "direct": {
+    "min": 150,
+    "airlines": [
+     "EASTAR JET",
+     "Jeju Air",
+     "Jin Air",
+     "Asiana Airlines"
+    ]
+   },
+   "fare": {
+    "min": 593700,
+    "direct": 593700,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301892,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ1RTGh4SCjIwMjYtMTItMTRqBwgBEgNDVFNyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "TPE": {
+   "iata": "TPE",
+   "date": "2026-12-10",
+   "at": 1795433301559,
+   "direct": {
+    "min": 160,
+    "airlines": [
+     "Scoot",
+     "Tigerair Taiwan",
+     "China Airlines",
+     "Korean Air",
+     "Jin Air"
+    ]
+   },
+   "transfer": {
+    "min": 540,
+    "via": "HKG"
+   },
+   "fare": {
+    "min": 325835,
+    "direct": 325835,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301559,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVFBFGh4SCjIwMjYtMTItMTRqBwgBEgNUUEVyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "AKJ": {
+   "iata": "AKJ",
+   "date": "2026-12-10",
+   "at": 1795433301971,
+   "transfer": {
+    "min": 490,
+    "via": "FUK,HND"
+   },
+   "fare": {
+    "min": 1274300,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433301971,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQUtKGh4SCjIwMjYtMTItMTRqBwgBEgNBS0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "HKT": {
+   "iata": "HKT",
+   "date": "2026-12-10",
+   "at": 1795433322022,
+   "direct": {
+    "min": 390,
+    "airlines": [
+     "Asiana Airlines",
+     "Korean Air"
+    ]
+   },
+   "transfer": {
+    "min": 590,
+    "via": "HKG"
+   },
+   "fare": {
+    "min": 499300,
+    "direct": 870100,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433322022,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSEtUGh4SCjIwMjYtMTItMTRqBwgBEgNIS1RyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "SDJ": {
+   "iata": "SDJ",
+   "date": "2026-12-10",
+   "at": 1795433333671,
+   "direct": {
+    "min": 130,
+    "airlines": [
+     "Asiana Airlines"
+    ]
+   },
+   "transfer": {
+    "min": 420,
+    "via": "KIX"
+   },
+   "fare": {
+    "min": 421500,
+    "direct": 421500,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333671,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDU0RKGh4SCjIwMjYtMTItMTRqBwgBEgNTREpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "HKD": {
+   "iata": "HKD",
+   "date": "2026-12-10",
+   "at": 1795433333743,
+   "transfer": {
+    "min": 490,
+    "via": "CTS"
+   },
+   "fare": {
+    "min": 819451,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333743,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSEtEGh4SCjIwMjYtMTItMTRqBwgBEgNIS0RyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "KHH": {
+   "iata": "KHH",
+   "date": "2026-12-10",
+   "at": 1795433333347,
+   "direct": {
+    "min": 195,
+    "airlines": [
+     "EVA Air",
+     "Trinity Airways"
+    ]
+   },
+   "transfer": {
+    "min": 480,
+    "via": "HKG"
+   },
+   "fare": {
+    "min": 399500,
+    "direct": 540600,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333347,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0hIGh4SCjIwMjYtMTItMTRqBwgBEgNLSEhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "NGO": {
+   "iata": "NGO",
+   "date": "2026-12-10",
+   "at": 1795433333793,
+   "direct": {
+    "min": 105,
+    "airlines": [
+     "Asiana Airlines",
+     "Jin Air",
+     "Jeju Air",
+     "Korean Air"
+    ]
+   },
+   "fare": {
+    "min": 393500,
+    "direct": 393500,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333793,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTkdPGh4SCjIwMjYtMTItMTRqBwgBEgNOR09yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "KBV": {
+   "iata": "KBV",
+   "date": "2026-12-10",
+   "at": 1795433333323,
+   "transfer": {
+    "min": 650,
+    "via": "KUL"
+   },
+   "fare": {
+    "min": 782525,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433333323,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0JWGh4SCjIwMjYtMTItMTRqBwgBEgNLQlZyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "RMQ": {
+   "iata": "RMQ",
+   "date": "2026-12-10",
+   "at": 1795433350492,
+   "direct": {
+    "min": 175,
+    "airlines": [
+     "Jin Air",
+     "Trinity Airways",
+     "Korean Air"
+    ]
+   },
+   "transfer": {
+    "min": 480,
+    "via": "HKG"
+   },
+   "fare": {
+    "min": 355813,
+    "direct": 355813,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350492,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDUk1RGh4SCjIwMjYtMTItMTRqBwgBEgNSTVFyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "CEI": {
+   "iata": "CEI",
+   "date": "2026-12-10",
+   "at": 1795433350651,
+   "transfer": {
+    "min": 570,
+    "via": "BKK"
+   },
+   "fare": {
+    "min": 1257200,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350651,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ0VJGh4SCjIwMjYtMTItMTRqBwgBEgNDRUlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "USM": {
+   "iata": "USM",
+   "date": "2026-12-10",
+   "at": 1795433350676,
+   "transfer": {
+    "min": 520,
+    "via": "BKK"
+   },
+   "fare": {
+    "min": 931453,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350676,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVVNNGh4SCjIwMjYtMTItMTRqBwgBEgNVU01yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "PQC": {
+   "iata": "PQC",
+   "date": "2026-12-10",
+   "at": 1795433350562,
+   "direct": {
+    "min": 350,
+    "airlines": [
+     "Vietjet",
+     "Jin Air",
+     "EASTAR JET"
+    ]
+   },
+   "transfer": {
+    "min": 525,
+    "via": "SGN"
+   },
+   "fare": {
+    "min": 409484,
+    "direct": 515460,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350562,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDUFFDGh4SCjIwMjYtMTItMTRqBwgBEgNQUUNyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "KIJ": {
+   "iata": "KIJ",
+   "date": "2026-12-10",
+   "at": 1795433350676,
+   "direct": {
+    "min": 125,
+    "airlines": [
+     "Korean Air"
+    ]
+   },
+   "transfer": {
+    "min": 445,
+    "via": "KIX"
+   },
+   "fare": {
+    "min": 423100,
+    "direct": 423100,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350676,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0lKGh4SCjIwMjYtMTItMTRqBwgBEgNLSUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "KMQ": {
+   "iata": "KMQ",
+   "date": "2026-12-10",
+   "at": 1795433350876,
+   "direct": {
+    "min": 110,
+    "airlines": [
+     "Korean Air"
+    ]
+   },
+   "transfer": {
+    "min": 545,
+    "via": "NRT"
+   },
+   "fare": {
+    "min": 478100,
+    "direct": 478100,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350876,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS01RGh4SCjIwMjYtMTItMTRqBwgBEgNLTVFyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "AOJ": {
+   "iata": "AOJ",
+   "date": "2026-12-10",
+   "at": 1795433350774,
+   "direct": {
+    "min": 155,
+    "airlines": [
+     "Korean Air"
+    ]
+   },
+   "transfer": {
+    "min": 410,
+    "via": "CTS"
+   },
+   "fare": {
+    "min": 1023200,
+    "direct": 1037100,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350774,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQU9KGh4SCjIwMjYtMTItMTRqBwgBEgNBT0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "KLO": {
+   "iata": "KLO",
+   "date": "2026-12-10",
+   "at": 1795433350160,
+   "transfer": {
+    "min": 700,
+    "via": "MNL"
+   },
+   "fare": {
+    "min": 656000,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350160,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0xPGh4SCjIwMjYtMTItMTRqBwgBEgNLTE9yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "UIH": {
+   "iata": "UIH",
+   "date": "2026-12-10",
+   "at": 1795433350850,
+   "transfer": {
+    "min": 915,
+    "via": "SGN"
+   }
+  },
+  "HND": {
+   "iata": "HND",
+   "date": "2026-12-10",
+   "at": 1795433350736,
+   "direct": {
+    "min": 115,
+    "airlines": [
+     "Asiana Airlines",
+     "Peach Aviation",
+     "Korean Air"
+    ]
+   },
+   "transfer": {
+    "min": 285,
+    "via": "OKJ"
+   },
+   "fare": {
+    "min": 574179,
+    "direct": 574179,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350736,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSE5EGh4SCjIwMjYtMTItMTRqBwgBEgNITkRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "IBR": {
+   "iata": "IBR",
+   "date": "2026-12-10",
+   "at": 1795433349888
+  },
+  "YGJ": {
+   "iata": "YGJ",
+   "date": "2026-12-10",
+   "at": 1795433350765,
+   "transfer": {
+    "min": 460,
+    "via": "OKJ,HND"
+   },
+   "fare": {
+    "min": 706800,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350765,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDWUdKGh4SCjIwMjYtMTItMTRqBwgBEgNZR0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+   }
+  },
+  "DLI": {
+   "iata": "DLI",
+   "date": "2026-12-10",
+   "at": 1795433350719,
+   "transfer": {
+    "min": 555,
+    "via": "DAD"
+   }
+  },
+  "VDO": {
+   "iata": "VDO",
+   "date": "2026-12-10",
+   "at": 1795433350436,
+   "transfer": {
+    "min": 795,
+    "via": "HAN,SGN"
+   },
+   "fare": {
+    "min": 548708,
+    "direct": null,
+    "dep": "2026-12-10",
+    "ret": "2026-12-14",
+    "at": 1795433350436,
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVkRPGh4SCjIwMjYtMTItMTRqBwgBEgNWRE9yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
    }
   }
  }
