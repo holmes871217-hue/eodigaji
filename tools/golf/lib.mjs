@@ -177,3 +177,25 @@ export function coordsFromGoogleUrl(u) {
 export function is18Tee(t) {
   return t && t.min_cost > 0 && t.is_9h !== 'Y' && t.is_9h2 !== 'Y' && !/9\s*홀/.test(t.course_name || '') && !/(^|[^0-9])9H/i.test(t.course_name || '');
 }
+
+/** 골프몬 해외투어 목록 화면(마크다운) → 상품 목록. 제목 [도시] …, 출발 기간, "N원~", 항공사, 사진(s3 주소만) */
+export function parseGolfmonOverseas(md) {
+  const start = md.indexOf('골프몬 해외 투어 NEW');
+  const m = start >= 0 ? md.slice(start) : md;
+  const parts = m.split(/\n!\[\]\((https:\/\/[^)]+)\)\n/);
+  const items = [];
+  for (let k = 1; k < parts.length - 1; k += 2) {
+    const img = parts[k], body = parts[k + 1];
+    const t = /\\\[([^\]]+?)\\\]\s*(.+)/.exec(body);
+    const p = /([\d,]+)원~/.exec(body);
+    if (!t || !p) continue;
+    const dr = /(\d\d\.\d\d)\([^)]\)\s*~\s*(\d\d\.\d\d)\([^)]\)/.exec(body);
+    const air = /ic_airplane\.svg\)\s*(.+)/.exec(body);
+    items.push({ city: t[1], title: `[${t[1]}] ${t[2].replace(/\\/g, '').trim()}`, price: Number(p[1].replace(/,/g, '')), from: dr?.[1] || null, to: dr?.[2] || null, air: air ? air[1].trim() : null, img: img.includes('amazonaws') ? img : '' });
+  }
+  return items;
+}
+
+/** 골프몬 양도 달력 칸 선택자: 지역 번호와 날짜로 그 칸을 누른다 */
+export const GOLFMON_REGIONS = [['9', '인천경인'], ['1', '경기북부'], ['8', '경기동부'], ['2', '경기남부'], ['3', '충청'], ['4', '강원'], ['5', '전라'], ['6', '경상'], ['7', '제주']];
+export const golfmonCell = (regionId, day) => `.schedule-count[data-gtm-meta*='"region_id":"${regionId}","date":"${day}"']`;

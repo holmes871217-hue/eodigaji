@@ -1,0 +1,22 @@
+# 시험용(게시 안 함): 작업 브랜치에서 골프몬 한국 위치 접속을 확인한다.
+name: 골프몬 접속 시험
+on:
+  workflow_dispatch:
+  push:
+    branches: [ccr-c3b867fc-1eymmm]
+    paths: [tools/golf/golfmon-test.mjs, .github/workflows/golfmon-test.yml]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 골프몬 시험
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: node tools/golf/golfmon-test.mjs
