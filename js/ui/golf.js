@@ -176,7 +176,7 @@ function abroadCard(t, data, rank) {
         <span class="card-body">
           <span class="golf-top"><span class="golf-rank">${rank}위</span>${stay(t) ? `<span class="golf-stay">${esc(stay(t))}</span>` : ''}</span>
           <span class="card-title">${esc(tourName(t))}</span>
-          <span class="card-meta">${t.city ? `${esc(t.city)} · ` : ''}${esc(siteOf(t))}</span>
+          <span class="card-meta">${esc(siteOf(t))}</span>
           <span class="golf-price"><b>${won(t.price)}~</b> <small>${esc(inclText(t))}</small></span>
         </span>
         ${thumb(t.photo)}
@@ -184,7 +184,7 @@ function abroadCard(t, data, rank) {
     </li>`;
 }
 
-const inclText = (t) => (t.flightIncl === 'no' ? '항공 불포함' : t.flightIncl === 'yes' ? '항공 포함' : '항공 포함 여부 확인 필요');
+const inclText = (t) => (t.flightIncl === 'no' ? (t.flight?.fare ? `항공 불포함 · 왕복 약 ${won(t.flight.fare.min)}~` : '항공 불포함') : t.flightIncl === 'yes' ? '항공 포함' : '항공 포함 여부 확인 필요');
 
 /** 해외 상품 상세 창 */
 export function golfTourSheet(data, id) {
@@ -192,31 +192,44 @@ export function golfTourSheet(data, id) {
   if (!t) return '';
   const cur = COUNTRY_CUR[t.country];
   const local = cur && cur !== 'KRW' ? localPrice(data.fx, t.price, cur) : null;
+  const f = t.flight;
+  const fare = t.flightIncl === 'no' ? f?.fare : null;
+  const md = (iso) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
+  const row = (k, v) => `<li><b>${k}</b><span>${v}</span></li>`;
+  const flightRow = f?.direct ? `인천→${esc(f.iata)} 직항 ${hm(f.direct.min)}<small>${esc((f.direct.airlines || []).slice(0, 3).join(' · '))}</small>`
+    : f?.transfer ? `인천→${esc(f.iata)} 경유 ${hm(f.transfer.min)}<small>${esc(f.transfer.via || '')} 경유 · 그날 직항 없음</small>` : '항공 정보 확인 불가';
   return `
     <div class="sheet-head">
       <div>
         <h2 class="sheet-title" id="sheet-title">${esc(tourName(t))}</h2>
-        <p class="card-meta">${esc(t.country)}${t.city ? ` · ${esc(t.city)}` : ''}${stay(t) ? ` · ${esc(stay(t))}` : ''} · ${esc(siteOf(t))}</p>
+        <p class="card-meta">${stay(t) ? `${esc(stay(t))} · ` : ''}${esc(siteOf(t))}</p>
       </div>
     </div>
     ${t.photo ? `<div class="sheet-photo golf-photo"><img src="${esc(t.photo)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : ''}
     <div class="stats">
-      <div class="stat"><b>${won(t.price)}~</b><span>상품가</span></div>
-      <div class="stat"><b>${t.flight?.direct ? hm(t.flight.direct.min) : t.flight?.transfer ? hm(t.flight.transfer.min) : '-'}</b><span>${t.flight?.direct ? '인천 출발 직항' : t.flight?.transfer ? '인천 출발 경유' : '항공 정보 없음'}</span></div>
+      <div class="stat"><b>${won(t.price)}</b><span>상품가(최저)</span></div>
+      <div class="stat"><b>${f?.direct ? hm(f.direct.min) : f?.transfer ? hm(f.transfer.min) : '-'}</b><span>${f?.direct ? '직항' : f?.transfer ? '경유' : '비행시간'}</span></div>
       <div class="stat"><b>${esc(stay(t) || '-')}</b><span>일정</span></div>
     </div>
     <ul class="golf-info">
-      <li><b>판매 상품명</b> ${esc(t.title)}</li>
-      <li><b>항공</b> ${esc(inclText(t))}${t.airline ? ` · ${esc(t.airline)}` : ''}</li>
-      <li><b>비행</b> ${flightText(t.flight)}</li>
-      ${local ? `<li><b>현지 통화</b> 약 ${local} ${cur} (${esc(data.fx.source)} 환율, ${esc(String(data.fx.at || '').replace(/ \+0000$/, ' UTC'))})</li>` : ''}
+      ${local ? row('현지 가격', `약 ${local} ${cur} = ${won(t.price)}`) : ''}
+      ${row('항공', `${esc(inclText(t))}${t.airline ? `<small>${esc(t.airline)}</small>` : ''}`)}
+      ${row('비행', flightRow)}
+      ${row('상품명', esc(t.title))}
     </ul>
-    ${t.clubs.length ? `<h3 class="golf-sub">골프장</h3><ul class="golf-info">${t.clubs.map((c) => `<li><b>${esc(c.name)}</b> ${c.airport ? `공항에서 ${c.airport.km}km · 차로 약 ${hm(c.airport.min)}` : '공항 거리 확인 불가'}</li>`).join('')}</ul>` : ''}
-    ${t.options?.length ? `<h3 class="golf-sub">출발 기간별 가격</h3><ul class="golf-info">${t.options.map((o) => `<li>${esc(o.name)} <b>${won(o.cost)}</b></li>`).join('')}</ul>` : ''}
+    ${fare ? `<h3 class="golf-sub">항공권 (따로 사야 해요)</h3>
+    <div class="golf-fare">
+      <p><b>왕복 약 ${won(fare.min)}~</b>${fare.direct && fare.direct !== fare.min ? ` · 직항 약 ${won(fare.direct)}~` : ''}</p>
+      <p class="muted">${md(fare.dep)} 출발 · ${md(fare.ret)} 귀국, 1인 기준 구글 항공편 조회</p>
+      <p>상품가 + 항공권 = <b>약 ${won(t.price + fare.min)}~</b></p>
+      <a class="btn-secondary" href="${esc(fare.url)}" target="_blank" rel="noopener noreferrer">항공권 찾아보기</a>
+    </div>` : ''}
+    ${t.clubs.length ? `<h3 class="golf-sub">골프장</h3><ul class="golf-info">${t.clubs.map((c) => row(esc(c.name), c.airport ? `공항에서 ${c.airport.km}km<small>차로 약 ${hm(c.airport.min)}</small>` : '공항 거리 확인 불가')).join('')}</ul>` : ''}
+    ${t.options?.length ? `<h3 class="golf-sub">출발 기간별 가격</h3><ul class="golf-opts">${t.options.map((o) => `<li><span>${esc(o.name)}</span><b>${won(o.cost)}</b></li>`).join('')}</ul>` : ''}
     <div class="sheet-actions golf-actions">
       <a class="btn-primary" href="${esc(t.url)}" target="_blank" rel="noopener noreferrer">상품 보기(${esc(siteOf(t))})</a>
     </div>
-    <p class="sample-note">가격·일정은 ${esc(kst(t.collectedAt || data.updatedAt))}에 ${esc(t.site || '티스캐너')}에 올라온 값이에요. 비행시간은 구글 항공편 조회값, 공항→골프장은 OpenStreetMap 도로 기준 예상값이라 실제와 다를 수 있어요.</p>`;
+    <p class="sample-note">가격·일정은 ${esc(kst(t.collectedAt || data.updatedAt))}에 ${esc(t.site || '티스캐너')}에 올라온 값이에요. 비행시간·항공권은 구글 항공편 조회값, 공항→골프장은 OpenStreetMap 도로 기준 예상값이라 실제와 다를 수 있어요.</p>`;
 }
 
 /**
@@ -230,11 +243,10 @@ export function tourName(t) {
   if (!names.length) names = [...String(t.title).replace(/\[[^\]]*\]/g, ' ').matchAll(CLUB_RE)].map((m) => m[1]);
   names = names.map((n) => n.replace(/^#/, '').split(/\s+-\s*|-\s+/)[0].replace(/\s+/g, ' ').trim()).filter((n) => n.length >= 2);
   names = [...new Set(names)].filter((n, i, a) => !a.some((m, j) => j !== i && m !== n && m.startsWith(n) && m.length > n.length));
-  if (names.length) return `[${country}] ${names.slice(0, 3).join('+')}${names.length > 3 ? ` 외 ${names.length - 3}곳` : ''}`;
-  const br = /^\[([^\]]+)\]/.exec(t.title)?.[1];
-  const place = t.site === '골프몬' && t.city && br ? br : t.city || '';
+  const head = `[${country}${t.city ? `-${t.city}` : ''}]`;
+  if (names.length) return `${head} ${names.slice(0, 3).join('+')}${names.length > 3 ? ` 외 ${names.length - 3}곳` : ''}`;
   const n = /(\d)\s*색/.exec(t.title);
-  return `[${country}] ${place} ${n ? `${n[1]}색 ` : ''}골프`.replace(/\s+/g, ' ');
+  return `${head} ${n ? `${n[1]}색 ` : ''}골프`;
 }
 
 /** 일정: 제목·옵션에서 "3박5일"처럼 적힌 것만 읽는다(없으면 표시 안 함) */
