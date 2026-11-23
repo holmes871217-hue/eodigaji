@@ -11,6 +11,7 @@ import { memberLabel } from '../core/segments.js';
 import { SHOP_KINDS } from '../core/nearby.js';
 import { esc, icon, rangeText, heartBtn, naverQuery, googleMapUrl, kakaoPinUrl, kakaoId } from './util.js';
 import { favSet, favKey } from '../core/favs.js';
+import { golfSheet, golfTourSheet } from './golf.js';
 
 const DOW = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -292,6 +293,10 @@ export function renderSheet(state, c) {
     inner = trendSheet();
   } else if (s.type === 'course') {
     inner = courseSheet(state);
+  } else if (s.type === 'golf') {
+    inner = golfSheet(state, c.golf, s.id);
+  } else if (s.type === 'golf-tour') {
+    inner = golfTourSheet(c.golf, s.id);
   } else if (s.type === 'shops' && SHOP_KINDS[s.kind]) {
     const row = c.rankedAll.find((r) => r.place.id === s.id);
     if (row) inner = shopsSheet(row.place, s.kind, state.ui.shops?.[`${s.id}|${s.kind}`], favSet(state));

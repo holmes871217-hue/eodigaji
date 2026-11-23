@@ -556,7 +556,9 @@ for (const co of courses.values()) {
   const est = estFor(co);
   const days = {};
   for (const [day, offers] of Object.entries(co.offers)) {
-    const priced = offers.map((o) => ({ o, cost: perPersonCost(o.price, co.cartFee, co.caddieFee, { noCaddie: o.noCaddie, cartIncluded: o.cartIncluded, ...est }) }));
+    // 노캐디 여부를 알려 주지 않는 플랫폼(티업엔조이·골프몬)은, 같은 골프장·같은 날 다른 플랫폼에서 노캐디로 확인되면 그대로 따른다(같은 기준 비교).
+    const dayNoCaddie = offers.some((o) => o.noCaddie === true);
+    const priced = offers.map((o) => ({ o, cost: perPersonCost(o.price, co.cartFee, co.caddieFee, { noCaddie: o.noCaddie ?? dayNoCaddie, cartIncluded: o.cartIncluded, ...est }) }));
     const best = priced.reduce((a, b) => (b.cost.total < a.cost.total ? b : a));
     days[day] = { ...best.cost, src: best.o.src, offers: priced.map(({ o, cost }) => [o.src, o.price, o.count, cost.total]) }; // 링크는 앱이 만든다(파일 크기 줄이기)
   }
