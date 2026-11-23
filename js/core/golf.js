@@ -78,4 +78,29 @@ export function localPrice(fx, krw, cur) {
   return v >= 100 ? Math.round(v).toLocaleString('ko-KR') : (Math.round(v * 10) / 10).toLocaleString('ko-KR');
 }
 
-export const COUNTRY_CUR = { 태국: 'THB', 베트남: 'VND', 필리핀: 'PHP', 말레이시아: 'MYR', 일본: 'JPY', 중국: 'CNY', '괌(미국)': 'USD', '사이판(미국)': 'USD', 라오스: 'USD', 인도네시아: 'USD' };
+export const COUNTRY_CUR = { 대만: 'TWD', 괌: 'USD', 태국: 'THB', 베트남: 'VND', 필리핀: 'PHP', 말레이시아: 'MYR', 일본: 'JPY', 중국: 'CNY', '괌(미국)': 'USD', '사이판(미국)': 'USD', 라오스: 'USD', 인도네시아: 'USD' };
+
+// ── 해외 골프장(몽키트래블) ───────────────────────────────
+export const CONTINENT_OF = { 태국: '동남아시아', 베트남: '동남아시아', 필리핀: '동남아시아', 말레이시아: '동남아시아', 인도네시아: '동남아시아', 라오스: '동남아시아', 일본: '동북아시아', 대만: '동북아시아', 중국: '동북아시아', 괌: '괌·사이판', '괌(미국)': '괌·사이판', '사이판(미국)': '괌·사이판' };
+export const CONTINENTS = ['동남아시아', '동북아시아', '괌·사이판'];
+
+/** 대륙 → 나라 → 도시 목록(골프장 수 많은 순) */
+export function courseTree(list) {
+  const t = new Map();
+  for (const c of list || []) {
+    const cont = CONTINENT_OF[c.country] || '기타';
+    if (!t.has(cont)) t.set(cont, new Map());
+    const cm = t.get(cont);
+    if (!cm.has(c.country)) cm.set(c.country, new Map());
+    const cities = cm.get(c.country);
+    cities.set(c.city, (cities.get(c.city) || 0) + 1);
+  }
+  return t;
+}
+
+/** 대륙·나라·도시로 거르고 1인당 낮은 순(가격 없는 곳은 맨 뒤) */
+export function courseList(list, { cont, country, city }) {
+  return (list || [])
+    .filter((c) => (!cont || (CONTINENT_OF[c.country] || '기타') === cont) && (!country || c.country === country) && (!city || c.city === city))
+    .sort((a, b) => (a.price ? 0 : 1) - (b.price ? 0 : 1) || a.price - b.price || (b.rating || 0) - (a.rating || 0));
+}

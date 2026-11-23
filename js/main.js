@@ -453,6 +453,15 @@ root.addEventListener('click', (ev) => {
     case 'golf-open':
       openSheet({ type: 'golf', id });
       break;
+    case 'golf-course':
+      openSheet({ type: 'golf-course', id });
+      break;
+    case 'golf-kind':
+      update(() => { state.ui.golf.kind = v === 'pack' ? 'pack' : 'course'; state.ui.golf.cont = ''; state.ui.golf.country = ''; state.ui.golf.city = ''; state.ui.golf.max = 20; }, { persist: false });
+      break;
+    case 'golf-cont':
+      update(() => { state.ui.golf.cont = v || ''; state.ui.golf.country = ''; state.ui.golf.city = ''; state.ui.golf.max = 20; }, { persist: false });
+      break;
     case 'golf-tour':
       openSheet({ type: 'golf-tour', id });
       break;
