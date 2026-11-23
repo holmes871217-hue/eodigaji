@@ -172,11 +172,11 @@ function flightText(f) {
 function abroadCard(t, data, rank) {
   return `
     <li>
-      <button type="button" class="card golf-card" data-action="golf-tour" data-id="${esc(t.id)}" aria-label="${esc(t.title)} 상세 보기">
+      <button type="button" class="card golf-card" data-action="golf-tour" data-id="${esc(t.id)}" aria-label="${esc(tourName(t))} 상세 보기">
         <span class="card-body">
           <span class="golf-top"><span class="golf-rank">${rank}위</span>${stay(t) ? `<span class="golf-stay">${esc(stay(t))}</span>` : ''}</span>
-          <span class="card-title">${esc(t.title)}</span>
-          <span class="card-meta">${esc(t.country)}${t.city ? ` · ${esc(t.city)}` : ''} · ${esc(siteOf(t))}</span>
+          <span class="card-title">${esc(tourName(t))}</span>
+          <span class="card-meta">${t.city ? `${esc(t.city)} · ` : ''}${esc(siteOf(t))}</span>
           <span class="golf-price"><b>${won(t.price)}~</b> <small>${esc(inclText(t))}</small></span>
         </span>
         ${thumb(t.photo)}
@@ -195,7 +195,7 @@ export function golfTourSheet(data, id) {
   return `
     <div class="sheet-head">
       <div>
-        <h2 class="sheet-title" id="sheet-title">${esc(t.title)}</h2>
+        <h2 class="sheet-title" id="sheet-title">${esc(tourName(t))}</h2>
         <p class="card-meta">${esc(t.country)}${t.city ? ` · ${esc(t.city)}` : ''}${stay(t) ? ` · ${esc(stay(t))}` : ''} · ${esc(siteOf(t))}</p>
       </div>
     </div>
@@ -206,6 +206,7 @@ export function golfTourSheet(data, id) {
       <div class="stat"><b>${esc(stay(t) || '-')}</b><span>일정</span></div>
     </div>
     <ul class="golf-info">
+      <li><b>판매 상품명</b> ${esc(t.title)}</li>
       <li><b>항공</b> ${esc(inclText(t))}${t.airline ? ` · ${esc(t.airline)}` : ''}</li>
       <li><b>비행</b> ${flightText(t.flight)}</li>
       ${local ? `<li><b>현지 통화</b> 약 ${local} ${cur} (${esc(data.fx.source)} 환율, ${esc(String(data.fx.at || '').replace(/ \+0000$/, ' UTC'))})</li>` : ''}
@@ -216,6 +217,24 @@ export function golfTourSheet(data, id) {
       <a class="btn-primary" href="${esc(t.url)}" target="_blank" rel="noopener noreferrer">상품 보기(${esc(siteOf(t))})</a>
     </div>
     <p class="sample-note">가격·일정은 ${esc(kst(t.collectedAt || data.updatedAt))}에 ${esc(t.site || '티스캐너')}에 올라온 값이에요. 비행시간은 구글 항공편 조회값, 공항→골프장은 OpenStreetMap 도로 기준 예상값이라 실제와 다를 수 있어요.</p>`;
+}
+
+/**
+ * 해외 카드 이름을 "[나라] 골프장+골프장" 으로 통일한다(광고 문구는 쓰지 않는다).
+ * 골프장 이름은 상품의 골프장 목록, 없으면 상품명 속 "…CC/GC/골프클럽" 을 쓴다. 그것도 없으면 "[나라] 지역 N색 골프".
+ */
+const CLUB_RE = /([가-힣A-Za-z0-9'’&.]+(?:\s?(?:CC|GC|cc|gc|C\.C|G\.C|컨트리클럽|골프클럽|GOLF CLUB|Golf Club)))(?![가-힣A-Za-z])/g;
+export function tourName(t) {
+  const country = t.country || '해외';
+  let names = (t.clubs || []).map((c) => c.name);
+  if (!names.length) names = [...String(t.title).replace(/\[[^\]]*\]/g, ' ').matchAll(CLUB_RE)].map((m) => m[1]);
+  names = names.map((n) => n.replace(/^#/, '').split(/\s+-\s*|-\s+/)[0].replace(/\s+/g, ' ').trim()).filter((n) => n.length >= 2);
+  names = [...new Set(names)].filter((n, i, a) => !a.some((m, j) => j !== i && m !== n && m.startsWith(n) && m.length > n.length));
+  if (names.length) return `[${country}] ${names.slice(0, 3).join('+')}${names.length > 3 ? ` 외 ${names.length - 3}곳` : ''}`;
+  const br = /^\[([^\]]+)\]/.exec(t.title)?.[1];
+  const place = t.site === '골프몬' && t.city && br ? br : t.city || '';
+  const n = /(\d)\s*색/.exec(t.title);
+  return `[${country}] ${place} ${n ? `${n[1]}색 ` : ''}골프`.replace(/\s+/g, ' ');
 }
 
 /** 일정: 제목·옵션에서 "3박5일"처럼 적힌 것만 읽는다(없으면 표시 안 함) */
