@@ -19,7 +19,12 @@ const GP_MAX_PAGES = Number(process.env.GOLF_GP_PAGES || 8);
 const KAKAO = process.env.KAKAO_REST_KEY || '';
 const DRIVE_CAP = Number(process.env.GOLF_DRIVE_CAP || 3000); // 한 번에 부르는 길찾기 최대 건수(하루 무료 10,000건)
 const DRIVE_TTL_DAYS = 14;
+const DRIVE_BUDGET_MIN = Number(process.env.GOLF_DRIVE_MIN || 12); // 길찾기에 쓰는 시간 상한(분). 못 다 한 것은 다음 날 이어서 한다
 const HUB_RADIUS_KM = 230; // 직선 230km 넘는 거점은 길찾기를 부르지 않는다(차로 3시간 넘음)
+
+// 응답 없는 요청이 작업 전체를 붙잡지 않게 모든 요청에 20초 제한을 건다
+const rawFetch = globalThis.fetch;
+globalThis.fetch = (u, o = {}) => rawFetch(u, { signal: AbortSignal.timeout(20000), ...o });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8')); } catch { return d; } };
@@ -218,33 +223,44 @@ async function driveTimes(courses, hubs, meta) {
   const dep = nextSaturday0600();
   meta.drive = { source: KAKAO ? 'kakao-future' : 'none', departure: dep, calls: 0, errors: 0, status: KAKAO ? 'ok' : '카카오 키 없음 — 앱이 직선거리 추정으로 표시' };
   const now = Date.now();
+  const keyOf = (co, h) => `${co.lat.toFixed(4)},${co.lng.toFixed(4)}|${h.name}`;
+  // 새로 불러야 하는 것만 모은다(가까운 거점부터 → 시간이 모자라도 많이 쓰는 값부터 채워진다)
+  const jobs = [];
+  for (const co of courses.values()) for (const h of hubs) {
+    const km = haversineKm(h, co);
+    if (km > HUB_RADIUS_KM) continue;
+    const c = cache[keyOf(co, h)];
+    if (!c || now - c.at > DRIVE_TTL_DAYS * 864e5) jobs.push({ co, h, km });
+  }
+  jobs.sort((a, b) => a.km - b.km);
+  const deadline = Date.now() + DRIVE_BUDGET_MIN * 60e3;
+  let i = 0;
+  const worker = async () => {
+    while (KAKAO && i < jobs.length && meta.drive.status === 'ok' && meta.drive.calls < DRIVE_CAP && Date.now() < deadline) {
+      const { co, h } = jobs[i++];
+      meta.drive.calls++;
+      try {
+        const u = `https://apis-navi.kakaomobility.com/v1/future/directions?origin=${h.lng},${h.lat}&destination=${co.lng},${co.lat}&departure_time=${dep}&summary=true`;
+        const r = await fetch(u, { headers: { Authorization: `KakaoAK ${KAKAO}` }, signal: AbortSignal.timeout(8000) });
+        if (r.status === 401 || r.status === 403) { meta.drive.status = `카카오모빌리티 사용 권한 없음(${r.status})`; meta.drive.errors++; }
+        else if (r.status === 429) { meta.drive.status = '카카오모빌리티 하루 사용량 초과(429)'; meta.drive.errors++; }
+        else if (r.ok) {
+          const s = (await r.json()).routes?.[0];
+          cache[keyOf(co, h)] = s && s.result_code === 0 ? { at: now, min: Math.round(s.summary.duration / 60), km: Math.round(s.summary.distance / 100) / 10, dep } : { at: now, fail: s?.result_code ?? 'x' };
+        } else meta.drive.errors++;
+      } catch { meta.drive.errors++; }
+      if (meta.drive.calls % 500 === 0) log(`카카오 길찾기 ${meta.drive.calls}건 진행`);
+    }
+  };
+  await Promise.all(Array.from({ length: 6 }, worker));
+  meta.drive.pending = Math.max(0, jobs.length - i);
   for (const co of courses.values()) {
     co.drive = {};
-    for (const h of hubs) {
-      const km = haversineKm(h, co);
-      if (km > HUB_RADIUS_KM) continue;
-      const k = `${co.lat.toFixed(4)},${co.lng.toFixed(4)}|${h.name}`;
-      let c = cache[k];
-      if (KAKAO && meta.drive.status === 'ok' && (!c || now - c.at > DRIVE_TTL_DAYS * 864e5) && meta.drive.calls < DRIVE_CAP) {
-        try {
-          const u = `https://apis-navi.kakaomobility.com/v1/future/directions?origin=${h.lng},${h.lat}&destination=${co.lng},${co.lat}&departure_time=${dep}&summary=true`;
-          const r = await fetch(u, { headers: { Authorization: `KakaoAK ${KAKAO}` } });
-          meta.drive.calls++;
-          if (r.status === 401 || r.status === 403) { meta.drive.status = `카카오모빌리티 사용 권한 없음(${r.status})`; meta.drive.errors++; }
-          else if (r.ok) {
-            const j = await r.json();
-            const s = j.routes?.[0];
-            if (s && s.result_code === 0) { c = cache[k] = { at: now, min: Math.round(s.summary.duration / 60), km: Math.round(s.summary.distance / 100) / 10, dep }; }
-            else { cache[k] = { at: now, fail: s?.result_code ?? 'x' }; }
-          } else meta.drive.errors++;
-          await sleep(60);
-        } catch { meta.drive.errors++; }
-      }
-      if (c && c.min) co.drive[h.name] = [c.min, c.km, c.dep];
-    }
+    for (const h of hubs) { const c = cache[keyOf(co, h)]; if (c && c.min) co.drive[h.name] = [c.min, c.km, c.dep]; }
   }
+  if (meta.drive.status === 'ok' && !Object.values(cache).some((c) => c.min)) meta.drive.source = 'none';
   writeJson('drive.json', cache);
-  log(`카카오 길찾기 호출 ${meta.drive.calls}건, 오류 ${meta.drive.errors}, 상태: ${meta.drive.status}`);
+  log(`카카오 길찾기 호출 ${meta.drive.calls}건, 오류 ${meta.drive.errors}, 남은 것 ${meta.drive.pending}건(다음 실행 때 이어서), 상태: ${meta.drive.status}`);
 }
 
 // ── 해외: 티스캐너 해외 골프 상품 ─────────────────────────────
