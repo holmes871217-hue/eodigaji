@@ -1,0 +1,396 @@
+// 골프 탭 자료 모으기: 티스캐너·골팡(국내 그린피), 티스캐너 해외 골프 상품, 카카오 미래 길찾기(거점→골프장), 환율.
+// 결과: app/data/golf.json (앱이 읽는 파일). 캐시: tools/golf/data/*.json
+// 실행: node tools/golf/collect.mjs  (KAKAO_REST_KEY 가 있으면 길찾기·골팡 골프장 위치 찾기까지 한다. 키 값은 출력하지 않는다.)
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import {
+  unescapeHtml, nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost,
+  haversineKm, nextSaturday0600, is18Tee, cityOf, flightIncluded, coordsFromGoogleUrl,
+} from './lib.mjs';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const DATA = path.join(ROOT, 'tools/golf/data');
+const OUT = path.join(ROOT, 'app/data/golf.json');
+fs.mkdirSync(DATA, { recursive: true });
+
+const DAYS = Number(process.env.GOLF_DAYS || 7);
+const GP_MAX_PAGES = Number(process.env.GOLF_GP_PAGES || 8);
+const KAKAO = process.env.KAKAO_REST_KEY || '';
+const DRIVE_CAP = Number(process.env.GOLF_DRIVE_CAP || 3000); // 한 번에 부르는 길찾기 최대 건수(하루 무료 10,000건)
+const DRIVE_TTL_DAYS = 14;
+const HUB_RADIUS_KM = 230; // 직선 230km 넘는 거점은 길찾기를 부르지 않는다(차로 3시간 넘음)
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8')); } catch { return d; } };
+const writeJson = (f, v) => fs.writeFileSync(path.join(DATA, f), JSON.stringify(v, null, 1));
+const log = (...a) => console.log(...a);
+
+// 앱의 거점 목록(geo.js CITIES)을 그대로 읽는다 — 같은 좌표를 써야 앱과 맞는다.
+async function loadHubs() {
+  const { CITIES } = await import(path.join(ROOT, 'app/js/core/geo.js'));
+  return CITIES;
+}
+
+function kstDates(n) {
+  const out = [];
+  const now = new Date(Date.now() + 9 * 3600e3);
+  for (let i = 1; i <= n; i++) {
+    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + i));
+    out.push(d.toISOString().slice(0, 10));
+  }
+  return out;
+}
+
+// ── 티스캐너 ───────────────────────────────────────────────
+const TS = 'https://foapi.teescanner.com/v1';
+const TS_HEAD = { Referer: 'https://www.teescanner.com/', Origin: 'https://www.teescanner.com', 'x-client-build': '1', 'x-client-version': '2.0.0', 'User-Agent': 'Mozilla/5.0' };
+
+async function tsGet(p) {
+  const r = await fetch(TS + p, { headers: TS_HEAD });
+  if (!r.ok) throw new Error(`teescanner ${r.status}`);
+  const j = await r.json();
+  if (j.result !== 0) throw new Error(`teescanner result ${j.result}`);
+  return j.data;
+}
+async function tsPost(p, fields) {
+  const fd = new FormData();
+  for (const [k, v] of Object.entries(fields)) fd.append(k, String(v));
+  const r = await fetch(TS + p, { method: 'POST', headers: TS_HEAD, body: fd });
+  if (!r.ok) throw new Error(`teescanner ${r.status}`);
+  const j = await r.json();
+  if (j.result !== 0) throw new Error(`teescanner result ${j.result}`);
+  return j.data;
+}
+
+async function collectTeescanner(dates, courses, stat) {
+  const todo = [];
+  for (const day of dates) {
+    const d = await tsPost('/booking/getGolfclubListByGolfclub', { page: 1, page_size: 500, orderType: 'distance', roundDay: day, userLatitude: 37.5, userLongitude: 127.0, tab: 'golfcourse', isScroll: 'N', _tab: 'golfcourse' });
+    const seen = new Set();
+    for (const c of d.golfclubList || []) {
+      if (seen.has(c.golfclub_seq)) continue; // 광고 칸이 같은 골프장을 한 번 더 넣는 경우
+      seen.add(c.golfclub_seq);
+      const lat = Number(c.latitude), lng = Number(c.longitude);
+      if (!lat || !lng) continue;
+      const id = `ts-${c.golfclub_seq}`;
+      const co = courses.get(id) || { id, tsSeq: c.golfclub_seq, name: unescapeHtml(c.golfclub_name), key: nameKey(c.golfclub_name), area: unescapeHtml(c.area_name), lat, lng, grade: c.avg_grade || null, offers: {} };
+      courses.set(id, co);
+      if (c.min_cost > 0 && c.teecount > 0) todo.push({ co, day });
+    }
+    stat.days++;
+    log(`티스캐너 ${day}: 골프장 ${seen.size}곳`);
+    await sleep(400);
+  }
+  // 목록의 최저가에는 9홀 상품이 섞일 수 있어, 골프장마다 티타임 목록을 열어 18홀 티타임만으로 최저가·티 수를 다시 센다.
+  let i = 0;
+  const worker = async () => {
+    while (i < todo.length) {
+      const { co, day } = todo[i++];
+      try {
+        const d = await tsGet(`/booking/getTeeTimeListbyGolfclub?golfclub_seq=${co.tsSeq}&roundDay=${day}&orderType=`);
+        const tees = (d.teeTimeList || []).filter(is18Tee);
+        if (tees.length) {
+          const best = tees.reduce((a, b) => (b.min_cost < a.min_cost ? b : a));
+          (co.offers[day] ||= []).push({ src: 'ts', price: best.min_cost, count: tees.length, noCaddie: /노캐디|셀프/.test(best.caddie_name || '') });
+          stat.offers++;
+        } else stat.only9++;
+      } catch { stat.errors = (stat.errors || 0) + 1; }
+      await sleep(150);
+    }
+  };
+  await Promise.all([worker(), worker(), worker()]);
+  log(`티스캐너 18홀 티타임 확인 ${todo.length}건, 18홀 없음 ${stat.only9}건`);
+}
+
+
+// 골프장 정보(주소·전화·카트비·캐디피): 한 번 받아 두고 7일마다 다시 받는다.
+async function teescannerInfo(courses) {
+  const cache = readJson('ts-info.json', {});
+  const now = Date.now();
+  let calls = 0;
+  for (const co of courses.values()) {
+    if (!co.tsSeq) continue;
+    const c = cache[co.tsSeq];
+    if (!c || now - (c.at || 0) > 7 * 864e5) {
+      try {
+        const d = await tsPost('/board/getGolfclubInformationInfo', { golfclub_seq: co.tsSeq });
+        const g = d.golfclubInfo || {};
+        cache[co.tsSeq] = { at: now, addr: unescapeHtml(g.address1), tel: g.golfclub_tel || '', holes: g.hole_count || null, cart: g.cart_fee || 0, caddie: g.caddie_fee || 0, week: g.green_fee_week || 0, weekend: g.green_fee_weekend || 0, type: unescapeHtml(g.membership_type_name || '') };
+        calls++;
+        await sleep(250);
+      } catch (e) { log('티스캐너 골프장 정보 실패', co.tsSeq, e.message); }
+    }
+    const i = cache[co.tsSeq];
+    if (i) Object.assign(co, { addr: i.addr, tel: i.tel, holes: i.holes, cartFee: i.cart, caddieFee: i.caddie, type: i.type });
+  }
+  writeJson('ts-info.json', cache);
+  log(`티스캐너 골프장 정보 새로 받음 ${calls}곳`);
+}
+
+// ── 골팡 ───────────────────────────────────────────────────
+const GP = 'https://www.golfpang.com';
+const GP_SECTORS = [['5', '한강이남'], ['1', '강북/경춘'], ['4', '충청'], ['8', '원주/영동'], ['16', '영호남/제주']];
+
+async function collectGolfpang(dates, stat) {
+  // 첫 화면을 열어 받은 쿠키로 부킹표를 부른다(브라우저와 같은 순서).
+  const first = await fetch(`${GP}/web/round/booking_list.do`, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+  const cookie = (first.headers.getSetCookie?.() || []).map((c) => c.split(';')[0]).join('; ');
+  const agg = new Map(); // key|day → {name, region, day, price, count}
+  for (const day of dates) {
+    for (const [sector, region] of GP_SECTORS) {
+      let total = 0;
+      for (let page = 1; page <= GP_MAX_PAGES; page++) {
+        const body = new URLSearchParams({ pageNum: page, bkOrder: 'rd_fee_desc', rd_date: day, ampm: '', sector, idx: '', cust_nick: '', clubname: '', sector2: '', sector3: '', cdOrder: '' });
+        const r = await fetch(`${GP}/web/round/booking_tblList.do`, { method: 'POST', body, headers: { 'X-Requested-With': 'XMLHttpRequest', Referer: `${GP}/web/round/booking_list.do`, Origin: GP, 'User-Agent': 'Mozilla/5.0', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', Cookie: cookie } });
+        if (!r.ok) { stat.errors++; break; }
+        const html = await r.text();
+        if (page === 1) total = golfpangTotal(html);
+        const rows = parseGolfpangRows(html);
+        stat.pages++;
+        for (const row of rows) {
+          stat.rows++;
+          if (isHiddenName(row.name)) { stat.hidden++; continue; }
+          if (row.holes && !/18/.test(row.holes)) { stat.not18++; continue; } // 9홀 등은 값이 비교되지 않아 뺀다
+          const k = `${nameKey(row.name)}|${day}`;
+          const a = agg.get(k) || { name: row.name, key: nameKey(row.name), region, day, price: Infinity, count: 0 };
+          a.count++;
+          if (row.price < a.price) { a.price = row.price; a.noCaddie = /노캐디/.test(row.caddie || ''); }
+          agg.set(k, a);
+        }
+        if (rows.length < 100 || page * 100 >= total) break;
+        await sleep(500);
+      }
+      log(`골팡 ${day} ${region}: 전체 ${total}타임`);
+      await sleep(500);
+    }
+  }
+  return [...agg.values()];
+}
+
+// 골팡 골프장 위치: 이름이 티스캐너와 같으면 그 골프장으로 합치고, 아니면 카카오 장소검색(골프장 분류만)으로 찾는다.
+async function kakaoFindGolf(name) {
+  const q = `${unescapeHtml(name).replace(/\((p|퍼|퍼9)\)|퍼9$|퍼$/gi, '').trim()} 골프`;
+  const r = await fetch(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(q)}&size=5`, { headers: { Authorization: `KakaoAK ${KAKAO}` } });
+  if (!r.ok) throw new Error(`kakao ${r.status}`);
+  const j = await r.json();
+  return (j.documents || []).filter((d) => /골프장/.test(d.category_name || '') && !/연습장|스크린/.test(d.category_name || ''));
+}
+
+async function mergeGolfpang(gpRows, courses, stat) {
+  const byKey = new Map();
+  for (const co of courses.values()) if (!byKey.has(co.key)) byKey.set(co.key, co);
+  const geo = readJson('gp-geo.json', {});
+  for (const g of gpRows) {
+    let co = byKey.get(g.key);
+    if (!co && KAKAO) {
+      if (!(g.key in geo)) {
+        try {
+          const docs = await kakaoFindGolf(g.name);
+          geo[g.key] = docs.length ? { name: docs[0].place_name, lat: Number(docs[0].y), lng: Number(docs[0].x), addr: docs[0].road_address_name || docs[0].address_name, kid: docs[0].id, n: docs.length } : null;
+          await sleep(150);
+        } catch (e) { log('카카오 장소검색 실패', e.message); }
+      }
+      const p = geo[g.key];
+      if (p) {
+        // 티스캐너 골프장과 1.5km 안이면 같은 골프장(플랫폼 중복 제거)
+        let best = null, bestKm = 1.5;
+        for (const c of courses.values()) { const km = haversineKm(p, c); if (km < bestKm) { best = c; bestKm = km; } }
+        if (best) co = best;
+        else {
+          const id = `gp-${g.key}`;
+          co = courses.get(id) || { id, name: p.name, key: nameKey(p.name), area: g.region, lat: p.lat, lng: p.lng, addr: p.addr, kakaoId: p.kid, offers: {} };
+          courses.set(id, co);
+        }
+        byKey.set(g.key, co);
+      }
+    }
+    if (!co) { stat.unplaced.add(g.name); continue; }
+    (co.offers[g.day] ||= []).push({ src: 'gp', price: g.price, count: g.count, name: g.name, noCaddie: g.noCaddie });
+    stat.merged++;
+  }
+  writeJson('gp-geo.json', geo);
+}
+
+// ── 카카오 미래 길찾기: 거점 → 골프장 (토요일 06:00 출발 예상) ───────────
+async function driveTimes(courses, hubs, meta) {
+  const cache = readJson('drive.json', {});
+  const dep = nextSaturday0600();
+  meta.drive = { source: KAKAO ? 'kakao-future' : 'none', departure: dep, calls: 0, errors: 0, status: KAKAO ? 'ok' : '카카오 키 없음 — 앱이 직선거리 추정으로 표시' };
+  const now = Date.now();
+  for (const co of courses.values()) {
+    co.drive = {};
+    for (const h of hubs) {
+      const km = haversineKm(h, co);
+      if (km > HUB_RADIUS_KM) continue;
+      const k = `${co.lat.toFixed(4)},${co.lng.toFixed(4)}|${h.name}`;
+      let c = cache[k];
+      if (KAKAO && meta.drive.status === 'ok' && (!c || now - c.at > DRIVE_TTL_DAYS * 864e5) && meta.drive.calls < DRIVE_CAP) {
+        try {
+          const u = `https://apis-navi.kakaomobility.com/v1/future/directions?origin=${h.lng},${h.lat}&destination=${co.lng},${co.lat}&departure_time=${dep}&summary=true`;
+          const r = await fetch(u, { headers: { Authorization: `KakaoAK ${KAKAO}` } });
+          meta.drive.calls++;
+          if (r.status === 401 || r.status === 403) { meta.drive.status = `카카오모빌리티 사용 권한 없음(${r.status})`; meta.drive.errors++; }
+          else if (r.ok) {
+            const j = await r.json();
+            const s = j.routes?.[0];
+            if (s && s.result_code === 0) { c = cache[k] = { at: now, min: Math.round(s.summary.duration / 60), km: Math.round(s.summary.distance / 100) / 10, dep }; }
+            else { cache[k] = { at: now, fail: s?.result_code ?? 'x' }; }
+          } else meta.drive.errors++;
+          await sleep(60);
+        } catch { meta.drive.errors++; }
+      }
+      if (c && c.min) co.drive[h.name] = [c.min, c.km, c.dep];
+    }
+  }
+  writeJson('drive.json', cache);
+  log(`카카오 길찾기 호출 ${meta.drive.calls}건, 오류 ${meta.drive.errors}, 상태: ${meta.drive.status}`);
+}
+
+// ── 해외: 티스캐너 해외 골프 상품 ─────────────────────────────
+async function resolveMapUrl(u) {
+  if (!u) return null;
+  try {
+    const r = await fetch(u, { redirect: 'manual', headers: { 'User-Agent': 'Mozilla/5.0' } });
+    return coordsFromGoogleUrl(r.headers.get('location') || u);
+  } catch { return null; }
+}
+
+async function osrmRoute(a, b) {
+  try {
+    const r = await fetch(`https://router.project-osrm.org/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=false`, { headers: { 'User-Agent': 'nolpick-golf/1.0' } });
+    if (!r.ok) return null;
+    const j = await r.json();
+    const s = j.routes?.[0];
+    return s ? { km: Math.round(s.distance / 100) / 10, min: Math.round(s.duration / 60) } : null;
+  } catch { return null; }
+}
+
+async function collectAbroad(stat) {
+  const d = await tsGet('/tour/getDomesticTourList?order_type=price_row&page=1&page_size=200&is_tour_page=Y&tour_type=R');
+  const cache = readJson('abroad-clubs.json', {});
+  const flights = readJson('flights.json', { airports: {} });
+  const out = [];
+  for (const t of d.list || []) {
+    const title = unescapeHtml(t.title);
+    const city = cityOf(`${title} ${t.etc_name || ''}`);
+    let options = [], clubs = [];
+    try {
+      const info = await tsGet(`/tour/getDomesticTourInfo?tour_seq=${t.tour_seq}`);
+      options = (info.optionList || []).map((o) => ({ name: unescapeHtml(o.option_name), from: o.start_date, to: o.end_date, cost: o.cost }));
+      await sleep(250);
+      const gi = await tsGet(`/tour/getDomesticTourGolfclubInfoList?tour_seq=${t.tour_seq}`);
+      const uniq = new Map();
+      for (const g of gi.golfclubInfoList || []) if (!uniq.has(g.golfclub_seq)) uniq.set(g.golfclub_seq, g);
+      for (const g of uniq.values()) {
+        const ck = String(g.golfclub_seq);
+        if (!(ck in cache)) { cache[ck] = await resolveMapUrl(g.map_url); await sleep(300); }
+        const pos = cache[ck];
+        let route = null;
+        if (pos && city) {
+          const rk = `${ck}|${city.iata}`;
+          if (!(rk in cache)) { cache[rk] = await osrmRoute(city.airport, pos); await sleep(1100); }
+          route = cache[rk];
+          // 공항에서 300km 넘게 떨어지면 공항 판단이 틀렸을 수 있어 표시하지 않는다.
+          if (route && route.km > 300) route = null;
+        }
+        clubs.push({ name: unescapeHtml(g.golfclub_name), en: unescapeHtml(g.address2 || ''), holes: g.hole_count || null, airport: route });
+      }
+      await sleep(250);
+    } catch (e) { stat.errors++; log('해외 상품 상세 실패', t.tour_seq, e.message); }
+    if (!clubs.length) clubs = (t.club_name || []).map((n) => ({ name: unescapeHtml(n), airport: null }));
+    const prices = options.map((o) => o.cost).filter((x) => x > 0);
+    const price = prices.length ? Math.min(...prices) : t.sales_cost;
+    const fl = city ? flights.airports[city.iata] || null : null;
+    out.push({
+      id: `tst-${t.tour_seq}`,
+      title,
+      country: city?.country || unescapeHtml(t.area_seq_name || ''),
+      city: city?.city || '',
+      iata: city?.iata || '',
+      price, cur: 'KRW',
+      flightIncl: flightIncluded(`${title} ${options.map((o) => o.name).join(' ')} ${t.keywords || ''}`),
+      options, clubs,
+      flight: fl,
+      seller: unescapeHtml(t.import_company_name || '') || '티스캐너',
+      url: `https://www.teescanner.com/tour/detail?tab=product&tour_seq=${t.tour_seq}`,
+    });
+    stat.abroad++;
+  }
+  writeJson('abroad-clubs.json', cache);
+  return { list: out, flightsAt: flights.observedAt || null, flightsSource: flights.source || null };
+}
+
+// ── 환율 ──────────────────────────────────────────────────
+async function fx() {
+  try {
+    const r = await fetch('https://open.er-api.com/v6/latest/KRW');
+    const j = await r.json();
+    if (j.result !== 'success') return null;
+    const pick = {};
+    for (const c of ['USD', 'JPY', 'THB', 'VND', 'PHP', 'MYR', 'CNY']) if (j.rates[c]) pick[c] = 1 / j.rates[c];
+    return { base: 'KRW', perUnit: pick, source: 'ExchangeRate-API (open.er-api.com)', at: j.time_last_update_utc };
+  } catch { return null; }
+}
+
+// ── 실행 ──────────────────────────────────────────────────
+const dates = kstDates(DAYS);
+const hubs = await loadHubs();
+const courses = new Map();
+const meta = { sources: [] };
+const tsStat = { days: 0, offers: 0, only9: 0 };
+const gpStat = { pages: 0, rows: 0, hidden: 0, not18: 0, errors: 0, merged: 0, unplaced: new Set() };
+const abStat = { abroad: 0, errors: 0 };
+
+try { await collectTeescanner(dates, courses, tsStat); await teescannerInfo(courses); meta.sources.push({ id: 'ts', name: '티스캐너', ok: true, ...tsStat, at: new Date().toISOString() }); }
+catch (e) { meta.sources.push({ id: 'ts', name: '티스캐너', ok: false, error: e.message }); log('티스캐너 실패', e.message); }
+
+try {
+  const gpRows = await collectGolfpang(dates, gpStat);
+  await mergeGolfpang(gpRows, courses, gpStat);
+  meta.sources.push({ id: 'gp', name: '골팡', ok: gpStat.pages > 0, pages: gpStat.pages, rows: gpStat.rows, hidden: gpStat.hidden, not18: gpStat.not18, merged: gpStat.merged, unplaced: gpStat.unplaced.size, at: new Date().toISOString() });
+} catch (e) { meta.sources.push({ id: 'gp', name: '골팡', ok: false, error: e.message }); log('골팡 실패', e.message); }
+
+await driveTimes(courses, hubs, meta);
+
+let abroad = { list: [] };
+try { abroad = await collectAbroad(abStat); meta.sources.push({ id: 'tst', name: '티스캐너 해외 골프', ok: true, count: abStat.abroad, errors: abStat.errors, at: new Date().toISOString() }); }
+catch (e) { meta.sources.push({ id: 'tst', name: '티스캐너 해외 골프', ok: false, error: e.message }); log('해외 실패', e.message); }
+
+const rate = await fx();
+
+// 앱에 내보낼 모양: 가격이 하나라도 있는 골프장만, 1인 총비용 계산을 붙인다.
+const list = [];
+for (const co of courses.values()) {
+  const days = {};
+  for (const [day, offers] of Object.entries(co.offers)) {
+    const best = offers.reduce((a, b) => (b.price < a.price ? b : a));
+    const cost = perPersonCost(best.price, co.cartFee, co.caddieFee, { noCaddie: best.noCaddie });
+    days[day] = { ...cost, src: best.src, offers: offers.map((o) => [o.src, o.price, o.count]) }; // 링크는 앱이 만든다(파일 크기 줄이기)
+  }
+  if (!Object.keys(days).length) continue;
+  if (co.holes && co.holes < 18) continue; // 9홀 골프장은 18홀 가격과 비교되지 않아 뺀다
+  list.push({ id: co.id, name: co.name, area: co.area || '', addr: co.addr || '', tel: co.tel || '', lat: Math.round(co.lat * 1e5) / 1e5, lng: Math.round(co.lng * 1e5) / 1e5, grade: co.grade || null, holes: co.holes || null, type: co.type || '', kakaoId: co.kakaoId || '', drive: co.drive || {}, days });
+}
+list.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+
+const out = {
+  v: 1,
+  updatedAt: new Date().toISOString(),
+  dates,
+  sources: meta.sources,
+  drive: meta.drive,
+  fx: rate,
+  domestic: list,
+  abroad: abroad.list,
+  flightsAt: abroad.flightsAt,
+  flightsSource: abroad.flightsSource,
+  notes: {
+    cost: '1인 총비용 = 1인 그린피 + 카트비÷4 + 캐디피÷4 (카트·캐디피는 티스캐너 골프장 정보의 팀 요금). 모르는 항목이 있으면 "미포함"으로 표시한다.',
+    golfpang: '골팡은 양도·부킹 게시글 기준, 18홀만, 골프장 이름을 감춘(비공개) 글은 뺀다. 날짜·지역마다 싼 순서로 최대 ' + GP_MAX_PAGES * 100 + '개까지 본다.',
+  },
+};
+fs.writeFileSync(OUT, JSON.stringify(out));
+log(`저장: 국내 ${list.length}곳, 해외 상품 ${abroad.list.length}개 → app/data/golf.json (${Math.round(fs.statSync(OUT).size / 1024)}KB)`);
+if (gpStat.unplaced.size) log('골팡 위치 못 찾은 골프장:', [...gpStat.unplaced].slice(0, 40).join(', '));
+process.exit(0);

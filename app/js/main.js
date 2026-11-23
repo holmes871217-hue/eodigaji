@@ -19,6 +19,8 @@ import { attachSortable } from './ui/sortable.js';
 import { renderHome } from './ui/home.js';
 import { renderEvents } from './ui/events.js';
 import { renderDeals } from './ui/deals.js';
+import { renderGolf } from './ui/golf.js';
+import { loadGolf } from './core/golf.js';
 import { renderMy } from './ui/mypage.js';
 import { renderSheet } from './ui/sheet.js';
 import { mountRoute } from './ui/map.js';
@@ -37,6 +39,7 @@ state.ui.course = { start: '09:00', end: '18:00', mode: 'car', result: null }; /
 const tasteScorer = () => makeTasteScorer(taste, PLACES, state.favs.filter((f) => f.type === 'place').map((f) => f.id), state.profile.members);
 let EVENTS = getEvents();
 let liveUpdatedAt = null; // 실제 데이터를 모은 시각 (없으면 연습용 데이터)
+let golfData; // 골프 자료(undefined: 아직 안 받음, null: 실패)
 let installEvent = null; // 브라우저가 건네준 "설치 창 띄우기" 손잡이
 
 const TABS = [
@@ -44,6 +47,7 @@ const TABS = [
   { v: 'events', label: '축제', full: '축제·행사', icon: '<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>' },
   { v: 'favs', label: '찜·코스', full: '찜·코스', icon: '<path d="M12 20.5s-7.5-4.6-7.5-10.3A4.4 4.4 0 0 1 12 7.4a4.4 4.400 0 0 1 7.500 2.800c0 5.700-7.500 10.300-7.500 10.300z"/>' },
   { v: 'deals', label: '특가', full: '특가', icon: '<path d="M3.5 12.5V4.5h8l9 9-8 8z"/><circle cx="8" cy="9" r="1.5"/>' },
+  { v: 'golf', label: '골프', full: '골프', icon: '<path d="M7 21V3.5l10 4-10 4"/><path d="M4 21h10"/>' },
   { v: 'my', label: '마이', full: '마이페이지', icon: '<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>' },
 ];
 
@@ -67,7 +71,14 @@ function compute() {
   return { tripEvents, upcoming, eventsAll, ranked, rankedAll };
 }
 
+function ensureGolf() {
+  if (state.ui.tab !== 'golf' || golfData !== undefined || state.ui.golfLoading) return;
+  state.ui.golfLoading = true;
+  loadGolf().then((d) => { golfData = d; state.ui.golfLoading = false; if (state.ui.tab === 'golf') update(() => {}, { persist: false }); });
+}
+
 function render() {
+  ensureGolf();
   ensureShops();
   ensureGooglePhotos();
   const c = compute();
@@ -76,6 +87,7 @@ function render() {
     tab === 'events' ? renderEvents(state, c)
     : tab === 'favs' ? renderFavs(state, c)
     : tab === 'deals' ? renderDeals()
+    : tab === 'golf' ? renderGolf(state, golfData)
     : tab === 'my' ? renderMy(state)
     : renderHome(state, c);
 
@@ -422,6 +434,24 @@ root.addEventListener('click', (ev) => {
       if (depth && Array.isArray(history.state?.sheets)) history.go(-depth);
       break;
     }
+    case 'golf-mode':
+      update(() => { state.ui.golf.mode = v === 'abroad' ? 'abroad' : 'dom'; state.ui.golf.max = 20; });
+      break;
+    case 'golf-day':
+      update(() => { state.ui.golf.day = v; state.ui.golf.max = 20; }, { persist: false });
+      break;
+    case 'golf-time':
+      update(() => { state.ui.golf.maxMin = Number(v) || 120; state.ui.golf.max = 20; });
+      break;
+    case 'golf-country':
+      update(() => { state.ui.golf.country = v || ''; state.ui.golf.city = ''; state.ui.golf.max = 20; }, { persist: false });
+      break;
+    case 'golf-city':
+      update(() => { state.ui.golf.city = v || ''; state.ui.golf.max = 20; }, { persist: false });
+      break;
+    case 'golf-more':
+      update(() => { state.ui.golf.max = (state.ui.golf.max || 20) + 20; }, { persist: false });
+      break;
     case 'mode':
       update(() => { state.profile.mode = v === 'calm' ? 'calm' : 'hot'; state.ui.listMax = 20; });
       break;

@@ -2,7 +2,7 @@
 // 규칙: 인터넷이 되면 항상 최신 파일을 받아 오고(그래서 수정이 바로 반영됨), 안 될 때만 보관해 둔 파일을 쓴다.
 // 앱 파일 목록이 바뀌면 아래 CACHE 이름의 숫자를 올린다.
 
-const CACHE = 'eodigaji-v71';
+const CACHE = 'eodigaji-v72';
 const SHELL = [
   './',
   'index.html',
@@ -38,6 +38,8 @@ const SHELL = [
   'js/ui/home.js',
   'js/ui/events.js',
   'js/ui/deals.js',
+  'js/ui/golf.js',
+  'js/core/golf.js',
   'js/ui/mypage.js',
   'js/ui/sheet.js',
   'js/ui/trust.js',

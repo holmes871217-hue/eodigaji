@@ -1,0 +1,58 @@
+# 골프 탭 자료(티스캐너·골팡 그린피, 해외 골프 상품, 카카오 미래 길찾기, 환율)를 모아 app/data/golf.json 으로 저장하고 앱에 게시한다.
+# 설명: docs/골프-탭-운영법.md
+name: 골프 자료 수집
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 19 * * *' # 매일 한국 시간 04:30 (다른 수집보다 먼저)
+
+permissions:
+  contents: write
+
+concurrency:
+  group: golf
+  cancel-in-progress: false
+
+jobs:
+  golf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 키 설정 여부 확인 (값은 출력하지 않음)
+        env:
+          KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+        run: if [ -n "$KAKAO_REST_KEY" ]; then echo "KAKAO_REST_KEY: 설정됨"; else echo "KAKAO_REST_KEY: 없음"; fi
+
+      - name: 규칙 점검
+        run: node tools/check-golf.mjs
+
+      - name: 골프 자료 수집
+        env:
+          KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+        run: node tools/golf/collect.mjs
+
+      - name: 수집 결과 점검
+        run: node tools/check-golf.mjs
+
+      - name: 저장하고 앱에 게시
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/data/golf.json tools/golf/data
+          if git diff --cached --quiet; then echo "바뀐 내용 없음"; exit 0; fi
+          git commit -m "골프 자료 갱신 $(TZ=Asia/Seoul date +%F)"
+          git pull --rebase -X theirs origin main
+          git push origin HEAD:main
+          git push origin "$(git subtree split --prefix app HEAD)":refs/heads/gh-pages --force
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || true

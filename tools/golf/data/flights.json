@@ -1,0 +1,450 @@
+{
+ "source": "Google 항공편(구글 플라이트) 검색 결과, 인천(ICN) 출발 편도 첫 페이지",
+ "observedAt": "2026-11-23T07:22:28.222000Z",
+ "searchDate": "2026-12-10",
+ "airports": {
+  "KMI": {
+   "iata": "KMI",
+   "date": "2026-12-10",
+   "at": 1795418526551,
+   "transfer": {
+    "min": 280,
+    "via": "FUK"
+   }
+  },
+  "FUK": {
+   "iata": "FUK",
+   "date": "2026-12-10",
+   "at": 1795418526515,
+   "direct": {
+    "min": 80,
+    "airlines": [
+     "EASTAR JET",
+     "Asiana Airlines",
+     "Air Seoul",
+     "Trinity Airways",
+     "Jeju Air"
+    ]
+   }
+  },
+  "HSG": {
+   "iata": "HSG",
+   "date": "2026-12-10",
+   "at": 1795418526309,
+   "transfer": {
+    "min": 475,
+    "via": "KIX,HND"
+   }
+  },
+  "KKJ": {
+   "iata": "KKJ",
+   "date": "2026-12-10",
+   "at": 1795418525922,
+   "direct": {
+    "min": 85,
+    "airlines": [
+     "Jin Air"
+    ]
+   }
+  },
+  "KMJ": {
+   "iata": "KMJ",
+   "date": "2026-12-10",
+   "at": 1795418526240,
+   "direct": {
+    "min": 95,
+    "airlines": [
+     "Trinity Airways",
+     "Korean Air"
+    ]
+   }
+  },
+  "NGS": {
+   "iata": "NGS",
+   "date": "2026-12-10",
+   "at": 1795418526212,
+   "direct": {
+    "min": 90,
+    "airlines": [
+     "Korean Air"
+    ]
+   },
+   "transfer": {
+    "min": 430,
+    "via": "KIX"
+   }
+  },
+  "KIX": {
+   "iata": "KIX",
+   "date": "2026-12-10",
+   "at": 1795418526759,
+   "direct": {
+    "min": 100,
+    "airlines": [
+     "Air Seoul",
+     "Peach Aviation",
+     "Jeju Air",
+     "Air Busan",
+     "EASTAR JET"
+    ]
+   }
+  },
+  "NRT": {
+   "iata": "NRT",
+   "date": "2026-12-10",
+   "at": 1795418526871,
+   "direct": {
+    "min": 135,
+    "airlines": [
+     "EASTAR JET",
+     "Air Seoul",
+     "Asiana Airlines",
+     "Jeju Air",
+     "Jin Air"
+    ]
+   }
+  },
+  "HIJ": {
+   "iata": "HIJ",
+   "date": "2026-12-10",
+   "at": 1795418526302,
+   "direct": {
+    "min": 95,
+    "airlines": [
+     "Jeju Air"
+    ]
+   },
+   "transfer": {
+    "min": 375,
+    "via": "SDJ"
+   }
+  },
+  "MYJ": {
+   "iata": "MYJ",
+   "date": "2026-12-10",
+   "at": 1795418526753,
+   "direct": {
+    "min": 95,
+    "airlines": [
+     "Jeju Air"
+    ]
+   },
+   "transfer": {
+    "min": 400,
+    "via": "FUK"
+   }
+  },
+  "CAN": {
+   "iata": "CAN",
+   "date": "2026-12-10",
+   "at": 1795418547743,
+   "direct": {
+    "min": 230,
+    "airlines": [
+     "China Southern",
+     "Korean Air",
+     "Asiana Airlines"
+    ]
+   },
+   "transfer": {
+    "min": 560,
+    "via": "TNA"
+   }
+  },
+  "YNT": {
+   "iata": "YNT",
+   "date": "2026-12-10",
+   "at": 1795418547621,
+   "direct": {
+    "min": 90,
+    "airlines": [
+     "China Eastern",
+     "China Southern",
+     "Jin Air"
+    ]
+   },
+   "transfer": {
+    "min": 1595,
+    "via": "SZX"
+   }
+  },
+  "XMN": {
+   "iata": "XMN",
+   "date": "2026-12-10",
+   "at": 1795418547925,
+   "direct": {
+    "min": 195,
+    "airlines": [
+     "XiamenAir",
+     "EASTAR JET"
+    ]
+   },
+   "transfer": {
+    "min": 400,
+    "via": "HKG"
+   }
+  },
+  "GUM": {
+   "iata": "GUM",
+   "date": "2026-12-10",
+   "at": 1795418547675,
+   "direct": {
+    "min": 255,
+    "airlines": [
+     "Jin Air",
+     "Korean Air",
+     "Air Seoul"
+    ]
+   }
+  },
+  "SPN": {
+   "iata": "SPN",
+   "date": "2026-12-10",
+   "at": 1795418547452
+  },
+  "MDC": {
+   "iata": "MDC",
+   "date": "2026-12-10",
+   "at": 1795418547790,
+   "direct": {
+    "min": 350,
+    "airlines": [
+     "EASTAR JET"
+    ]
+   },
+   "transfer": {
+    "min": 1125,
+    "via": "SIN,CGK"
+   }
+  },
+  "MNL": {
+   "iata": "MNL",
+   "date": "2026-12-10",
+   "at": 1795418548222,
+   "direct": {
+    "min": 255,
+    "airlines": [
+     "Philippine Airlines",
+     "Cebu Pacific",
+     "Jeju Air"
+    ]
+   },
+   "transfer": {
+    "min": 430,
+    "via": "TPE"
+   }
+  },
+  "KUL": {
+   "iata": "KUL",
+   "date": "2026-12-10",
+   "at": 1795418548013,
+   "direct": {
+    "min": 400,
+    "airlines": [
+     "Malaysia Airlines",
+     "Batik Air",
+     "AirAsia"
+    ]
+   },
+   "transfer": {
+    "min": 695,
+    "via": "HKG"
+   }
+  },
+  "VTE": {
+   "iata": "VTE",
+   "date": "2026-12-10",
+   "at": 1795418547658,
+   "direct": {
+    "min": 350,
+    "airlines": [
+     "Jeju Air"
+    ]
+   },
+   "transfer": {
+    "min": 475,
+    "via": "CAN"
+   }
+  },
+  "JHB": {
+   "iata": "JHB",
+   "date": "2026-12-10",
+   "at": 1795418547756,
+   "transfer": {
+    "min": 545,
+    "via": "KUL"
+   }
+  },
+  "DAD": {
+   "iata": "DAD",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 285,
+    "airlines": [
+     "Air Seoul",
+     "Vietjet",
+     "Vietnam Airlines",
+     "Jeju Air"
+    ]
+   },
+   "transfer": {
+    "min": 440,
+    "via": "HKG"
+   }
+  },
+  "CNX": {
+   "iata": "CNX",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 355,
+    "airlines": [
+     "Jin Air",
+     "EASTAR JET",
+     "Air Busan",
+     "Jeju Air"
+    ]
+   },
+   "transfer": {
+    "min": 510,
+    "via": "HKG"
+   }
+  },
+  "CXR": {
+   "iata": "CXR",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 330,
+    "airlines": [
+     "Air Seoul",
+     "Air Busan",
+     "EASTAR JET"
+    ]
+   },
+   "transfer": {
+    "min": 655,
+    "via": "HAN"
+   }
+  },
+  "HAN": {
+   "iata": "HAN",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 320,
+    "airlines": [
+     "Sun PhuQuoc Airways",
+     "Jeju Air"
+    ]
+   },
+   "transfer": {
+    "min": 505,
+    "via": "HKG"
+   }
+  },
+  "KOJ": {
+   "iata": "KOJ",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 95,
+    "airlines": [
+     "Jeju Air",
+     "Korean Air",
+     "EASTAR JET"
+    ]
+   },
+   "transfer": {
+    "min": 360,
+    "via": "FUK"
+   }
+  },
+  "BKI": {
+   "iata": "BKI",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 325,
+    "airlines": [
+     "AirAsia",
+     "Jeju Air"
+    ]
+   },
+   "transfer": {
+    "min": 555,
+    "via": "CAN"
+   }
+  },
+  "CEB": {
+   "iata": "CEB",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 275,
+    "airlines": [
+     "Korean Air",
+     "Jeju Air",
+     "Cebu Pacific"
+    ]
+   },
+   "transfer": {
+    "min": 490,
+    "via": "MNL"
+   }
+  },
+  "BKK": {
+   "iata": "BKK",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 370,
+    "airlines": [
+     "Thai Vietjet Air",
+     "Air Premia",
+     "Trinity Airways",
+     "EASTAR JET"
+    ]
+   },
+   "transfer": {
+    "min": 570,
+    "via": "HKG"
+   }
+  },
+  "SGN": {
+   "iata": "SGN",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 325,
+    "airlines": [
+     "Vietnam Airlines",
+     "Vietjet",
+     "Air Premia",
+     "Sun PhuQuoc Airways"
+    ]
+   },
+   "transfer": {
+    "min": 475,
+    "via": "CAN"
+   }
+  },
+  "CRK": {
+   "iata": "CRK",
+   "date": "2026-12-10",
+   "at": 1795418509000,
+   "direct": {
+    "min": 245,
+    "airlines": [
+     "Jeju Air",
+     "Jin Air"
+    ]
+   },
+   "transfer": {
+    "min": 490,
+    "via": "HKG"
+   }
+  }
+ }
+}

@@ -157,6 +157,13 @@ git push origin "$(git subtree split --prefix app origin/main)":refs/heads/gh-pa
 ## 운영자 지시 원칙
 - 운영자 지시는 CLAUDE.md 의 "운영자 지시"를 따른다(운영자가 직접 한 말만 적혀 있다).
 
+## 골프 탭 (2026-11-23 구현)
+- 탭 순서: 추천·축제·찜·코스·특가·**골프**·마이. 화면 `app/js/ui/golf.js`, 계산 `app/js/core/golf.js`, 자료 `app/data/golf.json`(앱은 골프 탭을 열 때만 받음).
+- 수집 `tools/golf/collect.mjs` + 규칙 `tools/golf/lib.mjs`, 점검 `node tools/check-golf.mjs`, 자동 실행 `.github/workflows/golf.yml`(매일 04:30, 수집 후 gh-pages 게시까지 함).
+- 캐시 `tools/golf/data/`: ts-info(골프장 정보), gp-geo(골팡 이름→카카오 위치), drive(카카오 미래 길찾기), abroad-clubs(해외 골프장 좌표·공항 경로), flights(항공 시간, 수동 갱신).
+- 설정은 `eodigaji.v1` 안의 `golf: {mode, maxMin}` 으로 저장(키 이름은 그대로).
+- 자세한 출처·규칙·한계: `docs/골프-탭-운영법.md`, 조사 보고: `docs/골프-STEP1-분석.md`
+
 ## 유튜브 기반 맛집 검증 (구현 완료, 기본 꺼짐)
 - 운영법: docs/유튜브-맛집-검증-운영법.md, 설계: docs/유튜브-맛집-검증-설계.md. 코드 tools/food-verify/, 점검 tools/check-food-verify.mjs(자동 실행에 연결).
 - 스위치 2개(tools/food-verify/config.json): collect(수집), appEnabled(앱이 승인 식당만 노출). 둘 다 false 가 기본이며 이때 앱은 기존 동작.
