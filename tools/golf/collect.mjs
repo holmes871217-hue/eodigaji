@@ -79,7 +79,7 @@ async function collectTeescanner(dates, courses, stat) {
       const lat = Number(c.latitude), lng = Number(c.longitude);
       if (!lat || !lng) continue;
       const id = `ts-${c.golfclub_seq}`;
-      const co = courses.get(id) || { id, tsSeq: c.golfclub_seq, name: unescapeHtml(c.golfclub_name), key: nameKey(c.golfclub_name), area: unescapeHtml(c.area_name), lat, lng, grade: c.avg_grade || null, offers: {} };
+      const co = courses.get(id) || { id, tsSeq: c.golfclub_seq, name: unescapeHtml(c.golfclub_name), key: nameKey(c.golfclub_name), area: unescapeHtml(c.area_name), lat, lng, grade: c.avg_grade || null, photo: c.thmbn_file_url || '', ids: { ts: c.golfclub_seq }, offers: {} };
       courses.set(id, co);
       if (c.min_cost > 0 && c.teecount > 0) todo.push({ co, day });
     }
@@ -204,7 +204,7 @@ async function mergeGolfpang(gpRows, courses, stat) {
         if (best) co = best;
         else {
           const id = `gp-${g.key}`;
-          co = courses.get(id) || { id, name: p.name, key: nameKey(p.name), area: g.region, lat: p.lat, lng: p.lng, addr: p.addr, kakaoId: p.kid, offers: {} };
+          co = courses.get(id) || { id, name: p.name, key: nameKey(p.name), area: g.region, lat: p.lat, lng: p.lng, addr: p.addr, kakaoId: p.kid, ids: {}, offers: {} };
           courses.set(id, co);
         }
         byKey.set(g.key, co);
@@ -215,6 +215,80 @@ async function mergeGolfpang(gpRows, courses, stat) {
     stat.merged++;
   }
   writeJson('gp-geo.json', geo);
+}
+
+// ── 티업엔조이: 지역·날짜별 골프장 최저가(공개 목록 API, robots.txt 가 /api/proxy/ 허용) ─────────
+const TU = 'https://app.teeupnjoy.com';
+const TU_AREAS = ['ARE10', 'ARE20', 'ARE30', 'ARE40', 'ARE50', 'ARE60', 'ARE70'];
+
+async function collectTeeupnjoy(dates, courses, stat) {
+  const rows = [];
+  for (const day of dates) {
+    for (const cat of TU_AREAS) {
+      for (let page = 1; page <= 10; page++) {
+        const u = `${TU}/api/proxy/booking/search/list?dateFirst=${day}&searchType=golfClub&sortBy=clubName&category=${cat}&subCategory=0&pageIndex=${page}&today=N&isManager=false`;
+        const r = await fetch(u, { headers: { 'User-Agent': 'Mozilla/5.0', Referer: `${TU}/booking` } });
+        if (!r.ok) { stat.errors++; break; }
+        const j = await r.json();
+        for (const c of j.resultList || []) {
+          const price = Number(String(c.disPrice || '').replace(/[^\d]/g, ''));
+          const lat = Number(c.clubLat), lng = Number(c.clubLng);
+          if (!price || !lat || !lng || c.nation !== 'CTYKR') continue;
+          rows.push({ day, id: c.clubId, name: unescapeHtml(c.clubName).replace(/_임박$/, ''), lat, lng, addr: unescapeHtml(c.region || ''), price, count: Number(c.clubCnt) || 1, area: c.codeName || '' });
+        }
+        stat.pages++;
+        const pi = j.paginationInfo || {};
+        if (!pi.totalPageCount || page >= pi.totalPageCount) break;
+        await sleep(300);
+      }
+      await sleep(300);
+    }
+    log(`티업엔조이 ${day}: 누적 ${rows.length}건`);
+  }
+  // 골프장 화면(공개)에서 사진과 "18홀 티타임이 있는지"를 한 번 확인해 30일 보관
+  const cache = readJson('tu-club.json', {});
+  const now = Date.now();
+  const ids = [...new Set(rows.map((r) => r.id))];
+  for (const id of ids) {
+    const c = cache[id];
+    if (c && now - c.at < 30 * 864e5) continue;
+    try {
+      const day = rows.find((r) => r.id === id).day;
+      const h = await (await fetch(`${TU}/club/${id}?dateFirst=${day}`, { headers: { 'User-Agent': 'Mozilla/5.0' } })).text();
+      const m = /<script type="application\/ld\+json">(\{"@context":"https:\/\/schema.org","@type":"GolfCourse"[\s\S]*?)<\/script>/.exec(h);
+      const ld = m ? JSON.parse(m[1]) : null;
+      const offers = ld?.makesOffer || [];
+      cache[id] = { at: now, photo: (Array.isArray(ld?.image) ? ld.image[0] : ld?.image) || '', has18: offers.some((o) => /18홀/.test(o.name || '')), has9only: offers.length > 0 && offers.every((o) => /9홀/.test(o.name || '') && !/18홀/.test(o.name || '')) };
+      stat.clubPages++;
+      await sleep(400);
+    } catch { stat.errors++; }
+  }
+  writeJson('tu-club.json', cache);
+  // 기존 골프장과 합치기: 이름이 같거나 1.5km 안이면 같은 골프장
+  const byKey = new Map();
+  for (const co of courses.values()) if (!byKey.has(co.key)) byKey.set(co.key, co);
+  for (const r of rows) {
+    if (cache[r.id]?.has9only) { stat.only9++; continue; }
+    let co = byKey.get(nameKey(r.name));
+    if (!co) {
+      let best = null, bestKm = 1.5;
+      for (const c of courses.values()) { const km = haversineKm(r, c); if (km < bestKm) { best = c; bestKm = km; } }
+      co = best;
+    }
+    if (!co) {
+      const id = `tu-${r.id}`;
+      co = courses.get(id) || { id, name: r.name, key: nameKey(r.name), area: r.area, lat: r.lat, lng: r.lng, addr: r.addr, offers: {} };
+      courses.set(id, co);
+      byKey.set(co.key, co);
+      stat.newCourses++;
+    }
+    (co.ids ||= {}).tu = r.id;
+    if (!co.photo && cache[r.id]?.photo) co.photo = cache[r.id].photo;
+    if (!co.addr && r.addr) co.addr = r.addr;
+    const prev = (co.offers[r.day] ||= []).find((o) => o.src === 'tu');
+    if (prev) { if (r.price < prev.price) prev.price = r.price; prev.count += r.count; }
+    else { co.offers[r.day].push({ src: 'tu', price: r.price, count: r.count }); stat.merged++; }
+  }
 }
 
 // ── 카카오 미래 길찾기: 거점 → 골프장 (토요일 06:00 출발 예상) ───────────
@@ -329,6 +403,7 @@ async function collectAbroad(stat) {
       options, clubs,
       flight: fl,
       seller: unescapeHtml(t.import_company_name || '') || '티스캐너',
+      photo: t.thmbn_file_url || '',
       url: `https://www.teescanner.com/tour/detail?tab=product&tour_seq=${t.tour_seq}`,
     });
     stat.abroad++;
@@ -367,6 +442,10 @@ try {
   meta.sources.push({ id: 'gp', name: '골팡', ok: gpStat.pages > 0, pages: gpStat.pages, rows: gpStat.rows, hidden: gpStat.hidden, not18: gpStat.not18, merged: gpStat.merged, unplaced: gpStat.unplaced.size, at: new Date().toISOString() });
 } catch (e) { meta.sources.push({ id: 'gp', name: '골팡', ok: false, error: e.message }); log('골팡 실패', e.message); }
 
+const tuStat = { pages: 0, clubPages: 0, errors: 0, merged: 0, newCourses: 0, only9: 0 };
+try { await collectTeeupnjoy(dates, courses, tuStat); meta.sources.push({ id: 'tu', name: '티업엔조이', ok: tuStat.pages > 0, ...tuStat, at: new Date().toISOString() }); }
+catch (e) { meta.sources.push({ id: 'tu', name: '티업엔조이', ok: false, error: e.message }); log('티업엔조이 실패', e.message); }
+
 await driveTimes(courses, hubs, meta);
 
 let abroad = { list: [] };
@@ -386,7 +465,7 @@ for (const co of courses.values()) {
   }
   if (!Object.keys(days).length) continue;
   if (co.holes && co.holes < 18) continue; // 9홀 골프장은 18홀 가격과 비교되지 않아 뺀다
-  list.push({ id: co.id, name: co.name, area: co.area || '', addr: co.addr || '', tel: co.tel || '', lat: Math.round(co.lat * 1e5) / 1e5, lng: Math.round(co.lng * 1e5) / 1e5, grade: co.grade || null, holes: co.holes || null, type: co.type || '', kakaoId: co.kakaoId || '', drive: co.drive || {}, days });
+  list.push({ id: co.id, name: co.name, area: co.area || '', addr: co.addr || '', tel: co.tel || '', lat: Math.round(co.lat * 1e5) / 1e5, lng: Math.round(co.lng * 1e5) / 1e5, grade: co.grade || null, holes: co.holes || null, type: co.type || '', kakaoId: co.kakaoId || '', ids: co.ids || {}, photo: co.photo || '', drive: co.drive || {}, days });
 }
 list.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
 

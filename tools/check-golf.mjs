@@ -103,7 +103,7 @@ if (fs.existsSync(f)) {
       for (const [day, d] of Object.entries(c.days)) {
         assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(day));
         assert.ok(d.total >= d.green && d.green > 0, `가격 이상 ${c.name}`);
-        assert.ok(d.offers.length >= 1 && d.offers.every((o) => ['ts', 'gp'].includes(o[0]) && o[1] > 0 && o[2] > 0), `출처 없음 ${c.name}`);
+        assert.ok(d.offers.length >= 1 && d.offers.every((o) => ['ts', 'gp', 'tu'].includes(o[0]) && o[1] > 0 && o[2] > 0), `출처 없음 ${c.name}`);
         assert.ok(d.green === Math.min(...d.offers.map((o) => o[1])), `최저가 아님 ${c.name}`);
         assert.equal(d.complete, d.missing.length === 0);
       }

@@ -47,7 +47,7 @@ const TABS = [
   { v: 'events', label: '축제', full: '축제·행사', icon: '<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>' },
   { v: 'favs', label: '찜·코스', full: '찜·코스', icon: '<path d="M12 20.5s-7.5-4.6-7.5-10.3A4.4 4.4 0 0 1 12 7.4a4.4 4.400 0 0 1 7.500 2.800c0 5.700-7.500 10.300-7.500 10.300z"/>' },
   { v: 'deals', label: '특가', full: '특가', icon: '<path d="M3.5 12.5V4.5h8l9 9-8 8z"/><circle cx="8" cy="9" r="1.5"/>' },
-  { v: 'golf', label: '골프', full: '골프', icon: '<path d="M7 21V3.5l10 4-10 4"/><path d="M4 21h10"/>' },
+  { v: 'golf', label: '골픽', full: '골픽', icon: '<path d="M7 21V3.5l10 4-10 4"/><path d="M4 21h10"/>' },
   { v: 'my', label: '마이', full: '마이페이지', icon: '<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>' },
 ];
 
