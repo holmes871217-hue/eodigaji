@@ -674,7 +674,7 @@ svg { flex: none; }
 
 /* 해외 골프장 카드(사진 왼쪽, 가격 오른쪽 아래) */
 .mt-card { align-items: stretch; }
-.golf-thumb.mt-thumb { width: 112px; height: auto; min-height: 136px; align-self: stretch; }
+.golf-thumb.mt-thumb { width: 138px; height: auto; min-height: 170px; align-self: stretch; }
 .mt-rate { font-size: 13px; }
 .mt-rate b { color: #e0492c; }
 .mt-rate small { color: var(--ink-2); }
@@ -683,3 +683,13 @@ svg { flex: none; }
 .mt-price b { font-family: var(--font-display); font-size: 21px; font-weight: 400; }
 .mt-air { align-self: end; justify-self: end; font-size: 12px; font-weight: 700; color: var(--calm-ink); background: var(--calm-soft); padding: 2px 8px; border-radius: 999px; }
 .golf-kind { margin-top: 14px; }
+
+.chips.chips-wrap { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
+.chips.chips-wrap + .chips { margin-top: 10px; }
+.golf-fly { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.golf-stays { display: grid; gap: 10px; margin-top: 10px; }
+.golf-stays a { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; align-items: center; padding: 8px; border-radius: 16px; background: var(--bg); color: var(--ink); text-decoration: none; }
+.golf-stays img, .golf-stay-ph { width: 72px; height: 72px; border-radius: 12px; object-fit: cover; background: var(--surface); }
+.golf-stay-body { display: grid; gap: 2px; min-width: 0; }
+.golf-stay-body b { font-size: var(--fs-sm); line-height: 1.35; }
+.golf-stay-body small { font-size: 12px; color: var(--ink-2); }
