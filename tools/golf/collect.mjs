@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   unescapeHtml, nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost,
-  haversineKm, nextSaturday0600, is18Tee, pickAirport, AIRPORTS, isPar3, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
+  haversineKm, nextSaturday0600, is18Tee, pickAirport, AIRPORTS, pickStays, isPar3, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
 } from './lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -453,6 +453,8 @@ async function collectMonkey(stat) {
   await Promise.all([worker(), worker(), worker()]);
   writeJson('mt-holes.json', cache);
   const flights = readJson('flights.json', { airports: {} }).airports;
+  const stayData = readJson('hotels.json', { hotels: {} });
+  const usedHotels = new Set();
   for (const g of out) {
     g.holes = cache[g.pid]?.holes || null; g.par = cache[g.pid]?.par || null;
     // 가까운 공항과 인천 왕복 항공권(구글 항공편 조회값). 못 찾으면 비워 두고 화면에 "확인 불가"로 표시한다.
@@ -460,8 +462,13 @@ async function collectMonkey(stat) {
     const CITY_AIR = { 괌: 'GUM', 사이판: 'SPN', '수빅ㆍ클락': 'CRK', 방콕: 'BKK', '마닐라 근교': 'MNL' };
     const a = pickAirport(g, flights) || (CITY_AIR[g.city] ? { ...AIRPORTS.find((x) => x.iata === CITY_AIR[g.city]), km: null } : null);
     const f = a ? flights[a.iata] : null;
+    g.stays = pickStays(g, stayData.hotels); // [[숙소 id, 골프장에서 km], …] 평점 높은 순
+    for (const [id] of g.stays) usedHotels.add(id);
     g.air = a ? { iata: a.iata, name: a.name, km: Math.round(a.km), direct: f?.direct?.min || null, airlines: f?.direct?.airlines?.slice(0, 3) || [], transfer: f?.direct ? null : f?.transfer?.min || null, via: f?.direct ? '' : f?.transfer?.via || '', fare: f?.fare?.min || null, fareDirect: f?.fare?.direct || null, fareDep: f?.fare?.dep || '', fareRet: f?.fare?.ret || '', fareUrl: f?.fare?.url || '' } : null;
   }
+  // 쓰는 숙소만 골라 한 번만 담는다(파일 크기 줄이기)
+  out.hotels = Object.fromEntries([...usedHotels].map((id) => { const h = stayData.hotels[id]; return [id, { n: h.n, lat: h.lat, lng: h.lng, s: h.s, c: h.c, st: h.st, p: h.p, url: `https://www.booking.com/hotel/${h.cc}/${h.pg}.ko.html`, ph: h.ph, loc: h.loc }]; }));
+  out.hotelsAt = stayData.collectedAt; out.hotelsCheckin = stayData.checkin;
   stat.count = out.length; stat.priced = out.filter((g) => g.price > 0).length; stat.newHoles = need.length; stat.checkIn = checkIn;
   return out;
 }
@@ -574,6 +581,7 @@ if (process.env.GOLF_ONLY_MT) {
   const prev = JSON.parse(fs.readFileSync(OUT, 'utf8'));
   const st = { errors: 0 };
   prev.courses = await collectMonkey(st);
+  prev.hotels = prev.courses.hotels || {}; prev.hotelsAt = prev.courses.hotelsAt; prev.hotelsCheckin = prev.courses.hotelsCheckin;
   prev.sources = [...(prev.sources || []).filter((x) => x.id !== 'mt'), { id: 'mt', name: '몽키트래블 골프장', ok: prev.courses.length > 0, ...st, at: new Date().toISOString() }];
   fs.writeFileSync(OUT, JSON.stringify(prev));
   log(`몽키트래블만 저장: ${prev.courses.length}곳`, st);
@@ -668,6 +676,9 @@ const out = {
   domestic: list,
   abroad: abroad.list,
   courses: monkey,
+  hotels: monkey.hotels || {},
+  hotelsAt: monkey.hotelsAt || null,
+  hotelsCheckin: monkey.hotelsCheckin || null,
   flightsAt: abroad.flightsAt,
   flightsSource: abroad.flightsSource,
   notes: {

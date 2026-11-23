@@ -251,3 +251,17 @@ export function pickAirport(course, flights = {}) {
   const direct = list.find((a) => flights[a.iata]?.direct && a.km <= near.km + 80);
   return direct || near;
 }
+
+/**
+ * 골프장 근처 숙소 5곳: 도시별로 받아 둔 평점 높은 숙소(시내 숙소) 중 골프장에서 가까운 10곳을 고르고, 그중 평점 높은 순 5곳.
+ * 리뷰 30개 미만은 평점이 흔들려서 뺀다. 60km 안에 5곳이 안 되면 120km까지 넓힌다.
+ */
+export function pickStays(course, hotels, n = 5) {
+  if (!Number.isFinite(course.lat) || !Number.isFinite(course.lng)) return [];
+  const all = Object.entries(hotels).filter(([, h]) => h.c >= 30).map(([id, h]) => ({ id, km: haversineKm(course, h), s: h.s }));
+  for (const lim of [60, 120]) {
+    const near = all.filter((x) => x.km <= lim).sort((a, b) => a.km - b.km).slice(0, n * 2);
+    if (near.length >= n || lim === 120) return near.sort((a, b) => b.s - a.s || a.km - b.km).slice(0, n).map((x) => [x.id, Math.round(x.km)]);
+  }
+  return [];
+}

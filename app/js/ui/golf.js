@@ -162,9 +162,9 @@ function abroadCourses(state, data) {
   const shown = rows.slice(0, g.max || 20);
   const chip = (act, v, label, on) => `<button type="button" class="chip ${on ? 'is-on' : ''}" data-action="${act}" data-v="${esc(v)}" aria-pressed="${on}">${esc(label)}</button>`;
   return `
-    <div class="chips" role="group" aria-label="대륙">${chip('golf-cont', '', '전체', !cont)}${conts.map((c) => chip('golf-cont', c, c, c === cont)).join('')}</div>
-    ${countries.length ? `<div class="chips" role="group" aria-label="나라">${chip('golf-country', '', `${cont} 전체`, !country)}${countries.map((c) => chip('golf-country', c, c, c === country)).join('')}</div>` : ''}
-    ${cities.length > 1 ? `<div class="chips" role="group" aria-label="도시">${chip('golf-city', '', `${country} 전체`, !city)}${cities.map(([n, k]) => chip('golf-city', n, `${n} ${k}`, n === city)).join('')}</div>` : ''}
+    <div class="chips chips-wrap" role="group" aria-label="대륙">${chip('golf-cont', '', '전체', !cont)}${conts.map((c) => chip('golf-cont', c, c, c === cont)).join('')}</div>
+    ${countries.length ? `<div class="chips chips-wrap" role="group" aria-label="나라">${chip('golf-country', '', `${cont} 전체`, !country)}${countries.map((c) => chip('golf-country', c, c, c === country)).join('')}</div>` : ''}
+    ${cities.length > 1 ? `<div class="chips chips-wrap" role="group" aria-label="도시">${chip('golf-city', '', `${country} 전체`, !city)}${cities.map(([n, k]) => chip('golf-city', n, `${n} ${k}`, n === city)).join('')}</div>` : ''}
     <h2 class="h2 mt">골프장 · 총 <span data-golf-total>${rows.length}</span>곳</h2>
     ${rows.length ? `<ol class="list golf-list">${shown.map((c) => courseCard(c)).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}곳 (남은 ${rows.length - shown.length}곳)</button>` : ''}`
@@ -172,6 +172,9 @@ function abroadCourses(state, data) {
 }
 
 const gradeText = (n) => (n ? `${Number.isInteger(n) ? n : n.toFixed(1)}성급` : '');
+/** [나라-도시] 이름: 일본은 지역이 넓어 시·현(town) 이름을 쓴다 */
+const cityOfCourse = (c) => (c.country === '일본' && c.town ? c.town.replace(/\(.*\)/, '') : c.city);
+export const courseTitle = (c) => `[${c.country}${cityOfCourse(c) ? `-${cityOfCourse(c)}` : ''}] ${c.name}`;
 const placeText = (c) => [c.city, c.town].filter((x, i, a) => x && a.indexOf(x) === i).join(' · ');
 
 function courseCard(c) {
@@ -181,7 +184,7 @@ function courseCard(c) {
       <button type="button" class="card golf-card mt-card" data-action="golf-course" data-id="${esc(c.id)}" aria-label="${esc(c.name)} 상세 보기">
         ${thumb(c.photo).replace('golf-thumb', 'golf-thumb mt-thumb')}
         <span class="card-body">
-          <span class="card-title">${esc(c.name)}</span>
+          <span class="card-title">${esc(courseTitle(c))}</span>
           <span class="card-meta">${[gradeText(c.grade), c.holes ? `${c.holes}홀` : ''].filter(Boolean).map(esc).join(' · ')}</span>
           <span class="card-meta">${esc(placeText(c))}</span>
           ${c.rating ? `<span class="mt-rate"><b>★ ${c.rating}</b> <small>(${Number(c.reviews || 0).toLocaleString('ko-KR')})</small></span>` : ''}
@@ -206,8 +209,8 @@ export function golfCourseSheet(data, id) {
   return `
     <div class="sheet-head">
       <div>
-        <h2 class="sheet-title" id="sheet-title">${esc(c.name)}</h2>
-        <p class="card-meta">${[c.country, placeText(c)].filter(Boolean).map(esc).join(' · ')}</p>
+        <h2 class="sheet-title" id="sheet-title">${esc(courseTitle(c))}</h2>
+        <p class="card-meta">${[gradeText(c.grade), c.holes ? `${c.holes}홀` : '', placeText(c)].filter(Boolean).map(esc).join(' · ')}</p>
       </div>
     </div>
     ${c.photo ? `<div class="sheet-photo golf-photo"><img src="${esc(c.photo)}" alt="${esc(c.name)} 사진" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : ''}
@@ -228,12 +231,36 @@ export function golfCourseSheet(data, id) {
       <p>왕복 항공권 <b>약 ${won(a.fare)}~</b>${a.fareDirect && a.fareDirect !== a.fare ? ` · 직항 약 ${won(a.fareDirect)}~` : ''}</p>
       ${c.price ? `<p>골프 1인당 + 항공권 = <b>약 ${won(c.price + a.fare)}~</b></p>` : ''}
       <p class="muted">${md(a.fareDep)} 출발 · ${md(a.fareRet)} 귀국, 1인 기준 구글 항공편 조회</p>
-      <a class="btn-secondary" href="${esc(a.fareUrl)}" target="_blank" rel="noopener noreferrer">항공권 찾아보기</a>
     </div>` : ''}
+    ${a ? `<div class="golf-fly">${flyLinks(a).map(([n, u]) => `<a class="golf-src" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>`).join('')}</div>` : ''}
+    ${stayList(c, data)}
     <div class="sheet-actions golf-actions">
       <a class="btn-primary" href="${esc(c.url)}" target="_blank" rel="noopener noreferrer">예약하러 가기(몽키트래블)</a>
     </div>
     <p class="sample-note">1인당 가격·등급·평점·사진은 ${esc(kst((data.sources || []).find((x) => x.id === 'mt')?.at || data.updatedAt))}에 몽키트래블에 올라온 값이에요(${esc(md((data.sources || []).find((x) => x.id === 'mt')?.checkIn || ''))} 라운드 기준). 포함 내역(그린피·캐디·카트)은 예약 화면에서 확인해 주세요. 항공권은 구글 항공편 조회값이라 날짜에 따라 달라져요.</p>`;
+}
+
+/** 항공권 최저가 비교 바로가기(인천 출발, 항공권 조회와 같은 날짜) */
+function flyLinks(a) {
+  const dep = (a.fareDep || '2026-12-10').replace(/-/g, '');
+  const ret = (a.fareRet || '2026-12-14').replace(/-/g, '');
+  const i = a.iata.toLowerCase();
+  const out = [];
+  if (a.fareUrl) out.push(['구글 항공편', a.fareUrl]);
+  out.push(['스카이스캐너', `https://www.skyscanner.co.kr/transport/flights/icn/${i}/${dep.slice(2)}/${ret.slice(2)}/`]);
+  out.push(['네이버 항공권', `https://flight.naver.com/flights/international/ICN-${a.iata}-${dep}/${a.iata}-ICN-${ret}?adult=1&fareType=Y`]);
+  return out;
+}
+
+/** 근처 숙소 5곳(부킹닷컴 평점 높은 순) */
+function stayList(c, data) {
+  const hs = (c.stays || []).map(([id, km]) => ({ ...(data.hotels || {})[id], km })).filter((h) => h.n);
+  if (!hs.length) return '';
+  return `<h3 class="golf-sub">근처 숙소 · 평점 높은 순</h3>
+    <ul class="golf-stays">${hs.map((h) => `<li><a href="${esc(h.url)}" target="_blank" rel="noopener noreferrer">
+      ${h.ph ? `<img src="${esc(h.ph)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '<span class="golf-stay-ph"></span>'}
+      <span class="golf-stay-body"><b>${esc(h.n)}</b><small>★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''} · 골프장에서 ${h.km}km</small><small>${esc(h.loc || '')}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''}</small></span></a></li>`).join('')}</ul>
+    <p class="muted">숙소 평점·가격은 부킹닷컴(${esc((data.hotelsCheckin || '').slice(5).replace('-', '/'))} 1박·성인 2명 기준) 조회값이에요.</p>`;
 }
 
 /** 해외 패키지 상품(골프몬·티스캐너) */
