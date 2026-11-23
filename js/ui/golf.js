@@ -150,11 +150,8 @@ function abroad(state, data) {
     <label class="field mt">
       <span class="field-label">가는 날짜</span>
       <input type="date" class="input" id="golf-ab-date" value="${esc(t.dep)}" min="${todayISO()}" data-field="golf-ab-date">
-    </label>
-    <div class="chips golf-staychips" role="group" aria-label="일정">
-      ${AB_STAYS.map(([n, d]) => `<button type="button" class="chip ${n === t.nights && d === t.days ? 'is-on' : ''}" data-action="golf-ab-stay" data-v="${n}-${d}" aria-pressed="${n === t.nights && d === t.days}">${n}박 ${d}일</button>`).join('')}
-    </div>`;
-  return seg + when + (kind === 'pack' ? abroadPacks(state, data) : abroadCourses(state, data));
+    </label>`;
+  return when + seg + (kind === 'pack' ? abroadPacks(state, data) : abroadCourses(state, data));
 }
 
 /** 해외 일정: 가는 날짜(처음엔 마이 탭 가는 날짜)와 몇 박 며칠 → 돌아오는 날·체크아웃 날 */
@@ -181,6 +178,7 @@ function abroadCourses(state, data) {
   const shown = rows.slice(0, g.max || 20);
   const chip = (act, v, label, on) => `<button type="button" class="chip ${on ? 'is-on' : ''}" data-action="${act}" data-v="${esc(v)}" aria-pressed="${on}">${esc(label)}</button>`;
   return `
+    <h2 class="h2 mt">나라</h2>
     <div class="chips chips-wrap" role="group" aria-label="대륙">${chip('golf-cont', '', '전체', !cont)}${conts.map((c) => chip('golf-cont', c, c, c === cont)).join('')}</div>
     ${countries.length ? `<div class="chips chips-wrap" role="group" aria-label="나라">${chip('golf-country', '', `${cont} 전체`, !country)}${countries.map((c) => chip('golf-country', c, c, c === country)).join('')}</div>` : ''}
     ${cities.length > 1 ? `<div class="chips golf-cities" role="group" aria-label="도시">${chip('golf-city', '', `${country} 전체`, !city)}${cities.map(([n, k]) => chip('golf-city', n, `${n} ${k}`, n === city)).join('')}</div>` : ''}
