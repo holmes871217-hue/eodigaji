@@ -121,7 +121,7 @@ if (fs.existsSync(f) && JSON.parse(fs.readFileSync(f, 'utf8')).v >= 2) { // 예�
       for (const [day, d] of Object.entries(c.days)) {
         assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(day));
         assert.ok(d.total >= d.green && d.green > 0, `가격 이상 ${c.name}`);
-        assert.ok(d.offers.length >= 1 && d.offers.every((o) => ['ts', 'gp', 'tu'].includes(o[0]) && o[1] > 0 && o[2] > 0), `출처 없음 ${c.name}`);
+        assert.ok(d.offers.length >= 1 && d.offers.every((o) => ['ts', 'gp', 'tu', 'gm'].includes(o[0]) && o[1] > 0 && o[2] > 0), `출처 없음 ${c.name}`);
         assert.ok(d.total === Math.min(...d.offers.map((o) => o[3])), `총비용 최저 아님 ${c.name}`);
         assert.ok(!isPar3(c.name), `파3 포함됨 ${c.name}`);
       }

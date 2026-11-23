@@ -354,6 +354,8 @@ async function driveTimes(courses, hubs, meta) {
   }
   jobs.sort((a, b) => a.km - b.km);
   const deadline = Date.now() + DRIVE_BUDGET_MIN * 60e3;
+  const errCodes = {};
+  let lastLog = 0;
   let i = 0;
   const worker = async () => {
     while (KAKAO && i < jobs.length && meta.drive.status === 'ok' && meta.drive.calls < DRIVE_CAP && Date.now() < deadline) {
@@ -367,12 +369,14 @@ async function driveTimes(courses, hubs, meta) {
         else if (r.ok) {
           const s = (await r.json()).routes?.[0];
           cache[keyOf(co, h)] = s && s.result_code === 0 ? { at: now, min: Math.round(s.summary.duration / 60), km: Math.round(s.summary.distance / 100) / 10, dep } : { at: now, fail: s?.result_code ?? 'x' };
-        } else meta.drive.errors++;
-      } catch { meta.drive.errors++; }
-      if (meta.drive.calls % 500 === 0) log(`카카오 길찾기 ${meta.drive.calls}건 진행`);
+        } else { meta.drive.errors++; errCodes[r.status] = (errCodes[r.status] || 0) + 1; }
+      } catch (e) { meta.drive.errors++; errCodes[e.name || 'x'] = (errCodes[e.name || 'x'] || 0) + 1; }
+      if (meta.drive.calls % 500 === 0 && meta.drive.calls !== lastLog) { lastLog = meta.drive.calls; log(`카카오 길찾기 ${meta.drive.calls}건 진행`); }
+      await sleep(120);
     }
   };
-  await Promise.all(Array.from({ length: 6 }, worker));
+  await Promise.all(Array.from({ length: 3 }, worker));
+  meta.drive.errorCodes = errCodes;
   meta.drive.pending = Math.max(0, jobs.length - i);
   for (const co of courses.values()) {
     co.drive = {};
@@ -380,7 +384,7 @@ async function driveTimes(courses, hubs, meta) {
   }
   if (meta.drive.status === 'ok' && !Object.values(cache).some((c) => c.min)) meta.drive.source = 'none';
   writeJson('drive.json', cache);
-  log(`카카오 길찾기 호출 ${meta.drive.calls}건, 오류 ${meta.drive.errors}, 남은 것 ${meta.drive.pending}건(다음 실행 때 이어서), 상태: ${meta.drive.status}`);
+  log(`카카오 길찾기 호출 ${meta.drive.calls}건, 오류 ${meta.drive.errors} ${JSON.stringify(errCodes)}, 남은 것 ${meta.drive.pending}건(다음 실행 때 이어서), 상태: ${meta.drive.status}`);
 }
 
 // ── 해외: 티스캐너 해외 골프 상품 ─────────────────────────────
