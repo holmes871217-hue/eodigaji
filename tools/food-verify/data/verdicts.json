@@ -311,6 +311,18 @@
    "ep:56"
   ]
  },
+ "10079141": {
+  "name": "우래정",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "Z-zG-6rynP8"
+  ]
+ },
  "10093756": {
   "name": "하레하레 둔산점",
   "status": "eligible",
@@ -537,6 +549,18 @@
   "episodes": 1,
   "videos": [
    "ep:51"
+  ]
+ },
+ "10988644": {
+  "name": "형제식당",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "Ppt-Dr0QT_o"
   ]
  },
  "11053604": {

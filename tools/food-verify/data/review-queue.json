@@ -33,14 +33,6 @@
  },
  {
   "kind": "series",
-  "videoId": "Ppt-Dr0QT_o",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "형제식당",
-  "role": "visited",
-  "why": "MULTI_BRANCH"
- },
- {
-  "kind": "series",
   "videoId": "mNjTXSfQXnE",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "마창수산횟집",
@@ -62,14 +54,6 @@
   "name": "다가이순대국",
   "role": "visited",
   "why": "WEAK_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "Z-zG-6rynP8",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "우래정",
-  "role": "visited",
-  "why": "MULTI_BRANCH"
  },
  {
   "kind": "series",

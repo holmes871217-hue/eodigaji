@@ -436,8 +436,8 @@
   "items": []
  },
  "Ppt-Dr0QT_o": {
-  "descHash": "a2393aab290cf498",
-  "extractedAt": 1794921060420,
+  "descHash": "494e557326164755",
+  "extractedAt": 1795415750292,
   "region": "울산",
   "source": "manual",
   "items": [
@@ -467,11 +467,11 @@
     "name": "형제식당",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "울산 중구 젊음의거리 68",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "10988644",
+     "why": ""
     }
    }
   ]
@@ -747,8 +747,8 @@
   ]
  },
  "Z-zG-6rynP8": {
-  "descHash": "b3d5c0f9b1249ddd",
-  "extractedAt": 1794921060420,
+  "descHash": "6bfe56ffdcbe3e0f",
+  "extractedAt": 1795415750292,
   "region": "전남 해남군",
   "source": "manual",
   "items": [
@@ -756,11 +756,11 @@
     "name": "우래정",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "전남 해남군 송지면 산정1길 117",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "10079141",
+     "why": ""
     }
    },
    {
