@@ -1,7 +1,7 @@
 // 골프 탭 규칙 점검: node tools/check-golf.mjs
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import { nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost, nextSaturday0600, cityOf, flightIncluded, coordsFromGoogleUrl, unescapeHtml, is18Tee, isPar3, cartIncludedText, median } from './golf/lib.mjs';
+import { nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost, nextSaturday0600, cityOf, flightIncluded, coordsFromGoogleUrl, unescapeHtml, is18Tee, isPar3, cartIncludedText, median, parseGolfmonDomestic } from './golf/lib.mjs';
 import { golfDomestic, golfDrive, golfAbroad, golfCountries, golfDays, localPrice } from '../app/js/core/golf.js';
 
 let n = 0;
@@ -27,6 +27,15 @@ t('골팡 표 읽기', () => {
   assert.equal(rows[0].name, '세현');
   assert.equal(rows[0].holes, '18홀');
   assert.equal(golfpangTotal(html), 1839);
+});
+
+t('골프몬 국내 목록 읽기', () => {
+  const md = '이포\n\n37Km\n\n11/28(토)07:15\n\n18홀\n\n골프몬\n\n골프몬 염팀장\n\n290,000원\n\n크리스밸리\n\n11/28(토)11:56\n\n18홀\n\n쏘매니저vV\n\n200,000원\n\n신안P 오렌지p9\\*2\n\n47Km\n\n11/28(토)12:46\n\n18홀\n\n쏘매니저vV\n\n120,000원';
+  const r = parseGolfmonDomestic(md);
+  assert.equal(r.length, 3);
+  assert.deepEqual([r[0].name, r[0].price, r[0].md, r[0].time], ['이포', 290000, '11/28', '07:15']);
+  assert.equal(r[1].name, '크리스밸리', '거리 줄이 없어도 이름을 읽음');
+  assert.equal(r[2].name, '신안P 오렌지p9*2');
 });
 
 t('1인 총비용', () => {
@@ -103,7 +112,7 @@ t('해외 목록', () => {
 
 // 실제 자료 파일이 있으면 모양을 점검한다.
 const f = new URL('../app/data/golf.json', import.meta.url);
-if (fs.existsSync(f)) {
+if (fs.existsSync(f) && JSON.parse(fs.readFileSync(f, 'utf8')).v >= 2) { // 예전 형식(v1) 파일은 새로 모으기 전이라 건너뛴다
   t('golf.json 모양', () => {
     const j = JSON.parse(fs.readFileSync(f, 'utf8'));
     assert.ok(j.updatedAt && Array.isArray(j.dates) && Array.isArray(j.domestic) && Array.isArray(j.abroad));

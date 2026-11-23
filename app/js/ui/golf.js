@@ -62,6 +62,7 @@ export function offerUrl(c, src, day) {
   if (src === 'ts' && ts) return `https://www.teescanner.com/booking/detail?tab=teetime&golfclub_seq=${ts}&roundDay=${day}`;
   if (src === 'tu' && ids.tu) return `https://app.teeupnjoy.com/club/${ids.tu}?dateFirst=${day}`;
   if (src === 'gp') return 'https://www.golfpang.com/web/round/booking_list.do';
+  if (src === 'gm') return 'https://www.golfmon.net/booking/list?tab=%EC%96%91%EB%8F%84';
   return { ts: 'https://www.teescanner.com/', tu: 'https://app.teeupnjoy.com/' }[src] || 'https://www.golfpang.com/';
 }
 

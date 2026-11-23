@@ -199,3 +199,28 @@ export function parseGolfmonOverseas(md) {
 /** 골프몬 양도 달력 칸 선택자: 지역 번호와 날짜로 그 칸을 누른다 */
 export const GOLFMON_REGIONS = [['9', '인천경인'], ['1', '경기북부'], ['8', '경기동부'], ['2', '경기남부'], ['3', '충청'], ['4', '강원'], ['5', '전라'], ['6', '경상'], ['7', '제주']];
 export const golfmonCell = (regionId, day) => `.schedule-count[data-gtm-meta*='"region_id":"${regionId}","date":"${day}"']`;
+
+/**
+ * 골프몬 양도 목록(마크다운) → 행. 한 건은 "골프장명 / (거리Km) / 11/28(토)13:00 / 18홀 / (골프몬) / 판매자 / 230,000원" 순서로 나온다.
+ * 날짜·시간 줄을 기준으로 앞쪽에서 골프장명, 뒤쪽에서 홀 수와 가격을 찾는다.
+ */
+export function parseGolfmonDomestic(md) {
+  const lines = String(md || '').split('\n').map((s) => s.replace(/\\/g, '').trim()).filter(Boolean);
+  const out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const d = /^(\d{1,2})\/(\d{1,2})\([^)]\)\s*(\d{1,2}):?(\d{2})?/.exec(lines[i]);
+    if (!d) continue;
+    let j = i - 1;
+    if (j >= 0 && /^\d+(\.\d+)?\s*Km$/i.test(lines[j])) j--;
+    const name = j >= 0 ? lines[j] : '';
+    let holes = '', price = 0;
+    for (let k = i + 1; k < Math.min(lines.length, i + 6); k++) {
+      if (!holes && /^\d+\s*홀/.test(lines[k])) holes = lines[k];
+      const p = /^([\d,]+)\s*원$/.exec(lines[k]);
+      if (p) { price = Number(p[1].replace(/,/g, '')); break; }
+    }
+    if (!name || !price || /원$|Km$|^\d+\s*홀/.test(name)) continue;
+    out.push({ name, md: `${d[1]}/${d[2]}`, time: `${d[3]}:${d[4] || '00'}`, holes, price });
+  }
+  return out;
+}

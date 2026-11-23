@@ -30,8 +30,9 @@ jobs:
       - name: 키 설정 여부 확인 (값은 출력하지 않음)
         env:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: |
-          if [ -n "$KAKAO_REST_KEY" ]; then echo "KAKAO_REST_KEY: 설정됨"; else echo "KAKAO_REST_KEY: 없음"; fi
+          for n in KAKAO_REST_KEY FIRECRAWL_API_KEY; do if [ -n "${!n}" ]; then echo "$n: 설정됨"; else echo "$n: 없음"; fi; done
 
       - name: 규칙 점검
         run: node tools/check-golf.mjs
@@ -39,6 +40,7 @@ jobs:
       - name: 골프 자료 수집
         env:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: node tools/golf/collect.mjs
 
       - name: 수집 결과 점검

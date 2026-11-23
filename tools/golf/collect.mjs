@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   unescapeHtml, nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost,
-  haversineKm, nextSaturday0600, is18Tee, isPar3, cartIncludedText, median, cityOf, flightIncluded, coordsFromGoogleUrl,
+  haversineKm, nextSaturday0600, is18Tee, isPar3, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
 } from './lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -17,6 +17,8 @@ fs.mkdirSync(DATA, { recursive: true });
 const DAYS = Number(process.env.GOLF_DAYS || 7);
 const GP_MAX_PAGES = Number(process.env.GOLF_GP_PAGES || 8);
 const KAKAO = process.env.KAKAO_REST_KEY || '';
+const FIRECRAWL = process.env.FIRECRAWL_API_KEY || ''; // 골프몬(한국 밖 접속 차단)을 한국 위치로 열 때 쓴다
+const GOLFMON_DAYS = Number(process.env.GOLF_GM_DAYS || 3); // 골프몬 국내는 앞으로 며칠치(무료 한도 고려)
 const DRIVE_CAP = Number(process.env.GOLF_DRIVE_CAP || 3000); // 한 번에 부르는 길찾기 최대 건수(하루 무료 10,000건)
 const DRIVE_TTL_DAYS = 14;
 const DRIVE_BUDGET_MIN = Number(process.env.GOLF_DRIVE_MIN || 12); // 길찾기에 쓰는 시간 상한(분). 못 다 한 것은 다음 날 이어서 한다
@@ -182,7 +184,7 @@ async function kakaoFindGolf(name) {
   return (j.documents || []).filter((d) => /골프장/.test(d.category_name || '') && !/연습장|스크린/.test(d.category_name || ''));
 }
 
-async function mergeGolfpang(gpRows, courses, stat) {
+async function mergeGolfpang(gpRows, courses, stat, src = 'gp') {
   const byKey = new Map();
   for (const co of courses.values()) if (!byKey.has(co.key)) byKey.set(co.key, co);
   const geo = readJson('gp-geo.json', {});
@@ -203,7 +205,7 @@ async function mergeGolfpang(gpRows, courses, stat) {
         for (const c of courses.values()) { const km = haversineKm(p, c); if (km < bestKm) { best = c; bestKm = km; } }
         if (best) co = best;
         else {
-          const id = `gp-${g.key}`;
+          const id = `${src}-${g.key}`;
           co = courses.get(id) || { id, name: p.name, key: nameKey(p.name), area: g.region, lat: p.lat, lng: p.lng, addr: p.addr, kakaoId: p.kid, ids: {}, offers: {} };
           courses.set(id, co);
         }
@@ -211,10 +213,54 @@ async function mergeGolfpang(gpRows, courses, stat) {
       }
     }
     if (!co) { stat.unplaced.add(g.name); continue; }
-    (co.offers[g.day] ||= []).push({ src: 'gp', price: g.price, count: g.count, name: g.name, noCaddie: g.noCaddie, cartIncluded: g.cartIncluded });
+    (co.offers[g.day] ||= []).push({ src, price: g.price, count: g.count, name: g.name, noCaddie: g.noCaddie, cartIncluded: g.cartIncluded });
     stat.merged++;
   }
   writeJson('gp-geo.json', geo);
+}
+
+// ── 골프몬: 한국 밖 접속을 막아 Firecrawl(한국 위치)로 화면을 열고 달력 칸을 눌러 목록을 읽는다 ─────────
+async function firecrawl(body) {
+  const r = await fetch('https://api.firecrawl.dev/v2/scrape', { method: 'POST', headers: { Authorization: `Bearer ${FIRECRAWL}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ location: { country: 'KR', languages: ['ko'] }, onlyMainContent: true, ...body }), signal: AbortSignal.timeout(150000) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.success) throw new Error(`firecrawl ${r.status} ${j.error || ''}`.trim());
+  return j.data?.markdown || '';
+}
+
+async function collectGolfmon(dates, stat) {
+  const agg = new Map();
+  const year = dates[0].slice(0, 4);
+  for (const day of dates.slice(0, GOLFMON_DAYS)) {
+    for (const [rid, region] of GOLFMON_REGIONS) {
+      try {
+        const md = await firecrawl({ url: 'https://www.golfmon.net/booking/list?tab=%EC%96%91%EB%8F%84', actions: [{ type: 'wait', milliseconds: 3000 }, { type: 'click', selector: golfmonCell(rid, day) }, { type: 'wait', milliseconds: 4000 }, { type: 'scroll', direction: 'down' }, { type: 'wait', milliseconds: 1500 }] });
+        const rows = parseGolfmonDomestic(md);
+        stat.pages++;
+        for (const r of rows) {
+          const [m, d] = r.md.split('/').map(Number);
+          const rd = `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          if (rd !== day) continue;
+          stat.rows++;
+          if (isHiddenName(r.name)) continue;
+          if (r.holes && !/18/.test(r.holes)) continue;
+          const k = `${nameKey(r.name)}|${day}`;
+          const a = agg.get(k) || { name: r.name, key: nameKey(r.name), region, day, price: Infinity, count: 0 };
+          a.count++;
+          if (r.price < a.price) a.price = r.price;
+          agg.set(k, a);
+        }
+        log(`골프몬 ${day} ${region}: ${rows.length}건`);
+      } catch (e) { stat.errors++; log('골프몬 실패', day, region, e.message.slice(0, 80)); }
+    }
+  }
+  return [...agg.values()];
+}
+
+async function collectGolfmonAbroad() {
+  const md = await firecrawl({ url: 'https://www.golfmon.net/overseas/tour', waitFor: 4000 });
+  const items = parseGolfmonOverseas(md);
+  if (items.length) writeJson('golfmon-abroad.json', { source: '골프몬 해외투어 목록(https://www.golfmon.net/overseas/tour) 첫 화면, 한국 위치 접속(Firecrawl)', collectedAt: new Date().toISOString(), items });
+  return items.length;
 }
 
 // ── 티업엔조이: 지역·날짜별 골프장 최저가(공개 목록 API, robots.txt 가 /api/proxy/ 허용) ─────────
@@ -457,6 +503,16 @@ try {
   meta.sources.push({ id: 'gp', name: '골팡', ok: gpStat.pages > 0, pages: gpStat.pages, rows: gpStat.rows, hidden: gpStat.hidden, not18: gpStat.not18, merged: gpStat.merged, unplaced: gpStat.unplaced.size, at: new Date().toISOString() });
 } catch (e) { meta.sources.push({ id: 'gp', name: '골팡', ok: false, error: e.message }); log('골팡 실패', e.message); }
 
+const gmStat = { pages: 0, rows: 0, errors: 0, merged: 0, unplaced: new Set() };
+if (FIRECRAWL) {
+  try {
+    const gmRows = await collectGolfmon(dates, gmStat);
+    await mergeGolfpang(gmRows, courses, gmStat, 'gm');
+    meta.sources.push({ id: 'gm', name: '골프몬', ok: gmStat.pages > 0, pages: gmStat.pages, rows: gmStat.rows, merged: gmStat.merged, unplaced: gmStat.unplaced.size, errors: gmStat.errors, days: GOLFMON_DAYS, at: new Date().toISOString() });
+  } catch (e) { meta.sources.push({ id: 'gm', name: '골프몬', ok: false, error: e.message }); log('골프몬 실패', e.message); }
+  try { log(`골프몬 해외 상품 ${await collectGolfmonAbroad()}개`); } catch (e) { log('골프몬 해외 실패', e.message.slice(0, 80)); }
+} else log('FIRECRAWL_API_KEY 없음 — 골프몬은 저장본만 사용');
+
 const tuStat = { pages: 0, clubPages: 0, errors: 0, merged: 0, newCourses: 0, only9: 0 };
 try { await collectTeeupnjoy(dates, courses, tuStat); meta.sources.push({ id: 'tu', name: '티업엔조이', ok: tuStat.pages > 0, ...tuStat, at: new Date().toISOString() }); }
 catch (e) { meta.sources.push({ id: 'tu', name: '티업엔조이', ok: false, error: e.message }); log('티업엔조이 실패', e.message); }
@@ -502,7 +558,7 @@ log(`파3 골프장 제외 ${par3}곳`);
 list.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
 
 const out = {
-  v: 1,
+  v: 2,
   updatedAt: new Date().toISOString(),
   dates,
   sources: meta.sources,
