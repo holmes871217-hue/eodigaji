@@ -32,17 +32,19 @@ function domestic(state, data) {
   const g = state.ui.golf;
   const days = golfDays(data, todayISO());
   if (!days.length) return '<div class="empty mt"><b>지금 볼 수 있는 날짜 자료가 없어요.</b><span>자료는 매일 새로 모아요.</span></div>';
-  const day = days.includes(g.day) ? g.day : days[0];
+  // 날짜는 마이 탭 "가는 날짜"처럼 달력에서 고른다. 처음에는 마이 탭에서 정한 가는 날짜를 쓴다.
+  const day = g.day && g.day >= todayISO() ? g.day : state.profile.date;
+  const inRange = days.includes(day);
   const origin = state.profile.origin;
-  const rows = golfDomestic(data, { origin, day, maxMin: g.maxMin });
+  const rows = inRange ? golfDomestic(data, { origin, day, maxMin: g.maxMin }) : [];
   const shown = rows.slice(0, g.max || 20);
   const srcs = (data.sources || []).filter((s) => ['ts', 'gp', 'tu', 'gm'].includes(s.id));
   return `
     <p class="golf-from">출발: <b>${esc(origin.name || '내 위치')}</b> <button type="button" class="link-btn" data-action="tab" data-v="my">바꾸기</button></p>
-    <h2 class="h2 mt">날짜</h2>
-    <div class="chips" role="group" aria-label="날짜">
-      ${days.map((d) => `<button type="button" class="chip ${d === day ? 'is-on' : ''}" data-action="golf-day" data-v="${d}" aria-pressed="${d === day}">${dayLabel(d)}</button>`).join('')}
-    </div>
+    <label class="field mt">
+      <span class="field-label">치는 날짜</span>
+      <input type="date" class="input" id="golf-date" value="${esc(day)}" min="${todayISO()}" data-field="golf-date">
+    </label>
     <h2 class="h2 mt">차로 몇 시간까지</h2>
     <div class="chips" role="group" aria-label="이동시간">
       ${GOLF_TIMES.map((m) => `<button type="button" class="chip ${m === g.maxMin ? 'is-on' : ''}" data-action="golf-time" data-v="${m}" aria-pressed="${m === g.maxMin}">${hm(m)}</button>`).join('')}
@@ -51,7 +53,8 @@ function domestic(state, data) {
     <p class="muted">1인 총비용 낮은 순 · 수집 ${esc(kst(data.updatedAt))} · 출처 ${srcs.map((s) => `${esc(s.name)}${s.ok ? '' : '(실패)'}`).join('·')}</p>
     ${rows.length ? `<ol class="list golf-list">${shown.map((r, i) => domCard(r, day, i + 1)).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}곳 (남은 ${rows.length - shown.length}곳)</button>` : ''}`
-      : `<div class="empty"><b>${hm(g.maxMin)} 안에 이 날 가격이 올라온 골프장이 없어요.</b><span>시간을 늘리거나 다른 날짜를 골라 보세요.</span></div>`}
+      : inRange ? `<div class="empty"><b>${hm(g.maxMin)} 안에 이 날 가격이 올라온 골프장이 없어요.</b><span>시간을 늘리거나 다른 날짜를 골라 보세요.</span></div>`
+      : `<div class="empty"><b>이 날짜는 아직 가격 자료가 없어요.</b><span>가격은 앞으로 ${days.length}일(${dayLabel(days[0])} ~ ${dayLabel(days[days.length - 1])})치를 매일 모아요.</span></div>`}
     <p class="muted golf-foot">가격은 플랫폼에 올라온 값을 모은 것이라 예약 시점에 달라질 수 있어요. 카트비·캐디피는 팀(4인) 요금을 4로 나눠 더했어요.</p>`;
 }
 

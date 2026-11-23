@@ -702,6 +702,9 @@ root.addEventListener('change', (ev) => {
     state.ui.course[field === 'course-start' ? 'start' : 'end'] = el.value;
     state.ui.course.result = null;
     update(() => {}, { persist: false });
+  } else if (field === 'golf-date') {
+    // 골픽 치는 날짜(달력에서 고름)
+    if (isValidISO(el.value) && el.value >= todayISO()) update(() => { state.ui.golf.day = el.value; state.ui.golf.max = 20; }, { persist: false });
   } else if (field === 'jump') {
     // 지역을 고르면 그 지역의 지정 위치가 곧바로 검색 위치가 된다(안산·수원·오산·평택은 정해 둔 거점, 나머지는 도심).
     const city = CITIES.find((c) => c.name === el.value);
