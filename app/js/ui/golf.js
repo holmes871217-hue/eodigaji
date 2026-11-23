@@ -294,8 +294,8 @@ export function golfStaysSheet(state, data, id) {
       </div>
     </div>
     ${hs.length ? `<ul class="golf-stays">${hs.map((h) => `<li><a href="${esc(`${h.url}?checkin=${t.dep}&checkout=${t.out}&group_adults=2&no_rooms=1`)}" target="_blank" rel="noopener noreferrer">
-      ${h.ph ? `<img src="${esc(h.ph)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '<span class="golf-stay-ph"></span>'}
-      <span class="golf-stay-body"><b>${esc(h.n)}</b><small>★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''} · 골프장에서 ${h.km}km</small><small>${esc(h.loc || '')}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''}</small></span></a></li>`).join('')}</ul>
+      <span class="golf-stay-body"><b>${esc(h.n)}</b><small>★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''} · 골프장에서 ${h.km}km</small><small>${esc(h.loc || '')}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''}</small></span>
+      ${h.ph ? `<img src="${esc(h.ph)}" alt="${esc(h.n)} 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'), { className: 'golf-stay-ph' }))">` : '<span class="golf-stay-ph"></span>'}</a></li>`).join('')}</ul>
     <p class="sample-note">숙소를 누르면 부킹닷컴에서 ${md(t.dep)} 체크인 · ${md(t.out)} 체크아웃(${t.nights}박, 성인 2명)으로 열려요. 평점·1박 가격은 ${esc(md(data.hotelsCheckin || t.dep))} 1박 기준 조회값이라 고른 날짜와 다를 수 있어요.</p>`
       : '<div class="empty"><b>이 골프장 근처 숙소 정보가 아직 없어요.</b></div>'}`;
 }
