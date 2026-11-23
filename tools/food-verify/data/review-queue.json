@@ -1,6 +1,30 @@
 [
  {
   "kind": "series",
+  "videoId": "Z6cPZiosZEo",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "땡초화끈이",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "m9u4_9Uau8g",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "쌍둥이돼지국밥",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
+  "videoId": "m9u4_9Uau8g",
+  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
+  "name": "삼천포횟집",
+  "role": "visited",
+  "why": "MULTI_BRANCH"
+ },
+ {
+  "kind": "series",
   "videoId": "Ppt-Dr0QT_o",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "장터순대숙",
