@@ -268,3 +268,17 @@ export function pickStays(course, hotels, n = 5) {
   }
   return [];
 }
+
+/**
+ * 공항 비교: 골프장에서 가까운 공항(가장 가까운 곳 + 150km 안쪽) 중 항공권 정보가 있는 곳을 모아
+ * 추천 항공권(여러 날짜 조회 평균 rec)이 가장 싼 공항을 고른다. 차이가 5% 안쪽이면 더 가까운 공항.
+ */
+export function compareAirports(course, flights = {}) {
+  if (!Number.isFinite(course.lat) || !Number.isFinite(course.lng)) return [];
+  const list = AIRPORTS.map((a) => ({ ...a, km: haversineKm(course, a) })).sort((x, y) => x.km - y.km);
+  const near = list[0];
+  if (!near || near.km > 400) return [];
+  return list.filter((a) => flights[a.iata]?.fare && a.km <= near.km + 150).slice(0, 4)
+    .map((a) => ({ iata: a.iata, name: a.name, km: Math.round(a.km), rec: flights[a.iata].fare.rec || flights[a.iata].fare.min, direct: flights[a.iata].direct?.min || null }))
+    .sort((x, y) => (Math.abs(x.rec - y.rec) <= Math.min(x.rec, y.rec) * 0.05 ? x.km - y.km : x.rec - y.rec));
+}

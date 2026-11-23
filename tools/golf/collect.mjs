@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   unescapeHtml, nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost,
-  haversineKm, nextSaturday0600, is18Tee, pickAirport, AIRPORTS, pickStays, isPar3, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
+  haversineKm, nextSaturday0600, is18Tee, pickAirport, AIRPORTS, pickStays, compareAirports, isPar3, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
 } from './lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -460,11 +460,14 @@ async function collectMonkey(stat) {
     // 가까운 공항과 인천 왕복 항공권(구글 항공편 조회값). 못 찾으면 비워 두고 화면에 "확인 불가"로 표시한다.
     // 좌표가 없는 골프장은 도시로 공항을 정한다(괌·사이판·클락 등)
     const CITY_AIR = { 괌: 'GUM', 사이판: 'SPN', '수빅ㆍ클락': 'CRK', 방콕: 'BKK', '마닐라 근교': 'MNL', '츄부 지역(나고야 근교)': 'NGO', '큐슈 지역': 'FUK', '간토 지역(도쿄 근교)': 'NRT', '간사이 지역(오사카 근교/교토/고베/나라)': 'KIX', '홋카이도(북해도/삿포로)': 'CTS' };
-    const a = pickAirport(g, flights) || (CITY_AIR[g.city] ? { ...AIRPORTS.find((x) => x.iata === CITY_AIR[g.city]), km: null } : null);
+    const cmp = compareAirports(g, flights);
+    const best = cmp[0] ? { ...AIRPORTS.find((x) => x.iata === cmp[0].iata), km: cmp[0].km } : null;
+    g.airCmp = cmp.map((x) => [x.iata, x.name, x.km, x.rec, x.direct]);
+    const a = best || pickAirport(g, flights) || (CITY_AIR[g.city] ? { ...AIRPORTS.find((x) => x.iata === CITY_AIR[g.city]), km: null } : null);
     const f = a ? flights[a.iata] : null;
     g.stays = pickStays(g, stayData.hotels); // [[숙소 id, 골프장에서 km], …] 평점 높은 순
     for (const [id] of g.stays) usedHotels.add(id);
-    g.air = a ? { iata: a.iata, name: a.name, km: Math.round(a.km), direct: f?.direct?.min || null, airlines: f?.direct?.airlines?.slice(0, 3) || [], transfer: f?.direct ? null : f?.transfer?.min || null, via: f?.direct ? '' : f?.transfer?.via || '', fare: f?.fare?.min || null, fareDirect: f?.fare?.direct || null, fareDep: f?.fare?.dep || '', fareRet: f?.fare?.ret || '', fareUrl: f?.fare?.url || '' } : null;
+    g.air = a ? { iata: a.iata, name: a.name, km: Math.round(a.km), direct: f?.direct?.min || null, airlines: f?.direct?.airlines?.slice(0, 3) || [], transfer: f?.direct ? null : f?.transfer?.min || null, via: f?.direct ? '' : f?.transfer?.via || '', fare: f?.fare?.rec || f?.fare?.min || null, fareLo: f?.fare?.lo || null, fareHi: f?.fare?.hi || null, fareN: f?.fare?.samples?.length || 0, fareSamples: (f?.fare?.samples || []).map((x) => [x.dep, x.ret, x.min]), fareDirect: f?.fare?.direct || null, fareDep: f?.fare?.dep || '', fareRet: f?.fare?.ret || '', fareUrl: f?.fare?.url || '' } : null;
   }
   // 쓰는 숙소만 골라 한 번만 담는다(파일 크기 줄이기)
   out.hotels = Object.fromEntries([...usedHotels].map((id) => { const h = stayData.hotels[id]; return [id, { n: h.n, lat: h.lat, lng: h.lng, s: h.s, c: h.c, st: h.st, p: h.p, url: `https://www.booking.com/hotel/${h.cc}/${h.pg}.ko.html`, ph: h.ph, loc: h.loc }]; }));

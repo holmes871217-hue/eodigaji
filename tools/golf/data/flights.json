@@ -17,7 +17,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433351009,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS01JGh4SCjIwMjYtMTItMTRqBwgBEgNLTUlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS01JGh4SCjIwMjYtMTItMTRqBwgBEgNLTUlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 653800
+     }
+    ],
+    "rec": 653800,
+    "lo": 653800,
+    "hi": 653800
    }
   },
   "FUK": {
@@ -40,7 +50,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301898,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDRlVLGh4SCjIwMjYtMTItMTRqBwgBEgNGVUtyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDRlVLGh4SCjIwMjYtMTItMTRqBwgBEgNGVUtyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 365000
+     }
+    ],
+    "rec": 365000,
+    "lo": 365000,
+    "hi": 365000
    }
   },
   "HSG": {
@@ -57,7 +77,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350232,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSFNHGh4SCjIwMjYtMTItMTRqBwgBEgNIU0dyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSFNHGh4SCjIwMjYtMTItMTRqBwgBEgNIU0dyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 508024
+     }
+    ],
+    "rec": 508000,
+    "lo": 508024,
+    "hi": 508024
    }
   },
   "KKJ": {
@@ -80,7 +110,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433322093,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0tKGh4SCjIwMjYtMTItMTRqBwgBEgNLS0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0tKGh4SCjIwMjYtMTItMTRqBwgBEgNLS0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 329800
+     }
+    ],
+    "rec": 329800,
+    "lo": 329800,
+    "hi": 329800
    }
   },
   "KMJ": {
@@ -100,7 +140,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301836,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS01KGh4SCjIwMjYtMTItMTRqBwgBEgNLTUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS01KGh4SCjIwMjYtMTItMTRqBwgBEgNLTUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 351800
+     }
+    ],
+    "rec": 351800,
+    "lo": 351800,
+    "hi": 351800
    }
   },
   "NGS": {
@@ -123,7 +173,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433322176,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTkdTGh4SCjIwMjYtMTItMTRqBwgBEgNOR1NyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTkdTGh4SCjIwMjYtMTItMTRqBwgBEgNOR1NyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 463100
+     }
+    ],
+    "rec": 463100,
+    "lo": 463100,
+    "hi": 463100
    }
   },
   "KIX": {
@@ -145,7 +205,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301828,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0lYGh4SCjIwMjYtMTItMTRqBwgBEgNLSVhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0lYGh4SCjIwMjYtMTItMTRqBwgBEgNLSVhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 351058
+     }
+    ],
+    "rec": 351100,
+    "lo": 351058,
+    "hi": 351058
    }
   },
   "NRT": {
@@ -167,7 +237,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301816,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTlJUGh4SCjIwMjYtMTItMTRqBwgBEgNOUlRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTlJUGh4SCjIwMjYtMTItMTRqBwgBEgNOUlRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 336870
+     }
+    ],
+    "rec": 336900,
+    "lo": 336870,
+    "hi": 336870
    }
   },
   "HIJ": {
@@ -190,7 +270,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433322065,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSElKGh4SCjIwMjYtMTItMTRqBwgBEgNISUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSElKGh4SCjIwMjYtMTItMTRqBwgBEgNISUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 546700
+     }
+    ],
+    "rec": 546700,
+    "lo": 546700,
+    "hi": 546700
    }
   },
   "MYJ": {
@@ -213,7 +303,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333614,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTVlKGh4SCjIwMjYtMTItMTRqBwgBEgNNWUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTVlKGh4SCjIwMjYtMTItMTRqBwgBEgNNWUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 435300
+     }
+    ],
+    "rec": 435300,
+    "lo": 435300,
+    "hi": 435300
    }
   },
   "CAN": {
@@ -238,7 +338,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795431165000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ0FOGh4SCjIwMjYtMTItMTRqBwgBEgNDQU5yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ0FOGh4SCjIwMjYtMTItMTRqBwgBEgNDQU5yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 403800
+     }
+    ],
+    "rec": 403800,
+    "lo": 403800,
+    "hi": 403800
    }
   },
   "YNT": {
@@ -292,7 +402,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333329,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDR1VNGh4SCjIwMjYtMTItMTRqBwgBEgNHVU1yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDR1VNGh4SCjIwMjYtMTItMTRqBwgBEgNHVU1yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 317953
+     }
+    ],
+    "rec": 318000,
+    "lo": 317953,
+    "hi": 317953
    }
   },
   "SPN": {
@@ -309,7 +429,28 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350166,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDU1BOGh4SCjIwMjYtMTItMTRqBwgBEgNTUE5yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDU1BOGh4SCjIwMjYtMTItMTRqBwgBEgNTUE5yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 2199600
+     },
+     {
+      "dep": "2026-12-17",
+      "ret": "2026-12-21",
+      "min": 1158300
+     }
+    ],
+    "rec": 1158300,
+    "lo": 1158300,
+    "hi": 2199600
+   },
+   "direct": {
+    "min": 265,
+    "airlines": [
+     "Jeju Air"
+    ]
    }
   },
   "MDC": {
@@ -348,7 +489,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301777,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTU5MGh4SCjIwMjYtMTItMTRqBwgBEgNNTkxyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTU5MGh4SCjIwMjYtMTItMTRqBwgBEgNNTkxyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 452800
+     }
+    ],
+    "rec": 452800,
+    "lo": 452800,
+    "hi": 452800
    }
   },
   "KUL": {
@@ -415,7 +566,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433321866,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDREFEGh4SCjIwMjYtMTItMTRqBwgBEgNEQURyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDREFEGh4SCjIwMjYtMTItMTRqBwgBEgNEQURyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 389831
+     }
+    ],
+    "rec": 389800,
+    "lo": 389831,
+    "hi": 389831
    }
   },
   "CNX": {
@@ -441,7 +602,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795431165000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ05YGh4SCjIwMjYtMTItMTRqBwgBEgNDTlhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ05YGh4SCjIwMjYtMTItMTRqBwgBEgNDTlhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 545300
+     }
+    ],
+    "rec": 545300,
+    "lo": 545300,
+    "hi": 545300
    }
   },
   "CXR": {
@@ -465,7 +636,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433322131,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ1hSGh4SCjIwMjYtMTItMTRqBwgBEgNDWFJyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ1hSGh4SCjIwMjYtMTItMTRqBwgBEgNDWFJyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 516901
+     }
+    ],
+    "rec": 516900,
+    "lo": 516901,
+    "hi": 516901
    }
   },
   "HAN": {
@@ -489,7 +670,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795431165000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSEFOGh4SCjIwMjYtMTItMTRqBwgBEgNIQU5yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSEFOGh4SCjIwMjYtMTItMTRqBwgBEgNIQU5yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 368966
+     }
+    ],
+    "rec": 369000,
+    "lo": 368966,
+    "hi": 368966
    }
   },
   "KOJ": {
@@ -514,7 +705,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795431165000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS09KGh4SCjIwMjYtMTItMTRqBwgBEgNLT0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS09KGh4SCjIwMjYtMTItMTRqBwgBEgNLT0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 498104
+     }
+    ],
+    "rec": 498100,
+    "lo": 498104,
+    "hi": 498104
    }
   },
   "BKI": {
@@ -538,7 +739,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795431165000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQktJGh4SCjIwMjYtMTItMTRqBwgBEgNCS0lyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQktJGh4SCjIwMjYtMTItMTRqBwgBEgNCS0lyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 454318
+     }
+    ],
+    "rec": 454300,
+    "lo": 454318,
+    "hi": 454318
    }
   },
   "CEB": {
@@ -562,7 +773,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333546,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ0VCGh4SCjIwMjYtMTItMTRqBwgBEgNDRUJyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ0VCGh4SCjIwMjYtMTItMTRqBwgBEgNDRUJyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 584600
+     }
+    ],
+    "rec": 584600,
+    "lo": 584600,
+    "hi": 584600
    }
   },
   "BKK": {
@@ -575,7 +796,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350635,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQktLGh4SCjIwMjYtMTItMTRqBwgBEgNCS0tyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQktLGh4SCjIwMjYtMTItMTRqBwgBEgNCS0tyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 446100
+     }
+    ],
+    "rec": 446100,
+    "lo": 446100,
+    "hi": 446100
    },
    "direct": {
     "min": 370,
@@ -611,7 +842,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301649,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDU0dOGh4SCjIwMjYtMTItMTRqBwgBEgNTR05yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDU0dOGh4SCjIwMjYtMTItMTRqBwgBEgNTR05yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 368158
+     }
+    ],
+    "rec": 368200,
+    "lo": 368158,
+    "hi": 368158
    }
   },
   "CRK": {
@@ -634,7 +875,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433321591,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ1JLGh4SCjIwMjYtMTItMTRqBwgBEgNDUktyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ1JLGh4SCjIwMjYtMTItMTRqBwgBEgNDUktyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 406200
+     }
+    ],
+    "rec": 406200,
+    "lo": 406200,
+    "hi": 406200
    }
   },
   "MMY": {
@@ -651,7 +902,22 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350903,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTU1ZGh4SCjIwMjYtMTItMTRqBwgBEgNNTVlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTU1ZGh4SCjIwMjYtMTItMTRqBwgBEgNNTVlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 1072100
+     },
+     {
+      "dep": "2026-12-17",
+      "ret": "2026-12-21",
+      "min": 1028700
+     }
+    ],
+    "rec": 1050400,
+    "lo": 1028700,
+    "hi": 1072100
    }
   },
   "NKG": {
@@ -689,7 +955,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433322050,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDT0tBGh4SCjIwMjYtMTItMTRqBwgBEgNPS0FyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDT0tBGh4SCjIwMjYtMTItMTRqBwgBEgNPS0FyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 407392
+     }
+    ],
+    "rec": 407400,
+    "lo": 407392,
+    "hi": 407392
    }
   },
   "HAK": {
@@ -721,7 +997,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433322117,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSFBIGh4SCjIwMjYtMTItMTRqBwgBEgNIUEhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSFBIGh4SCjIwMjYtMTItMTRqBwgBEgNIUEhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 338133
+     }
+    ],
+    "rec": 338100,
+    "lo": 338133,
+    "hi": 338133
    }
   },
   "BTH": {
@@ -762,7 +1048,22 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333620,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDT0tKGh4SCjIwMjYtMTItMTRqBwgBEgNPS0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDT0tKGh4SCjIwMjYtMTItMTRqBwgBEgNPS0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 1196800
+     },
+     {
+      "dep": "2026-12-17",
+      "ret": "2026-12-21",
+      "min": 799708
+     }
+    ],
+    "rec": 799708,
+    "lo": 799708,
+    "hi": 1196800
    }
   },
   "FOC": {
@@ -825,7 +1126,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350670,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVUJKGh4SCjIwMjYtMTItMTRqBwgBEgNVQkpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVUJKGh4SCjIwMjYtMTItMTRqBwgBEgNVQkpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 1978900
+     }
+    ],
+    "rec": 1978900,
+    "lo": 1978900,
+    "hi": 1978900
    }
   },
   "TAK": {
@@ -849,7 +1160,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433321094,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVEFLGh4SCjIwMjYtMTItMTRqBwgBEgNUQUtyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVEFLGh4SCjIwMjYtMTItMTRqBwgBEgNUQUtyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 374500
+     }
+    ],
+    "rec": 374500,
+    "lo": 374500,
+    "hi": 374500
    }
   },
   "FSZ": {
@@ -868,7 +1189,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301249,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDRlNaGh4SCjIwMjYtMTItMTRqBwgBEgNGU1pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDRlNaGh4SCjIwMjYtMTItMTRqBwgBEgNGU1pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 377400
+     }
+    ],
+    "rec": 377400,
+    "lo": 377400,
+    "hi": 377400
    }
   },
   "OIT": {
@@ -891,7 +1222,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333573,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDT0lUGh4SCjIwMjYtMTItMTRqBwgBEgNPSVRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDT0lUGh4SCjIwMjYtMTItMTRqBwgBEgNPSVRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 375300
+     }
+    ],
+    "rec": 375300,
+    "lo": 375300,
+    "hi": 375300
    }
   },
   "CTS": {
@@ -913,7 +1254,22 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301892,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ1RTGh4SCjIwMjYtMTItMTRqBwgBEgNDVFNyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ1RTGh4SCjIwMjYtMTItMTRqBwgBEgNDVFNyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 593700
+     },
+     {
+      "dep": "2026-12-17",
+      "ret": "2026-12-21",
+      "min": 668700
+     }
+    ],
+    "rec": 631200,
+    "lo": 593700,
+    "hi": 668700
    }
   },
   "TPE": {
@@ -940,7 +1296,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301559,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVFBFGh4SCjIwMjYtMTItMTRqBwgBEgNUUEVyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVFBFGh4SCjIwMjYtMTItMTRqBwgBEgNUUEVyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 325835
+     }
+    ],
+    "rec": 325800,
+    "lo": 325835,
+    "hi": 325835
    }
   },
   "AKJ": {
@@ -957,7 +1323,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433301971,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQUtKGh4SCjIwMjYtMTItMTRqBwgBEgNBS0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQUtKGh4SCjIwMjYtMTItMTRqBwgBEgNBS0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 1274300
+     }
+    ],
+    "rec": 1274300,
+    "lo": 1274300,
+    "hi": 1274300
    }
   },
   "HKT": {
@@ -981,7 +1357,22 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433322022,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSEtUGh4SCjIwMjYtMTItMTRqBwgBEgNIS1RyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSEtUGh4SCjIwMjYtMTItMTRqBwgBEgNIS1RyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 499300
+     },
+     {
+      "dep": "2026-12-17",
+      "ret": "2026-12-21",
+      "min": 881400
+     }
+    ],
+    "rec": 499300,
+    "lo": 499300,
+    "hi": 881400
    }
   },
   "SDJ": {
@@ -1004,7 +1395,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333671,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDU0RKGh4SCjIwMjYtMTItMTRqBwgBEgNTREpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDU0RKGh4SCjIwMjYtMTItMTRqBwgBEgNTREpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 421500
+     }
+    ],
+    "rec": 421500,
+    "lo": 421500,
+    "hi": 421500
    }
   },
   "HKD": {
@@ -1021,7 +1422,28 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333743,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSEtEGh4SCjIwMjYtMTItMTRqBwgBEgNIS0RyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSEtEGh4SCjIwMjYtMTItMTRqBwgBEgNIS0RyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 819451
+     },
+     {
+      "dep": "2026-12-17",
+      "ret": "2026-12-21",
+      "min": 502172
+     }
+    ],
+    "rec": 502172,
+    "lo": 502172,
+    "hi": 819451
+   },
+   "direct": {
+    "min": 140,
+    "airlines": [
+     "Jeju Air"
+    ]
    }
   },
   "KHH": {
@@ -1045,7 +1467,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333347,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0hIGh4SCjIwMjYtMTItMTRqBwgBEgNLSEhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0hIGh4SCjIwMjYtMTItMTRqBwgBEgNLSEhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 399500
+     }
+    ],
+    "rec": 399500,
+    "lo": 399500,
+    "hi": 399500
    }
   },
   "NGO": {
@@ -1067,7 +1499,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333793,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTkdPGh4SCjIwMjYtMTItMTRqBwgBEgNOR09yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDTkdPGh4SCjIwMjYtMTItMTRqBwgBEgNOR09yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 393500
+     }
+    ],
+    "rec": 393500,
+    "lo": 393500,
+    "hi": 393500
    }
   },
   "KBV": {
@@ -1084,7 +1526,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433333323,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0JWGh4SCjIwMjYtMTItMTRqBwgBEgNLQlZyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0JWGh4SCjIwMjYtMTItMTRqBwgBEgNLQlZyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 782525
+     }
+    ],
+    "rec": 782500,
+    "lo": 782525,
+    "hi": 782525
    }
   },
   "RMQ": {
@@ -1109,7 +1561,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350492,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDUk1RGh4SCjIwMjYtMTItMTRqBwgBEgNSTVFyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDUk1RGh4SCjIwMjYtMTItMTRqBwgBEgNSTVFyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 355813
+     }
+    ],
+    "rec": 355800,
+    "lo": 355813,
+    "hi": 355813
    }
   },
   "CEI": {
@@ -1126,7 +1588,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350651,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ0VJGh4SCjIwMjYtMTItMTRqBwgBEgNDRUlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQ0VJGh4SCjIwMjYtMTItMTRqBwgBEgNDRUlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 1257200
+     }
+    ],
+    "rec": 1257200,
+    "lo": 1257200,
+    "hi": 1257200
    }
   },
   "USM": {
@@ -1143,7 +1615,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350676,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVVNNGh4SCjIwMjYtMTItMTRqBwgBEgNVU01yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVVNNGh4SCjIwMjYtMTItMTRqBwgBEgNVU01yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 931453
+     }
+    ],
+    "rec": 931500,
+    "lo": 931453,
+    "hi": 931453
    }
   },
   "PQC": {
@@ -1168,7 +1650,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350562,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDUFFDGh4SCjIwMjYtMTItMTRqBwgBEgNQUUNyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDUFFDGh4SCjIwMjYtMTItMTRqBwgBEgNQUUNyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 409484
+     }
+    ],
+    "rec": 409500,
+    "lo": 409484,
+    "hi": 409484
    }
   },
   "KIJ": {
@@ -1191,7 +1683,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350676,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0lKGh4SCjIwMjYtMTItMTRqBwgBEgNLSUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0lKGh4SCjIwMjYtMTItMTRqBwgBEgNLSUpyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 423100
+     }
+    ],
+    "rec": 423100,
+    "lo": 423100,
+    "hi": 423100
    }
   },
   "KMQ": {
@@ -1214,7 +1716,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350876,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS01RGh4SCjIwMjYtMTItMTRqBwgBEgNLTVFyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS01RGh4SCjIwMjYtMTItMTRqBwgBEgNLTVFyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 478100
+     }
+    ],
+    "rec": 478100,
+    "lo": 478100,
+    "hi": 478100
    }
   },
   "AOJ": {
@@ -1237,7 +1749,22 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350774,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQU9KGh4SCjIwMjYtMTItMTRqBwgBEgNBT0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDQU9KGh4SCjIwMjYtMTItMTRqBwgBEgNBT0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 1023200
+     },
+     {
+      "dep": "2026-12-17",
+      "ret": "2026-12-21",
+      "min": 995900
+     }
+    ],
+    "rec": 1009600,
+    "lo": 995900,
+    "hi": 1023200
    }
   },
   "KLO": {
@@ -1254,7 +1781,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350160,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0xPGh4SCjIwMjYtMTItMTRqBwgBEgNLTE9yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0xPGh4SCjIwMjYtMTItMTRqBwgBEgNLTE9yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 656000
+     }
+    ],
+    "rec": 656000,
+    "lo": 656000,
+    "hi": 656000
    }
   },
   "UIH": {
@@ -1288,7 +1825,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350736,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSE5EGh4SCjIwMjYtMTItMTRqBwgBEgNITkRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSE5EGh4SCjIwMjYtMTItMTRqBwgBEgNITkRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 574179
+     }
+    ],
+    "rec": 574200,
+    "lo": 574179,
+    "hi": 574179
    }
   },
   "IBR": {
@@ -1310,7 +1857,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350765,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDWUdKGh4SCjIwMjYtMTItMTRqBwgBEgNZR0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDWUdKGh4SCjIwMjYtMTItMTRqBwgBEgNZR0pyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 706800
+     }
+    ],
+    "rec": 706800,
+    "lo": 706800,
+    "hi": 706800
    }
   },
   "DLI": {
@@ -1336,7 +1893,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795433350436,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVkRPGh4SCjIwMjYtMTItMTRqBwgBEgNWRE9yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVkRPGh4SCjIwMjYtMTItMTRqBwgBEgNWRE9yBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 548708
+     }
+    ],
+    "rec": 548700,
+    "lo": 548708,
+    "hi": 548708
    }
   },
   "UTH": {
@@ -1353,7 +1920,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795435277000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVVRIGh4SCjIwMjYtMTItMTRqBwgBEgNVVEhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVVRIGh4SCjIwMjYtMTItMTRqBwgBEgNVVEhyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 944742
+     }
+    ],
+    "rec": 944700,
+    "lo": 944742,
+    "hi": 944742
    }
   },
   "KKC": {
@@ -1370,7 +1947,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795435277000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0tDGh4SCjIwMjYtMTItMTRqBwgBEgNLS0NyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDS0tDGh4SCjIwMjYtMTItMTRqBwgBEgNLS0NyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 1074100
+     }
+    ],
+    "rec": 1074100,
+    "lo": 1074100,
+    "hi": 1074100
    }
   },
   "HDY": {
@@ -1387,7 +1974,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795435277000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSERZGh4SCjIwMjYtMTItMTRqBwgBEgNIRFlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDSERZGh4SCjIwMjYtMTItMTRqBwgBEgNIRFlyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 729692
+     }
+    ],
+    "rec": 729700,
+    "lo": 729692,
+    "hi": 729692
    }
   },
   "URT": {
@@ -1404,7 +2001,17 @@
     "dep": "2026-12-10",
     "ret": "2026-12-14",
     "at": 1795435277000,
-    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVVJUGh4SCjIwMjYtMTItMTRqBwgBEgNVUlRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW"
+    "url": "https://www.google.com/travel/flights?tfs=CBwQAhoeEgoyMDI2LTEyLTEwagcIARIDSUNOcgcIARIDVVJUGh4SCjIwMjYtMTItMTRqBwgBEgNVUlRyBwgBEgNJQ05AAUgBcAGYAQE&hl=ko&gl=KR&curr=KRW",
+    "samples": [
+     {
+      "dep": "2026-12-10",
+      "ret": "2026-12-14",
+      "min": 896000
+     }
+    ],
+    "rec": 896000,
+    "lo": 896000,
+    "hi": 896000
    }
   }
  }
