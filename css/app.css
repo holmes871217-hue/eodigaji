@@ -710,9 +710,7 @@ svg { flex: none; }
 .golf-card { position: relative; }
 .golf-no { left: -6px; top: -6px; z-index: 1; }
 .golf-card .card-title { padding-left: 22px; }
-.golf-side { flex: none; display: grid; gap: 6px; justify-items: center; }
-.golf-plat { font-size: 12px; font-weight: 800; color: var(--ink-2); }
 .golf-break { font-size: 12px; line-height: 1.4; color: var(--ink-2); }
-.golf-when { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; align-items: end; margin-top: 14px; }
-.golf-when .golf-from { margin: 0 0 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; }
+.golf-when { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: end; margin-top: 14px; }
+.golf-when .golf-from { margin: 0 0 12px; padding-left: 4px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; }
 .golf-when .golf-from .field-label { margin: 0; }

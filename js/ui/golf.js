@@ -79,7 +79,7 @@ function costBreak(cost) {
   const parts = [`필드비 ${won(cost.green)}`];
   parts.push(cost.cartIncluded ? '카트비 포함' : cost.cart ? `카트비 ${won(cost.cart)}${est('카트비')}` : '카트비 모름');
   parts.push(cost.noCaddie ? '노캐디' : cost.caddie ? `캐디피 ${won(cost.caddie)}${est('캐디피')}` : '캐디피 모름');
-  return parts.join(' + ');
+  return parts.join('+');
 }
 
 function domCard({ c, cost, drive }, day, rank) {
@@ -92,9 +92,9 @@ function domCard({ c, cost, drive }, day, rank) {
           <span class="card-meta">${esc(c.area.replace('>', '·'))}${c.holes ? ` · ${c.holes}홀` : ''}</span>
           <span class="card-meta golf-drive ${drive.kind}">${esc(driveText(drive))} ${drive.kind === 'kakao' ? '' : '<em>추정</em>'}</span>
           <span class="golf-price"><b>${won(cost.total)}</b> <small>1인 총비용</small></span>
-          <span class="golf-break">${esc(costBreak(cost))}</span>
+          <span class="golf-break">${esc(costBreak(cost))}${SRC[cost.src] ? `(${SRC[cost.src]})` : ''}</span>
         </span>
-        <span class="golf-side">${thumb(c.photo)}<span class="golf-plat">${esc(SRC[cost.src] || '')}</span></span>
+        ${thumb(c.photo)}
       </button>
     </li>`;
 }
@@ -138,7 +138,7 @@ export function golfSheet(state, data, id) {
       <div class="stat"><b>${esc(formatMin(drive.min))}</b><span>${drive.kind === 'kakao' ? '차로(카카오 길찾기)' : '차로(직선거리 추정)'}</span></div>
       <div class="stat"><b>${c.grade ? c.grade : '-'}</b><span>평점(티스캐너)</span></div>
     </div>
-    ${cost ? `<p class="desc"><b>${esc(dayLabel(day))} 1인 비용</b> ${esc(costBreak(cost))}</p>` : `<p class="desc">${esc(dayLabel(day))}에는 올라온 가격이 없어요.</p>`}
+    ${cost ? `<p class="desc"><b>${esc(dayLabel(day))} 1인 비용</b><br>${esc(costBreak(cost))}${SRC[cost.src] ? `(${SRC[cost.src]})` : ''}</p>` : `<p class="desc">${esc(dayLabel(day))}에는 올라온 가격이 없어요.</p>`}
     ${offers.length ? `<h3 class="golf-sub">예약하러 가기 · 플랫폼별 가격</h3>
     <ul class="golf-links">
       ${offers.map(([src, price, count, total]) => `<li><a href="${esc(offerUrl(c, src, day))}" target="_blank" rel="noopener noreferrer"><b>${SRC[src] || esc(src)}</b><span>그린피 ${won(price)} · ${count}타임${total ? ` · 1인 ${won(total)}` : ''}</span><i aria-hidden="true">›</i></a></li>`).join('')}
