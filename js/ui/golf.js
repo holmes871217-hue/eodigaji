@@ -319,9 +319,9 @@ function abroadCourses(state, data) {
     ${countries.length ? `<div class="chips chips-wrap" role="group" aria-label="나라">${chip('golf-country', '', `${cont} 전체`, !country)}${countries.map((c) => chip('golf-country', c, c, c === country)).join('')}</div>` : ''}
     ${cities.length > 1 ? `<div class="chips golf-cities" role="group" aria-label="도시">${chip('golf-city', '', `${country} 전체`, !city)}${cities.map(([n, k]) => chip('golf-city', n, `${n} ${k}`, n === city)).join('')}</div>` : ''}
     <div class="golf-head">
-      <h2 class="h2">골프장 · 총 <span data-golf-total>${rows.length}</span>곳</h2>
+      <h2 class="h2">골프장 총 <span data-golf-total>${rows.length}</span>곳</h2>
       <div class="golf-filters">
-      <button type="button" class="golf-air-toggle ${view === 'total' ? 'is-on' : ''}" data-action="golf-ab-air" aria-pressed="${view === 'total'}" aria-label="네이버 항공권 금액 ${view === 'total' ? '켜짐(누르면 1인 골프 가격만)' : '꺼짐(누르면 항공권 더하기)'}">✈️<span>항공권</span></button>
+      <button type="button" class="golf-air-toggle ${view === 'total' ? 'is-on' : ''}" data-action="golf-ab-air" aria-pressed="${view === 'total'}" aria-label="네이버 항공권 금액 ${view === 'total' ? '켜짐(누르면 1인 골프 가격만)' : '꺼짐(누르면 항공권 더하기)'}">✈️<span>항공권 포함</span></button>
       <label class="golf-filter"><span class="sr-only">홀 수</span>
         <select class="input sm" data-field="golf-ab-holes">
           <option value="18" ${holes === '18' ? 'selected' : ''}>18홀 이상</option>
@@ -331,7 +331,6 @@ function abroadCourses(state, data) {
       </label>
       </div>
     </div>
-    <p class="muted">${view === 'golf' ? '1인 골프 가격(18홀 1회)이 낮은 순 · 항공권은 빼고 봐요' : '추천순: 1인 골프 비용 + 왕복 항공권 합계가 낮은 순'}</p>
     ${rows.length ? `<ol class="list golf-list">${shown.map((r, i) => courseCard(r.c, r.cost, i + 1, (g.picks || []).includes(r.c.id))).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}곳 (남은 ${rows.length - shown.length}곳)</button>` : ''}`
       : '<div class="empty"><b>이 조건의 골프장이 없어요.</b><span>홀 수 필터를 "전체"로 바꿔 보세요.</span></div>'}`;

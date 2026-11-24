@@ -775,3 +775,6 @@ svg { flex: none; }
 .golf-filters { display: flex; align-items: center; gap: 6px; margin-left: auto; flex: none; }
 .golf-air-toggle { display: inline-flex; align-items: center; gap: 3px; min-height: 40px; padding: 0 10px; border-radius: 999px; border: 1px solid #d5def2; background: var(--surface); color: var(--ink-2); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; opacity: 0.55; }
 .golf-air-toggle.is-on { opacity: 1; color: var(--ink); border-color: var(--ink); }
+.golf-head .h2 { font-size: 19px; white-space: nowrap; min-width: 0; }
+.golf-filters .golf-filter select { min-height: 38px; padding: 0 26px 0 10px; font-size: 13px; }
+.golf-air-toggle { min-height: 38px; padding: 0 9px; }
