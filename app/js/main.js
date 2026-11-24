@@ -19,7 +19,7 @@ import { attachSortable } from './ui/sortable.js';
 import { renderHome } from './ui/home.js';
 import { renderEvents } from './ui/events.js';
 import { renderDeals } from './ui/deals.js';
-import { renderGolf, abroadFareNeeds } from './ui/golf.js';
+import { renderGolf, abroadFareNeeds, pickPlan } from './ui/golf.js';
 import { loadGolf, requestFares } from './core/golf.js';
 import { renderMy } from './ui/mypage.js';
 import { renderSheet } from './ui/sheet.js';
@@ -72,9 +72,10 @@ function compute() {
 }
 
 function ensureGolf() {
-  if (state.ui.tab !== 'golf' || golfData !== undefined || state.ui.golfLoading) return;
+  const golfSheetOpen = typeof sheets !== 'undefined' && sheets.some((x) => String(x.type).startsWith('golf'));
+  if ((state.ui.tab !== 'golf' && !golfSheetOpen) || golfData !== undefined || state.ui.golfLoading) return;
   state.ui.golfLoading = true;
-  loadGolf().then((d) => { golfData = d; state.ui.golfLoading = false; if (state.ui.tab === 'golf') update(() => {}, { persist: false }); });
+  loadGolf().then((d) => { golfData = d; state.ui.golfLoading = false; if (state.ui.tab === 'golf' || sheets.some((x) => String(x.type).startsWith('golf'))) update(() => {}, { persist: false }); });
 }
 
 function render() {
@@ -508,6 +509,29 @@ root.addEventListener('click', (ev) => {
     case 'golf-ab-stay':
       update(() => { state.ui.golf.abStay = v; }, { persist: false });
       break;
+    case 'golf-pick': {
+      // 해외 골프장 찜(여러 골프장 합계용)
+      update(() => {
+        const g = state.ui.golf;
+        g.picks = (g.picks || []).includes(id) ? g.picks.filter((x) => x !== id) : [...(g.picks || []), id].slice(-10);
+        if (g.pickN) delete g.pickN[id];
+      });
+      break;
+    }
+    case 'golf-picks':
+      openSheet({ type: 'golf-picks' });
+      break;
+    case 'golf-pick-n': {
+      const plan = pickPlan(state, golfData);
+      const row = plan.rows.find((r) => r.c.id === id);
+      if (row) update(() => {
+        state.ui.golf.pickN ||= {};
+        // 처음 손대면 지금 보이는 자동 배분을 모두 고정한 뒤 바꾼다
+        for (const r of plan.rows) if (!Number.isInteger(state.ui.golf.pickN[r.c.id])) state.ui.golf.pickN[r.c.id] = r.n;
+        state.ui.golf.pickN[id] = Math.max(0, Math.min(10, row.n + Number(v)));
+      }, { persist: false });
+      break;
+    }
     case 'golf-ab-nights':
       update(() => { state.ui.golf.abNights = Number(v) || 2; state.ui.golf.max = 20; }, { persist: false });
       break;
