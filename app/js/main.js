@@ -116,6 +116,7 @@ function render() {
 
   document.body.classList.toggle('has-sheet', Boolean(sheetHtml));
   watchCardPhotos();
+  fitLines(root);
   const slides = document.querySelector('[data-slides]');
   if (slides) syncSlides(slides);
 
@@ -345,6 +346,24 @@ function watchCardPhotos() {
 
 // ── 사진 넘겨 보기 ──────────────────────────────────────────
 /** 지금 몇 번째 사진인지 숫자와 점을 맞춘다. */
+/**
+ * 연관된 내용은 한 줄에: [data-fit] 줄이 조금 넘치면 자간을 조금씩 좁혀(최대 -0.06em) 한 줄로 맞추고,
+ * 그래도 많이 넘치면 자간을 되돌리고 줄을 바꾼다.
+ */
+function fitLines(scope) {
+  for (const el of scope.querySelectorAll('[data-fit]')) {
+    el.classList.add('fit-one'); el.style.letterSpacing = '';
+    if (el.scrollWidth <= el.clientWidth) continue;
+    let ok = false;
+    for (const ls of [-0.02, -0.04, -0.06]) {
+      el.style.letterSpacing = `${ls}em`;
+      if (el.scrollWidth <= el.clientWidth) { ok = true; break; }
+    }
+    if (!ok) { el.style.letterSpacing = ''; el.classList.remove('fit-one'); }
+  }
+}
+addEventListener('resize', () => fitLines(document));
+
 function syncSlides(el) {
   const box = el.closest('.sheet-photo');
   if (!box) return;
