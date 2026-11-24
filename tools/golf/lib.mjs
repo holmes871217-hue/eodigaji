@@ -199,8 +199,15 @@ export function earliestAtMin(list, priceOf, timeOf) {
   return { min, time };
 }
 
+/** 상품 글에 "6홀*3회", "9홀x2", "9홀 2회", "6홀 세 바퀴"처럼 짧은 홀을 여러 번 도는 진행이 적혀 있는지 */
+export const repeatsShortHoles = (text) => /[369]\s*홀\s*[*x×X]\s*\d|[369]\s*홀\s*\d\s*회|[369]\s*홀\s*(두|세)\s*(번|바퀴)|[369]\s*H\s*[*x×X]\s*\d/i.test(String(text || ''));
+
+/** 18홀 정규로 보기에 너무 짧은 골프장(티스캐너 코스 길이 4,000m 미만: 6홀×3·9홀×2·파3 등) */
+export const SHORT_COURSE_METER = 4000;
+
 export function is18Tee(t) {
-  return t && t.min_cost > 0 && t.is_9h !== 'Y' && t.is_9h2 !== 'Y' && !/9\s*홀/.test(t.course_name || '') && !/(^|[^0-9])9H/i.test(t.course_name || '');
+  return t && t.min_cost > 0 && t.is_9h !== 'Y' && t.is_9h2 !== 'Y' && !/9\s*홀/.test(t.course_name || '') && !/(^|[^0-9])9H/i.test(t.course_name || '')
+    && !repeatsShortHoles(`${t.course_name || ''} ${t.benefit_comment || ''} ${t.condition_text || ''}`);
 }
 
 /** 골프몬 해외투어 목록 화면(마크다운) → 상품 목록. 제목 [도시] …, 출발 기간, "N원~", 항공사, 사진(s3 주소만) */

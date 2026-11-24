@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   unescapeHtml, nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost,
-  haversineKm, nextSaturday0600, is18Tee, pickAirport, AIRPORTS, pickStays, compareAirports, isPar3, isShortCourseName, tsDeal, tuDeal, earliestAtMin, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
+  haversineKm, nextSaturday0600, is18Tee, pickAirport, AIRPORTS, pickStays, compareAirports, isPar3, isShortCourseName, repeatsShortHoles, SHORT_COURSE_METER, tsDeal, tuDeal, earliestAtMin, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
 } from './lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -130,17 +130,17 @@ async function teescannerInfo(courses) {
   for (const co of courses.values()) {
     if (!co.tsSeq) continue;
     const c = cache[co.tsSeq];
-    if (!c || !c.photos || now - (c.at || 0) > 7 * 864e5) {
+    if (!c || !c.photos || c.meter === undefined || now - (c.at || 0) > 7 * 864e5) {
       try {
         const d = await tsPost('/board/getGolfclubInformationInfo', { golfclub_seq: co.tsSeq });
         const g = d.golfclubInfo || {};
-        cache[co.tsSeq] = { at: now, addr: unescapeHtml(g.address1), tel: g.golfclub_tel || '', holes: g.hole_count || null, cart: g.cart_fee || 0, caddie: g.caddie_fee || 0, week: g.green_fee_week || 0, weekend: g.green_fee_weekend || 0, type: unescapeHtml(g.membership_type_name || ''), photos: tsPhotos(g) };
+        cache[co.tsSeq] = { at: now, addr: unescapeHtml(g.address1), tel: g.golfclub_tel || '', holes: g.hole_count || null, cart: g.cart_fee || 0, caddie: g.caddie_fee || 0, week: g.green_fee_week || 0, weekend: g.green_fee_weekend || 0, type: unescapeHtml(g.membership_type_name || ''), photos: tsPhotos(g), meter: Number(g.course_scale_meter) || 0 };
         calls++;
         await sleep(250);
       } catch (e) { log('티스캐너 골프장 정보 실패', co.tsSeq, e.message); }
     }
     const i = cache[co.tsSeq];
-    if (i) Object.assign(co, { addr: i.addr, tel: i.tel, holes: i.holes, cartFee: i.cart, caddieFee: i.caddie, type: i.type, photos: i.photos || [] });
+    if (i) Object.assign(co, { addr: i.addr, tel: i.tel, holes: i.holes, cartFee: i.cart, caddieFee: i.caddie, type: i.type, photos: i.photos || [], meter: i.meter || 0 });
   }
   writeJson('ts-info.json', cache);
   log(`티스캐너 골프장 정보 새로 받음 ${calls}곳`);
@@ -170,7 +170,7 @@ async function collectGolfpang(dates, stat) {
           stat.rows++;
           if (isHiddenName(row.name)) { stat.hidden++; continue; }
           if (row.holes && !/18/.test(row.holes)) { stat.not18++; continue; } // 9홀 등은 값이 비교되지 않아 뺀다
-          if (isShortCourseName(row.name)) { stat.not18++; continue; } // "-퍼9" 처럼 9홀을 두 번 도는 곳
+          if (isShortCourseName(row.name) || repeatsShortHoles(`${row.incl || ''} ${row.name}`)) { stat.not18++; continue; } // "-퍼9" 처럼 9홀을 두 번 도는 곳
           const k = `${nameKey(row.name)}|${day}`;
           const a = agg.get(k) || { name: row.name, key: nameKey(row.name), region, day, price: Infinity, count: 0 };
           a.count++;
@@ -479,7 +479,7 @@ async function collectTeeupnjoy(dates, courses, stat) {
       const { id, day, tu } = jobs[i++];
       try {
         const r = await fetch(`${TU}/api/proxy/booking/search/club/teetimes?clubId=${id}&bookingDay=${day}&today=N`, { headers: { 'User-Agent': 'Mozilla/5.0', Referer: `${TU}/club/${id}` } });
-        const list = ((await r.json()).resultList || []).filter((t) => !t.holeName || /18/.test(t.holeName));
+        const list = ((await r.json()).resultList || []).filter((t) => (!t.holeName || /18/.test(t.holeName)) && !repeatsShortHoles(`${t.holeName || ''} ${t.prEvent || ''} ${t.bookingCourse || ''}`));
         const hm = (t) => (t.bookingTime ? `${String(t.bookingTime).slice(0, 2)}:${String(t.bookingTime).slice(2, 4)}` : null);
         const { min, time } = earliestAtMin(list, (t) => Number(t.disPrice) || 0, hm);
         if (min < Infinity) {
@@ -820,7 +820,7 @@ let par3 = 0;
 const list = [];
 for (const co of courses.values()) {
   if (isPar3(co.name)) { par3++; continue; }
-  if ((co.holes && co.holes < 18) || isShortCourseName(co.name)) { par3++; continue; } // 9홀·6홀·3홀을 여러 번 도는 곳은 검색에서 뺀다
+  if ((co.holes && co.holes < 18) || isShortCourseName(co.name) || (co.meter && co.meter < SHORT_COURSE_METER)) { par3++; continue; } // 9홀·6홀·3홀을 여러 번 도는 곳은 검색에서 뺀다
   const est = estFor(co);
   const days = {};
   for (const [day, offers] of Object.entries(co.offers)) {
