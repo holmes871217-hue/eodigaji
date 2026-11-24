@@ -21,7 +21,7 @@ export function loadGolf() {
  */
 export function golfDrive(course, origin) {
   const d = origin?.type === 'city' ? course.drive?.[origin.name] : null;
-  if (d) return { min: d[0], km: d[1], dep: d[2], kind: 'kakao' };
+  if (d) return { min: d[0], km: d[1], dep: d[2], toll: Number.isFinite(d[3]) ? d[3] : null, kind: 'kakao' };
   const e = driveEstimate(origin, course);
   return { min: e.min, km: Math.round(e.km * 1.35 * 10) / 10, kind: 'est' };
 }
@@ -43,6 +43,18 @@ export const isShortCourse = (c) => (c.holes && c.holes < 18) || /파크\s*골�
  * 연료·연비·가격 중 하나라도 없으면 null(계산 안 함).
  */
 export const FUEL_LABEL = { gasoline: '휘발유', diesel: '경유', ev: '전기' };
+/**
+ * 교통비(1인) = 주유비 + 왕복 통행료. 연료·연비를 안 적으면 계산하지 않는다(null).
+ * 통행료는 카카오 길찾기(거점 도시 출발)가 알려 준 편도 값 × 2. 모르면(지도·GPS 출발, 아직 안 받은 곳) 0으로 두고 tollKnown=false.
+ */
+export function transportCost(drive, car, fuel) {
+  const f = fuelCost(drive.km, car, fuel);
+  if (!f) return null;
+  const tollKnown = Number.isFinite(drive.toll);
+  const toll = tollKnown ? drive.toll * 2 : 0;
+  return { ...f, fuel: f.total, toll, tollKnown, total: f.total + toll, perPerson: f.total + toll };
+}
+
 export function fuelCost(km, car, fuel) {
   const price = fuel?.[car?.fuel];
   if (!car?.fuel || !(car.eff > 0) || !(price > 0) || !(km > 0)) return null;
@@ -59,7 +71,7 @@ export function golfDomestic(data, { origin, day, maxMin, car }) {
     if (!cost) continue;
     const drive = golfDrive(c, origin);
     if (drive.min > maxMin) continue;
-    const fuel = fuelCost(drive.km, car, data.fuel);
+    const fuel = transportCost(drive, car, data.fuel);
     out.push({ c, cost, drive, fuel, sum: cost.total + (fuel?.perPerson || 0) });
   }
   out.sort((a, b) => a.sum - b.sum || a.drive.min - b.drive.min);

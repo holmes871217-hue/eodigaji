@@ -519,7 +519,8 @@ async function driveTimes(courses, hubs, meta) {
     const km = haversineKm(h, co);
     if (km > HUB_RADIUS_KM) continue;
     const c = cache[keyOf(co, h)];
-    if (!c || now - c.at > DRIVE_TTL_DAYS * 864e5) jobs.push({ co, h, km });
+    // 통행료(toll)를 저장하기 전 값도 다시 부른다(2026-11-24 교통비 추가)
+    if (!c || now - c.at > DRIVE_TTL_DAYS * 864e5 || (c.min && c.toll === undefined)) jobs.push({ co, h, km });
   }
   jobs.sort((a, b) => a.km - b.km);
   const deadline = Date.now() + DRIVE_BUDGET_MIN * 60e3;
@@ -539,7 +540,7 @@ async function driveTimes(courses, hubs, meta) {
         else if (r.ok) {
           const s = (await r.json()).routes?.[0];
           failRun = 0;
-          cache[keyOf(co, h)] = s && s.result_code === 0 ? { at: now, min: Math.round(s.summary.duration / 60), km: Math.round(s.summary.distance / 100) / 10, dep } : { at: now, fail: s?.result_code ?? 'x' };
+          cache[keyOf(co, h)] = s && s.result_code === 0 ? { at: now, min: Math.round(s.summary.duration / 60), km: Math.round(s.summary.distance / 100) / 10, dep, toll: Number(s.summary.fare?.toll) || 0 } : { at: now, fail: s?.result_code ?? 'x' };
         } else {
           meta.drive.errors++; errCodes[r.status] = (errCodes[r.status] || 0) + 1;
           if (!meta.drive.firstError) meta.drive.firstError = `${r.status} ${(await r.text().catch(() => '')).slice(0, 160)}`;
@@ -553,9 +554,10 @@ async function driveTimes(courses, hubs, meta) {
   await Promise.all(Array.from({ length: 3 }, worker));
   meta.drive.errorCodes = errCodes;
   meta.drive.pending = Math.max(0, jobs.length - i);
+  // co.drive[거점] = [분, km, 출발시각, 편도 통행료(원)]
   for (const co of courses.values()) {
     co.drive = {};
-    for (const h of hubs) { const c = cache[keyOf(co, h)]; if (c && c.min) co.drive[h.name] = [c.min, c.km, c.dep]; }
+    for (const h of hubs) { const c = cache[keyOf(co, h)]; if (c && c.min) co.drive[h.name] = c.toll === undefined ? [c.min, c.km, c.dep] : [c.min, c.km, c.dep, c.toll]; }
   }
   if (meta.drive.status === 'ok' && !Object.values(cache).some((c) => c.min)) meta.drive.source = 'none';
   writeJson('drive.json', cache);

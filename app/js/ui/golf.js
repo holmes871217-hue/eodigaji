@@ -1,6 +1,6 @@
 // 골프 화면: 국내(차로 갈 수 있는 골프장, 1인 총비용 낮은 순) / 해외(나라·도시별 골프 상품, 가격 낮은 순)
 import { esc } from './util.js';
-import { courseTree, courseList, fareOf, fuelCost, FUEL_LABEL, CONTINENTS, CONTINENT_OF, golfDomestic, golfDrive, golfDays, golfCountries, golfAbroad, won, localPrice, COUNTRY_CUR } from '../core/golf.js';
+import { courseTree, courseList, fareOf, fuelCost, transportCost, FUEL_LABEL, CONTINENTS, CONTINENT_OF, golfDomestic, golfDrive, golfDays, golfCountries, golfAbroad, won, localPrice, COUNTRY_CUR } from '../core/golf.js';
 import { formatMin } from '../core/geo.js';
 import { todayISO } from '../core/dates.js';
 import { CITIES } from '../core/geo.js';
@@ -130,7 +130,7 @@ function costBreakShort(cost, fuel) {
   const parts = [`그린피 ${n(cost.green)}`];
   parts.push(cost.cartIncluded ? '카트 포함' : cost.cart ? `카트비 ${n(cost.cart)}${est('카트비')}` : '카트비 ?');
   parts.push(cost.noCaddie ? '노캐디' : cost.caddie ? `캐디피 ${n(cost.caddie)}${est('캐디피')}` : '캐디피 ?');
-  if (fuel) parts.push(`주유비 ${n(fuel.perPerson)}`);
+  if (fuel) parts.push(`교통비 ${n(fuel.perPerson)}`);
   return parts.join('+');
 }
 
@@ -142,7 +142,7 @@ function domCard({ c, cost, drive, fuel, sum }, day, rank) {
         <span class="card-body">
           <span class="card-title">${esc(c.name)}${cost.deal ? ` <span class="golf-deal">${esc(dealText(cost.deal))}</span>` : ''}</span>
           <span class="card-meta">${esc(c.area.replace('>', '·'))}${c.holes ? ` · ${c.holes}홀` : ''}</span>
-          <span class="card-meta golf-drive ${drive.kind}" data-fit>${esc(driveText(drive))}${fuel ? ` · 주유비 ${esc(won(fuel.perPerson))}` : ''} ${drive.kind === 'kakao' ? '' : '<em>추정</em>'}</span>
+          <span class="card-meta golf-drive ${drive.kind}" data-fit>${esc(driveText(drive))}${fuel ? ` · 교통비 ${esc(won(fuel.perPerson))}` : ''} ${drive.kind === 'kakao' ? '' : '<em>추정</em>'}</span>
           <span class="golf-price" data-fit><b>${won(sum ?? cost.total)}</b> <small>1인 총비용</small>${cost.time ? ` <span class="golf-time">${esc(cost.time)} 티오프</span>` : ''}</span>
         </span>
         ${thumb(c.photo)}
@@ -186,7 +186,7 @@ export function golfSheet(state, data, id) {
   const day = g.day && g.day >= todayISO() ? g.day : state.profile.date;
   const cost = c.days?.[day];
   const drive = golfDrive(c, state.profile.origin);
-  const fuel = fuelCost(drive.km, state.profile.car, data.fuel);
+  const fuel = transportCost(drive, state.profile.car, data.fuel);
   const offers = cost ? [...cost.offers].sort((a, b) => (a[3] ?? a[1]) - (b[3] ?? b[1])) : [];
   const q = encodeURIComponent(c.name);
   return `
@@ -198,12 +198,12 @@ export function golfSheet(state, data, id) {
     </div>
     ${photoSlides(c)}
     <div class="stats">
-      <div class="stat"><b>${cost ? won(cost.total + (fuel?.perPerson || 0)) : '-'}</b><span>1인 ${cost ? (fuel ? '총비용(주유비 포함)' : esc(costLabel(cost))) : '가격 없음'}</span></div>
+      <div class="stat"><b>${cost ? won(cost.total + (fuel?.perPerson || 0)) : '-'}</b><span>1인 ${cost ? (fuel ? '총비용(교통비 포함)' : esc(costLabel(cost))) : '가격 없음'}</span></div>
       <div class="stat"><b>${esc(formatMin(drive.min))}</b><span>${drive.kind === 'kakao' ? '차로(카카오 길찾기)' : '차로(직선거리 추정)'}</span></div>
       <div class="stat"><b>${c.grade ? c.grade : '-'}</b><span>평점(티스캐너)</span></div>
     </div>
-    ${cost ? `<p class="desc"><b>${esc(dayLabel(day))} 1인 비용${cost.time ? ` · ${esc(cost.time)} 티오프` : ''}</b>${cost.deal ? ` <span class="golf-deal">${esc(dealText(cost.deal))}</span>` : ''}<span class="golf-break-d" data-fit>${esc(costBreak(cost))}${fuel ? `+주유비 ${esc(won(fuel.perPerson))}` : ''}${SRC[cost.src] ? `(${SRC[cost.src]})` : ''}</span></p>
-    ${fuel ? `<p class="muted golf-fuel">주유비: 왕복 ${fuel.roundKm}km ÷ 연비 ${state.profile.car.eff}km/${fuel.unit} × ${FUEL_LABEL[state.profile.car.fuel]} ${won(fuel.price)}/${fuel.unit} = ${won(fuel.total)}${data.fuel?.date ? ` (가격 ${esc(data.fuel.date)} ${esc(data.fuel.src || '')})` : ''}</p>` : `<p class="muted golf-fuel">마이 탭 "내 차 연비"에 연료와 연비를 적으면 왕복 주유비도 더해져요.</p>`}` : `<p class="desc">${esc(dayLabel(day))}에는 올라온 가격이 없어요.</p>`}
+    ${cost ? `<p class="desc"><b>${esc(dayLabel(day))} 1인 비용${cost.time ? ` · ${esc(cost.time)} 티오프` : ''}</b>${cost.deal ? ` <span class="golf-deal">${esc(dealText(cost.deal))}</span>` : ''}<span class="golf-break-d" data-fit>${esc(costBreak(cost))}${fuel ? `+교통비 ${esc(won(fuel.perPerson))}` : ''}${SRC[cost.src] ? `(${SRC[cost.src]})` : ''}</span></p>
+    ${fuel ? `<p class="muted golf-fuel">교통비 ${won(fuel.total)} = 주유비 ${won(fuel.fuel)}(왕복 ${fuel.roundKm}km ÷ 연비 ${state.profile.car.eff}km/${fuel.unit} × ${FUEL_LABEL[state.profile.car.fuel]} ${won(fuel.price)}/${fuel.unit}) + ${fuel.tollKnown ? `통행료 ${won(fuel.toll)}(왕복, 카카오 길찾기)` : `통행료 ${drive.kind === 'kakao' ? '정보 준비 중' : '모름(지도·현재 위치 출발은 거점 도시 길찾기만 통행료를 알려 줘요)'}`}${data.fuel?.date ? ` (가격 ${esc(data.fuel.date)} ${esc(data.fuel.src || '')})` : ''}</p>` : `<p class="muted golf-fuel">마이 탭 "내 차 연비"에 연료와 연비를 적으면 왕복 교통비(주유비+통행료)도 더해져요.</p>`}` : `<p class="desc">${esc(dayLabel(day))}에는 올라온 가격이 없어요.</p>`}
     ${offers.length ? `<h3 class="golf-sub">예약하러 가기 · 플랫폼별 가격</h3>
     <ul class="golf-links">
       ${offers.map(([src, price, count, total]) => `<li><a href="${esc(offerUrl(c, src, day))}" target="_blank" rel="noopener noreferrer"><b>${SRC[src] || esc(src)}</b><span>그린피 ${won(price)} · ${count}타임${total ? ` · 1인 ${won(total)}` : ''}</span><i aria-hidden="true">›</i></a></li>`).join('')}
