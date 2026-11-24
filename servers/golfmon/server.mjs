@@ -172,5 +172,54 @@ app.get('/homepage', one(async (req) => {
   } finally { await ctx.close(); }
 }));
 
+// ── 한국 브라우저 창구: 비밀 토큰(KR_BROWSER_TOKEN)을 가진 쪽만, 아무 공개 화면이나 한국에서 열어 준다 ─────────
+// POST /browse  헤더 Authorization: Bearer <토큰>
+// { url, actions: [{type:'wait',ms}|{type:'click',selector}|{type:'scroll'}|{type:'type',selector,text}|{type:'goto',url}],
+//   want: ['text','html','links','imgs','xhr','screenshot'], mode: 'headless'|'headed' }
+app.use(express.json({ limit: '200kb' }));
+const TOKEN = process.env.KR_BROWSER_TOKEN || '';
+app.post('/browse', async (req, res) => {
+  if (!TOKEN || req.get('authorization') !== `Bearer ${TOKEN}`) return res.status(401).json({ error: '토큰 필요' });
+  if (busy) return res.status(429).json({ error: '다른 일 처리 중' });
+  busy = true;
+  const b = req.body || {};
+  const want = new Set(b.want || ['text']);
+  let ctx = null;
+  try {
+    const u = new URL(String(b.url || ''));
+    if (!/^https?:$/.test(u.protocol)) throw new Error('http(s) 주소만');
+    ctx = await context(b.mode === 'headed' ? 'headed' : mode);
+    const page = await ctx.newPage();
+    const xhr = [];
+    if (want.has('xhr')) page.on('response', async (r) => {
+      const ct = r.headers()['content-type'] || '';
+      if (!/json/.test(ct) || xhr.length >= 40) return;
+      try { xhr.push({ url: r.url().slice(0, 400), status: r.status(), body: (await r.text()).slice(0, 4000) }); } catch {}
+    });
+    const resp = await page.goto(u.href, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await sleep(2500);
+    for (const a of (b.actions || []).slice(0, 30)) {
+      if (a.type === 'wait') await sleep(Math.min(Number(a.ms) || 1000, 15000));
+      else if (a.type === 'click') await page.$eval(String(a.selector), (el) => { el.scrollIntoView({ block: 'center' }); el.click(); });
+      else if (a.type === 'scroll') await scrollAll(page);
+      else if (a.type === 'type') await page.fill(String(a.selector), String(a.text || ''));
+      else if (a.type === 'goto') await page.goto(String(a.url), { waitUntil: 'domcontentloaded', timeout: 45000 });
+    }
+    const out = { status: resp?.status() || null, url: page.url(), title: await page.title() };
+    if (want.has('text')) out.text = (await page.innerText('body').catch(() => '')).slice(0, 60000);
+    if (want.has('html')) out.html = (await page.content()).slice(0, 400000);
+    if (want.has('links')) out.links = await page.$$eval('a', (as) => as.map((a) => ({ t: (a.innerText || a.title || '').trim().slice(0, 100), h: a.href })).slice(0, 400));
+    if (want.has('imgs')) out.imgs = await page.$$eval('img', (is) => is.map((i) => ({ alt: i.alt || '', src: i.src })).slice(0, 200));
+    if (want.has('xhr')) out.xhr = xhr;
+    if (want.has('screenshot')) out.screenshot = (await page.screenshot({ type: 'jpeg', quality: 60 })).toString('base64');
+    res.json({ mode, ...out });
+  } catch (e) {
+    res.status(500).json({ mode, error: String(e.message || e).slice(0, 300) });
+  } finally {
+    await ctx?.close().catch(() => {});
+    busy = false;
+  }
+});
+
 const port = Number(process.env.PORT || 8080);
 app.listen(port, () => console.log(`golfmon-collector :${port}`));

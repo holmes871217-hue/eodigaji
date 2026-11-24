@@ -1,0 +1,33 @@
+# 한국 창구(서울 서버, servers/golfmon)를 GitHub 이 자동으로 다시 올린다. 키 파일 없이 Workload Identity 로 로그인.
+# 처음 한 번 servers/golfmon/setup-kr.sh 를 구글 클라우드 셸에서 돌려야 동작한다. 토큰·설정값은 그대로 유지된다.
+name: 한국 창구 배포
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['servers/golfmon/**']
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: kr-browser-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/351935360699/locations/global/workloadIdentityPools/github/providers/eodigaji
+          service_account: kr-deployer@project-8a98bd00-9abd-428d-9b0.iam.gserviceaccount.com
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: 서울 서버 다시 올리기
+        run: gcloud run deploy golfmon-collector --source servers/golfmon --region asia-northeast3 --project project-8a98bd00-9abd-428d-9b0 --quiet
+      - name: 확인
+        run: curl -s --max-time 60 https://golfmon-collector-351935360699.asia-northeast3.run.app/health
