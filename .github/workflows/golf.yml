@@ -17,7 +17,7 @@ concurrency:
 jobs:
   golf:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
@@ -36,6 +36,9 @@ jobs:
 
       - name: 규칙 점검
         run: node tools/check-golf.mjs
+
+      - name: 해외 항공권 (네이버 항공권 MCP 서버, 서울)
+        run: node tools/golf/naver-fares.mjs
 
       - name: 골프 자료 수집
         env:

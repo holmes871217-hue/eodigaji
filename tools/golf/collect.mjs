@@ -467,7 +467,7 @@ async function collectMonkey(stat) {
     const f = a ? flights[a.iata] : null;
     g.stays = pickStays(g, stayData.hotels); // [[숙소 id, 골프장에서 km], …] 평점 높은 순
     for (const [id] of g.stays) usedHotels.add(id);
-    g.air = a ? { iata: a.iata, name: a.name, km: Math.round(a.km), direct: f?.direct?.min || null, airlines: f?.direct?.airlines?.slice(0, 3) || [], transfer: f?.direct ? null : f?.transfer?.min || null, via: f?.direct ? '' : f?.transfer?.via || '', fare: f?.fare?.rec || f?.fare?.min || null, fareLo: f?.fare?.lo || null, fareHi: f?.fare?.hi || null, fareN: f?.fare?.samples?.length || 0, fareSamples: (f?.fare?.samples || []).map((x) => [x.dep, x.ret, x.min]), fareDirect: f?.fare?.direct || null, fareDep: f?.fare?.dep || '', fareRet: f?.fare?.ret || '', fareUrl: f?.fare?.url || '' } : null;
+    g.air = a ? { iata: a.iata, name: a.name, km: Math.round(a.km), direct: f?.direct?.min || null, airlines: f?.direct?.airlines?.slice(0, 3) || [], transfer: f?.direct ? null : f?.transfer?.min || null, via: f?.direct ? '' : f?.transfer?.via || '', fare: f?.fare?.rec || f?.fare?.min || null, fareLo: f?.fare?.lo || null, fareHi: f?.fare?.hi || null, fareN: f?.fare?.samples?.length || 0, fareSamples: (f?.fare?.samples || []).map((x) => [x.dep, x.ret, x.min]), fareDirect: f?.fare?.direct || null, fareDep: f?.fare?.dep || '', fareRet: f?.fare?.ret || '', fareUrl: f?.fare?.url || '', fareSrc: f?.fare?.src || 'google' } : null;
   }
   // 쓰는 숙소만 골라 한 번만 담는다(파일 크기 줄이기)
   out.hotels = Object.fromEntries([...usedHotels].map((id) => { const h = stayData.hotels[id]; return [id, { n: h.n, lat: h.lat, lng: h.lng, s: h.s, c: h.c, st: h.st, p: h.p, url: `https://www.booking.com/hotel/${h.cc}/${h.pg}.ko.html`, ph: h.ph, loc: h.loc }]; }));

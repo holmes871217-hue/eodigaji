@@ -258,24 +258,27 @@ export function golfCourseSheet(state, data, id) {
         ${(a.fareSamples || []).map(([d1, d2, v]) => `<li><span>${md(d1)} 출발 · ${md(d2)} 귀국 조회</span><b>${won(v)}</b></li>`).join('')}
       </ul>
       ${(c.airCmp || []).length > 1 ? `<p class="golf-fare-cmp-t">주변 공항 비교</p><ul class="golf-fare-list">${c.airCmp.map(([iata, name, km, rec, dir]) => `<li class="${iata === a.iata ? 'is-pick' : ''}"><span>${esc(name)}(${esc(iata)}) · 골프장에서 ${km}km${dir ? ' · 직항' : ' · 경유'}</span><b>${won(rec)}${iata === a.iata ? ' 추천' : ''}</b></li>`).join('')}</ul>` : ''}
-      <p class="muted">${a.fareN > 1 ? `구글 항공편에서 날짜를 바꿔 ${a.fareN}번 조회해 비교했어요(1인 왕복). 두 값이 크게 다르면 비싼 날은 그날 직항이 없던 경우라 싼 쪽을, 비슷하면 평균을 추천가로 썼어요.` : '구글 항공편 1인 왕복 조회값이에요. 주변 공항끼리 비교해 가장 합리적인 공항을 추천했어요.'} 고른 날짜(${md(trip.dep)} 출발 · ${md(trip.ret)} 귀국)는 아래 버튼으로 확인해 보세요.</p>
+      <p class="muted">${a.fareN > 1 ? `${fareSrc(a.fareSrc)}에서 날짜를 바꿔 ${a.fareN}번 조회해 비교했어요(1인 왕복). 두 값이 크게 다르면 싼 쪽을, 비슷하면 평균을 추천가로 썼어요.` : `${fareSrc(a.fareSrc)} 1인 왕복 조회값이에요. 주변 공항끼리 비교해 가장 합리적인 공항을 추천했어요.`} 고른 날짜(${md(trip.dep)} 출발 · ${md(trip.ret)} 귀국)는 아래 버튼으로 확인해 보세요.</p>
     </div>` : ''}
     ${a ? `<div class="golf-fly">${flyLinks(a, trip).map(([n, u]) => `<a class="golf-src" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>`).join('')}</div>` : ''}
     ${c.stays?.length ? `<button type="button" class="shop-btn golf-stay-btn" data-action="golf-stays" data-id="${esc(c.id)}"><span class="shop-btn-icon" aria-hidden="true">🏨</span><span><b>근처 숙소</b><small>평점 높은 순 ${c.stays.length}곳</small></span></button>` : ''}
     <div class="sheet-actions golf-actions">
       <a class="btn-primary" href="${esc(`${c.url}&checkInDate=${trip.dep}`)}" target="_blank" rel="noopener noreferrer">예약하러 가기(몽키트래블)</a>
     </div>
-    <p class="sample-note">1인당 가격·등급·평점·사진은 ${esc(kst((data.sources || []).find((x) => x.id === 'mt')?.at || data.updatedAt))}에 몽키트래블에 올라온 값이에요(${esc(md((data.sources || []).find((x) => x.id === 'mt')?.checkIn || ''))} 라운드 기준). 포함 내역(그린피·캐디·카트)은 예약 화면에서 확인해 주세요. 항공권은 구글 항공편 조회값이라 날짜에 따라 달라져요.</p>`;
+    <p class="sample-note">1인당 가격·등급·평점·사진은 ${esc(kst((data.sources || []).find((x) => x.id === 'mt')?.at || data.updatedAt))}에 몽키트래블에 올라온 값이에요(${esc(md((data.sources || []).find((x) => x.id === 'mt')?.checkIn || ''))} 라운드 기준). 포함 내역(그린피·캐디·카트)은 예약 화면에서 확인해 주세요. 항공권은 ${esc(fareSrc(a?.fareSrc))} 조회값이라 날짜에 따라 달라져요.</p>`;
 }
+
+/** 항공권 값을 어디서 받았는지 */
+const fareSrc = (s) => (s === 'naver' ? '네이버 항공권' : '구글 항공편');
 
 /** 항공권 최저가 비교 바로가기(인천 출발, 고른 날짜) */
 function flyLinks(a, t) {
   const d1 = t.dep.replace(/-/g, ''), d2 = t.ret.replace(/-/g, '');
   const i = a.iata.toLowerCase();
   return [
-    ['구글 항공편', `https://www.google.com/travel/flights?q=${encodeURIComponent(`Flights from ICN to ${a.iata} on ${t.dep} through ${t.ret}`)}&hl=ko&gl=KR&curr=KRW`],
-    ['스카이스캐너', `https://www.skyscanner.co.kr/transport/flights/icn/${i}/${d1.slice(2)}/${d2.slice(2)}/`],
     ['네이버 항공권', `https://flight.naver.com/flights/international/ICN-${a.iata}-${d1}/${a.iata}-ICN-${d2}?adult=1&fareType=Y`],
+    ['스카이스캐너', `https://www.skyscanner.co.kr/transport/flights/icn/${i}/${d1.slice(2)}/${d2.slice(2)}/`],
+    ['구글 항공편', `https://www.google.com/travel/flights?q=${encodeURIComponent(`Flights from ICN to ${a.iata} on ${t.dep} through ${t.ret}`)}&hl=ko&gl=KR&curr=KRW`],
   ];
 }
 
@@ -401,7 +404,7 @@ export function golfTourSheet(data, id) {
     ${fare ? `<h3 class="golf-sub">항공권 (따로 사야 해요)</h3>
     <div class="golf-fare">
       <p><b>왕복 약 ${won(fare.min)}~</b>${fare.direct && fare.direct !== fare.min ? ` · 직항 약 ${won(fare.direct)}~` : ''}</p>
-      <p class="muted">${md(fare.dep)} 출발 · ${md(fare.ret)} 귀국, 1인 기준 구글 항공편 조회</p>
+      <p class="muted">${md(fare.dep)} 출발 · ${md(fare.ret)} 귀국, 1인 기준 ${esc(fareSrc(fare.src))} 조회</p>
       <p>상품가 + 항공권 = <b>약 ${won(t.price + fare.min)}~</b></p>
       <a class="btn-secondary" href="${esc(fare.url)}" target="_blank" rel="noopener noreferrer">항공권 찾아보기</a>
     </div>` : ''}
@@ -410,7 +413,7 @@ export function golfTourSheet(data, id) {
     <div class="sheet-actions golf-actions">
       <a class="btn-primary" href="${esc(t.url)}" target="_blank" rel="noopener noreferrer">상품 보기(${esc(siteOf(t))})</a>
     </div>
-    <p class="sample-note">가격·일정은 ${esc(kst(t.collectedAt || data.updatedAt))}에 ${esc(t.site || '티스캐너')}에 올라온 값이에요. 비행시간·항공권은 구글 항공편 조회값, 공항→골프장은 OpenStreetMap 도로 기준 예상값이라 실제와 다를 수 있어요.</p>`;
+    <p class="sample-note">가격·일정은 ${esc(kst(t.collectedAt || data.updatedAt))}에 ${esc(t.site || '티스캐너')}에 올라온 값이에요. 비행시간은 구글 항공편, 항공권은 ${esc(fareSrc(f?.fare?.src))} 조회값, 공항→골프장은 OpenStreetMap 도로 기준 예상값이라 실제와 다를 수 있어요.</p>`;
 }
 
 /**
