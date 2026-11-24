@@ -1,15 +1,159 @@
 {
  "source": "골프몬 해외투어 목록(https://www.golfmon.net/overseas/tour), 서울 서버(플레이라이트)",
- "collectedAt": "2026-11-24T04:55:11.439Z",
+ "collectedAt": "2026-11-24T05:17:28.093Z",
  "items": [
   {
-   "city": "나트랑",
-   "title": "[나트랑] @시내 3색 항공팩 @5성급 하바나호텔 @전일정 프라이빗 단독차량",
-   "price": 949000,
+   "city": "큐슈",
+   "title": "[큐슈] @요즘 대세 골프 여행지! 큐슈 사가 3색 투어",
+   "price": 790000,
    "from": null,
    "to": null,
    "air": null,
    "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/banner/20260729_b0a9f6f8018d4a72ae0114e0f6152a9c.png"
+  },
+  {
+   "city": "바탐",
+   "title": "[바탐] @무제한 라운드 4색 @겨울 골프의 새로운 성지",
+   "price": 990000,
+   "from": "12.01",
+   "to": "03.31",
+   "air": "제주항공",
+   "img": ""
+  },
+  {
+   "city": "나트랑",
+   "title": "[나트랑] @매일 27홀 보장 + 5성급 비치리조트 + 전일정 식사포함 + 나트랑 야시장관광포함",
+   "price": 949000,
+   "from": "10.26",
+   "to": "03.31",
+   "air": "실시간 최저가",
+   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261124_09d7e2171c43435687ee0425ae1b9481.png"
+  },
+  {
+   "city": "나트랑",
+   "title": "[나트랑] @시내 3색 항공팩 @5성급 하바나호텔 @전일정 프라이빗 단독차량",
+   "price": 949000,
+   "from": "11.22",
+   "to": "03.31",
+   "air": "실시간 최저가",
+   "img": ""
+  },
+  {
+   "city": "방콕",
+   "title": "[방콕] @방콕 골프, 이 가격 실화? 방콕 실속 3색골프 · 초특가 항공팩",
+   "price": 870000,
+   "from": "09.30",
+   "to": "02.28",
+   "air": "실시간 최저가",
+   "img": ""
+  },
+  {
+   "city": "방콕",
+   "title": "[방콕] @매일 27홀 @3색 골프에 3식을 더하다 @골프장 동반안내",
+   "price": 1090000,
+   "from": "11.01",
+   "to": "02.28",
+   "air": "실시간 최저가",
+   "img": ""
+  },
+  {
+   "city": "치앙마이",
+   "title": "[치앙마이] @명품 3색골프 @5성급호텔 한국인직원안내 @전용차량",
+   "price": 1090000,
+   "from": "11.01",
+   "to": "03.31",
+   "air": "실시간 최저가",
+   "img": ""
+  },
+  {
+   "city": "후에",
+   "title": "[후에] @하루 18홀로는 부족하다! 매일 36홀 · 골든샌즈CC · 3박5일",
+   "price": 1190000,
+   "from": "11.01",
+   "to": "03.31",
+   "air": "실시간 최저가",
+   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261124_e04778324d41433ab82604e349c5b58b.png"
+  },
+  {
+   "city": "오키나와",
+   "title": "[오키나와] @2027 설 연휴, 카누차에서 특별한 4일",
+   "price": 2690000,
+   "from": "02.05",
+   "to": "02.10",
+   "air": "이스타항공",
+   "img": ""
+  },
+  {
+   "city": "파타야",
+   "title": "[파타야] @동남아 최고의 골프 휴양지 실속3색 @골프치고 놀고 먹고 @꿀잠보장 그랜드팔라죠 호텔(5성)",
+   "price": 840000,
+   "from": "11.01",
+   "to": "02.28",
+   "air": "실시간 최저가",
+   "img": ""
+  },
+  {
+   "city": "가고시마",
+   "title": "[가고시마] @미야코노조 루트인 천연온천 호텔 @골프 치고 온천까지! 따뜻한 가고시마 3박4일 3색골프",
+   "price": 1350000,
+   "from": "11.16",
+   "to": "03.31",
+   "air": "이스타항공",
+   "img": ""
+  },
+  {
+   "city": "큐슈",
+   "title": "[큐슈] @요즘 대세 골프 여행지! 큐슈 사가 3색 투어",
+   "price": 790000,
+   "from": "11.01",
+   "to": "12.27",
+   "air": "트리니티항공(구 티웨이)",
+   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261124_ade1cee1ef7e48ce97e2cbebd266cc2d.png"
+  },
+  {
+   "city": "나가사키",
+   "title": "[나가사키] @시내2색 골프 석식외 올포함!!",
+   "price": 1090000,
+   "from": "11.10",
+   "to": "03.31",
+   "air": "대한항공",
+   "img": ""
+  },
+  {
+   "city": "미야코지마",
+   "title": "[미야코지마] @브리즈베이마리나 본관 @남쪽나라 에메랄드빛 바다에서 즐기는 3색골프",
+   "price": 1890000,
+   "from": "11.09",
+   "to": "03.24",
+   "air": "진에어",
+   "img": ""
+  },
+  {
+   "city": "가고시마",
+   "title": "[가고시마] @텐몬칸 시내 그란세렛소or오리엔탈 @3색골프!! @3박4일 @국제CC, 체리CC, 난코쿠CC",
+   "price": 1090000,
+   "from": "10.01",
+   "to": "03.31",
+   "air": "이스타항공",
+   "img": ""
+  },
+  {
+   "city": "나트랑",
+   "title": "[나트랑] @골퍼들이 나트랑을 찾는 이유! 나트랑 3색!",
+   "price": 1290000,
+   "from": "11.13",
+   "to": "02.28",
+   "air": "실시간 최저가",
+   "img": ""
+  },
+  {
+   "city": "하노이",
+   "title": "[하노이] @2026-2027 동계 박린 골프 항공팩",
+   "price": 880000,
+   "from": "11.01",
+   "to": "03.24",
+   "air": "제주항공",
+   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261124_30bad81112b245e5af4b7a9002c5b7b4.png"
   },
   {
    "city": "구마모토",
@@ -3142,150 +3286,6 @@
    "to": "03.31",
    "air": "실시간 최저가",
    "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_15ceb8f756f44c48a739b86165c6a33b.png"
-  },
-  {
-   "city": "치앙마이",
-   "title": "[치앙마이] 알파인·하이랜드·그린밸리 3대장 VIP 3색 54홀, 정5성 샹그릴라 호텔 단독 전용차량 노옵션·노쇼핑 3박5일",
-   "price": 2090000,
-   "from": "11.01",
-   "to": "03.31",
-   "air": "대한항공",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_00c277bfb1bd4cfe9a46eb72d74a30d5.png"
-  },
-  {
-   "city": "방콕",
-   "title": "[방콕] 알파인·타이CC·로얄방파인 VIP 명품 3색 54홀, 정5성 S31 스쿰빗 호텔 디너크루즈 포함 대한항공 3박5일",
-   "price": 1790000,
-   "from": "12.01",
-   "to": "03.04",
-   "air": "대한항공",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_7d3941f24f1a42419d078b0b3994e21a.png"
-  },
-  {
-   "city": "파타야",
-   "title": "[파타야] 시암 워터사이드·플렌테이션·롤링힐스·치찬 중 고품격 3색 54홀, 특5성 홀리데이인 시내 중심 대한항공 3박5일",
-   "price": 2190000,
-   "from": "11.01",
-   "to": "03.04",
-   "air": "대한항공",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_e97ef32fa4444425933edbf4544227e3.png"
-  },
-  {
-   "city": "가고시마",
-   "title": "[가고시마] 연말연시·설·삼일절 연휴 항공 확보, 텐몬칸 시내 숙박 난코쿠·치란·가덴 중 명품 2색 이스타항공 3박4일",
-   "price": 1690000,
-   "from": "12.24",
-   "to": "03.03",
-   "air": "이스타항공",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_416886b6c2534737883d1b7b703ef746.png"
-  },
-  {
-   "city": "가고시마 기리시마",
-   "title": "[가고시마 기리시마] 설·삼일절 연휴 좌석 확보, 명문 타카치호CC 매일 라운드 + 올 리뉴얼 더 펄스 기리시마 온천 조석식 3박4일",
-   "price": 1790000,
-   "from": "02.05",
-   "to": "03.03",
-   "air": "이스타항공",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_c0182b36d9394b4d9610bec7ea3c83b9.png"
-  },
-  {
-   "city": "야마구치 우베",
-   "title": "[야마구치 우베] 2026년 마지막 특가 60년 전통 초요CC 72홀, 루트인 우베 1인1실 싱글룸 무료 대욕장 진에어 3박4일",
-   "price": 899000,
-   "from": "11.23",
-   "to": "12.18",
-   "air": "진에어",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_788ab6a0b2e442ea92cec238a6747d31.png"
-  },
-  {
-   "city": "가고시마",
-   "title": "[가고시마] 겨울에도 따뜻한 온천 골프! 골든팜CC 도보 리조트 36~90홀 2박3일~5박6일 매일 출발",
-   "price": 1120000,
-   "from": "10.04",
-   "to": "04.05",
-   "air": "이스타항공",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_0d205c395d3341bfa64862d1c1e719d7.png"
-  },
-  {
-   "city": "하노이",
-   "title": "[하노이] 노가이드로 가성비까지? 박린 3색 노가이드 자유일정 선택 54·72홀 3박5일·4박6일",
-   "price": 890000,
-   "from": "10.01",
-   "to": "04.05",
-   "air": "실시간 최저가",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_1a6389c90ed14903ad72a57d8882b0d8.png"
-  },
-  {
-   "city": "하노이",
-   "title": "[하노이] 시내 가이드 없이 하루는 자유롭게 노가이드 3색 골프 3박5일·4박6일 시내 숙박",
-   "price": 850000,
-   "from": "10.01",
-   "to": "04.05",
-   "air": "실시간 최저가",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_1be4783189d94ac8a98b0e6e92d7e525.png"
-  },
-  {
-   "city": "광저우",
-   "title": "[광저우] 캐디팁만 준비하세요! 명문 3색 골프 54홀 3박4일 올포함 국적기",
-   "price": 1249000,
-   "from": "10.01",
-   "to": "03.03",
-   "air": "대한항공",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_ffaeb354ad564eb1a17f65d9c1b974e4.png"
-  },
-  {
-   "city": "호치민",
-   "title": "[호치민] 겨울골프 항공료 오르기 전에 잡는 6색 골프 54·72홀 3박5일·4박6일 1군 시내 호텔",
-   "price": 1060000,
-   "from": "10.01",
-   "to": "04.05",
-   "air": "실시간 최저가",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_6b9a81fba0374348be0284574c9a8fee.png"
-  },
-  {
-   "city": "나트랑",
-   "title": "[나트랑] 가이드를 뺄 수도 있다고? 매일 라운드·하루 자유 4타입 선택 3색 골프 54·72홀",
-   "price": 910000,
-   "from": "10.01",
-   "to": "04.05",
-   "air": "실시간 최저가",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_b591fb0de13745ffbaf94e0826fed962.png"
-  },
-  {
-   "city": "다낭",
-   "title": "[다낭] 겨울골프 미케비치가 코앞? 동계 시즌 3색 골프 54·72홀 3박5일·4박6일 5성급",
-   "price": 990000,
-   "from": "10.01",
-   "to": "04.05",
-   "air": "실시간 최저가",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_bdbd1aec1b774be3b72f1139dd2f27bb.png"
-  },
-  {
-   "city": "하롱베이",
-   "title": "[하롱베이] 하루 골프 대신 크루즈를? 동계시즌 같은 요금 골프+관광 36·54홀 3박5일·4박6일",
-   "price": 990000,
-   "from": "10.01",
-   "to": "04.05",
-   "air": "실시간 최저가",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_1fc15e57162440c0adf814d0d0d7ce2f.png"
-  },
-  {
-   "city": "하노이",
-   "title": "[하노이] 빈푹 노가이드로 가장 저렴하게 자유일정 4색 골프 54·72홀 3박5일·4박6일",
-   "price": 880000,
-   "from": "10.01",
-   "to": "04.05",
-   "air": "실시간 최저가",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_b6569a5d7fa14b6e94b75dd70d574dfd.png"
-  },
-  {
-   "city": "미야자키",
-   "title": "[미야자키] 이제 매일 출발이라고? 매년 항공권부터 마감되는 겨울골프 성지 아이와 리조트 올포함 2박3일~7박8일 아시아나 직항",
-   "price": 740000,
-   "from": "08.28",
-   "to": "04.07",
-   "air": "아시아나항공",
-   "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_33cebece164d480cadb91235c2f6cfa1.png"
   }
  ]
 }
