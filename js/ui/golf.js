@@ -98,7 +98,12 @@ export function offerUrl(c, src, day) {
   return { ts: 'https://www.teescanner.com/', tu: 'https://app.teeupnjoy.com/' }[src] || 'https://www.golfpang.com/';
 }
 
-const naverUrl = (name) => `https://m.search.naver.com/search.naver?query=${encodeURIComponent(`${name.replace(/\((P|M|퍼|퍼9)\)/gi, '').trim()} 골프장 예약`)}`;
+/** 네이버 검색어: 골프장 이름만(예: "360도CC"). (P)·(M) 같은 표시는 떼고, CC·GC·골프 같은 말이 없으면 CC 를 붙인다 */
+export const naverQuery = (name) => {
+  const n = String(name || '').replace(/\((P|M|퍼|퍼9|대중제|회원제)\)/gi, '').replace(/\s*\([^)]*\)/g, '').replace(/\s(노캐디|셀프|임박|특가|마샬캐디)(?=\s|$).*$/, '').replace(/[-_](퍼9|퍼)$/, '').replace(/\s+/g, ' ').trim();
+  return /(CC|GC|C\.C|G\.C|골프|컨트리|클럽|리조트|레이크|힐스|밸리|파크)/i.test(n) ? n : `${n}CC`;
+};
+const naverUrl = (name) => `https://m.search.naver.com/search.naver?query=${encodeURIComponent(naverQuery(name))}`;
 
 /** 오른쪽 사진: 없거나 못 불러오면 깃발 그림 */
 const thumb = (url) => `<span class="golf-thumb">${url ? `<img src="${esc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 21V3.5l10 4-10 4"/><path d="M4 21h10"/></svg></span>`;
@@ -225,7 +230,10 @@ function abroad(state, data) {
         </div>
       </div>
     </div>
-    <p class="muted golf-trip">항공권은 ${md(t.dep)} 출발 · ${md(t.ret)} 저녁 귀국편(다음날 한국 도착) 기준, 라운딩 ${md(t.round)}~${md(t.ret)} 3일</p>
+    <div class="chips golf-nights" role="group" aria-label="머무는 기간">
+      ${[1, 2, 3].map((n) => `<button type="button" class="chip ${t.golfNights === n ? 'is-on' : ''}" data-action="golf-ab-nights" data-v="${n}" aria-pressed="${t.golfNights === n}">${n}박 · ${(n + 1) * 18}홀</button>`).join('')}
+    </div>
+    <p class="muted golf-trip">라운딩 ${md(t.round)}~${md(t.ret)} ${t.rounds}번(${t.rounds * 18}홀) · 항공권은 ${md(t.dep)} 출발, ${md(t.ret)} 저녁 귀국편(다음날 한국 도착) 기준</p>
     ${kind === 'pack' ? abroadPacks(state, data) : abroadCourses(state, data)}`;
 }
 /** 해외 일정: 가는 날짜(처음엔 마이 탭 가는 날짜)와 몇 박 며칠 → 돌아오는 날·체크아웃 날 */
@@ -237,17 +245,20 @@ export function abroadTrip(state) {
   const min = addDays(todayISO(), 1);
   const pick = g.abDate || state.profile.date;
   const round = pick && pick >= min ? pick : min;
-  const dep = addDays(round, -1), last = addDays(round, 2);
-  return { round, dep, ret: last, out: last, nights: 3, days: 5 };
+  // N박 = 라운딩 N+1번(1박 → 18홀 2번 = 36홀). 전날 출발, 마지막 라운딩 날 저녁 귀국편(다음날 한국 도착)
+  const nights = [1, 2, 3].includes(Number(g.abNights)) ? Number(g.abNights) : 2;
+  const rounds = nights + 1;
+  const dep = addDays(round, -1), last = addDays(round, nights);
+  return { round, dep, ret: last, out: last, nights: nights + 1, days: nights + 3, golfNights: nights, rounds };
 }
 
 /** 골프장 1인 비용 + 항공권(라운딩 일정 실시간 조회값 → 없으면 모아 둔 예상값) */
 export function courseCost(c, trip) {
-  const golf = c.price || 0;
+  const golf = (c.price || 0) * (trip.rounds || 1); // 라운딩 횟수만큼
   const f = fareOf(c.air?.iata, trip);
   const live = f?.state === 'ok' ? f.pick.price : null;
   const fare = live || c.air?.fare || 0;
-  return { golf, fare, live: Boolean(live), loading: f?.state === 'loading', fareInfo: f?.state === 'ok' ? f : null, total: golf + fare };
+  return { golf, rounds: trip.rounds || 1, fare, live: Boolean(live), loading: f?.state === 'loading', fareInfo: f?.state === 'ok' ? f : null, total: golf + fare };
 }
 
 /** 지금 화면에 보이는 해외 골프장 카드의 공항들(항공권 실시간 조회 대상) */
@@ -314,7 +325,7 @@ const placeText = (c) => [c.city, c.town].filter((x, i, a) => x && a.indexOf(x) 
 
 function courseCard(c, cost, rank) {
   const fareTxt = cost.loading ? '항공권 조회 중…' : cost.fare ? `항공권 ${won(cost.fare)}(${cost.live ? '네이버 항공권' : '예상'})` : '항공권 확인 불가';
-  const golfTxt = c.price ? `골프 ${won(c.price)}(몽키트래블)` : c.agency ? '골프 예약 대행(그린피 별도)' : '골프 가격 없음';
+  const golfTxt = c.price ? `골프 ${cost.rounds > 1 ? `${won(c.price)}×${cost.rounds}회` : won(c.price)}(몽키트래블)` : c.agency ? '골프 예약 대행(그린피 별도)' : '골프 가격 없음';
   return `
     <li class="golf-item">
       <button type="button" class="card golf-card" data-action="golf-course" data-id="${esc(c.id)}" aria-label="${rank}위 ${esc(courseTitle(c))} 상세 보기">
@@ -397,7 +408,7 @@ function fareBox(c, a, trip, md) {
   return `<h3 class="golf-sub">항공권 더하면 (${md(trip.dep)} 출발 · ${md(trip.ret)} 귀국)</h3>
     <div class="golf-fare">
       ${body}
-      ${c.price && cost.fare ? `<p>골프 1인당 + 항공권 = <b>${cost.live ? '' : '약 '}${won(c.price + cost.fare)}</b></p>` : ''}
+      ${c.price && cost.fare ? `<p>골프 ${won(c.price)}×${cost.rounds}회(${cost.rounds * 18}홀) + 항공권 = <b>${cost.live ? '' : '약 '}${won(cost.total)}</b></p>` : ''}
     </div>`;
 }
 
