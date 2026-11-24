@@ -194,7 +194,7 @@ app.post('/browse', async (req, res) => {
     if (want.has('xhr')) page.on('response', async (r) => {
       const ct = r.headers()['content-type'] || '';
       if (!/json/.test(ct) || xhr.length >= 40) return;
-      try { xhr.push({ url: r.url().slice(0, 400), status: r.status(), body: (await r.text()).slice(0, Math.min(Number(b.xhrMax) || 4000, 200000)) }); } catch {}
+      try { xhr.push({ url: r.url().slice(0, 400), status: r.status(), body: (await r.text()).slice(0, Math.min(Number(b.xhrMax) || 4000, 3000000)) }); } catch {}
     });
     const resp = await page.goto(u.href, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await sleep(2500);

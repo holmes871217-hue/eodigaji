@@ -1,4 +1,4 @@
-# 골프몬 양도(국내 30일치, 14일에 한 번)와 해외 투어 목록을 서울 서버(servers/golfmon, 플레이라이트)로 받아 저장한다.
+# 골프몬 양도(국내 30일치, 14일에 한 번)·해외 투어 목록, 카카오골프 공개 요약(7일에 한 번)을 서울 서버(servers/golfmon, 플레이라이트)로 받아 저장한다.
 # Firecrawl 은 쓰지 않는다. 매일 돌지만 저장본이 14일 안 됐으면 국내는 건너뛴다. 앱 게시는 04:30 골프 작업이 한다.
 name: 골프몬 수집
 
@@ -31,13 +31,14 @@ jobs:
       - name: 골프몬 받기 (서울 서버)
         env:
           GOLF_ONLY_GM: '1'
+          KR_BROWSER_TOKEN: ${{ secrets.KR_BROWSER_TOKEN }}
           GOLF_GM_FORCE: ${{ github.event.inputs.force }}
         run: node tools/golf/collect.mjs
       - name: 저장
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tools/golf/data/golfmon-dom.json tools/golf/data/golfmon-abroad.json 2>/dev/null || true
+          git add tools/golf/data/golfmon-dom.json tools/golf/data/golfmon-abroad.json tools/golf/data/kakao-golf.json 2>/dev/null || true
           if git diff --cached --quiet; then echo "바뀐 내용 없음"; exit 0; fi
           git commit -m "골프몬 자료 갱신 $(TZ=Asia/Seoul date +%F)"
           git pull --rebase -X theirs origin main

@@ -738,12 +738,57 @@ async function fx() {
 }
 
 // ── 실행 ──────────────────────────────────────────────────
+// ── 카카오골프(로그인 없이 보이는 공개 정보만): 한국 창구(/browse)로 골프장 화면을 열어 그 화면이 부르는 요약을 읽는다 ─────────
+// 티타임·가격 상세는 로그인해야 보여서 모으지 않는다(상세 화면은 카카오골프 링크). 7일에 한 번.
+const KR_TOKEN = process.env.KR_BROWSER_TOKEN || '';
+async function krBrowse(body) {
+  const r = await fetch(`${GOLFMON_SERVER}/browse`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${KR_TOKEN}` }, body: JSON.stringify(body), signal: AbortSignal.timeout(180000) });
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || `창구 ${r.status}`);
+  return j;
+}
+async function collectKakaoGolf() {
+  if (!KR_TOKEN) { log('카카오골프: KR_BROWSER_TOKEN 없음 — 건너뜀'); return; }
+  const cache = readJson('kakao-golf.json', { at: null, courses: {}, summary: {} });
+  if (cache.at && Date.now() - Date.parse(cache.at) < 7 * 864e5 && !process.env.GOLF_KG_FORCE) { log(`카카오골프: 저장본 사용(${cache.at.slice(0, 10)})`); return; }
+  // 1) 골프장 목록(번호·이름·좌표·홀 수)
+  const main = await krBrowse({ url: 'https://www.kakao.golf/', actions: [{ type: 'wait', ms: 4000 }], want: ['xhr'], xhrMax: 3000000 });
+  const listX = (main.xhr || []).find((x) => /\/api\/golf\/info\/list/.test(x.url));
+  const list = listX ? JSON.parse(listX.body).list || [] : [];
+  for (const c of list) {
+    if (c.status !== '0') continue;
+    cache.courses[c.golfInfoSeq] = { n: unescapeHtml(c.golfInfoName), lat: Number(c.latitude) || null, lng: Number(c.longitude) || null, holes: Number(c.holeCount) || null, type: c.membershipType || '' };
+  }
+  log(`카카오골프 골프장 ${Object.keys(cache.courses).length}곳`);
+  // 2) 골프장마다 공개 요약(약 2주 그린피 범위, 날짜별 남은 티타임 수)
+  const seqs = Object.keys(cache.courses).filter((k) => Number(cache.courses[k].holes) >= 18);
+  const start = Date.now();
+  let ok = 0;
+  for (const seq of seqs) {
+    if (Date.now() - start > 80 * 60e3) { log('카카오골프: 시간 상한(80분) — 다음에 이어서'); break; }
+    try {
+      const j = await krBrowse({ url: `https://www.kakao.golf/golf/${seq}`, actions: [{ type: 'wait', ms: 4000 }], want: ['xhr'], xhrMax: 20000 });
+      const x = (j.xhr || []).find((y) => /summarybyseq/.test(y.url));
+      if (!x) continue;
+      const o = JSON.parse(x.body);
+      const iso = (d) => (d && d.length === 8 ? `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}` : null);
+      cache.summary[seq] = { low: o.greenFeeLow || null, high: o.greenFeeHigh || null, from: iso(o.greenFeeFrom), to: iso(o.greenFeeTo), cnt: Object.fromEntries((o.timeZone || []).map((t) => [iso(t.bookDate), t.timeCnt])), at: new Date().toISOString() };
+      ok++;
+    } catch (e) { log('카카오골프 요약 실패', seq, e.message.slice(0, 60)); }
+    await sleep(1500); // 천천히(robots.txt Crawl-delay: 1)
+  }
+  cache.at = new Date().toISOString();
+  writeJson('kakao-golf.json', cache);
+  log(`카카오골프 요약 ${ok}/${seqs.length}곳`);
+}
+
 // 골프몬만 받을 때(golfmon.yml 매일 03:30): 저장본이 14일 넘었으면 30일치 새로 받기. 해외 투어 목록도 받는다.
 if (process.env.GOLF_ONLY_GM) {
   const st = { pages: 0, rows: 0, errors: 0 };
   const rows = await collectGolfmonCached(st);
   log(`골프몬 국내 ${rows.length}건 (새로 받은 화면 ${st.pages}, 오류 ${st.errors}${st.cached ? `, 저장본 ${st.cached.slice(0, 10)}` : ''})`);
   try { log(`골프몬 해외 상품 ${await collectGolfmonAbroad()}개`); } catch (e) { log('골프몬 해외 실패', e.message.slice(0, 80)); }
+  try { await collectKakaoGolf(); } catch (e) { log('카카오골프 실패', e.message.slice(0, 80)); }
   process.exit(0);
 }
 
@@ -817,6 +862,16 @@ for (const co of courses.values()) {
 const allCart = median([...courses.values()].map((c) => c.cartFee || 0));
 const allCaddie = median([...courses.values()].map((c) => c.caddieFee || 0));
 const estFor = (co) => { const e = feeByArea.get(areaOf(co)); return { estCart: (e && e.cart.length >= 3 && median(e.cart)) || allCart, estCaddie: (e && e.caddie.length >= 3 && median(e.caddie)) || allCaddie }; };
+// 카카오골프 공개 요약을 골프장에 붙인다: 번호(티업엔조이 자료) → 없으면 이름 → 1.5km 안
+const KG = readJson('kakao-golf.json', { courses: {}, summary: {} });
+const kgByKey = new Map(Object.entries(KG.courses).map(([seq, c]) => [nameKey(c.n), seq]));
+function kgFor(co) {
+  let seq = co.ids?.kg ? String(co.ids.kg) : kgByKey.get(co.key || nameKey(co.name));
+  if (!seq) { let best = null, bestKm = 1.5; for (const [s2, c] of Object.entries(KG.courses)) { if (!c.lat) continue; const km = haversineKm(co, c); if (km < bestKm) { best = s2; bestKm = km; } } seq = best; }
+  if (!seq) return null;
+  const sm = KG.summary[seq];
+  return sm ? { seq: Number(seq), low: sm.low, high: sm.high, from: sm.from, to: sm.to, cnt: sm.cnt } : { seq: Number(seq) };
+}
 let par3 = 0;
 const list = [];
 for (const co of courses.values()) {
@@ -833,7 +888,8 @@ for (const co of courses.values()) {
   }
   if (!Object.keys(days).length) continue;
   if (co.holes && co.holes < 18) continue; // 9홀 골프장은 18홀 가격과 비교되지 않아 뺀다
-  list.push({ id: co.id, name: co.name, area: co.area || '', addr: co.addr || '', tel: co.tel || '', lat: Math.round(co.lat * 1e5) / 1e5, lng: Math.round(co.lng * 1e5) / 1e5, grade: co.grade || null, holes: co.holes || null, type: co.type || '', kakaoId: co.kakaoId || '', ids: co.ids || {}, photo: co.photo || '', photos: co.photos?.length ? co.photos : co.photo ? [co.photo] : [], drive: co.drive || {}, days });
+  const kgs = kgFor(co);
+  list.push({ kg: kgs, id: co.id, name: co.name, area: co.area || '', addr: co.addr || '', tel: co.tel || '', lat: Math.round(co.lat * 1e5) / 1e5, lng: Math.round(co.lng * 1e5) / 1e5, grade: co.grade || null, holes: co.holes || null, type: co.type || '', kakaoId: co.kakaoId || '', ids: co.ids || {}, photo: co.photo || '', photos: co.photos?.length ? co.photos : co.photo ? [co.photo] : [], drive: co.drive || {}, days });
 }
 log(`파3 골프장 제외 ${par3}곳`);
 list.sort((a, b) => a.name.localeCompare(b.name, 'ko'));

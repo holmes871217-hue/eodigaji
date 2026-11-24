@@ -120,9 +120,13 @@ function photoSlides(c) {
 
 /** 카카오골프: 가격은 로그인해야 보여서 모으지 않고, 그 골프장·그 날짜 화면으로 바로 연결한다 */
 function kakaoLink(c, day) {
-  const kg = c.ids?.kg;
+  const kg = c.kg?.seq || c.ids?.kg;
   if (!kg) return '';
-  return `<li><a href="https://www.kakao.golf/golf/${encodeURIComponent(kg)}?date=${day.replace(/-/g, '')}" target="_blank" rel="noopener noreferrer"><b>카카오골프</b><span>가격은 카카오골프에서 확인(로그인 필요)</span><i aria-hidden="true">›</i></a></li>`;
+  const k = c.kg || {};
+  const n = k.cnt?.[day];
+  const range = k.low ? `${Math.round(k.low / 1000) / 10}만~${Math.round(k.high / 1000) / 10}만원(약 2주 그린피)` : '';
+  const info = [range, n != null ? `이 날 ${n}타임` : ''].filter(Boolean).join(' · ');
+  return `<li><a href="https://www.kakao.golf/golf/${encodeURIComponent(kg)}?date=${day.replace(/-/g, '')}" target="_blank" rel="noopener noreferrer"><b>카카오골프</b><span>${esc(info || '가격은 카카오골프에서 확인')}<small>정확한 시간별 가격은 카카오골프 로그인 후 확인</small></span><i aria-hidden="true">›</i></a></li>`;
 }
 
 /** 국내 골프장 상세 창 */
