@@ -355,7 +355,7 @@ async function collectGolfmon(dates, stat) {
           const k = `${nameKey(r.name)}|${day}`;
           const a = agg.get(k) || { name: r.name, key: nameKey(r.name), region, day, price: Infinity, count: 0 };
           a.count++;
-          if (r.price < a.price) { a.price = r.price; a.time = r.time || null; }
+          if (r.price < a.price) { a.price = r.price; a.time = r.time || null; a.noCaddie = r.noCaddie || undefined; }
           else if (r.price === a.price && r.time && (!a.time || r.time < a.time)) a.time = r.time;
           agg.set(k, a);
         }

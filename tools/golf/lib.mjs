@@ -240,19 +240,23 @@ export function parseGolfmonDomestic(md) {
   const lines = String(md || '').split('\n').map((s) => s.replace(/\\/g, '').trim()).filter(Boolean);
   const out = [];
   for (let i = 0; i < lines.length; i++) {
-    const d = /^(\d{1,2})\/(\d{1,2})\([^)]\)\s*(\d{1,2}):?(\d{2})?/.exec(lines[i]);
+    // 날짜와 시각이 한 줄("11/28(토)13:00", Firecrawl)이거나 두 줄("11/28(토)" / "13:00", 플레이라이트 화면 글)
+    const d = /^(\d{1,2})\/(\d{1,2})\([^)]\)\s*(?:(\d{1,2}):?(\d{2})?)?$/.exec(lines[i]);
     if (!d) continue;
+    let hh = d[3], mm = d[4], next = i + 1;
+    if (!hh) { const t = /^(\d{1,2}):(\d{2})$/.exec(lines[i + 1] || ''); if (!t) continue; hh = t[1]; mm = t[2]; next = i + 2; }
     let j = i - 1;
     if (j >= 0 && /^\d+(\.\d+)?\s*Km$/i.test(lines[j])) j--;
     const name = j >= 0 ? lines[j] : '';
-    let holes = '', price = 0;
-    for (let k = i + 1; k < Math.min(lines.length, i + 6); k++) {
+    let holes = '', price = 0, noCaddie = false;
+    for (let k = next; k < Math.min(lines.length, next + 8); k++) {
       if (!holes && /^\d+\s*홀/.test(lines[k])) holes = lines[k];
+      if (/^노캐디$/.test(lines[k])) noCaddie = true;
       const p = /^([\d,]+)\s*원$/.exec(lines[k]);
       if (p) { price = Number(p[1].replace(/,/g, '')); break; }
     }
     if (!name || !price || /원$|Km$|^\d+\s*홀/.test(name)) continue;
-    out.push({ name, md: `${d[1]}/${d[2]}`, time: `${d[3]}:${d[4] || '00'}`, holes, price });
+    out.push({ name, md: `${d[1]}/${d[2]}`, time: `${String(hh).padStart(2, '0')}:${mm || '00'}`, holes, price, noCaddie });
   }
   return out;
 }
