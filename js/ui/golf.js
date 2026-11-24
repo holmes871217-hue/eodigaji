@@ -1,6 +1,6 @@
 // 골프 화면: 국내(차로 갈 수 있는 골프장, 1인 총비용 낮은 순) / 해외(나라·도시별 골프 상품, 가격 낮은 순)
 import { esc } from './util.js';
-import { courseTree, courseList, CONTINENTS, CONTINENT_OF, golfDomestic, golfDrive, golfDays, golfCountries, golfAbroad, won, localPrice, COUNTRY_CUR } from '../core/golf.js';
+import { courseTree, courseList, fareOf, CONTINENTS, CONTINENT_OF, golfDomestic, golfDrive, golfDays, golfCountries, golfAbroad, won, localPrice, COUNTRY_CUR } from '../core/golf.js';
 import { formatMin } from '../core/geo.js';
 import { todayISO } from '../core/dates.js';
 import { CITIES } from '../core/geo.js';
@@ -202,35 +202,65 @@ export function golfSheet(state, data, id) {
     <p class="sample-note">가격은 ${esc(kst(data.updatedAt))}에 플랫폼(티스캐너·티업엔조이·골팡·골프몬)에 올라온 값을 모은 것이라 예약할 때 달라질 수 있어요. 1인 비용은 그린피에 카트비·캐디피(팀 요금 ÷ 4)를 더한 값이고, 모르는 항목은 같은 지역 골프장 중간값으로 채워 "예상"으로 표시해요.</p>`;
 }
 
+const ICON_FLAG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21V4l11 4.5L6 13"/></svg>';
+const ICON_BAG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V4h6v3"/></svg>';
+
 function abroad(state, data) {
   const g = state.ui.golf;
   const kind = g.kind === 'pack' ? 'pack' : 'course';
-  const seg = `
-    <div class="chips golf-kind" role="group" aria-label="해외 종류">
-      <button type="button" class="chip ${kind === 'course' ? 'is-on' : ''}" data-action="golf-kind" data-v="course" aria-pressed="${kind === 'course'}">골프장</button>
-      <button type="button" class="chip ${kind === 'pack' ? 'is-on' : ''}" data-action="golf-kind" data-v="pack" aria-pressed="${kind === 'pack'}">패키지 상품</button>
-    </div>`;
   const t = abroadTrip(state);
-  const when = `
-    <label class="field mt">
-      <span class="field-label">가는 날짜</span>
-      <input type="date" class="input" id="golf-ab-date" value="${esc(t.dep)}" min="${todayISO()}" data-field="golf-ab-date">
-    </label>`;
-  return when + seg + (kind === 'pack' ? abroadPacks(state, data) : abroadCourses(state, data));
+  const md = (iso) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
+  // 국내와 같은 모양: 왼쪽 라운딩 일정(달력) · 오른쪽 골프장/패키지 고르기
+  return `
+    <div class="golf-when">
+      <label class="field">
+        <span class="field-label">라운딩 일정</span>
+        <input type="date" class="input" id="golf-ab-date" value="${esc(t.round)}" min="${esc(addDays(todayISO(), 1))}" data-field="golf-ab-date">
+      </label>
+      <div class="field">
+        <span class="field-label">상품</span>
+        <div class="golf-kind-seg" role="group" aria-label="해외 종류">
+          <button type="button" class="${kind === 'course' ? 'is-on' : ''}" data-action="golf-kind" data-v="course" aria-pressed="${kind === 'course'}">${ICON_FLAG}<span>골프장</span></button>
+          <button type="button" class="${kind === 'pack' ? 'is-on' : ''}" data-action="golf-kind" data-v="pack" aria-pressed="${kind === 'pack'}">${ICON_BAG}<span>패키지</span></button>
+        </div>
+      </div>
+    </div>
+    <p class="muted golf-trip">항공권은 ${md(t.dep)} 출발 · ${md(t.ret)} 저녁 귀국편(다음날 한국 도착) 기준, 라운딩 ${md(t.round)}~${md(t.ret)} 3일</p>
+    ${kind === 'pack' ? abroadPacks(state, data) : abroadCourses(state, data)}`;
 }
-
 /** 해외 일정: 가는 날짜(처음엔 마이 탭 가는 날짜)와 몇 박 며칠 → 돌아오는 날·체크아웃 날 */
 const AB_STAYS = [[2, 3], [3, 4], [3, 5], [4, 6]];
 const addDays = (iso, n) => { const d = new Date(`${iso}T00:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
 export function abroadTrip(state) {
+  // 라운딩 첫날 = 고른 날짜. 항공권은 전날 출발, 3일 라운딩 뒤 마지막 날 저녁 귀국편(다음날 한국 도착). 숙소는 전날 체크인 3박.
   const g = state.ui.golf;
-  const dep = g.abDate && g.abDate >= todayISO() ? g.abDate : state.profile.date;
-  const [nights, days] = AB_STAYS.find(([n, d]) => `${n}-${d}` === g.abStay) || [3, 5];
-  return { dep, nights, days, ret: addDays(dep, days - 1), out: addDays(dep, nights) };
+  const min = addDays(todayISO(), 1);
+  const pick = g.abDate || state.profile.date;
+  const round = pick && pick >= min ? pick : min;
+  const dep = addDays(round, -1), last = addDays(round, 2);
+  return { round, dep, ret: last, out: last, nights: 3, days: 5 };
 }
 
-/** 해외 골프장(몽키트래블처럼): 대륙 → 나라 → 도시, 사진 카드, 1인당 가격 */
-function abroadCourses(state, data) {
+/** 골프장 1인 비용 + 항공권(라운딩 일정 실시간 조회값 → 없으면 모아 둔 예상값) */
+export function courseCost(c, trip) {
+  const golf = c.price || 0;
+  const f = fareOf(c.air?.iata, trip);
+  const live = f?.state === 'ok' ? f.pick.price : null;
+  const fare = live || c.air?.fare || 0;
+  return { golf, fare, live: Boolean(live), loading: f?.state === 'loading', fareInfo: f?.state === 'ok' ? f : null, total: golf + fare };
+}
+
+/** 지금 화면에 보이는 해외 골프장 카드의 공항들(항공권 실시간 조회 대상) */
+export function abroadFareNeeds(state, data) {
+  const g = state.ui.golf;
+  if (state.ui.tab !== 'golf' || g.mode !== 'abroad' || !data?.courses) return null;
+  const trip = abroadTrip(state);
+  if (g.kind === 'pack') return { trip, iatas: packRows(state, data, trip).rows.slice(0, g.max || 20).filter((t) => t.flightIncl === 'no').map((t) => t.flight?.iata || t.iata).filter(Boolean) };
+  const { rows } = abroadRows(state, data, trip);
+  return { trip, iatas: rows.slice(0, g.max || 20).map((r) => r.c.air?.iata).filter(Boolean) };
+}
+
+function abroadRows(state, data, trip) {
   const g = state.ui.golf;
   const tree = courseTree(data.courses);
   const conts = CONTINENTS.filter((c) => tree.has(c));
@@ -239,7 +269,15 @@ function abroadCourses(state, data) {
   const country = countries.includes(g.country) ? g.country : '';
   const cities = country ? [...tree.get(cont).get(country)].sort((a, b) => b[1] - a[1]) : [];
   const city = cities.some(([n]) => n === g.city) ? g.city : '';
-  const rows = courseList(data.courses, { cont, country, city });
+  const holes = ['18', '9', 'all'].includes(g.abHoles) ? g.abHoles : '18';
+  const rows = courseList(data.courses, { cont, country, city, holes, costOf: (c) => courseCost(c, trip) });
+  return { rows, conts, cont, countries, country, cities, city, holes };
+}
+/** 해외 골프장(몽키트래블처럼): 대륙 → 나라 → 도시, 사진 카드, 1인당 가격 */
+function abroadCourses(state, data) {
+  const g = state.ui.golf;
+  const trip = abroadTrip(state);
+  const { rows, conts, cont, countries, country, cities, city, holes } = abroadRows(state, data, trip);
   const shown = rows.slice(0, g.max || 20);
   const chip = (act, v, label, on) => `<button type="button" class="chip ${on ? 'is-on' : ''}" data-action="${act}" data-v="${esc(v)}" aria-pressed="${on}">${esc(label)}</button>`;
   return `
@@ -247,12 +285,21 @@ function abroadCourses(state, data) {
     <div class="chips chips-wrap" role="group" aria-label="대륙">${chip('golf-cont', '', '전체', !cont)}${conts.map((c) => chip('golf-cont', c, c, c === cont)).join('')}</div>
     ${countries.length ? `<div class="chips chips-wrap" role="group" aria-label="나라">${chip('golf-country', '', `${cont} 전체`, !country)}${countries.map((c) => chip('golf-country', c, c, c === country)).join('')}</div>` : ''}
     ${cities.length > 1 ? `<div class="chips golf-cities" role="group" aria-label="도시">${chip('golf-city', '', `${country} 전체`, !city)}${cities.map(([n, k]) => chip('golf-city', n, `${n} ${k}`, n === city)).join('')}</div>` : ''}
-    <h2 class="h2 mt">골프장 · 총 <span data-golf-total>${rows.length}</span>곳</h2>
-    ${rows.length ? `<ol class="list golf-list">${shown.map((c) => courseCard(c)).join('')}</ol>
+    <div class="golf-head">
+      <h2 class="h2">골프장 · 총 <span data-golf-total>${rows.length}</span>곳</h2>
+      <label class="golf-filter"><span class="sr-only">홀 수</span>
+        <select class="input sm" data-field="golf-ab-holes">
+          <option value="18" ${holes === '18' ? 'selected' : ''}>18홀 이상</option>
+          <option value="9" ${holes === '9' ? 'selected' : ''}>9홀</option>
+          <option value="all" ${holes === 'all' ? 'selected' : ''}>전체</option>
+        </select>
+      </label>
+    </div>
+    <p class="muted">추천순: 1인 골프 비용 + 왕복 항공권 합계가 낮은 순</p>
+    ${rows.length ? `<ol class="list golf-list">${shown.map((r, i) => courseCard(r.c, r.cost, i + 1)).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}곳 (남은 ${rows.length - shown.length}곳)</button>` : ''}`
-      : '<div class="empty"><b>이 지역 골프장이 아직 없어요.</b></div>'}`;
+      : '<div class="empty"><b>이 조건의 골프장이 없어요.</b><span>홀 수 필터를 "전체"로 바꿔 보세요.</span></div>'}`;
 }
-
 const gradeText = (n) => (n ? `${Number.isInteger(n) ? n : n.toFixed(1)}성급` : '');
 /** [나라-도시] 이름: 일본은 지역이 넓어 시·현(town) 이름을 쓴다 */
 const cityOfCourse = (c) => (c.country === '일본' && c.town ? c.town.replace(/\(.*\)/, '') : c.city);
@@ -265,24 +312,24 @@ export const courseTitle = (c) => {
 };
 const placeText = (c) => [c.city, c.town].filter((x, i, a) => x && a.indexOf(x) === i).join(' · ');
 
-function courseCard(c) {
-  const withAir = c.price && c.air?.fare ? c.price + c.air.fare : 0;
+function courseCard(c, cost, rank) {
+  const fareTxt = cost.loading ? '항공권 조회 중…' : cost.fare ? `항공권 ${won(cost.fare)}(${cost.live ? '네이버 항공권' : '예상'})` : '항공권 확인 불가';
+  const golfTxt = c.price ? `골프 ${won(c.price)}(몽키트래블)` : c.agency ? '골프 예약 대행(그린피 별도)' : '골프 가격 없음';
   return `
-    <li>
-      <button type="button" class="card golf-card mt-card" data-action="golf-course" data-id="${esc(c.id)}" aria-label="${esc(c.name)} 상세 보기">
-        ${thumb(c.photo).replace('golf-thumb', 'golf-thumb mt-thumb')}
+    <li class="golf-item">
+      <button type="button" class="card golf-card" data-action="golf-course" data-id="${esc(c.id)}" aria-label="${rank}위 ${esc(courseTitle(c))} 상세 보기">
+        <span class="pcard-rank golf-no ${rank === 1 ? 'is-top' : ''}" aria-hidden="true">${rank}</span>
         <span class="card-body">
-          <span class="card-title">${esc(courseTitle(c))}</span>
-          <span class="card-meta">${[gradeText(c.grade), c.holes ? `${c.holes}홀` : ''].filter(Boolean).map(esc).join(' · ')}</span>
-          <span class="card-meta">${esc(placeText(c))}</span>
-          ${c.rating ? `<span class="mt-rate"><b>★ ${c.rating}</b> <small>(${Number(c.reviews || 0).toLocaleString('ko-KR')})</small></span>` : ''}
-          <span class="mt-price">${c.price ? `<small>1인당</small><b>${won(c.price)}</b>` : `<small>${c.agency ? '예약 대행(그린피 별도 안내)' : '가격 정보 없음'}</small>`}</span>
-          ${withAir ? `<span class="mt-air">항공 포함 약 ${won(withAir)}</span>` : c.air?.fare ? `<span class="mt-air">왕복 항공권 약 ${won(c.air.fare)}~</span>` : ''}
+          <span class="card-title" data-fit="shrink">${esc(courseTitle(c))}</span>
+          <span class="card-meta">${[gradeText(c.grade), c.holes ? `${c.holes}홀` : '', c.rating ? `★ ${c.rating} (${Number(c.reviews || 0).toLocaleString('ko-KR')})` : ''].filter(Boolean).map(esc).join(' · ')}</span>
+          <span class="card-meta">${esc(c.air ? `${c.air.name}(${c.air.iata}) 공항${c.air.km ? `에서 약 ${c.air.km}km` : ''}` : placeText(c))}</span>
+          <span class="golf-price" data-fit><b>${cost.total ? won(cost.total) : '-'}</b> <small>1인 골프+항공</small></span>
         </span>
+        ${thumb(c.photo)}
+        <span class="golf-break" data-fit>${esc(`${golfTxt}+${fareTxt}`)}</span>
       </button>
     </li>`;
 }
-
 /** 해외 골프장 상세 창 */
 export function golfCourseSheet(state, data, id) {
   const c = (data?.courses || []).find((x) => x.id === id);
@@ -302,7 +349,7 @@ export function golfCourseSheet(state, data, id) {
         <p class="card-meta">${[gradeText(c.grade), c.holes ? `${c.holes}홀` : '', placeText(c)].filter(Boolean).map(esc).join(' · ')}</p>
       </div>
     </div>
-    ${c.photo ? `<div class="sheet-photo golf-photo"><img src="${esc(c.photo)}" alt="${esc(c.name)} 사진" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>` : ''}
+    ${photoSlides(c)}
     <div class="stats">
       <div class="stat"><b>${c.price ? won(c.price) : '-'}</b><span>1인당</span></div>
       <div class="stat"><b>${c.holes ? `${c.holes}홀` : '-'}</b><span>${c.par ? `파${c.par}` : '홀 수'}</span></div>
@@ -315,10 +362,9 @@ export function golfCourseSheet(state, data, id) {
       ${a ? row('공항', `${esc(a.name)}(${esc(a.iata)})${a.km ? `에서 직선 약 ${a.km}km` : ''}`) : ''}
       ${row('비행', flight)}
     </ul>
-    ${a?.fare ? `<h3 class="golf-sub">항공권 더하면</h3>
-    <div class="golf-fare">
-      <p>추천 왕복 항공권 <b>약 ${won(a.fare)}</b> <small>(${esc(a.name)} ${esc(a.iata)})</small></p>
-      ${c.price ? `<p>골프 1인당 + 항공권 = <b>약 ${won(c.price + a.fare)}</b></p>` : ''}
+    ${a ? fareBox(c, a, trip, md) : ''}
+    ${a?.fare ? `<div class="golf-fare">
+      <p class="golf-fare-cmp-t">모아 둔 예상값(날짜 고정 조회)</p>
       <ul class="golf-fare-list">
         ${(a.fareSamples || []).map(([d1, d2, v]) => `<li><span>${md(d1)} 출발 · ${md(d2)} 귀국 조회</span><b>${won(v)}</b></li>`).join('')}
       </ul>
@@ -328,9 +374,31 @@ export function golfCourseSheet(state, data, id) {
     ${a ? `<div class="golf-fly">${flyLinks(a, trip).map(([n, u]) => `<a class="golf-src" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>`).join('')}</div>` : ''}
     ${c.stays?.length ? `<button type="button" class="shop-btn golf-stay-btn" data-action="golf-stays" data-id="${esc(c.id)}"><span class="shop-btn-icon" aria-hidden="true">🏨</span><span><b>근처 숙소</b><small>평점 높은 순 ${c.stays.length}곳</small></span></button>` : ''}
     <div class="sheet-actions golf-actions">
-      <a class="btn-primary" href="${esc(`${c.url}&checkInDate=${trip.dep}`)}" target="_blank" rel="noopener noreferrer">예약하러 가기(몽키트래블)</a>
+      <a class="btn-primary" href="${esc(`${c.url}&checkInDate=${trip.round}`)}" target="_blank" rel="noopener noreferrer">예약하러 가기(몽키트래블)</a>
     </div>
     <p class="sample-note">1인당 가격·등급·평점·사진은 ${esc(kst((data.sources || []).find((x) => x.id === 'mt')?.at || data.updatedAt))}에 몽키트래블에 올라온 값이에요(${esc(md((data.sources || []).find((x) => x.id === 'mt')?.checkIn || ''))} 라운드 기준). 포함 내역(그린피·캐디·카트)은 예약 화면에서 확인해 주세요. 항공권은 ${esc(fareSrc(a?.fareSrc))} 조회값이라 날짜에 따라 달라져요.</p>`;
+}
+
+/** 상세: 고른 라운딩 일정의 항공권(전날 출발 · 마지막 날 저녁 귀국편) */
+function fareBox(c, a, trip, md) {
+  const f = fareOf(a.iata, trip);
+  const cost = courseCost(c, trip);
+  const p = f?.state === 'ok' ? f.pick : null;
+  const body = p
+    ? `<p>추천 왕복 항공권 <b>${won(p.price)}</b> <small>(${esc(a.name)} ${esc(a.iata)}, 네이버 항공권)</small></p>
+      <ul class="golf-fare-list">
+        <li><span>가는 편 ${md(trip.dep)} ${esc(p.outDep)} → ${esc(p.outArr)} · ${esc(p.out)}</span><b></b></li>
+        <li><span>오는 편 ${md(trip.ret)} ${esc(p.backDep)} → ${esc(p.backArr)} · ${esc(p.back)}</span><b></b></li>
+      </ul>
+      ${f.fitsAfter ? '' : '<p class="muted">마지막 날 저녁 귀국편이 없어 가장 싼 편으로 계산했어요.</p>'}
+      ${f.min && f.min < p.price ? `<p class="muted">같은 날짜 전체 최저가는 ${won(f.min)}(귀국편이 라운딩 전에 출발)</p>` : ''}`
+    : f?.state === 'loading' ? '<p>항공권 조회 중… (10초쯤 걸려요)</p>'
+    : `<p>이 날짜 항공권을 아직 못 찾았어요.${a.fare ? ` 모아 둔 예상값 <b>약 ${won(a.fare)}</b>로 계산했어요.` : ''}</p>`;
+  return `<h3 class="golf-sub">항공권 더하면 (${md(trip.dep)} 출발 · ${md(trip.ret)} 귀국)</h3>
+    <div class="golf-fare">
+      ${body}
+      ${c.price && cost.fare ? `<p>골프 1인당 + 항공권 = <b>${cost.live ? '' : '약 '}${won(c.price + cost.fare)}</b></p>` : ''}
+    </div>`;
 }
 
 /** 항공권 값을 어디서 받았는지 */
@@ -384,32 +452,62 @@ export function departsOn(t, dep) {
 }
 
 /** 해외 패키지 상품(골프몬·티스캐너) */
-function abroadPacks(state, data) {
+/** 같은 사이트·같은 제목 상품(출발일만 다른 것)은 가장 싼 하나만 남기고 몇 개였는지 센다 */
+function dedupePacks(rows) {
+  const m = new Map();
+  for (const t of rows) {
+    const k = `${t.site || ''}|${String(t.title || '').replace(/\s+/g, ' ').trim()}`;
+    const e = m.get(k);
+    if (!e) m.set(k, { t, n: 1 });
+    else { e.n++; if (t.price && (!e.t.price || t.price < e.t.price)) e.t = t; }
+  }
+  return [...m.values()].map(({ t, n }) => ({ ...t, same: n }));
+}
 
+/** 패키지 1인 합계: 항공 불포함이면 라운딩 일정 항공권(실시간 → 없으면 예상)을 더한다 */
+function packCost(t, trip) {
+  if (t.flightIncl !== 'no') return { fare: 0, total: t.price, live: false, loading: false };
+  const f = fareOf(t.flight?.iata || t.iata, trip);
+  const live = f?.state === 'ok' ? f.pick.price : null;
+  const fare = live || t.flight?.fare?.min || 0;
+  return { fare, live: Boolean(live), loading: f?.state === 'loading', total: t.price + fare };
+}
+function packRows(state, data, trip) {
+  const g = state.ui.golf;
+  const countries = golfCountries(data);
+  const country = countries.some((c) => c.name === g.country) ? g.country : '';
+  const cities = countries.find((c) => c.name === country)?.cities || [];
+  const city = cities.some((c) => c.name === g.city) ? g.city : '';
+  const rows = dedupePacks(golfAbroad(data, { country, city }).filter((x) => departsOn(x, trip.dep)))
+    .map((t) => ({ ...t, cost: packCost(t, trip) }))
+    .sort((a, b) => a.cost.total - b.cost.total);
+  return { rows, countries, country, cities, city };
+}
+
+function abroadPacks(state, data) {
   const g = state.ui.golf;
   const countries = golfCountries(data);
   const country = countries.some((c) => c.name === g.country) ? g.country : '';
   const cities = countries.find((c) => c.name === country)?.cities || [];
   const city = cities.some((c) => c.name === g.city) ? g.city : '';
   const trip = abroadTrip(state);
-  const rows = golfAbroad(data, { country, city }).filter((x) => departsOn(x, trip.dep));
+  const { rows } = packRows(state, data, trip);
   const shown = rows.slice(0, g.max || 20);
   return `
     <h2 class="h2 mt">나라</h2>
-    <div class="chips" role="group" aria-label="나라">
+    <div class="chips chips-wrap" role="group" aria-label="나라">
       <button type="button" class="chip ${!country ? 'is-on' : ''}" data-action="golf-country" data-v="">전체</button>
       ${countries.map((c) => `<button type="button" class="chip ${c.name === country ? 'is-on' : ''}" data-action="golf-country" data-v="${esc(c.name)}">${esc(c.name)} ${c.n}</button>`).join('')}
     </div>
-    ${cities.length > 1 ? `<div class="chips" role="group" aria-label="도시">
+    ${cities.length > 1 ? `<div class="chips golf-cities" role="group" aria-label="도시">
       <button type="button" class="chip ${!city ? 'is-on' : ''}" data-action="golf-city" data-v="">${esc(country)} 전체</button>
       ${cities.map((c) => `<button type="button" class="chip ${c.name === city ? 'is-on' : ''}" data-action="golf-city" data-v="${esc(c.name)}">${esc(c.name)} ${c.n}</button>`).join('')}
     </div>` : ''}
-    <h2 class="h2 mt">골프 상품 · 총 <span data-golf-total>${rows.length}</span>개</h2>
+    <h2 class="h2 mt">패키지 상품 · 총 <span data-golf-total>${rows.length}</span>개</h2>
     ${rows.length ? `<ol class="list golf-list">${shown.map((t, i) => abroadCard(t, data, i + 1)).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}개 (남은 ${rows.length - shown.length}개)</button>` : ''}`
       : '<div class="empty"><b>이 지역 상품이 아직 없어요.</b></div>'}`;
 }
-
 function flightText(f) {
   if (!f) return '항공 정보 확인 불가';
   const when = '';
@@ -420,19 +518,19 @@ function flightText(f) {
 
 function abroadCard(t, data, rank) {
   return `
-    <li>
-      <button type="button" class="card golf-card" data-action="golf-tour" data-id="${esc(t.id)}" aria-label="${esc(tourName(t))} 상세 보기">
+    <li class="golf-item">
+      <button type="button" class="card golf-card" data-action="golf-tour" data-id="${esc(t.id)}" aria-label="${rank}위 ${esc(tourName(t))} 상세 보기">
+        <span class="pcard-rank golf-no ${rank === 1 ? 'is-top' : ''}" aria-hidden="true">${rank}</span>
         <span class="card-body">
-          <span class="golf-top"><span class="golf-rank">${rank}위</span>${stay(t) ? `<span class="golf-stay">${esc(stay(t))}</span>` : ''}</span>
-          <span class="card-title">${esc(tourName(t))}</span>
-          <span class="card-meta">${esc(siteOf(t))}</span>
-          <span class="golf-price"><b>${won(t.price)}~</b> <small>${esc(inclText(t))}</small></span>
+          <span class="card-title" data-fit="shrink">${esc(tourName(t))}</span>
+          <span class="card-meta">${[stay(t), siteOf(t)].filter(Boolean).map(esc).join(' · ')}</span>
+          <span class="golf-price" data-fit><b>${won(t.cost.total)}~</b> <small>1인${t.flightIncl === 'no' ? ' 상품+항공' : ''}</small></span>
         </span>
         ${thumb(t.photo)}
+        <span class="golf-break" data-fit>${esc(t.flightIncl === 'no' ? `상품 ${won(t.price)}+${t.cost.loading ? '항공권 조회 중…' : t.cost.fare ? `항공권 ${won(t.cost.fare)}(${t.cost.live ? '네이버 항공권' : '예상'})` : '항공권 확인 불가'}` : inclText(t))}${t.same > 1 ? ` · 같은 상품 출발일 ${t.same}개 중 최저` : ''}</span>
       </button>
     </li>`;
 }
-
 const inclText = (t) => (t.flightIncl === 'no' ? (t.flight?.fare ? `항공 불포함 · 왕복 약 ${won(t.flight.fare.min)}~` : '항공 불포함') : t.flightIncl === 'yes' ? '항공 포함' : '항공 포함 여부 확인 필요');
 
 /** 해외 상품 상세 창 */

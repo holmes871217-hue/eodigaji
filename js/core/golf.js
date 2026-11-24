@@ -103,8 +103,44 @@ export function courseTree(list) {
 }
 
 /** 대륙·나라·도시로 거르고 1인당 낮은 순(가격 없는 곳은 맨 뒤) */
-export function courseList(list, { cont, country, city }) {
+/** 홀 수 필터: '18' = 18홀 이상(기본), '9' = 18홀 미만, 'all' = 전체 */
+export const holesOk = (c, f) => (f === 'all' ? true : f === '9' ? c.holes > 0 && c.holes < 18 : c.holes >= 18);
+
+/**
+ * 해외 골프장 목록: 추천순 = 1인 골프 비용 + 왕복 항공권(라운딩 일정 기준 실시간 조회값, 아직 없으면 모아 둔 예상값).
+ * costOf(c) → { total } 를 넘겨받는다. 가격 없는 곳은 뒤로.
+ */
+export function courseList(list, { cont, country, city, holes = '18', costOf = (c) => ({ total: c.price || 0 }) }) {
   return (list || [])
-    .filter((c) => (!cont || (CONTINENT_OF[c.country] || '기타') === cont) && (!country || c.country === country) && (!city || c.city === city))
-    .sort((a, b) => (a.price ? 0 : 1) - (b.price ? 0 : 1) || a.price - b.price || (b.rating || 0) - (a.rating || 0));
+    .filter((c) => (!cont || (CONTINENT_OF[c.country] || '기타') === cont) && (!country || c.country === country) && (!city || c.city === city) && holesOk(c, holes))
+    .map((c) => ({ c, cost: costOf(c) }))
+    .sort((a, b) => (a.c.price ? 0 : 1) - (b.c.price ? 0 : 1) || a.cost.total - b.cost.total || (b.c.rating || 0) - (a.c.rating || 0));
+}
+
+// ── 라운딩 일정 기준 항공권: 서울 서버(/fare)가 네이버 항공권으로 조회. 같은 질문은 이 화면에서 한 번만 ─────────
+export const FARE_API = 'https://golfmon-collector-351935360699.asia-northeast3.run.app/fare';
+const fares = new Map();
+const fareQueue = [];
+let fareRunning = 0;
+const fareKey = (iata, t) => `${iata}|${t.dep}|${t.ret}`;
+export const fareOf = (iata, t) => (iata ? fares.get(fareKey(iata, t)) : null);
+export function requestFares(iatas, t, onChange) {
+  for (const i of new Set(iatas.filter(Boolean))) {
+    const k = fareKey(i, t);
+    if (fares.has(k)) continue;
+    fares.set(k, { state: 'loading' });
+    fareQueue.push([i, k]);
+  }
+  const pump = () => {
+    while (fareRunning < 3 && fareQueue.length) {
+      const [i, k] = fareQueue.shift();
+      fareRunning++;
+      fetch(`${FARE_API}?to=${encodeURIComponent(i)}&dep=${t.dep}&ret=${t.ret}&after=17`)
+        .then((r) => r.json())
+        .then((j) => fares.set(k, j.pick ? { state: 'ok', ...j } : { state: 'fail' }))
+        .catch(() => fares.set(k, { state: 'fail' }))
+        .finally(() => { fareRunning--; onChange(); pump(); });
+    }
+  };
+  pump();
 }

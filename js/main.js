@@ -19,8 +19,8 @@ import { attachSortable } from './ui/sortable.js';
 import { renderHome } from './ui/home.js';
 import { renderEvents } from './ui/events.js';
 import { renderDeals } from './ui/deals.js';
-import { renderGolf } from './ui/golf.js';
-import { loadGolf } from './core/golf.js';
+import { renderGolf, abroadFareNeeds } from './ui/golf.js';
+import { loadGolf, requestFares } from './core/golf.js';
 import { renderMy } from './ui/mypage.js';
 import { renderSheet } from './ui/sheet.js';
 import { mountRoute } from './ui/map.js';
@@ -117,6 +117,9 @@ function render() {
   document.body.classList.toggle('has-sheet', Boolean(sheetHtml));
   watchCardPhotos();
   fitLines(root);
+  // 해외 골프장: 보이는 카드의 공항 항공권을 라운딩 일정으로 조회(끝나면 다시 그린다)
+  const fn = abroadFareNeeds(state, golfData);
+  if (fn?.iatas.length) requestFares(fn.iatas, fn.trip, () => update(() => {}, { persist: false }));
   const slides = document.querySelector('[data-slides]');
   if (slides) syncSlides(slides);
 
@@ -354,12 +357,22 @@ function watchCardPhotos() {
  */
 function fitLines(scope) {
   for (const el of scope.querySelectorAll('[data-fit]')) {
-    el.classList.add('fit-one'); el.style.letterSpacing = '';
+    el.classList.add('fit-one'); el.classList.remove('fit-ellipsis'); el.style.letterSpacing = ''; el.style.fontSize = '';
     if (el.scrollWidth <= el.clientWidth) continue;
     let ok = false;
     for (const ls of [-0.02, -0.04, -0.06]) {
       el.style.letterSpacing = `${ls}em`;
       if (el.scrollWidth <= el.clientWidth) { ok = true; break; }
+    }
+    // 제목처럼 꼭 한 줄이어야 하는 곳(data-fit="shrink")은 글자 크기를 줄이고, 그래도 넘치면 끝을 … 로
+    if (!ok && el.dataset.fit === 'shrink') {
+      el.style.fontSize = '';
+      const base = parseFloat(getComputedStyle(el).fontSize);
+      for (const k of [0.92, 0.85, 0.78, 0.72]) {
+        el.style.fontSize = `${base * k}px`;
+        if (el.scrollWidth <= el.clientWidth) { ok = true; break; }
+      }
+      if (!ok) { el.classList.add('fit-ellipsis'); ok = true; }
     }
     if (!ok) { el.style.letterSpacing = ''; el.classList.remove('fit-one'); }
   }
@@ -759,8 +772,10 @@ root.addEventListener('change', (ev) => {
     state.ui.course.result = null;
     update(() => {}, { persist: false });
   } else if (field === 'golf-ab-date') {
-    // 해외 가는 날짜
-    if (isValidISO(el.value) && el.value >= todayISO()) update(() => { state.ui.golf.abDate = el.value; state.ui.golf.max = 20; }, { persist: false });
+    // 해외 라운딩 일정(첫 라운딩 날)
+    if (isValidISO(el.value) && el.value > todayISO()) update(() => { state.ui.golf.abDate = el.value; state.ui.golf.max = 20; }, { persist: false });
+  } else if (field === 'golf-ab-holes') {
+    update(() => { state.ui.golf.abHoles = el.value; state.ui.golf.max = 20; }, { persist: false });
   } else if (field === 'golf-date') {
     // 골픽 치는 날짜(달력에서 고름)
     if (isValidISO(el.value) && el.value >= todayISO()) update(() => { state.ui.golf.day = el.value; state.ui.golf.max = 20; }, { persist: false });
