@@ -234,13 +234,34 @@ async function firecrawl(body) {
   return j.data?.markdown || '';
 }
 
+// 골프몬 서울 서버(servers/golfmon, 구글 클라우드 런 서울): 지역 3곳씩 나눠 물어 본다. 실패한 지역은 비워 두면 Firecrawl 로 받는다.
+const GOLFMON_SERVER = process.env.GOLFMON_SERVER || '';
+async function golfmonServer(day) {
+  const got = new Map();
+  if (!GOLFMON_SERVER) return got;
+  const ids = GOLFMON_REGIONS.map(([rid]) => rid);
+  for (let i = 0; i < ids.length; i += 3) {
+    try {
+      const r = await fetch(`${GOLFMON_SERVER}/golfmon?day=${day}&regions=${ids.slice(i, i + 3).join(',')}`, { signal: AbortSignal.timeout(280000) });
+      const j = await r.json();
+      for (const x of j.results || []) if (x.ok && x.text) got.set(x.rid, x.text);
+    } catch (e) { log('골프몬 서버 실패', day, e.message.slice(0, 80)); }
+  }
+  log(`골프몬 서버 ${day}: ${got.size}/${ids.length}개 지역`);
+  return got;
+}
+
 async function collectGolfmon(dates, stat) {
   const agg = new Map();
   const year = dates[0].slice(0, 4);
   for (const day of dates.slice(0, GOLFMON_DAYS)) {
+    const viaServer = await golfmonServer(day);
     for (const [rid, region] of GOLFMON_REGIONS) {
       try {
-        const md = await firecrawl({ url: 'https://www.golfmon.net/booking/list?tab=%EC%96%91%EB%8F%84', actions: [{ type: 'wait', milliseconds: 3000 }, { type: 'click', selector: golfmonCell(rid, day) }, { type: 'wait', milliseconds: 4000 }, { type: 'scroll', direction: 'down' }, { type: 'wait', milliseconds: 1500 }] });
+        // 1순위: 운영자 서울 서버(플레이라이트). 못 받으면 Firecrawl(한국 위치)
+        let md = viaServer.get(rid);
+        if (md == null) md = await firecrawl({ url: 'https://www.golfmon.net/booking/list?tab=%EC%96%91%EB%8F%84', actions: [{ type: 'wait', milliseconds: 3000 }, { type: 'click', selector: golfmonCell(rid, day) }, { type: 'wait', milliseconds: 4000 }, { type: 'scroll', direction: 'down' }, { type: 'wait', milliseconds: 1500 }] });
+        else stat.server = (stat.server || 0) + 1;
         const rows = parseGolfmonDomestic(md);
         stat.pages++;
         for (const r of rows) {
@@ -616,13 +637,13 @@ try {
 } catch (e) { meta.sources.push({ id: 'gp', name: '골팡', ok: false, error: e.message }); log('골팡 실패', e.message); }
 
 const gmStat = { pages: 0, rows: 0, errors: 0, merged: 0, unplaced: new Set() };
-if (FIRECRAWL) {
+if (FIRECRAWL || GOLFMON_SERVER) {
   try {
     const gmRows = await collectGolfmon(dates, gmStat);
     await mergeGolfpang(gmRows, courses, gmStat, 'gm');
-    meta.sources.push({ id: 'gm', name: '골프몬', ok: gmStat.pages > 0, pages: gmStat.pages, rows: gmStat.rows, merged: gmStat.merged, unplaced: gmStat.unplaced.size, errors: gmStat.errors, days: GOLFMON_DAYS, at: new Date().toISOString() });
+    meta.sources.push({ id: 'gm', name: '골프몬', ok: gmStat.pages > 0, pages: gmStat.pages, rows: gmStat.rows, merged: gmStat.merged, unplaced: gmStat.unplaced.size, errors: gmStat.errors, server: gmStat.server || 0, days: GOLFMON_DAYS, at: new Date().toISOString() });
   } catch (e) { meta.sources.push({ id: 'gm', name: '골프몬', ok: false, error: e.message }); log('골프몬 실패', e.message); }
-  try { log(`골프몬 해외 상품 ${await collectGolfmonAbroad()}개`); } catch (e) { log('골프몬 해외 실패', e.message.slice(0, 80)); }
+  if (FIRECRAWL) try { log(`골프몬 해외 상품 ${await collectGolfmonAbroad()}개`); } catch (e) { log('골프몬 해외 실패', e.message.slice(0, 80)); }
 } else log('FIRECRAWL_API_KEY 없음 — 골프몬은 저장본만 사용');
 
 const tuStat = { pages: 0, clubPages: 0, errors: 0, merged: 0, newCourses: 0, only9: 0 };
