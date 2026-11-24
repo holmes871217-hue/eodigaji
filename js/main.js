@@ -533,7 +533,8 @@ root.addEventListener('click', (ev) => {
       break;
     }
     case 'golf-ab-nights':
-      update(() => { state.ui.golf.abNights = Number(v) || 2; state.ui.golf.max = 20; }, { persist: false });
+      // 이미 고른 박 수를 다시 누르면 해제 → 라운딩 1회
+      update(() => { const n = Number(v) || 2; state.ui.golf.abNights = state.ui.golf.abNights === n || (state.ui.golf.abNights == null && n === 2) ? 0 : n; state.ui.golf.max = 20; }, { persist: false });
       break;
     case 'golf-kind':
       update(() => { state.ui.golf.kind = v === 'pack' ? 'pack' : 'course'; state.ui.golf.cont = ''; state.ui.golf.country = ''; state.ui.golf.city = ''; state.ui.golf.max = 20; }, { persist: false });

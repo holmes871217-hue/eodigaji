@@ -236,7 +236,7 @@ function abroad(state, data) {
       ${[1, 2, 3].map((n) => `<button type="button" class="chip ${t.golfNights === n ? 'is-on' : ''}" data-action="golf-ab-nights" data-v="${n}" aria-pressed="${t.golfNights === n}">${n}박</button>`).join('')}
       <button type="button" class="chip golf-picks-btn ${(g.picks || []).length ? 'has' : ''}" data-action="golf-picks" aria-label="찜한 골프장 ${(g.picks || []).length}곳, 합계 보기">${HEART_SM}찜 ${(g.picks || []).length}</button>
     </div>
-    <p class="muted golf-trip">라운딩 ${md(t.round)}~${md(t.ret)} ${t.rounds}번(${t.rounds * 18}홀) · 항공권은 ${md(t.dep)} 출발, ${md(t.ret)} 저녁 귀국편(다음날 한국 도착) 기준</p>
+    <p class="muted golf-trip">라운딩 ${t.rounds > 1 ? `${md(t.round)}~${md(t.ret)} ${t.rounds}번(${t.rounds * 18}홀)` : `${md(t.round)} 1번(18홀)`} · 항공권은 ${md(t.dep)} 출발, ${md(t.ret)} 저녁 귀국편(다음날 한국 도착) 기준</p>
     ${kind === 'pack' ? abroadPacks(state, data) : abroadCourses(state, data)}`;
 }
 /** 해외 일정: 가는 날짜(처음엔 마이 탭 가는 날짜)와 몇 박 며칠 → 돌아오는 날·체크아웃 날 */
@@ -249,7 +249,8 @@ export function abroadTrip(state) {
   const pick = g.abDate || state.profile.date;
   const round = pick && pick >= min ? pick : min;
   // N박 = 라운딩 N+1번(1박 → 18홀 2번 = 36홀). 전날 출발, 마지막 라운딩 날 저녁 귀국편(다음날 한국 도착)
-  const nights = [1, 2, 3].includes(Number(g.abNights)) ? Number(g.abNights) : 2;
+  // 박 수 버튼을 다시 눌러 끄면 0박 = 라운딩 1회(18홀)
+  const nights = [0, 1, 2, 3].includes(Number(g.abNights)) && g.abNights !== undefined && g.abNights !== null ? Number(g.abNights) : 2;
   const rounds = nights + 1;
   const dep = addDays(round, -1), last = addDays(round, nights);
   return { round, dep, ret: last, out: last, nights: nights + 1, days: nights + 3, golfNights: nights, rounds };
@@ -416,7 +417,7 @@ export function golfPicksSheet(state, data) {
     <div class="sheet-head">
       <div>
         <h2 class="sheet-title" id="sheet-title">찜한 골프장 합계</h2>
-        <p class="card-meta">${trip.golfNights}박 · 라운딩 ${md(trip.round)}~${md(trip.ret)} ${R}번 · ${md(trip.dep)} 출발</p>
+        <p class="card-meta">${trip.golfNights ? `${trip.golfNights}박 · 라운딩 ${md(trip.round)}~${md(trip.ret)} ${R}번` : `라운딩 ${md(trip.round)} 1번`} · ${md(trip.dep)} 출발</p>
       </div>
     </div>`;
   if (!rows.length) return `${head}<div class="empty"><b>찜한 골프장이 없어요.</b><span>골프장 카드 오른쪽 위 하트를 누르면 여기에 모여요. 여러 곳을 골라 한 번에 다녀올 때의 합계를 볼 수 있어요.</span></div>`;
@@ -446,7 +447,7 @@ export function golfPicksSheet(state, data) {
         </span>
       </li>`).join('')}
     </ul>
-    ${used !== R ? `<p class="golf-pick-warn">라운딩 횟수 합(${used}번)이 일정(${trip.golfNights}박 = ${R}번)과 달라요. 횟수를 맞추거나 위에서 박 수를 바꿔 보세요.</p>` : ''}
+    ${used !== R ? `<p class="golf-pick-warn">라운딩 횟수 합(${used}번)이 일정(${trip.golfNights ? `${trip.golfNights}박 = ` : ''}${R}번)과 달라요. 횟수를 맞추거나 위에서 박 수를 바꿔 보세요.</p>` : ''}
     <div class="golf-fare">
       <p>골프 합계 <b>${won(golf)}</b> <small>(${used}번 라운딩)</small></p>
       <p>왕복 항공권 <b>${live ? '' : '약 '}${won(fare)}</b> <small>(${esc(airC?.air?.name || '')} ${esc(iata || '')}, ${live ? `네이버 항공권 ${md(trip.dep)}~${md(trip.ret)}` : f?.state === 'loading' ? '조회 중…' : '예상'})</small></p>
