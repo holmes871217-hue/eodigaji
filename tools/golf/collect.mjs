@@ -191,26 +191,36 @@ async function collectGolfpang(dates, stat) {
 // 골팡 골프장 위치: 이름이 티스캐너와 같으면 그 골프장으로 합치고, 아니면 카카오 장소검색(골프장 분류만)으로 찾는다.
 async function kakaoFindGolf(name) {
   const q = `${unescapeHtml(name).replace(/\((p|퍼|퍼9)\)|퍼9$|퍼$/gi, '').trim()} 골프`;
-  const r = await fetch(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(q)}&size=5`, { headers: { Authorization: `KakaoAK ${KAKAO}` } });
+  const r = await fetch(`https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(q)}&size=5`, { headers: { Authorization: `KakaoAK ${KAKAO}` }, signal: AbortSignal.timeout(8000) });
   if (!r.ok) throw new Error(`kakao ${r.status}`);
   const j = await r.json();
   return (j.documents || []).filter((d) => /골프장/.test(d.category_name || '') && !/연습장|스크린/.test(d.category_name || ''));
 }
 
+const geoTried = new Set();
+const geoState = { fails: 0, calls: 0 };
 async function mergeGolfpang(gpRows, courses, stat, src = 'gp') {
   const byKey = new Map();
   for (const co of courses.values()) if (!byKey.has(co.key)) byKey.set(co.key, co);
   const geo = readJson('gp-geo.json', {});
   for (const g of gpRows) {
     let co = byKey.get(g.key);
-    if (!co && KAKAO) {
-      if (!(g.key in geo)) {
-        try {
-          const docs = await kakaoFindGolf(g.name);
-          geo[g.key] = docs.length ? { name: docs[0].place_name, lat: Number(docs[0].y), lng: Number(docs[0].x), addr: docs[0].road_address_name || docs[0].address_name, kid: docs[0].id, n: docs.length } : null;
-          await sleep(150);
-        } catch (e) { log('카카오 장소검색 실패', e.message); }
+    // 처음 보는 이름만 카카오 장소검색. 같은 이름은 한 번만 묻고, 연속 5번 실패하거나 한 번에 300건을 넘으면 이번에는 그만 묻는다(다음 날 이어서)
+    if (!co && KAKAO && !(g.key in geo) && !geoTried.has(g.key) && geoState.fails < 5 && geoState.calls < 300) {
+      geoTried.add(g.key);
+      geoState.calls++;
+      try {
+        const docs = await kakaoFindGolf(g.name);
+        geo[g.key] = docs.length ? { name: docs[0].place_name, lat: Number(docs[0].y), lng: Number(docs[0].x), addr: docs[0].road_address_name || docs[0].address_name, kid: docs[0].id, n: docs.length } : null;
+        geoState.fails = 0;
+        await sleep(150);
+      } catch (e) {
+        geoState.fails++;
+        log('카카오 장소검색 실패', e.message);
+        if (geoState.fails === 5) log('카카오 장소검색: 연속 5번 실패 — 이번 실행에서는 더 묻지 않음');
       }
+    }
+    if (!co && KAKAO) {
       const p = geo[g.key];
       if (p) {
         // 티스캐너 골프장과 1.5km 안이면 같은 골프장(플랫폼 중복 제거)
