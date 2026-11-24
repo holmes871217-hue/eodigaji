@@ -221,5 +221,55 @@ app.post('/browse', async (req, res) => {
   }
 });
 
+// ── 골픽 해외 항공권: 앱이 고른 라운딩 일정으로 인천 왕복 최저가를 묻는다(네이버 항공권 MCP 서버, 서울) ─────────
+// GET /fare?to=BKK&dep=YYYY-MM-DD&ret=YYYY-MM-DD&after=17
+//  → 10개 후보 중 "돌아오는 편이 after 시 이후에 출발"하는 가장 싼 편(마지막 날 라운딩 뒤 출발). 없으면 가장 싼 편.
+// 앱(github.io)에서만 부를 수 있게 CORS 를 좁히고, 같은 질문은 6시간 저장해 둔다.
+const NAVER_MCP = process.env.NAVER_MCP || 'https://naver-flight-mcp-oqvj6zwx3q-du.a.run.app/mcp';
+const FARE_ORIGINS = new Set(['https://holmes871217-hue.github.io', 'http://localhost:8765']);
+const fareCache = new Map();
+let fareRunning = 0;
+function fareCors(req, res) {
+  const o = req.get('origin');
+  if (o && FARE_ORIGINS.has(o)) { res.set('Access-Control-Allow-Origin', o); res.set('Vary', 'Origin'); }
+}
+function parseFlights(text) {
+  return String(text).split('---').map((b) => {
+    const g = (k) => new RegExp(`${k}:\\s*([^\\n]+)`).exec(b)?.[1]?.trim() || '';
+    const price = Number(g('총요금').replace(/[^\d]/g, '')) || 0;
+    const legs = [...b.matchAll(/소요시간:\s*(\d+)분/g)].map((m) => Number(m[1]));
+    return { price, out: g('가는편'), back: g('오는편'), outDep: g('가는편 출발'), outArr: g('가는편 도착'), backDep: g('오는편 출발'), backArr: g('오는편 도착'), outMin: legs[0] || null, backMin: legs[1] || null };
+  }).filter((f) => f.price > 0);
+}
+app.get('/fare', async (req, res) => {
+  fareCors(req, res);
+  const to = String(req.query.to || '').toUpperCase(), dep = String(req.query.dep || ''), ret = String(req.query.ret || '');
+  const after = Math.max(0, Math.min(23, Number(req.query.after ?? 17)));
+  if (!/^[A-Z]{3}$/.test(to) || !/^\d{4}-\d{2}-\d{2}$/.test(dep) || !/^\d{4}-\d{2}-\d{2}$/.test(ret)) return res.status(400).json({ error: 'to, dep, ret 필요' });
+  const key = `${to}|${dep}|${ret}|${after}`;
+  const hit = fareCache.get(key);
+  if (hit && Date.now() - hit.at < 6 * 3600e3) return res.json({ ...hit.data, cached: true });
+  if (fareRunning >= 3) return res.status(429).json({ error: '조회가 많아요. 잠시 후 다시' });
+  fareRunning++;
+  try {
+    const body = { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'search_naver_flights', arguments: { departure: 'ICN', arrival: to, departureDate: dep, returnDate: ret } } };
+    const r = await fetch(NAVER_MCP, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json, text/event-stream' }, body: JSON.stringify(body), signal: AbortSignal.timeout(90000) });
+    const raw = await r.text();
+    const line = raw.split('\n').find((l) => l.startsWith('data:'));
+    const j = JSON.parse(line ? line.slice(5) : raw);
+    const text = j.result?.content?.map((c) => c.text).join('\n') || '';
+    const list = parseFlights(text);
+    const hour = (t) => Number(String(t).slice(0, 2));
+    const fit = list.filter((f) => f.backDep && hour(f.backDep) >= after).sort((a, b) => a.price - b.price);
+    const any = [...list].sort((a, b) => a.price - b.price);
+    const pick = fit[0] || any[0] || null;
+    const data = { to, dep, ret, after, src: 'naver', at: new Date().toISOString(), min: any[0]?.price || null, pick, fitsAfter: Boolean(fit[0]), n: list.length };
+    if (pick) fareCache.set(key, { at: Date.now(), data });
+    res.json(data);
+  } catch (e) {
+    res.status(502).json({ error: String(e.message || e).slice(0, 200) });
+  } finally { fareRunning--; }
+});
+
 const port = Number(process.env.PORT || 8080);
 app.listen(port, () => console.log(`golfmon-collector :${port}`));
