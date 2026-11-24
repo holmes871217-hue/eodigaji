@@ -573,13 +573,17 @@ async function mtList(branch, m2, checkInDate) {
 }
 
 async function mtHoles(url) {
+  // 상세 화면 한 번: 제목에서 홀 수·파, 본문에서 골프장 사진(상품 폴더 바로 아래 사진, 최대 6장)
   const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-  const reader = r.body.getReader(); const dec = new TextDecoder(); let buf = '';
-  while (buf.length < 60000) { const { done, value } = await reader.read(); if (done) break; buf += dec.decode(value, { stream: true }); if (/<\/title>/i.test(buf)) break; }
-  try { reader.cancel(); } catch {}
+  const buf = await r.text();
   const title = /<title>([^<]+)<\/title>/i.exec(buf)?.[1] || '';
   const h = /(\d{1,3})\s*홀/.exec(title); const par = /파\s*(\d{2,3})/.exec(title);
-  return { holes: h ? Number(h[1]) : null, par: par ? Number(par[1]) : null };
+  const pid = /product_id=(\d+)/.exec(url)?.[1] || '';
+  // 사진 위치가 상품마다 달라서 두 곳을 다 본다: /상품번호/사진, /상품번호/1/날짜/사진 (앞의 것 먼저)
+  const found = pid ? [...buf.matchAll(new RegExp(`product\\.monkeytravel\\.com/${pid}/((?:\\d+/\\d{8}/)?[0-9a-f]{32}\\.(?:jpg|jpeg|png))`, 'gi'))].map((m) => m[1]) : [];
+  const uniq = [...new Set(found)];
+  const photos = [...uniq.filter((f) => !f.includes('/')), ...uniq.filter((f) => f.includes('/'))].slice(0, 6).map((f) => `https://product.monkeytravel.com/${pid}/${f}_2.jpg`);
+  return { holes: h ? Number(h[1]) : null, par: par ? Number(par[1]) : null, photos, pv: 2 };
 }
 
 async function collectMonkey(stat) {
@@ -606,9 +610,9 @@ async function collectMonkey(stat) {
     log(`몽키트래블 ${cc} ${m2 || '전체'}: ${list.length}곳`);
   }
   // 홀 수: 처음 보는 골프장만 상세 화면 제목을 읽어 보관(한 번 받으면 다시 안 받음)
-  const need = out.filter((g) => !(g.pid in cache));
+  const need = out.filter((g) => !(g.pid in cache) || cache[g.pid].pv !== 2); // 사진 읽는 방식이 바뀐 저장본도 한 번 다시 읽는다
   let i = 0;
-  const worker = async () => { while (i < need.length) { const g = need[i++]; try { cache[g.pid] = await mtHoles(g.url); } catch { cache[g.pid] = { holes: null }; } await sleep(400); } };
+  const worker = async () => { while (i < need.length) { const g = need[i++]; try { cache[g.pid] = await mtHoles(g.url); } catch { cache[g.pid] = { holes: null, ...(cache[g.pid] || {}), photos: cache[g.pid]?.photos || [] }; } await sleep(400); } };
   await Promise.all([worker(), worker(), worker()]);
   writeJson('mt-holes.json', cache);
   const flights = readJson('flights.json', { airports: {} }).airports;
@@ -616,6 +620,7 @@ async function collectMonkey(stat) {
   const usedHotels = new Set();
   for (const g of out) {
     g.holes = cache[g.pid]?.holes || null; g.par = cache[g.pid]?.par || null;
+    g.photos = cache[g.pid]?.photos?.length ? cache[g.pid].photos : g.photo ? [g.photo] : [];
     // 가까운 공항과 인천 왕복 항공권(구글 항공편 조회값). 못 찾으면 비워 두고 화면에 "확인 불가"로 표시한다.
     // 좌표가 없는 골프장은 도시로 공항을 정한다(괌·사이판·클락 등)
     const CITY_AIR = { 괌: 'GUM', 사이판: 'SPN', '수빅ㆍ클락': 'CRK', 방콕: 'BKK', '마닐라 근교': 'MNL', '츄부 지역(나고야 근교)': 'NGO', '큐슈 지역': 'FUK', '간토 지역(도쿄 근교)': 'NRT', '간사이 지역(오사카 근교/교토/고베/나라)': 'KIX', '홋카이도(북해도/삿포로)': 'CTS' };
