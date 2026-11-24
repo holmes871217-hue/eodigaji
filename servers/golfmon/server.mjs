@@ -18,8 +18,9 @@ async function readRegion(ctx, rid, day) {
   const page = await ctx.newPage();
   try {
     await page.goto(LIST, { waitUntil: 'domcontentloaded', timeout: 45000 });
-    await page.waitForSelector(cell(rid, day), { timeout: 20000 });
-    await page.click(cell(rid, day));
+    // 칸이 화면에 안 보여도(접힌 달력 등) 있으면 직접 누른다
+    await page.waitForSelector(cell(rid, day), { state: 'attached', timeout: 25000 });
+    await page.$eval(cell(rid, day), (el) => { el.scrollIntoView({ block: 'center' }); el.click(); });
     await sleep(4000);
     // 아래로 내려 더 불러오기: 길이가 더 안 늘면 멈춘다
     let last = 0;
@@ -31,7 +32,12 @@ async function readRegion(ctx, rid, day) {
     }
     return { rid, ok: true, text: await page.innerText('body') };
   } catch (e) {
-    return { rid, ok: false, error: String(e.message || e).slice(0, 200) };
+    // 원인 확인용: 화면 제목·주소·글자 앞부분·날짜 칸 예시
+    const info = await page.evaluate(() => ({
+      title: document.title, url: location.href, text: document.body?.innerText?.slice(0, 600) || '',
+      cells: [...document.querySelectorAll('[data-gtm-meta]')].slice(0, 5).map((x) => `${x.className} ${x.getAttribute('data-gtm-meta')}`.slice(0, 200)),
+    })).catch(() => null);
+    return { rid, ok: false, error: String(e.message || e).slice(0, 200), info };
   } finally {
     await page.close().catch(() => {});
   }
