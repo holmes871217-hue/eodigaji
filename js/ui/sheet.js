@@ -11,7 +11,7 @@ import { memberLabel } from '../core/segments.js';
 import { SHOP_KINDS } from '../core/nearby.js';
 import { esc, icon, rangeText, heartBtn, naverQuery, googleMapUrl, kakaoPinUrl, kakaoId } from './util.js';
 import { favSet, favKey } from '../core/favs.js';
-import { golfSheet, golfTourSheet, golfCourseSheet, golfStaysSheet, golfLocSheet } from './golf.js';
+import { golfSheet, golfTourSheet, golfCourseSheet, golfStaysSheet, golfLocSheet, golfPicksSheet } from './golf.js';
 
 const DOW = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -299,6 +299,8 @@ export function renderSheet(state, c) {
     inner = golfCourseSheet(state, c.golf, s.id);
   } else if (s.type === 'golf-stays') {
     inner = golfStaysSheet(state, c.golf, s.id);
+  } else if (s.type === 'golf-picks') {
+    inner = golfPicksSheet(state, c.golf);
   } else if (s.type === 'golf-loc') {
     inner = golfLocSheet(state);
   } else if (s.type === 'golf-tour') {
