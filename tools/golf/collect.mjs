@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   unescapeHtml, nameKey, isHiddenName, parseGolfpangRows, golfpangTotal, perPersonCost,
-  haversineKm, nextSaturday0600, is18Tee, pickAirport, AIRPORTS, pickStays, compareAirports, isPar3, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
+  haversineKm, nextSaturday0600, is18Tee, pickAirport, AIRPORTS, pickStays, compareAirports, isPar3, isShortCourseName, tsDeal, tuDeal, earliestAtMin, cartIncludedText, median, parseGolfmonOverseas, parseGolfmonDomestic, golfmonCell, GOLFMON_REGIONS, cityOf, flightIncluded, coordsFromGoogleUrl,
 } from './lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -106,8 +106,11 @@ async function collectTeescanner(dates, courses, stat) {
         const d = await tsGet(`/booking/getTeeTimeListbyGolfclub?golfclub_seq=${co.tsSeq}&roundDay=${day}&orderType=`);
         const tees = (d.teeTimeList || []).filter(is18Tee);
         if (tees.length) {
-          const best = tees.reduce((a, b) => (b.min_cost < a.min_cost ? b : a));
-          (co.offers[day] ||= []).push({ src: 'ts', price: best.min_cost, count: tees.length, noCaddie: /노캐디|셀프/.test(best.caddie_name || ''), cartIncluded: cartIncludedText(`${best.course_name || ''} ${best.benefit_comment || ''} ${best.condition_text || ''} ${best.product_tag_nm || ''}`) });
+          const { min, time } = earliestAtMin(tees, (t) => t.min_cost, (t) => t.teetime_time);
+          const atMin = tees.filter((t) => t.min_cost === min);
+          const best = atMin.find((t) => t.teetime_time === time) || atMin[0];
+          const deal = atMin.map(tsDeal).find(Boolean) || '';
+          (co.offers[day] ||= []).push({ src: 'ts', price: best.min_cost, count: tees.length, time, deal, noCaddie: /노캐디|셀프/.test(best.caddie_name || ''), cartIncluded: cartIncludedText(`${best.course_name || ''} ${best.benefit_comment || ''} ${best.condition_text || ''} ${best.product_tag_nm || ''}`) });
           stat.offers++;
         } else stat.only9++;
       } catch { stat.errors = (stat.errors || 0) + 1; }
@@ -167,10 +170,12 @@ async function collectGolfpang(dates, stat) {
           stat.rows++;
           if (isHiddenName(row.name)) { stat.hidden++; continue; }
           if (row.holes && !/18/.test(row.holes)) { stat.not18++; continue; } // 9홀 등은 값이 비교되지 않아 뺀다
+          if (isShortCourseName(row.name)) { stat.not18++; continue; } // "-퍼9" 처럼 9홀을 두 번 도는 곳
           const k = `${nameKey(row.name)}|${day}`;
           const a = agg.get(k) || { name: row.name, key: nameKey(row.name), region, day, price: Infinity, count: 0 };
           a.count++;
-          if (row.price < a.price) { a.price = row.price; a.noCaddie = /노캐디/.test(row.caddie || ''); a.cartIncluded = /카트/.test(row.incl || ''); }
+          if (row.price < a.price) { a.price = row.price; a.time = row.time || null; a.noCaddie = /노캐디/.test(row.caddie || ''); a.cartIncluded = /카트/.test(row.incl || ''); }
+          else if (row.price === a.price && row.time && (!a.time || row.time < a.time)) a.time = row.time;
           agg.set(k, a);
         }
         if (rows.length < 100 || page * 100 >= total) break;
@@ -221,7 +226,7 @@ async function mergeGolfpang(gpRows, courses, stat, src = 'gp') {
       }
     }
     if (!co) { stat.unplaced.add(g.name); continue; }
-    (co.offers[g.day] ||= []).push({ src, price: g.price, count: g.count, name: g.name, noCaddie: g.noCaddie, cartIncluded: g.cartIncluded });
+    (co.offers[g.day] ||= []).push({ src, price: g.price, count: g.count, name: g.name, time: g.time || null, noCaddie: g.noCaddie, cartIncluded: g.cartIncluded });
     stat.merged++;
   }
   writeJson('gp-geo.json', geo);
@@ -346,10 +351,12 @@ async function collectGolfmon(dates, stat) {
           stat.rows++;
           if (isHiddenName(r.name)) continue;
           if (r.holes && !/18/.test(r.holes)) continue;
+          if (isShortCourseName(r.name)) continue;
           const k = `${nameKey(r.name)}|${day}`;
           const a = agg.get(k) || { name: r.name, key: nameKey(r.name), region, day, price: Infinity, count: 0 };
           a.count++;
-          if (r.price < a.price) a.price = r.price;
+          if (r.price < a.price) { a.price = r.price; a.time = r.time || null; }
+          else if (r.price === a.price && r.time && (!a.time || r.time < a.time)) a.time = r.time;
           agg.set(k, a);
         }
         log(`골프몬 ${day} ${region}: ${rows.length}건`);
@@ -436,7 +443,7 @@ async function collectTeeupnjoy(dates, courses, stat) {
   const byKey = new Map();
   for (const co of courses.values()) if (!byKey.has(co.key)) byKey.set(co.key, co);
   for (const r of rows) {
-    if (cache[r.id]?.has9only) { stat.only9++; continue; }
+    if (cache[r.id]?.has9only || isShortCourseName(r.name)) { stat.only9++; continue; }
     let co = byKey.get(nameKey(r.name));
     if (!co) {
       let best = null, bestKm = 1.5;
@@ -457,6 +464,35 @@ async function collectTeeupnjoy(dates, courses, stat) {
     if (prev) { if (r.price < prev.price) prev.price = r.price; prev.count += r.count; }
     else { co.offers[r.day].push({ src: 'tu', price: r.price, count: r.count }); stat.merged++; }
   }
+  // 티업엔조이가 가장 싼 날은 골프장 티타임 목록(공개 API)을 열어 "최저가 중 가장 빠른 시각"과 특가 표시를 채운다
+  const jobs = [];
+  for (const co of courses.values()) {
+    if (!co.ids?.tu) continue;
+    for (const [day, offers] of Object.entries(co.offers)) {
+      const tu = offers.find((o) => o.src === 'tu');
+      if (tu && offers.every((o) => o === tu || tu.price <= o.price)) jobs.push({ id: co.ids.tu, day, tu });
+    }
+  }
+  let i = 0;
+  const worker = async () => {
+    while (i < jobs.length) {
+      const { id, day, tu } = jobs[i++];
+      try {
+        const r = await fetch(`${TU}/api/proxy/booking/search/club/teetimes?clubId=${id}&bookingDay=${day}&today=N`, { headers: { 'User-Agent': 'Mozilla/5.0', Referer: `${TU}/club/${id}` } });
+        const list = ((await r.json()).resultList || []).filter((t) => !t.holeName || /18/.test(t.holeName));
+        const hm = (t) => (t.bookingTime ? `${String(t.bookingTime).slice(0, 2)}:${String(t.bookingTime).slice(2, 4)}` : null);
+        const { min, time } = earliestAtMin(list, (t) => Number(t.disPrice) || 0, hm);
+        if (min < Infinity) {
+          tu.price = min; tu.time = time;
+          tu.deal = list.filter((t) => Number(t.disPrice) === min).map(tuDeal).find(Boolean) || '';
+          stat.teetimes = (stat.teetimes || 0) + 1;
+        }
+      } catch { stat.errors++; }
+      await sleep(200);
+    }
+  };
+  await Promise.all([worker(), worker(), worker()]);
+  log(`티업엔조이 티타임 확인 ${jobs.length}건(티업엔조이가 가장 싼 날)`);
 }
 
 // ── 카카오 미래 길찾기: 거점 → 골프장 (토요일 06:00 출발 예상) ───────────
@@ -784,6 +820,7 @@ let par3 = 0;
 const list = [];
 for (const co of courses.values()) {
   if (isPar3(co.name)) { par3++; continue; }
+  if ((co.holes && co.holes < 18) || isShortCourseName(co.name)) { par3++; continue; } // 9홀·6홀·3홀을 여러 번 도는 곳은 검색에서 뺀다
   const est = estFor(co);
   const days = {};
   for (const [day, offers] of Object.entries(co.offers)) {
@@ -791,7 +828,7 @@ for (const co of courses.values()) {
     const dayNoCaddie = offers.some((o) => o.noCaddie === true);
     const priced = offers.map((o) => ({ o, cost: perPersonCost(o.price, co.cartFee, co.caddieFee, { noCaddie: o.noCaddie ?? dayNoCaddie, cartIncluded: o.cartIncluded, ...est }) }));
     const best = priced.reduce((a, b) => (b.cost.total < a.cost.total ? b : a));
-    days[day] = { ...best.cost, src: best.o.src, offers: priced.map(({ o, cost }) => [o.src, o.price, o.count, cost.total]) }; // 링크는 앱이 만든다(파일 크기 줄이기)
+    days[day] = { ...best.cost, src: best.o.src, time: best.o.time || null, deal: best.o.deal || null, offers: priced.map(({ o, cost }) => [o.src, o.price, o.count, cost.total]) }; // 링크는 앱이 만든다(파일 크기 줄이기)
   }
   if (!Object.keys(days).length) continue;
   if (co.holes && co.holes < 18) continue; // 9홀 골프장은 18홀 가격과 비교되지 않아 뺀다

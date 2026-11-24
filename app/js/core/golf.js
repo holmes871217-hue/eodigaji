@@ -34,9 +34,13 @@ export function golfDays(data, today) {
  * 국내 목록: 고른 날짜에 가격이 있고, 차 시간이 maxMin 이하인 골프장.
  * 1인 총비용 낮은 순(같으면 가까운 순). 개수 제한 없이 전부 돌려준다(화면이 20개씩 나눠 보여 준다).
  */
+/** 18홀이 안 되는 골프장: 홀 수가 18 미만이거나 이름에 "퍼9"·"(P9)"·"9홀"·"6홀"·"3홀" */
+export const isShortCourse = (c) => (c.holes && c.holes < 18) || /파크\s*골프|퍼\s*9|\(\s*P\s*9\s*\)|\bP9\b|퍼블릭\s*9|(^|[^0-9])[369]\s*홀/i.test(c.name || '');
+
 export function golfDomestic(data, { origin, day, maxMin }) {
   const out = [];
   for (const c of data?.domestic || []) {
+    if (isShortCourse(c)) continue; // 18홀이 안 되는 곳(9홀×2, 6홀×3 등)은 뺀다
     const cost = c.days?.[day];
     if (!cost) continue;
     const drive = golfDrive(c, origin);

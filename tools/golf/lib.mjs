@@ -174,6 +174,31 @@ export function coordsFromGoogleUrl(u) {
 }
 
 /** 18홀 티타임인지(9홀·9홀+9홀 상품 제외) */
+/** 18홀이 안 되는 골프장(9홀·6홀·3홀을 여러 번 도는 곳) 이름: "-퍼9", "(P9)", "9홀", "6홀" 등 */
+export const isShortCourseName = (name) => /파크\s*골프|퍼\s*9|\(\s*P\s*9\s*\)|\bP9\b|퍼블릭\s*9|(^|[^0-9])[369]\s*홀/i.test(String(name || ''));
+
+/** 티스캐너 티타임의 특가·이벤트 표시 */
+export function tsDeal(t) {
+  if (/특가|이벤트/.test(t.product_tag_nm || '')) return t.product_tag_nm;
+  if (t.secret_discount_yn === 'Y') return t.secret_discount_name || '시크릿 특가';
+  return '';
+}
+/** 티업엔조이 티타임의 특가·이벤트 표시(상품 글에 적힌 것만) */
+export function tuDeal(t) {
+  const m = /시크릿\s*특가|특가|이벤트/.exec(`${t.prEvent || ''} ${t.regMemNoName || ''}`);
+  return m ? m[0] : '';
+}
+/** 같은 최저가 중 가장 빠른 시각 */
+export function earliestAtMin(list, priceOf, timeOf) {
+  let min = Infinity, time = null;
+  for (const x of list) {
+    const p = priceOf(x), t = timeOf(x);
+    if (!(p > 0)) continue;
+    if (p < min) { min = p; time = t; } else if (p === min && t && (!time || t < time)) time = t;
+  }
+  return { min, time };
+}
+
 export function is18Tee(t) {
   return t && t.min_cost > 0 && t.is_9h !== 'Y' && t.is_9h2 !== 'Y' && !/9\s*홀/.test(t.course_name || '') && !/(^|[^0-9])9H/i.test(t.course_name || '');
 }
