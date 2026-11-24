@@ -508,6 +508,9 @@ root.addEventListener('click', (ev) => {
     case 'golf-ab-stay':
       update(() => { state.ui.golf.abStay = v; }, { persist: false });
       break;
+    case 'golf-ab-nights':
+      update(() => { state.ui.golf.abNights = Number(v) || 2; state.ui.golf.max = 20; }, { persist: false });
+      break;
     case 'golf-kind':
       update(() => { state.ui.golf.kind = v === 'pack' ? 'pack' : 'course'; state.ui.golf.cont = ''; state.ui.golf.country = ''; state.ui.golf.city = ''; state.ui.golf.max = 20; }, { persist: false });
       break;

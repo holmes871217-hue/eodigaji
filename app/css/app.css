@@ -743,3 +743,4 @@ svg { flex: none; }
 .golf-head .h2 { margin: 0; }
 .golf-filter select { min-height: 40px; padding: 0 10px; font-size: 13px; }
 .fit-ellipsis { text-overflow: ellipsis; }
+.golf-nights { margin-top: 10px; }
