@@ -43,7 +43,7 @@ jobs:
       - name: 골프 자료 수집
         env:
           KAKAO_REST_KEY: ${{ secrets.KAKAO_REST_KEY }}
-          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          GOLF_GM_CACHE_ONLY: '1' # 골프몬 국내는 골프몬 작업(golfmon.yml)이 받아 둔 저장본만 읽는다
         run: node tools/golf/collect.mjs
 
       - name: 수집 결과 점검
