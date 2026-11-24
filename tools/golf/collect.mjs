@@ -602,9 +602,18 @@ async function collectMonkey(stat) {
   const checkIn = new Date(Date.now() + 9 * 3600e3 + 14 * 864e5).toISOString().slice(0, 10); // 2주 뒤 날짜 기준 1인당 가격
   const cache = readJson('mt-holes.json', {});
   const out = [];
+  // 나라별 목록 저장본: 한 나라 목록이 일시적으로 실패하면(시간 초과 등) 지난번 목록을 그대로 쓴다(그 나라 골프장이 통째로 사라지지 않게)
+  const lastLists = readJson('mt-lists.json', {});
   for (const [branch, cc, m2] of MT_BRANCHES) {
     let list = [];
-    try { list = await mtList(branch, m2, checkIn); } catch (e) { stat.errors++; log('몽키트래블 목록 실패', cc, m2, e.message); }
+    const key = `${cc}/${m2 || ''}`;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try { list = await mtList(branch, m2, checkIn); break; } catch (e) { log('몽키트래블 목록 실패', cc, m2, `${attempt}번째`, e.message); if (attempt < 3) await sleep(3000 * attempt); }
+    }
+    const KEEP = ['product_id', 'productName', 'menuJson', 'region', 'latitude', 'longitude', 'grade', 'reviewRatingAvg', 'reviewCount', 'displayDistanceStringSimple', 'mainImg', 'lowPrice', 'lowPriceCurrency'];
+    if (list.length) lastLists[key] = list.map((p) => Object.fromEntries(KEEP.filter((k) => p[k] !== undefined).map((k) => [k, p[k]])));
+    else if (lastLists[key]?.length) { stat.errors++; list = lastLists[key]; log(`몽키트래블 ${cc} ${m2 || '전체'}: 지난번 목록 ${list.length}곳 사용`); }
+    else stat.errors++;
     for (const p of list) {
       // 골프장이 아닌 상품(골프채 렌탈·캠프·맞춤 견적·조인 모집 등)은 뺀다
       if (/렌탈|캠프|맞춤골프|맞춤 골프|조인 골프|기타 지역 골프장/.test(p.productName || '')) { stat.skipped = (stat.skipped || 0) + 1; continue; }
@@ -621,6 +630,7 @@ async function collectMonkey(stat) {
     }
     log(`몽키트래블 ${cc} ${m2 || '전체'}: ${list.length}곳`);
   }
+  writeJson('mt-lists.json', lastLists);
   // 홀 수: 처음 보는 골프장만 상세 화면 제목을 읽어 보관(한 번 받으면 다시 안 받음)
   const need = out.filter((g) => !(g.pid in cache) || cache[g.pid].pv !== 2); // 사진 읽는 방식이 바뀐 저장본도 한 번 다시 읽는다
   let i = 0;
