@@ -409,7 +409,7 @@ async function collectTeeupnjoy(dates, courses, stat) {
           const price = Number(String(c.disPrice || '').replace(/[^\d]/g, ''));
           const lat = Number(c.clubLat), lng = Number(c.clubLng);
           if (!price || !lat || !lng || c.nation !== 'CTYKR') continue;
-          rows.push({ day, id: c.clubId, name: unescapeHtml(c.clubName).replace(/_임박$/, ''), lat, lng, addr: unescapeHtml(c.region || ''), price, count: Number(c.clubCnt) || 1, area: c.codeName || '' });
+          rows.push({ day, id: c.clubId, kg: Number(c.kakaoGolfSeq) || null, name: unescapeHtml(c.clubName).replace(/_임박$/, ''), lat, lng, addr: unescapeHtml(c.region || ''), price, count: Number(c.clubCnt) || 1, area: c.codeName || '' });
         }
         stat.pages++;
         const pi = j.paginationInfo || {};
@@ -458,6 +458,7 @@ async function collectTeeupnjoy(dates, courses, stat) {
       stat.newCourses++;
     }
     (co.ids ||= {}).tu = r.id;
+    if (r.kg) co.ids.kg = r.kg; // 카카오골프 골프장 번호(티업엔조이 자료의 kakaoGolfSeq) → 상세 화면 카카오골프 링크
     if (!co.photo && cache[r.id]?.photo) co.photo = cache[r.id].photo;
     if (!co.addr && r.addr) co.addr = r.addr;
     const prev = (co.offers[r.day] ||= []).find((o) => o.src === 'tu');

@@ -118,6 +118,13 @@ function photoSlides(c) {
     </div>`;
 }
 
+/** 카카오골프: 가격은 로그인해야 보여서 모으지 않고, 그 골프장·그 날짜 화면으로 바로 연결한다 */
+function kakaoLink(c, day) {
+  const kg = c.ids?.kg;
+  if (!kg) return '';
+  return `<li><a href="https://www.kakao.golf/golf/${encodeURIComponent(kg)}?date=${day.replace(/-/g, '')}" target="_blank" rel="noopener noreferrer"><b>카카오골프</b><span>가격은 카카오골프에서 확인(로그인 필요)</span><i aria-hidden="true">›</i></a></li>`;
+}
+
 /** 국내 골프장 상세 창 */
 export function golfSheet(state, data, id) {
   const c = (data?.domestic || []).find((x) => x.id === id);
@@ -145,6 +152,7 @@ export function golfSheet(state, data, id) {
     ${offers.length ? `<h3 class="golf-sub">예약하러 가기 · 플랫폼별 가격</h3>
     <ul class="golf-links">
       ${offers.map(([src, price, count, total]) => `<li><a href="${esc(offerUrl(c, src, day))}" target="_blank" rel="noopener noreferrer"><b>${SRC[src] || esc(src)}</b><span>그린피 ${won(price)} · ${count}타임${total ? ` · 1인 ${won(total)}` : ''}</span><i aria-hidden="true">›</i></a></li>`).join('')}
+      ${kakaoLink(c, day)}
     </ul>` : ''}
     <ul class="golf-info">
       ${c.addr ? `<li><b>주소</b> ${esc(c.addr)}</li>` : ''}
