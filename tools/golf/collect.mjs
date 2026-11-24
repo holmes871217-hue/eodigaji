@@ -18,7 +18,7 @@ const DAYS = Number(process.env.GOLF_DAYS || 7);
 const GP_MAX_PAGES = Number(process.env.GOLF_GP_PAGES || 8);
 const KAKAO = process.env.KAKAO_REST_KEY || '';
 const FIRECRAWL = process.env.FIRECRAWL_API_KEY || ''; // 골프몬(한국 밖 접속 차단)을 한국 위치로 열 때 쓴다
-const GOLFMON_DAYS = Number(process.env.GOLF_GM_DAYS || 3); // 골프몬 국내는 앞으로 며칠치(무료 한도 고려)
+const GOLFMON_DAYS = Number(process.env.GOLF_GM_DAYS || 7); // 골프몬 국내는 앞으로 며칠치(2026-11-24 3일→7일)
 const DRIVE_CAP = Number(process.env.GOLF_DRIVE_CAP || 3000); // 한 번에 부르는 길찾기 최대 건수(하루 무료 10,000건)
 const DRIVE_TTL_DAYS = 14;
 const DRIVE_BUDGET_MIN = Number(process.env.GOLF_DRIVE_MIN || 12); // 길찾기에 쓰는 시간 상한(분). 못 다 한 것은 다음 날 이어서 한다
@@ -70,6 +70,13 @@ async function tsPost(p, fields) {
   return j.data;
 }
 
+/** 티스캐너 골프장 사진: 작은 썸네일(180x180)은 다른 사진이 있으면 빼고 최대 5장 */
+export function tsPhotos(g) {
+  const all = [...new Set((g.golfclub_img_list || []).map((x) => x.file_url).filter((u) => /^https:\/\//.test(u || '')))];
+  const big = all.filter((u) => !/180x180/.test(u));
+  return (big.length ? big : all).slice(0, 5);
+}
+
 async function collectTeescanner(dates, courses, stat) {
   const todo = [];
   for (const day of dates) {
@@ -119,17 +126,17 @@ async function teescannerInfo(courses) {
   for (const co of courses.values()) {
     if (!co.tsSeq) continue;
     const c = cache[co.tsSeq];
-    if (!c || now - (c.at || 0) > 7 * 864e5) {
+    if (!c || !c.photos || now - (c.at || 0) > 7 * 864e5) {
       try {
         const d = await tsPost('/board/getGolfclubInformationInfo', { golfclub_seq: co.tsSeq });
         const g = d.golfclubInfo || {};
-        cache[co.tsSeq] = { at: now, addr: unescapeHtml(g.address1), tel: g.golfclub_tel || '', holes: g.hole_count || null, cart: g.cart_fee || 0, caddie: g.caddie_fee || 0, week: g.green_fee_week || 0, weekend: g.green_fee_weekend || 0, type: unescapeHtml(g.membership_type_name || '') };
+        cache[co.tsSeq] = { at: now, addr: unescapeHtml(g.address1), tel: g.golfclub_tel || '', holes: g.hole_count || null, cart: g.cart_fee || 0, caddie: g.caddie_fee || 0, week: g.green_fee_week || 0, weekend: g.green_fee_weekend || 0, type: unescapeHtml(g.membership_type_name || ''), photos: tsPhotos(g) };
         calls++;
         await sleep(250);
       } catch (e) { log('티스캐너 골프장 정보 실패', co.tsSeq, e.message); }
     }
     const i = cache[co.tsSeq];
-    if (i) Object.assign(co, { addr: i.addr, tel: i.tel, holes: i.holes, cartFee: i.cart, caddieFee: i.caddie, type: i.type });
+    if (i) Object.assign(co, { addr: i.addr, tel: i.tel, holes: i.holes, cartFee: i.cart, caddieFee: i.caddie, type: i.type, photos: i.photos || [] });
   }
   writeJson('ts-info.json', cache);
   log(`티스캐너 골프장 정보 새로 받음 ${calls}곳`);
@@ -664,7 +671,7 @@ for (const co of courses.values()) {
   }
   if (!Object.keys(days).length) continue;
   if (co.holes && co.holes < 18) continue; // 9홀 골프장은 18홀 가격과 비교되지 않아 뺀다
-  list.push({ id: co.id, name: co.name, area: co.area || '', addr: co.addr || '', tel: co.tel || '', lat: Math.round(co.lat * 1e5) / 1e5, lng: Math.round(co.lng * 1e5) / 1e5, grade: co.grade || null, holes: co.holes || null, type: co.type || '', kakaoId: co.kakaoId || '', ids: co.ids || {}, photo: co.photo || '', drive: co.drive || {}, days });
+  list.push({ id: co.id, name: co.name, area: co.area || '', addr: co.addr || '', tel: co.tel || '', lat: Math.round(co.lat * 1e5) / 1e5, lng: Math.round(co.lng * 1e5) / 1e5, grade: co.grade || null, holes: co.holes || null, type: co.type || '', kakaoId: co.kakaoId || '', ids: co.ids || {}, photo: co.photo || '', photos: co.photos?.length ? co.photos : co.photo ? [co.photo] : [], drive: co.drive || {}, days });
 }
 log(`파3 골프장 제외 ${par3}곳`);
 list.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
