@@ -6,9 +6,10 @@ let golfPromise = null;
 /** 골프 자료를 한 번만 받아 온다. 실패하면 null. */
 export function loadGolf() {
   if (!golfPromise) {
-    golfPromise = fetch('data/golf.json', { cache: 'no-cache' })
-      .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null)
+    golfPromise = Promise.all([
+      fetch('data/golf.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+      fetch('data/fuel.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    ]).then(([g, f]) => { if (g) g.fuel = f; return g; })
       .then((j) => { if (!j) golfPromise = null; return j; });
   }
   return golfPromise;
@@ -37,7 +38,20 @@ export function golfDays(data, today) {
 /** 18홀이 안 되는 골프장: 홀 수가 18 미만이거나 이름에 "퍼9"·"(P9)"·"9홀"·"6홀"·"3홀" */
 export const isShortCourse = (c) => (c.holes && c.holes < 18) || /파크\s*골프|퍼\s*9|\(\s*P\s*9\s*\)|\bP9\b|퍼블릭\s*9|(^|[^0-9])[369]\s*홀/i.test(c.name || '');
 
-export function golfDomestic(data, { origin, day, maxMin }) {
+/**
+ * 주유비(1인): 왕복 거리(차 거리 × 2) ÷ 연비 × 연료 가격 ÷ 4인(카트비·캐디피와 같은 4인 기준).
+ * 연료·연비·가격 중 하나라도 없으면 null(계산 안 함).
+ */
+export const FUEL_LABEL = { gasoline: '휘발유', diesel: '경유', ev: '전기' };
+export function fuelCost(km, car, fuel) {
+  const price = fuel?.[car?.fuel];
+  if (!car?.fuel || !(car.eff > 0) || !(price > 0) || !(km > 0)) return null;
+  const roundKm = km * 2;
+  const total = Math.round((roundKm / car.eff) * price / 10) * 10;
+  return { roundKm: Math.round(roundKm), total, perPerson: Math.round(total / 4 / 10) * 10, price, unit: car.fuel === 'ev' ? 'kWh' : 'L' };
+}
+
+export function golfDomestic(data, { origin, day, maxMin, car }) {
   const out = [];
   for (const c of data?.domestic || []) {
     if (isShortCourse(c)) continue; // 18홀이 안 되는 곳(9홀×2, 6홀×3 등)은 뺀다
@@ -45,9 +59,10 @@ export function golfDomestic(data, { origin, day, maxMin }) {
     if (!cost) continue;
     const drive = golfDrive(c, origin);
     if (drive.min > maxMin) continue;
-    out.push({ c, cost, drive });
+    const fuel = fuelCost(drive.km, car, data.fuel);
+    out.push({ c, cost, drive, fuel, sum: cost.total + (fuel?.perPerson || 0) });
   }
-  out.sort((a, b) => a.cost.total - b.cost.total || a.drive.min - b.drive.min);
+  out.sort((a, b) => a.sum - b.sum || a.drive.min - b.drive.min);
   return out;
 }
 

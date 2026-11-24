@@ -45,6 +45,7 @@ function defaults() {
       date: nextSaturday(),
       nights: 0,
       origin: { type: 'city', name: seoul.name, lat: seoul.lat, lng: seoul.lng },
+      car: { fuel: '', eff: null }, // 골픽 국내 주유비: 연료(gasoline·diesel·ev)와 연비(km/L, 전기는 km/kWh). 비우면 계산 안 함
     },
     favs: [], // 찜한 곳(담은 순서 = 동선 순서). core/favs.js 참고
     ui: {
@@ -72,6 +73,8 @@ export function loadState() {
       Object.assign(state.profile, saved.profile);
       // 지역 선택으로 저장된 이름에 붙어 있던 "(거점 설명)"은 떼어 낸다
       if (state.profile.origin?.type === 'city' && typeof state.profile.origin.name === 'string') state.profile.origin.name = state.profile.origin.name.replace(/\s*\([^)]*\)\s*$/, '');
+      const car = state.profile.car || {};
+      state.profile.car = { fuel: ['gasoline', 'diesel', 'ev'].includes(car.fuel) ? car.fuel : '', eff: Number(car.eff) > 0 && Number(car.eff) < 100 ? Number(car.eff) : null };
       if (typeof saved.maxMin === 'number') state.ui.maxMin = saved.maxMin;
       if (saved.golf && typeof saved.golf === 'object') {
         if ([60, 90, 120, 150, 180].includes(saved.golf.maxMin)) state.ui.golf.maxMin = saved.golf.maxMin;
