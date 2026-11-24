@@ -761,11 +761,14 @@ async function collectKakaoGolf() {
   }
   log(`카카오골프 골프장 ${Object.keys(cache.courses).length}곳`);
   // 2) 골프장마다 공개 요약(약 2주 그린피 범위, 날짜별 남은 티타임 수)
-  const seqs = Object.keys(cache.courses).filter((k) => Number(cache.courses[k].holes) >= 18);
+  // 오래된(또는 아직 없는) 골프장부터. 80분 안에 다 못 돌면 다음 실행 때 이어서 돈다
+  const seqs = Object.keys(cache.courses).filter((k) => Number(cache.courses[k].holes) >= 18)
+    .sort((a, b) => (cache.summary[a]?.at || '').localeCompare(cache.summary[b]?.at || ''));
+  let done = true;
   const start = Date.now();
   let ok = 0;
   for (const seq of seqs) {
-    if (Date.now() - start > 80 * 60e3) { log('카카오골프: 시간 상한(80분) — 다음에 이어서'); break; }
+    if (Date.now() - start > 80 * 60e3) { log('카카오골프: 시간 상한(80분) — 다음에 이어서'); done = false; break; }
     try {
       const j = await krBrowse({ url: `https://www.kakao.golf/golf/${seq}`, actions: [{ type: 'wait', ms: 4000 }], want: ['xhr'], xhrMax: 20000 });
       const x = (j.xhr || []).find((y) => /summarybyseq/.test(y.url));
@@ -777,7 +780,7 @@ async function collectKakaoGolf() {
     } catch (e) { log('카카오골프 요약 실패', seq, e.message.slice(0, 60)); }
     await sleep(1500); // 천천히(robots.txt Crawl-delay: 1)
   }
-  cache.at = new Date().toISOString();
+  if (done) cache.at = new Date().toISOString(); // 다 돌았을 때만 "7일 쉬기" 시작
   writeJson('kakao-golf.json', cache);
   log(`카카오골프 요약 ${ok}/${seqs.length}곳`);
 }
