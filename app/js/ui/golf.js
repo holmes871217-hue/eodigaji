@@ -76,10 +76,10 @@ const driveText = (drive) => `차로 ${drive.kind === 'kakao' ? '' : '약 '}${fo
 /** 특가 꼬리표 글자: "이벤트"·"특가"·"시크릿 특가" 등 예약처 표시 그대로(길면 줄임) */
 const dealText = (d) => (String(d).length > 8 ? '특가' : String(d));
 
-/** 카드 총비용 옆 내역: 필드비 + 카트비 + 캐디피(또는 노캐디), 1인 기준 */
+/** 카드 총비용 옆 내역: 그린피 + 카트비 + 캐디피(또는 노캐디), 1인 기준 */
 function costBreak(cost) {
   const est = (k) => (cost.estimated?.includes(k) ? '(예상)' : '');
-  const parts = [`필드비 ${won(cost.green)}`];
+  const parts = [`그린피 ${won(cost.green)}`];
   parts.push(cost.cartIncluded ? '카트비 포함' : cost.cart ? `카트비 ${won(cost.cart)}${est('카트비')}` : '카트비 모름');
   parts.push(cost.noCaddie ? '노캐디' : cost.caddie ? `캐디피 ${won(cost.caddie)}${est('캐디피')}` : '캐디피 모름');
   return parts.join('+');
