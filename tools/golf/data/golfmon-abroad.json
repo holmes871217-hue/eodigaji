@@ -1,15 +1,24 @@
 {
  "source": "골프몬 해외투어 목록(https://www.golfmon.net/overseas/tour), 서울 서버(플레이라이트)",
- "collectedAt": "2026-11-24T11:55:44.896Z",
+ "collectedAt": "2026-11-24T19:30:55.113Z",
  "items": [
   {
-   "city": "마닐라",
-   "title": "[마닐라] #따가이따이 #무제한라운드 - 스플랜디도 골프텔 제주항공 특가패키지",
-   "price": 999000,
+   "city": "하노이",
+   "title": "[하노이] 최고 퀄리티상품을 최고의 가성비로",
+   "price": 1129000,
    "from": null,
    "to": null,
    "air": null,
    "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/banner/20260729_b0a9f6f8018d4a72ae0114e0f6152a9c.png"
+  },
+  {
+   "city": "하이난",
+   "title": "[하이난] 아이비엘 취소특가 12/14 2명",
+   "price": 499000,
+   "from": "11.03",
+   "to": "03.31",
+   "air": "중국해남항공",
+   "img": ""
   },
   {
    "city": "구마모토",
@@ -3151,15 +3160,6 @@
    "to": "12.27",
    "air": "트리니티항공(구 티웨이)",
    "img": "https://gmon-files.s3.ap-northeast-2.amazonaws.com/overseasTour/240/20261119_15859f0d288d4eb5a66207c0e7af3279.png"
-  },
-  {
-   "city": "나가사키",
-   "title": "[나가사키] @시내2색 골프 석식외 올포함!!",
-   "price": 1090000,
-   "from": "11.10",
-   "to": "03.31",
-   "air": "대한항공",
-   "img": ""
   }
  ]
 }
