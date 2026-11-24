@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['servers/golfmon/**']
+    paths: ['servers/golfmon/**', '.github/workflows/kr-browser-deploy.yml']
 
 permissions:
   contents: read
@@ -28,6 +28,7 @@ jobs:
           service_account: kr-deployer@project-8a98bd00-9abd-428d-9b0.iam.gserviceaccount.com
       - uses: google-github-actions/setup-gcloud@v2
       - name: 서울 서버 다시 올리기
-        run: gcloud run deploy golfmon-collector --source servers/golfmon --region asia-northeast3 --project project-8a98bd00-9abd-428d-9b0 --quiet
+        # 동시 요청 8개까지(브라우저 일은 서버 안에서 한 번에 하나씩, 항공권 조회는 그와 따로 받는다)
+        run: gcloud run deploy golfmon-collector --source servers/golfmon --region asia-northeast3 --project project-8a98bd00-9abd-428d-9b0 --concurrency 8 --quiet
       - name: 확인
         run: curl -s --max-time 60 https://golfmon-collector-351935360699.asia-northeast3.run.app/health
