@@ -800,6 +800,23 @@ async function collectKakaoGolf() {
   log(`카카오골프 요약 ${ok}/${seqs.length}곳`);
 }
 
+// ── 유가(골픽 국내 주유비): 오피넷 오늘의 유가 전국 평균, 한국 창구로 화면을 읽는다. 못 읽으면 이전 값 유지 ─────────
+async function collectFuel() {
+  const file = path.join(path.dirname(OUT), 'fuel.json');
+  let prev = {};
+  try { prev = JSON.parse(fs.readFileSync(file, 'utf8')); } catch {}
+  if (!KR_TOKEN) { log('유가: KR_BROWSER_TOKEN 없음 — 이전 값 유지'); return; }
+  const read = (text) => { const m = /오늘의 유가\s*\((\d{4})\.(\d{2})\.(\d{2})\)[\s\S]*?전국평균[\s\S]*?([\d,]{4,}\.\d{1,2}|[\d,]{4,})/.exec(text || ''); return m ? { date: `${m[1]}-${m[2]}-${m[3]}`, v: Number(m[4].replace(/,/g, '')) } : null; };
+  try {
+    const g = read((await krBrowse({ url: 'https://www.opinet.co.kr/user/main/mainView.do', actions: [{ type: 'wait', ms: 3000 }], want: ['text'] })).text);
+    const d = read((await krBrowse({ url: 'https://www.opinet.co.kr/user/main/mainView.do', actions: [{ type: 'wait', ms: 3000 }, { type: 'click', selector: 'text=경유' }, { type: 'wait', ms: 2000 }], want: ['text'] })).text);
+    if (!g || !d || g.v < 1000 || d.v < 1000 || g.v > 4000 || d.v > 4000) { log('유가: 오피넷 값을 못 읽음 — 이전 값 유지'); return; }
+    const out = { ...prev, date: g.date, src: '오피넷(한국석유공사) 오늘의 유가 전국 평균', gasoline: g.v, diesel: d.v, ev: prev.ev || 295 };
+    fs.writeFileSync(file, JSON.stringify(out, null, 1) + '\n');
+    log(`유가 ${g.date}: 휘발유 ${g.v} · 경유 ${d.v}`);
+  } catch (e) { log('유가 실패 — 이전 값 유지', e.message.slice(0, 80)); }
+}
+
 // 골프몬만 받을 때(golfmon.yml 매일 03:30): 저장본이 14일 넘었으면 30일치 새로 받기. 해외 투어 목록도 받는다.
 if (process.env.GOLF_ONLY_GM) {
   const st = { pages: 0, rows: 0, errors: 0 };
@@ -864,6 +881,7 @@ let monkey = [];
 try { monkey = await collectMonkey(mtStat); meta.sources.push({ id: 'mt', name: '몽키트래블 골프장', ok: monkey.length > 0, ...mtStat, at: new Date().toISOString() }); }
 catch (e) { meta.sources.push({ id: 'mt', name: '몽키트래블 골프장', ok: false, error: e.message }); log('몽키트래블 실패', e.message); }
 
+await collectFuel();
 const rate = await fx();
 
 // 앱에 내보낼 모양: 가격이 하나라도 있는 골프장만, 1인 총비용(같은 기준: 카트·캐디피 포함 예상가)을 붙인다.

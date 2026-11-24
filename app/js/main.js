@@ -514,6 +514,10 @@ root.addEventListener('click', (ev) => {
     case 'golf-ab-stay':
       update(() => { state.ui.golf.abStay = v; }, { persist: false });
       break;
+    case 'car-fuel':
+      // 같은 연료를 다시 누르면 해제(주유비 계산 안 함)
+      update(() => { state.profile.car ||= { fuel: '', eff: null }; state.profile.car.fuel = state.profile.car.fuel === v ? '' : v; });
+      break;
     case 'golf-pick': {
       // 해외 골프장 찜(여러 골프장 합계용)
       update(() => {
@@ -807,6 +811,9 @@ root.addEventListener('change', (ev) => {
   } else if (field === 'golf-ab-date') {
     // 해외 라운딩 일정(첫 라운딩 날)
     if (isValidISO(el.value) && el.value > todayISO()) update(() => { state.ui.golf.abDate = el.value; state.ui.golf.max = 20; }, { persist: false });
+  } else if (field === 'car-eff') {
+    const n = Number(String(el.value).replace(',', '.'));
+    update(() => { state.profile.car ||= { fuel: '', eff: null }; state.profile.car.eff = n > 0 && n < 100 ? n : null; });
   } else if (field === 'golf-ab-holes') {
     update(() => { state.ui.golf.abHoles = el.value; state.ui.golf.max = 20; }, { persist: false });
   } else if (field === 'golf-date') {
