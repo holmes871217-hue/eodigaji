@@ -204,6 +204,8 @@ function restoreSheetPos() {
   if (slides) { slides.scrollLeft = pos.left; syncSlides(slides); }
 }
 
+const topSheet = () => sheets[sheets.length - 1];
+
 function openSheet(sheet) {
   rememberSheetPos();
   sheets = [...sheets, sheet];
@@ -433,7 +435,7 @@ function useGps() {
       const here = { lat: pos.coords.latitude, lng: pos.coords.longitude };
       state.profile.origin = { type: 'gps', name: `현재 위치 (${nearestLabel(here)})`, ...here };
       state.ui.geoMsg = '';
-    }),
+    }) || (topSheet()?.type === 'golf-loc' && closeSheet()),
     () => update(() => { state.ui.geoMsg = '위치를 가져오지 못했어요. 위치 권한을 허용하거나 아래 지도에서 골라 주세요.'; }),
     { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
   );
@@ -469,6 +471,18 @@ root.addEventListener('click', (ev) => {
     case 'golf-city':
       update(() => { state.ui.golf.city = v || ''; state.ui.golf.max = 20; }, { persist: false });
       break;
+    case 'golf-loc':
+      update(() => { state.ui.locResults = []; state.ui.locMsg = ''; state.ui.geoMsg = ''; }, { persist: false });
+      openSheet({ type: 'golf-loc' });
+      break;
+    case 'golf-loc-city': {
+      const city = CITIES.find((c) => c.name === v);
+      if (city) {
+        update(() => { state.profile.origin = { type: 'city', name: city.name, lat: city.lat, lng: city.lng }; state.ui.geoMsg = ''; state.ui.locResults = []; state.ui.locMsg = ''; state.ui.golf.max = 20; });
+        closeSheet();
+      }
+      break;
+    }
     case 'golf-open':
       openSheet({ type: 'golf', id });
       break;
@@ -704,6 +718,7 @@ root.addEventListener('click', (ev) => {
           state.ui.locMsg = `검색 위치를 "${r.name}"(으)로 정했어요.`;
           state.ui.geoMsg = '';
         });
+        if (topSheet()?.type === 'golf-loc') closeSheet();
       }
       break;
     }
