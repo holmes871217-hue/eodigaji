@@ -724,3 +724,4 @@ svg { flex: none; }
 /* 카드: 최저가 가장 빠른 시각, 특가 꼬리표 */
 .golf-time { font-size: 13px; font-weight: 800; color: var(--ink); }
 .golf-deal { display: inline-block; padding: 1px 8px; border-radius: 999px; background: #ffe3e3; color: #b42318; font-size: 12px; font-weight: 800; vertical-align: 2px; }
+.golf-links a span small { display: block; font-size: 11px; color: var(--ink-2); margin-top: 2px; }
