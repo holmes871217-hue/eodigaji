@@ -781,3 +781,8 @@ svg { flex: none; }
 .golf-picks-field { display: flex; align-items: center; gap: 6px; width: 100%; text-align: left; cursor: pointer; color: var(--ink); font: inherit; font-weight: 700; }
 .golf-picks-field svg { flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
 .golf-picks-field.has svg { fill: #f0326b; stroke: #f0326b; }
+/* 항공권 포함 버튼 작게(카드를 가리지 않게), 제목 줄과 카드 사이 여유 */
+.golf-air-toggle { min-height: 32px; padding: 0 8px; font-size: 11px; gap: 2px; }
+.golf-air-toggle::first-letter { font-size: 12px; }
+.golf-filters .golf-filter select { min-height: 32px; font-size: 12px; }
+.golf-head { margin-bottom: 10px; }
