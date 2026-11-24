@@ -123,6 +123,17 @@ function costBreak(cost) {
   return parts.join('+');
 }
 
+/** 카드 아래 한 줄용 짧은 내역(넘치면 글자 크기를 줄여 한 줄), 예상값은 * 로 */
+function costBreakShort(cost, fuel) {
+  const n = (v) => `${Number(v || 0).toLocaleString('ko-KR')}원`;
+  const est = (k) => (cost.estimated?.includes(k) ? '*' : '');
+  const parts = [`그린피 ${n(cost.green)}`];
+  parts.push(cost.cartIncluded ? '카트 포함' : cost.cart ? `카트비 ${n(cost.cart)}${est('카트비')}` : '카트비 ?');
+  parts.push(cost.noCaddie ? '노캐디' : cost.caddie ? `캐디피 ${n(cost.caddie)}${est('캐디피')}` : '캐디피 ?');
+  if (fuel) parts.push(`주유비 ${n(fuel.perPerson)}`);
+  return parts.join('+');
+}
+
 function domCard({ c, cost, drive, fuel, sum }, day, rank) {
   return `
     <li class="golf-item">
@@ -135,7 +146,7 @@ function domCard({ c, cost, drive, fuel, sum }, day, rank) {
           <span class="golf-price" data-fit><b>${won(sum ?? cost.total)}</b> <small>1인 총비용</small>${cost.time ? ` <span class="golf-time">${esc(cost.time)} 티오프</span>` : ''}</span>
         </span>
         ${thumb(c.photo)}
-        <span class="golf-break" data-fit>${esc(costBreak(cost))}${fuel ? `+주유비 ${esc(won(fuel.perPerson))}` : ''}${SRC[cost.src] ? `(${SRC[cost.src]})` : ''}</span>
+        <span class="golf-break" data-fit="shrink">${esc(costBreakShort(cost, fuel))}${SRC[cost.src] ? `(${SRC[cost.src]})` : ''}</span>
       </button>
     </li>`;
 }
@@ -344,7 +355,7 @@ function courseCard(c, cost, rank, picked = false) {
           <span class="golf-price" data-fit><b>${cost.total ? won(cost.total) : '-'}</b> <small>1인 골프+항공</small></span>
         </span>
         ${thumb(c.photo)}
-        <span class="golf-break" data-fit>${esc(`${golfTxt}+${fareTxt}`)}</span>
+        <span class="golf-break" data-fit="shrink">${esc(`${golfTxt}+${fareTxt}`)}</span>
       </button>
       <button type="button" class="heart on-card golf-heart ${picked ? 'is-on' : ''}" data-action="golf-pick" data-id="${esc(c.id)}" aria-pressed="${picked}" aria-label="${picked ? '찜에서 빼기' : '찜하기(여러 골프장 합계 보기)'}">${HEART}</button>
     </li>`;
@@ -607,7 +618,7 @@ function abroadCard(t, data, rank) {
           <span class="golf-price" data-fit><b>${won(t.cost.total)}~</b> <small>1인${t.flightIncl === 'no' ? ' 상품+항공' : ''}</small></span>
         </span>
         ${thumb(t.photo)}
-        <span class="golf-break" data-fit>${esc(t.flightIncl === 'no' ? `상품 ${won(t.price)}+${t.cost.loading ? '항공권 조회 중…' : t.cost.fare ? `항공권 ${won(t.cost.fare)}(${t.cost.live ? '네이버 항공권' : '예상'})` : '항공권 확인 불가'}` : inclText(t))}${t.same > 1 ? ` · 같은 상품 출발일 ${t.same}개 중 최저` : ''}</span>
+        <span class="golf-break" data-fit="shrink">${esc(t.flightIncl === 'no' ? `상품 ${won(t.price)}+${t.cost.loading ? '항공권 조회 중…' : t.cost.fare ? `항공권 ${won(t.cost.fare)}(${t.cost.live ? '네이버 항공권' : '예상'})` : '항공권 확인 불가'}` : inclText(t))}${t.same > 1 ? ` · 같은 상품 출발일 ${t.same}개 중 최저` : ''}</span>
       </button>
     </li>`;
 }
