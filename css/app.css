@@ -778,3 +778,6 @@ svg { flex: none; }
 .golf-head .h2 { font-size: 19px; white-space: nowrap; min-width: 0; }
 .golf-filters .golf-filter select { min-height: 38px; padding: 0 26px 0 10px; font-size: 13px; }
 .golf-air-toggle { min-height: 38px; padding: 0 9px; }
+.golf-picks-field { display: flex; align-items: center; gap: 6px; width: 100%; text-align: left; cursor: pointer; color: var(--ink); font: inherit; font-weight: 700; }
+.golf-picks-field svg { flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
+.golf-picks-field.has svg { fill: #f0326b; stroke: #f0326b; }
