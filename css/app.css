@@ -714,3 +714,10 @@ svg { flex: none; }
 .golf-when { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: end; margin-top: 14px; }
 .golf-when .golf-from { margin: 0 0 12px; padding-left: 4px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; }
 .golf-when .golf-from .field-label { margin: 0; }
+/* 카드: 비용 내역은 사진 아래까지 카드 폭 전체를 쓴다 */
+.golf-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; row-gap: 6px; }
+.golf-card .golf-break { grid-column: 1 / -1; }
+.golf-break-d { display: block; }
+/* 한 줄 맞추기(main.js fitLines): 넘치면 자간을 좁히고, 많이 넘치면 줄바꿈 */
+[data-fit] { display: block; min-width: 0; }
+.fit-one { white-space: nowrap; overflow: hidden; }
