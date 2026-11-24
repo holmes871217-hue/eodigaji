@@ -96,7 +96,7 @@ function render() {
   unmountMaps();
   root.innerHTML = `
     <header class="top">
-      <div class="brand"><b>${tab === 'golf' ? '골픽' : '놀픽'}</b><span>아빠 나들이 추천</span></div>
+      <div class="brand"><b>${tab === 'golf' ? '골픽' : '놀픽'}</b></div>
       ${liveUpdatedAt
         ? `<span class="pill-sample is-live" title="네이버 검색·한국관광공사 데이터">${new Date(liveUpdatedAt).getMonth() + 1}/${new Date(liveUpdatedAt).getDate()} 기준 실제 데이터</span>`
         : '<span class="pill-sample" title="실제 데이터 연결 전입니다">연습용 데이터</span>'}
