@@ -16,14 +16,14 @@ const hm = (min) => (min >= 60 ? `${Math.floor(min / 60)}시간${min % 60 ? ` ${
 
 const PIN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 
-/** 검색 지역 고르기 창(라운딩 일정 달력처럼 눌러서 고른다): 현재 위치 · 장소 검색 · 지역 선택 */
+/** 출발 지역 고르기 창(라운딩 일정 달력처럼 눌러서 고른다): 현재 위치 · 장소 검색 · 지역 선택 */
 export function golfLocSheet(state) {
   const o = state.profile.origin || {};
   const ui = state.ui;
   return `
     <div class="sheet-head">
       <div>
-        <h2 class="sheet-title" id="sheet-title">검색 지역</h2>
+        <h2 class="sheet-title" id="sheet-title">출발 지역</h2>
         <p class="card-meta">지금: <b>${esc(o.name || '내 위치')}</b></p>
         <p class="card-meta">이곳에서 차로 가는 시간으로 골프장을 찾아요</p>
       </div>
@@ -72,8 +72,8 @@ function domestic(state, data) {
         <input type="date" class="input" id="golf-date" value="${esc(day)}" min="${todayISO()}" data-field="golf-date">
       </label>
       <div class="field">
-        <span class="field-label">검색 지역</span>
-        <button type="button" class="input golf-loc-btn" data-action="golf-loc" aria-label="검색 지역 바꾸기, 지금 ${esc(origin.name || '내 위치')}">${PIN}<span>${esc(origin.name || '내 위치')}</span></button>
+        <span class="field-label">출발 지역</span>
+        <button type="button" class="input golf-loc-btn" data-action="golf-loc" aria-label="출발 지역 바꾸기, 지금 ${esc(origin.name || '내 위치')}">${PIN}<span>${esc(origin.name || '내 위치')}</span></button>
       </div>
     </div>
     <h2 class="h2 mt">차로 몇 시간까지</h2>
