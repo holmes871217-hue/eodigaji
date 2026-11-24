@@ -135,17 +135,17 @@ export function renderMy(state) {
     <button type="button" class="btn-add" data-action="add-member">+ 동행 추가</button>
 
     <h2 class="h2 mt">내 차 연비</h2>
-    <p class="muted">골픽(골프 탭) 국내 골프장 주유비 계산에만 쓰는 정보예요. 연료를 고르고 연비를 적으면, 검색 지역에서 골프장까지 왕복 주유비를 1인 총비용에 더해요. 비워 두면 계산하지 않아요.</p>
-    <div class="field">
-      <span class="field-label">연료</span>
-      <div class="toggle wide" role="group" aria-label="연료">
+    <p class="muted">골픽 국내 주유비 계산용 · 비워 두면 계산 안 함</p>
+    <div class="car-row">
+      <div class="toggle car-fuel" role="group" aria-label="연료">
         ${[['gasoline', '휘발유'], ['diesel', '경유'], ['ev', '전기']].map(([v, label]) => `<button type="button" class="toggle-btn ${car.fuel === v ? 'is-on' : ''}" data-action="car-fuel" data-v="${v}" aria-pressed="${car.fuel === v}">${label}</button>`).join('')}
       </div>
+      <label class="car-eff">
+        <span class="sr-only">연비</span>
+        <input type="number" class="input" inputmode="decimal" min="1" max="99" step="0.1" placeholder="연비" value="${car.eff ?? ''}" data-field="car-eff">
+        <span class="car-unit">${car.fuel === 'ev' ? 'km/kWh' : 'km/L'}</span>
+      </label>
     </div>
-    <label class="field">
-      <span class="field-label">연비 <em>${car.fuel === 'ev' ? 'km/kWh' : 'km/L'}</em></span>
-      <input type="number" class="input" inputmode="decimal" min="1" max="99" step="0.1" placeholder="예: 10" value="${car.eff ?? ''}" data-field="car-eff">
-    </label>
 
     ${state.ui.installed ? '' : `
     <h2 class="h2 mt">홈 화면에 설치하기</h2>

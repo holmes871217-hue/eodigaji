@@ -764,3 +764,10 @@ svg { flex: none; }
 .golf-pick-ctl > span { margin-left: auto; font-weight: 800; }
 .golf-pick-warn { margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: #fff4d6; font-size: 13px; }
 .golf-pick-total b { font-family: var(--font-display); font-size: 22px; font-weight: 400; }
+/* 마이 탭 내 차 연비: 한 줄(왼쪽 연료, 오른쪽 연비) */
+.car-row { display: grid; grid-template-columns: minmax(0, 1fr) 128px; gap: 10px; align-items: center; margin-top: 8px; }
+.car-fuel { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
+.car-fuel .toggle-btn { padding: 0 6px; min-width: 0; font-size: 14px; }
+.car-eff { position: relative; display: block; }
+.car-eff .input { padding-right: 58px; }
+.car-unit { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--ink-2); pointer-events: none; }
