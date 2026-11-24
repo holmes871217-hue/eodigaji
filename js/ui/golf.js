@@ -3,6 +3,7 @@ import { esc } from './util.js';
 import { courseTree, courseList, CONTINENTS, CONTINENT_OF, golfDomestic, golfDrive, golfDays, golfCountries, golfAbroad, won, localPrice, COUNTRY_CUR } from '../core/golf.js';
 import { formatMin } from '../core/geo.js';
 import { todayISO } from '../core/dates.js';
+import { CITIES } from '../core/geo.js';
 
 const GOLF_TIMES = [60, 90, 120, 150, 180];
 const SRC = { ts: '티스캐너', gp: '골팡', tu: '티업엔조이', gm: '골프몬' };
@@ -12,6 +13,35 @@ const dayLabel = (iso) => { const d = new Date(`${iso}T00:00:00`); return `${d.g
 const kst = (iso) => { const d = new Date(iso); return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
 const depLabel = (dep) => (dep ? `${Number(dep.slice(4, 6))}/${Number(dep.slice(6, 8))} ${dep.slice(8, 10)}:${dep.slice(10, 12)} 출발 예상` : '');
 const hm = (min) => (min >= 60 ? `${Math.floor(min / 60)}시간${min % 60 ? ` ${min % 60}분` : ''}` : `${min}분`);
+
+const PIN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+
+/** 검색 지역 고르기 창(라운딩 일정 달력처럼 눌러서 고른다): 현재 위치 · 장소 검색 · 지역 선택 */
+export function golfLocSheet(state) {
+  const o = state.profile.origin || {};
+  const ui = state.ui;
+  return `
+    <div class="sheet-head">
+      <div>
+        <h2 class="sheet-title" id="sheet-title">검색 지역</h2>
+        <p class="card-meta">지금: <b>${esc(o.name || '내 위치')}</b></p>
+        <p class="card-meta">이곳에서 차로 가는 시간으로 골프장을 찾아요</p>
+      </div>
+    </div>
+    <button type="button" class="btn-accent wide golf-loc-gps" data-action="use-gps">${PIN}현재 위치 사용</button>
+    ${ui.geoMsg ? `<p class="muted" role="status">${esc(ui.geoMsg)}</p>` : ''}
+    <form class="loc-search mt" data-form="loc-search" role="search">
+      <label class="sr-only" for="golf-loc-q">장소나 주소로 찾기</label>
+      <input id="golf-loc-q" name="q" type="search" class="input" enterkeyhint="search" autocomplete="off" placeholder="장소·주소 검색 (예: 판교역, 해운대)" value="${esc(ui.locQuery || '')}">
+      <button type="submit" class="btn-dark">검색</button>
+    </form>
+    ${ui.locMsg ? `<p class="muted" role="status">${esc(ui.locMsg)}</p>` : ''}
+    ${ui.locResults?.length ? `<ul class="loc-results" aria-label="검색 결과">${ui.locResults.map((r, i) => `<li><button type="button" class="loc-result" data-action="pick-result" data-v="${i}">${PIN}<span><b>${esc(r.name)}</b><small>${esc(r.addr || '')}</small></span></button></li>`).join('')}</ul>` : ''}
+    <h3 class="golf-sub">지역 선택</h3>
+    <div class="chips chips-wrap golf-loc-cities" role="group" aria-label="지역">
+      ${CITIES.map((c) => `<button type="button" class="chip ${o.name === c.name ? 'is-on' : ''}" data-action="golf-loc-city" data-v="${esc(c.name)}" aria-pressed="${o.name === c.name}">${esc(c.name)}</button>`).join('')}
+    </div>`;
+}
 
 export function renderGolf(state, data) {
   const g = state.ui.golf;
@@ -41,7 +71,10 @@ function domestic(state, data) {
         <span class="field-label">라운딩 일정</span>
         <input type="date" class="input" id="golf-date" value="${esc(day)}" min="${todayISO()}" data-field="golf-date">
       </label>
-      <p class="golf-from"><span class="field-label">출발:</span> <b>${esc(origin.name || '내 위치')}</b> <button type="button" class="link-btn" data-action="tab" data-v="my">바꾸기</button></p>
+      <div class="field">
+        <span class="field-label">검색 지역</span>
+        <button type="button" class="input golf-loc-btn" data-action="golf-loc" aria-label="검색 지역 바꾸기, 지금 ${esc(origin.name || '내 위치')}">${PIN}<span>${esc(origin.name || '내 위치')}</span></button>
+      </div>
     </div>
     <h2 class="h2 mt">차로 몇 시간까지</h2>
     <div class="chips" role="group" aria-label="이동시간">

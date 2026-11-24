@@ -725,3 +725,10 @@ svg { flex: none; }
 .golf-time { font-size: 13px; font-weight: 800; color: var(--ink); }
 .golf-deal { display: inline-block; padding: 1px 8px; border-radius: 999px; background: #ffe3e3; color: #b42318; font-size: 12px; font-weight: 800; vertical-align: 2px; }
 .golf-links a span small { display: block; font-size: 11px; color: var(--ink-2); margin-top: 2px; }
+/* 골픽 국내: 라운딩 일정·검색 지역을 같은 모양의 칸으로 나란히 */
+.golf-when .field { margin: 0; min-width: 0; }
+.golf-loc-btn { display: flex; align-items: center; gap: 6px; width: 100%; text-align: left; cursor: pointer; color: var(--ink); font: inherit; }
+.golf-loc-btn span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.golf-loc-btn svg { flex: none; color: var(--ink-2); }
+.golf-loc-gps { margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.golf-loc-cities { margin-top: 10px; }
