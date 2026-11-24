@@ -269,7 +269,7 @@ export function abroadTrip(state) {
   const round = pick && pick >= min ? pick : min;
   // N박 = 라운딩 N+1번(1박 → 18홀 2번 = 36홀). 전날 출발, 마지막 라운딩 날 저녁 귀국편(다음날 한국 도착)
   // 박 수 버튼을 다시 눌러 끄면 0박 = 라운딩 1회(18홀)
-  const nights = [0, 1, 2, 3].includes(Number(g.abNights)) && g.abNights !== undefined && g.abNights !== null ? Number(g.abNights) : 2;
+  const nights = [0, 1, 2, 3].includes(Number(g.abNights)) && g.abNights !== undefined && g.abNights !== null ? Number(g.abNights) : 0;
   const rounds = nights + 1;
   const dep = addDays(round, -1), last = addDays(round, nights);
   return { round, dep, ret: last, out: last, nights: nights + 1, days: nights + 3, golfNights: nights, rounds };
@@ -306,8 +306,8 @@ function abroadRows(state, data, trip) {
   const cities = country ? [...tree.get(cont).get(country)].sort((a, b) => b[1] - a[1]) : [];
   const city = cities.some(([n]) => n === g.city) ? g.city : '';
   const holes = ['18', '9', 'all'].includes(g.abHoles) ? g.abHoles : '18';
-  // 가격 보기: 'total' = 1인 골프 비용 + 항공권(기본), 'golf' = 1인 골프 가격(1회)만
-  const view = g.abView === 'golf' ? 'golf' : 'total';
+  // 가격 보기: 'golf' = 1인 골프 가격만(기본), 'total' = 1인 골프 비용 + 항공권
+  const view = g.abView === 'total' ? 'total' : 'golf';
   const costOf = view === 'golf' ? (c) => ({ golf: c.price || 0, rounds: 1, fare: 0, total: c.price || 0, golfOnly: true }) : (c) => courseCost(c, trip);
   const rows = courseList(data.courses, { cont, country, city, holes, costOf });
   return { rows, conts, cont, countries, country, cities, city, holes, view };
