@@ -78,11 +78,15 @@ function ensureGolf() {
   loadGolf().then((d) => { golfData = d; state.ui.golfLoading = false; if (state.ui.tab === 'golf' || sheets.some((x) => String(x.type).startsWith('golf'))) update(() => {}, { persist: false }); });
 }
 
+let lastCompute = null;
+let fareRenderTimer = 0;
 function render() {
   ensureGolf();
   ensureShops();
   ensureGooglePhotos();
-  const c = compute();
+  // 골프 탭(골프 창만 열린 상태)에서는 추천 순위 계산(약 0.4초)이 필요 없어 건너뛴다 → 해외 골프 화면 버벅임 해결
+  const needHome = state.ui.tab !== 'golf' || sheets.some((x) => !String(x.type).startsWith('golf'));
+  const c = needHome ? (lastCompute = compute()) : { ...(lastCompute || { tripEvents: [], upcoming: [], eventsAll: [], ranked: [], rankedAll: [] }) };
   c.golf = golfData; // 골픽 상세 창이 쓴다
   const tab = state.ui.tab;
   const view =
@@ -120,7 +124,8 @@ function render() {
   fitLines(root);
   // 해외 골프장: 보이는 카드의 공항 항공권을 라운딩 일정으로 조회(끝나면 다시 그린다)
   const fn = abroadFareNeeds(state, golfData);
-  if (fn?.iatas.length) requestFares(fn.iatas, fn.trip, () => update(() => {}, { persist: false }));
+  // 항공권 결과가 여러 개 연달아 오면 0.3초 모아서 한 번만 다시 그린다
+  if (fn?.iatas.length) requestFares(fn.iatas, fn.trip, () => { clearTimeout(fareRenderTimer); fareRenderTimer = setTimeout(() => update(() => {}, { persist: false }), 300); });
   const slides = document.querySelector('[data-slides]');
   if (slides) syncSlides(slides);
 
