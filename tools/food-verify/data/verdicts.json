@@ -419,6 +419,18 @@
    "ep:67"
   ]
  },
+ "10335617": {
+  "name": "막내회집 본점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5.5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "xGzUPV1lqNw"
+  ]
+ },
  "10343783": {
   "name": "맛삼",
   "status": "eligible",
@@ -729,6 +741,18 @@
   "episodes": 1,
   "videos": [
    "-rdQxOZgQCE"
+  ]
+ },
+ "12052839": {
+  "name": "조박사토종순대국",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:16"
   ]
  },
  "12055448": {
@@ -1137,6 +1161,18 @@
   "episodes": 1,
   "videos": [
    "ep:79"
+  ]
+ },
+ "16530821": {
+  "name": "스마일즉석떡볶이",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "ep:46"
   ]
  },
  "16669475": {
@@ -1581,6 +1617,18 @@
   "episodes": 1,
   "videos": [
    "uXq3hmDhpps"
+  ]
+ },
+ "21442291": {
+  "name": "다가이 상암점",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 1.5,
+  "top": "visited",
+  "episodes": 1,
+  "videos": [
+   "vAKeY1t_bLI"
   ]
  },
  "21722720": {
@@ -2817,6 +2865,18 @@
   "episodes": 1,
   "videos": [
    "ep:64"
+  ]
+ },
+ "1459458596": {
+  "name": "유야케도쿄",
+  "status": "eligible",
+  "reasons": [],
+  "channels": 1,
+  "score": 5,
+  "top": "winner",
+  "episodes": 1,
+  "videos": [
+   "ep:5"
   ]
  },
  "1496311890": {

@@ -687,20 +687,20 @@
   ]
  },
  "vAKeY1t_bLI": {
-  "descHash": "f667aa65540d93b2",
-  "extractedAt": 1794921060420,
+  "descHash": "f000dab23d62d567",
+  "extractedAt": 1795506393098,
   "region": "서울 마포구",
   "source": "manual",
   "items": [
    {
-    "name": "다가이순대국",
+    "name": "다가이",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 마포구 월드컵북로44길 67",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "WEAK_MATCH"
+     "level": "linked",
+     "key": "21442291",
+     "why": ""
     }
    },
    {
@@ -1160,8 +1160,8 @@
   "items": []
  },
  "xGzUPV1lqNw": {
-  "descHash": "5f37379b4e0a7942",
-  "extractedAt": 1794921060420,
+  "descHash": "9a6bb5c9c28242c8",
+  "extractedAt": 1795506393098,
   "region": "서울 중구",
   "source": "manual",
   "items": [
@@ -1169,11 +1169,11 @@
     "name": "막내회집",
     "role": "winner",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 중구 남대문시장2가길 2",
     "match": {
-     "level": "ambiguous",
-     "key": "",
-     "why": "MULTI_BRANCH"
+     "level": "linked",
+     "key": "10335617",
+     "why": ""
     }
    },
    {
@@ -1324,8 +1324,8 @@
   ]
  },
  "ep:83": {
-  "descHash": "d75a6889c7633cac",
-  "extractedAt": 1794921060420,
+  "descHash": "18be27e1523ba3da",
+  "extractedAt": 1795506393098,
   "region": "전남 여수시",
   "source": "manual",
   "items": [
@@ -1344,7 +1344,7 @@
     "name": "샛별식당",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "전남 여수시 웅천북3로 40",
     "match": {
      "level": "none",
      "key": "",
@@ -2762,8 +2762,8 @@
   ]
  },
  "ep:46": {
-  "descHash": "faac461ade3ba601",
-  "extractedAt": 1794921060420,
+  "descHash": "db901312dbc74368",
+  "extractedAt": 1795506393098,
   "region": "서울 성동구",
   "source": "manual",
   "items": [
@@ -2790,13 +2790,13 @@
     }
    },
    {
-    "name": "스마일떡볶이",
+    "name": "스마일 즉석떡볶이",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 성동구 마조로 39",
     "match": {
-     "level": "none",
-     "key": "",
+     "level": "linked",
+     "key": "16530821",
      "why": ""
     }
    },
@@ -3596,8 +3596,8 @@
   ]
  },
  "ep:24": {
-  "descHash": "92a399f55dabbdf3",
-  "extractedAt": 1794921549484,
+  "descHash": "42e3eb27ad4665b8",
+  "extractedAt": 1795506393098,
   "region": "서울 강남구",
   "source": "manual",
   "items": [
@@ -3605,7 +3605,7 @@
     "name": "광평",
     "role": "winner",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 강남구 영동대로106길 45",
     "match": {
      "level": "none",
      "key": "",
@@ -3935,19 +3935,19 @@
   ]
  },
  "ep:16": {
-  "descHash": "80ed609f73d3c80e",
-  "extractedAt": 1794921060420,
+  "descHash": "7d301bde1cc4af89",
+  "extractedAt": 1795506393098,
   "region": "서울 송파구",
   "source": "manual",
   "items": [
    {
-    "name": "조박사순대국",
+    "name": "조박사 토종 순대국",
     "role": "visited",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 송파구 올림픽로35길 112",
     "match": {
-     "level": "none",
-     "key": "",
+     "level": "linked",
+     "key": "12052839",
      "why": ""
     }
    },
@@ -4419,8 +4419,8 @@
   ]
  },
  "ep:5": {
-  "descHash": "02f700854c4ed6ea",
-  "extractedAt": 1794921060420,
+  "descHash": "6801d03abe472849",
+  "extractedAt": 1795506393098,
   "region": "서울 서대문구",
   "source": "manual",
   "items": [
@@ -4447,13 +4447,13 @@
     }
    },
    {
-    "name": "유아케도쿄",
+    "name": "유야케 도쿄",
     "role": "winner",
     "cue": "manual",
-    "addr": "",
+    "addr": "서울 서대문구 이화여대3길 28",
     "match": {
-     "level": "none",
-     "key": "",
+     "level": "linked",
+     "key": "1459458596",
      "why": ""
     }
    },
@@ -4555,6 +4555,13 @@
  "Rav1TeaYkn4": {
   "descHash": "d7243e7655742fbc",
   "extractedAt": 1795208011800,
+  "region": "군산시",
+  "source": "description",
+  "items": []
+ },
+ "Ct3Xds2Jgww": {
+  "descHash": "174ef60c08d9378e",
+  "extractedAt": 1795506393098,
   "region": "군산시",
   "source": "description",
   "items": []

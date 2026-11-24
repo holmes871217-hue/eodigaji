@@ -49,14 +49,6 @@
  },
  {
   "kind": "series",
-  "videoId": "vAKeY1t_bLI",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "다가이순대국",
-  "role": "visited",
-  "why": "WEAK_MATCH"
- },
- {
-  "kind": "series",
   "videoId": "y4rM8vnYsZc",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "원조누드김밥",
@@ -70,14 +62,6 @@
   "name": "순대",
   "role": "winner",
   "why": "NO_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "xGzUPV1lqNw",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "막내회집",
-  "role": "winner",
-  "why": "MULTI_BRANCH"
  },
  {
   "kind": "series",
@@ -169,14 +153,6 @@
  },
  {
   "kind": "series",
-  "videoId": "ep:46",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "스마일떡볶이",
-  "role": "visited",
-  "why": "NO_MATCH"
- },
- {
-  "kind": "series",
   "videoId": "ep:43",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "함박웃음순대숙",
@@ -241,14 +217,6 @@
  },
  {
   "kind": "series",
-  "videoId": "ep:16",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "조박사순대국",
-  "role": "visited",
-  "why": "NO_MATCH"
- },
- {
-  "kind": "series",
   "videoId": "ep:15",
   "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
   "name": "대가",
@@ -294,14 +262,6 @@
   "name": "맘맘테이블",
   "role": "visited",
   "why": "WEAK_MATCH"
- },
- {
-  "kind": "series",
-  "videoId": "ep:5",
-  "channelId": "UC4ZA57iJrf73bJlApKFeLRw",
-  "name": "유아케도쿄",
-  "role": "winner",
-  "why": "NO_MATCH"
  },
  {
   "kind": "series",
