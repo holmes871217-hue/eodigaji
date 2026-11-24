@@ -129,5 +129,48 @@ app.get('/golfmon/abroad', one(async () => {
   } finally { await ctx.close(); }
 }));
 
+// ── 카카오골프: 먼저 구조 확인용(robots.txt, 화면 글, 화면이 부르는 JSON 주소) ─────────────
+import { readFileSync } from 'node:fs';
+app.get('/kakaogolf/probe', one(async (req) => {
+  const path = String(req.query.path || '/');
+  if (!/^\/[\w\-/?=&.%]*$/.test(path)) throw new Error('path 형식 오류');
+  const ctx = await context(mode);
+  const page = await ctx.newPage();
+  const xhr = [];
+  page.on('response', async (r) => {
+    const ct = r.headers()['content-type'] || '';
+    if (!/json/.test(ct) || xhr.length >= 25) return;
+    try { xhr.push({ url: r.url().slice(0, 300), status: r.status(), body: (await r.text()).slice(0, 2000) }); } catch {}
+  });
+  try {
+    let robots = '';
+    try { const rr = await ctx.request.get('https://www.kakao.golf/robots.txt'); robots = `${rr.status()} ${(await rr.text()).slice(0, 3000)}`; } catch (e) { robots = String(e.message).slice(0, 200); }
+    await page.goto(`https://www.kakao.golf${path}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await sleep(5000);
+    await scrollAll(page);
+    const links = await page.$$eval('a', (as) => [...new Set(as.map((a) => a.href))].slice(0, 80));
+    return { robots, url: page.url(), title: await page.title(), text: (await page.innerText('body')).slice(0, 6000), links, xhr };
+  } finally { await ctx.close(); }
+}));
+
+// ── 골프장 홈페이지(티스캐너에 등록된 공식 홈페이지 주소만): 이벤트 확인용 ─────────────
+const HOMEPAGES = JSON.parse(readFileSync(new URL('./homepages.json', import.meta.url), 'utf8'));
+const HP_HOSTS = new Set(Object.values(HOMEPAGES).map((x) => new URL(x.u).hostname.replace(/^www\./, '')));
+const EV = /이벤트|EVENT|특가|프로모션|할인|그린피/i;
+app.get('/homepage', one(async (req) => {
+  const u = new URL(String(req.query.u || ''));
+  if (!HP_HOSTS.has(u.hostname.replace(/^www\./, ''))) throw new Error('등록된 골프장 홈페이지가 아님');
+  const ctx = await context(mode);
+  const page = await ctx.newPage();
+  try {
+    await page.goto(u.href, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await sleep(3000);
+    const text = (await page.innerText('body').catch(() => '')).slice(0, 20000);
+    const links = await page.$$eval('a', (as) => as.map((a) => ({ t: (a.innerText || a.title || '').trim().slice(0, 80), h: a.href }))).catch(() => []);
+    const imgs = await page.$$eval('img', (is) => is.map((i) => ({ alt: i.alt || '', src: i.src }))).catch(() => []);
+    return { url: page.url(), title: await page.title(), text, links: links.filter((l) => EV.test(`${l.t} ${l.h}`)).slice(0, 30), imgs: imgs.filter((i) => EV.test(`${i.alt} ${i.src}`)).slice(0, 20) };
+  } finally { await ctx.close(); }
+}));
+
 const port = Number(process.env.PORT || 8080);
 app.listen(port, () => console.log(`golfmon-collector :${port}`));
