@@ -39,7 +39,7 @@ export function golfDays(data, today) {
 export const isShortCourse = (c) => (c.holes && c.holes < 18) || /파크\s*골프|퍼\s*9|\(\s*P\s*9\s*\)|\bP9\b|퍼블릭\s*9|(^|[^0-9])[369]\s*홀/i.test(c.name || '');
 
 /**
- * 주유비(1인): 왕복 거리(차 거리 × 2) ÷ 연비 × 연료 가격 ÷ 4인(카트비·캐디피와 같은 4인 기준).
+ * 주유비(1인): 왕복 거리(차 거리 × 2) ÷ 연비 × 연료 가격. 한 사람이 차 한 대로 가므로 나누지 않는다.
  * 연료·연비·가격 중 하나라도 없으면 null(계산 안 함).
  */
 export const FUEL_LABEL = { gasoline: '휘발유', diesel: '경유', ev: '전기' };
@@ -48,7 +48,7 @@ export function fuelCost(km, car, fuel) {
   if (!car?.fuel || !(car.eff > 0) || !(price > 0) || !(km > 0)) return null;
   const roundKm = km * 2;
   const total = Math.round((roundKm / car.eff) * price / 10) * 10;
-  return { roundKm: Math.round(roundKm), total, perPerson: Math.round(total / 4 / 10) * 10, price, unit: car.fuel === 'ev' ? 'kWh' : 'L' };
+  return { roundKm: Math.round(roundKm), total, perPerson: total, price, unit: car.fuel === 'ev' ? 'kWh' : 'L' }; // 한 사람이 차 한 대를 몰고 가므로 차 1대 왕복 주유비 전부가 1인 몫(2026-11-24 운영자 지시)
 }
 
 export function golfDomestic(data, { origin, day, maxMin, car }) {
