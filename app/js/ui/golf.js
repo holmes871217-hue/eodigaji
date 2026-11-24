@@ -225,9 +225,12 @@ const HEART = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true
 const ICON_FLAG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21V4l11 4.5L6 13"/></svg>';
 const ICON_BAG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9 7V4h6v3"/></svg>';
 
+// 해외 패키지 상품: 화면이 복잡해 잠시 숨김(2026-11-24 운영자 지시). 다시 보이려면 true 로 바꾸면 된다(코드·수집은 그대로 있음)
+export const SHOW_PACKS = false;
+
 function abroad(state, data) {
   const g = state.ui.golf;
-  const kind = g.kind === 'pack' ? 'pack' : 'course';
+  const kind = SHOW_PACKS && g.kind === 'pack' ? 'pack' : 'course';
   const t = abroadTrip(state);
   const md = (iso) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
   // 국내와 같은 모양: 왼쪽 라운딩 일정(달력) · 오른쪽 골프장/패키지 고르기
@@ -237,17 +240,20 @@ function abroad(state, data) {
         <span class="field-label">라운딩 일정</span>
         <input type="date" class="input" id="golf-ab-date" value="${esc(t.round)}" min="${esc(addDays(todayISO(), 1))}" data-field="golf-ab-date">
       </label>
-      <div class="field">
+      ${SHOW_PACKS ? `<div class="field">
         <span class="field-label">상품</span>
         <div class="golf-kind-seg" role="group" aria-label="해외 종류">
           <button type="button" class="${kind === 'course' ? 'is-on' : ''}" data-action="golf-kind" data-v="course" aria-pressed="${kind === 'course'}">${ICON_FLAG}<span>골프장</span></button>
           <button type="button" class="${kind === 'pack' ? 'is-on' : ''}" data-action="golf-kind" data-v="pack" aria-pressed="${kind === 'pack'}">${ICON_BAG}<span>패키지</span></button>
         </div>
-      </div>
+      </div>` : `<div class="field">
+        <span class="field-label">찜한 골프장</span>
+        <button type="button" class="input golf-picks-field ${(g.picks || []).length ? 'has' : ''}" data-action="golf-picks" aria-label="찜한 골프장 ${(g.picks || []).length}곳, 합계 보기">${HEART_SM}<span>찜 ${(g.picks || []).length}곳 · 합계</span></button>
+      </div>`}
     </div>
     <div class="chips golf-nights" role="group" aria-label="머무는 기간">
       ${[1, 2, 3].map((n) => `<button type="button" class="chip ${t.golfNights === n ? 'is-on' : ''}" data-action="golf-ab-nights" data-v="${n}" aria-pressed="${t.golfNights === n}">${n}박</button>`).join('')}
-      <button type="button" class="chip golf-picks-btn ${(g.picks || []).length ? 'has' : ''}" data-action="golf-picks" aria-label="찜한 골프장 ${(g.picks || []).length}곳, 합계 보기">${HEART_SM}찜 ${(g.picks || []).length}</button>
+      ${SHOW_PACKS ? `<button type="button" class="chip golf-picks-btn ${(g.picks || []).length ? 'has' : ''}" data-action="golf-picks" aria-label="찜한 골프장 ${(g.picks || []).length}곳, 합계 보기">${HEART_SM}찜 ${(g.picks || []).length}</button>` : ''}
     </div>
     <p class="muted golf-trip">라운딩 ${t.rounds > 1 ? `${md(t.round)}~${md(t.ret)} ${t.rounds}번(${t.rounds * 18}홀)` : `${md(t.round)} 1번(18홀)`} · 항공권은 ${md(t.dep)} 출발, ${md(t.ret)} 저녁 귀국편(다음날 한국 도착) 기준</p>
     ${kind === 'pack' ? abroadPacks(state, data) : abroadCourses(state, data)}`;
