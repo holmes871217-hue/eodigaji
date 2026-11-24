@@ -7,6 +7,7 @@
 //   GET /golfmon/abroad                        → { mode, ok, text, html }  해외 투어 목록
 import express from 'express';
 import { chromium } from 'playwright';
+import { spawn } from 'node:child_process';
 
 const LIST = 'https://www.golfmon.net/booking/list?tab=%EC%96%91%EB%8F%84';
 const ABROAD = 'https://www.golfmon.net/overseas/tour';
@@ -22,7 +23,20 @@ const browsers = {};
 let mode = MODES[0];
 let busy = false;
 
+// 화면 있는 크롬이 필요할 때만 가상 화면(Xvfb :99)을 띄운다
+let xvfb = null;
+async function ensureDisplay() {
+  if (process.env.DISPLAY) return;
+  if (!xvfb) {
+    xvfb = spawn('Xvfb', [':99', '-screen', '0', '1366x900x24', '-nolisten', 'tcp'], { stdio: 'ignore' });
+    xvfb.on('error', (e) => console.log('Xvfb 실행 실패', e.message));
+    await sleep(1500);
+  }
+  process.env.DISPLAY = ':99';
+}
+
 async function context(m) {
+  if (m === 'headed') await ensureDisplay();
   if (!browsers[m] || !browsers[m].isConnected()) {
     browsers[m] = await chromium.launch({ headless: m === 'headless', executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--no-sandbox', '--disable-dev-shm-usage'] });
   }
