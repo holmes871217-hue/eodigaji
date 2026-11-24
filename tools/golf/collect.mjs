@@ -18,7 +18,8 @@ const DAYS = Number(process.env.GOLF_DAYS || 7);
 const GP_MAX_PAGES = Number(process.env.GOLF_GP_PAGES || 8);
 const KAKAO = process.env.KAKAO_REST_KEY || '';
 const FIRECRAWL = process.env.FIRECRAWL_API_KEY || ''; // 골프몬(한국 밖 접속 차단)을 한국 위치로 열 때 쓴다
-const GOLFMON_DAYS = Number(process.env.GOLF_GM_DAYS || 7); // 골프몬 국내는 앞으로 며칠치(2026-11-24 3일→7일)
+const GOLFMON_DAYS = Number(process.env.GOLF_GM_DAYS || 30); // 골프몬 국내는 앞으로 30일치를
+const GOLFMON_EVERY_DAYS = Number(process.env.GOLF_GM_EVERY || 14); // 14일에 한 번만 받는다(Firecrawl 크레딧 아끼기, 2026-11-24 운영자 지시). 그 사이에는 저장본을 쓴다
 const DRIVE_CAP = Number(process.env.GOLF_DRIVE_CAP || 3000); // 한 번에 부르는 길찾기 최대 건수(하루 무료 10,000건)
 const DRIVE_TTL_DAYS = 14;
 const DRIVE_BUDGET_MIN = Number(process.env.GOLF_DRIVE_MIN || 12); // 길찾기에 쓰는 시간 상한(분). 못 다 한 것은 다음 날 이어서 한다
@@ -233,6 +234,40 @@ async function firecrawl(body) {
   if (!r.ok || !j.success) throw new Error(`firecrawl ${r.status} ${j.error || ''}`.trim());
   return j.data?.markdown || '';
 }
+async function firecrawlRaw(body) {
+  const r = await fetch('https://api.firecrawl.dev/v2/scrape', { method: 'POST', headers: { Authorization: `Bearer ${FIRECRAWL}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ location: { country: 'KR', languages: ['ko'] }, onlyMainContent: false, formats: ['rawHtml'], ...body }), signal: AbortSignal.timeout(150000) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.success) throw new Error(`firecrawl ${r.status} ${j.error || ''}`.trim());
+  return j.data?.rawHtml || '';
+}
+
+/**
+ * 골프몬 달력에 실제로 매물이 있는 (지역, 날짜) 칸만 고른다. 화면 한 번(1크레딧)으로 달력을 읽어,
+ * 매물 0건인 칸은 누르지 않는다. 달력을 못 읽으면 null(→ 모든 칸을 차례로 누른다).
+ */
+async function golfmonCalendar(daySet) {
+  try {
+    const html = await firecrawlRaw({ url: 'https://www.golfmon.net/booking/list?tab=%EC%96%91%EB%8F%84', actions: [{ type: 'wait', milliseconds: 4000 }] });
+    const cells = [];
+    for (const m of html.matchAll(/<[^>]*class="[^"]*schedule-count[^"]*"[^>]*data-gtm-meta="([^"]+)"[^>]*>([\s\S]*?)<\//g)) {
+      const meta = unescapeHtml(m[1]);
+      const rid = /"region_id":"(\d+)"/.exec(meta)?.[1], date = /"date":"(\d{4}-\d{2}-\d{2})"/.exec(meta)?.[1];
+      const n = Number(String(m[2]).replace(/<[^>]+>/g, '').replace(/[^\d]/g, '')) || 0;
+      if (rid && date) cells.push({ rid, date, n });
+    }
+    // 속성 순서가 반대인 경우(data-gtm-meta 가 class 앞)도 읽는다
+    if (!cells.length) for (const m of html.matchAll(/data-gtm-meta="([^"]+)"[^>]*class="[^"]*schedule-count[^"]*"[^>]*>([\s\S]*?)<\//g)) {
+      const meta = unescapeHtml(m[1]);
+      const rid = /"region_id":"(\d+)"/.exec(meta)?.[1], date = /"date":"(\d{4}-\d{2}-\d{2})"/.exec(meta)?.[1];
+      const n = Number(String(m[2]).replace(/<[^>]+>/g, '').replace(/[^\d]/g, '')) || 0;
+      if (rid && date) cells.push({ rid, date, n });
+    }
+    if (!cells.length) { log('골프몬 달력 칸을 못 읽음 — 모든 칸을 누른다'); return null; }
+    const dates = [...new Set(cells.map((c) => c.date))].sort();
+    log(`골프몬 달력: ${cells.length}칸, ${dates[0]} ~ ${dates[dates.length - 1]}, 매물 있는 칸 ${cells.filter((c) => c.n > 0).length}`);
+    return cells.filter((c) => daySet.has(c.date) && c.n > 0);
+  } catch (e) { log('골프몬 달력 실패', e.message.slice(0, 80)); return null; }
+}
 
 // 골프몬 서울 서버(servers/golfmon, 구글 클라우드 런 서울): 지역 3곳씩 나눠 물어 본다. 실패한 지역은 비워 두면 Firecrawl 로 받는다.
 const GOLFMON_SERVER = process.env.GOLFMON_SERVER || '';
@@ -251,12 +286,34 @@ async function golfmonServer(day) {
   return got;
 }
 
+/** 골프몬: 14일에 한 번 30일치를 받아 저장하고, 그 사이에는 저장본(지난 날짜 뺀 것)을 쓴다 */
+async function collectGolfmonCached(stat) {
+  const cache = readJson('golfmon-dom.json', { collectedAt: null, rows: [] });
+  const age = cache.collectedAt ? (Date.now() - Date.parse(cache.collectedAt)) / 864e5 : Infinity;
+  const today = kstDates(1)[0];
+  if (age < GOLFMON_EVERY_DAYS && !process.env.GOLF_GM_FORCE) {
+    stat.cached = cache.collectedAt;
+    log(`골프몬: 저장본 사용(${cache.collectedAt.slice(0, 10)} 수집, ${Math.floor(age)}일 지남, ${GOLFMON_EVERY_DAYS}일마다 새로 받음)`);
+    return cache.rows.filter((r) => r.day >= today);
+  }
+  const rows = await collectGolfmon(kstDates(GOLFMON_DAYS), stat);
+  if (rows.length) writeJson('golfmon-dom.json', { collectedAt: new Date().toISOString(), days: GOLFMON_DAYS, rows });
+  else { log('골프몬 새로 받기 실패 — 저장본 사용'); return cache.rows.filter((r) => r.day >= today); }
+  return rows;
+}
+
 async function collectGolfmon(dates, stat) {
   const agg = new Map();
   const year = dates[0].slice(0, 4);
-  for (const day of dates.slice(0, GOLFMON_DAYS)) {
+  let days = dates.slice(0, GOLFMON_DAYS);
+  const cal = FIRECRAWL ? await golfmonCalendar(new Set(days)) : null;
+  // 달력을 못 읽으면 칸을 하나하나 눌러야 해서 크레딧이 많이 든다 → 그때는 7일치만
+  if (!cal && days.length > 7) { log('골프몬: 달력을 못 읽어 7일치만 받음'); days = days.slice(0, 7); }
+  if (cal) stat.pages++;
+  for (const day of days) {
     const viaServer = await golfmonServer(day);
     for (const [rid, region] of GOLFMON_REGIONS) {
+      if (cal && !viaServer.has(rid) && !cal.some((c) => c.rid === rid && c.date === day)) continue; // 매물 없는 칸은 건너뛴다
       try {
         // 1순위: 운영자 서울 서버(플레이라이트). 못 받으면 Firecrawl(한국 위치)
         let md = viaServer.get(rid);
@@ -266,7 +323,8 @@ async function collectGolfmon(dates, stat) {
         stat.pages++;
         for (const r of rows) {
           const [m, d] = r.md.split('/').map(Number);
-          const rd = `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          const y = m < Number(dates[0].slice(5, 7)) ? Number(year) + 1 : Number(year); // 12월→1월 넘어가는 30일치
+          const rd = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
           if (rd !== day) continue;
           stat.rows++;
           if (isHiddenName(r.name)) continue;
@@ -639,9 +697,9 @@ try {
 const gmStat = { pages: 0, rows: 0, errors: 0, merged: 0, unplaced: new Set() };
 if (FIRECRAWL || GOLFMON_SERVER) {
   try {
-    const gmRows = await collectGolfmon(dates, gmStat);
+    const gmRows = await collectGolfmonCached(gmStat);
     await mergeGolfpang(gmRows, courses, gmStat, 'gm');
-    meta.sources.push({ id: 'gm', name: '골프몬', ok: gmStat.pages > 0, pages: gmStat.pages, rows: gmStat.rows, merged: gmStat.merged, unplaced: gmStat.unplaced.size, errors: gmStat.errors, server: gmStat.server || 0, days: GOLFMON_DAYS, at: new Date().toISOString() });
+    meta.sources.push({ id: 'gm', name: '골프몬', ok: gmStat.pages > 0 || Boolean(gmStat.cached), pages: gmStat.pages, rows: gmStat.rows, merged: gmStat.merged, unplaced: gmStat.unplaced.size, errors: gmStat.errors, server: gmStat.server || 0, days: GOLFMON_DAYS, cachedFrom: gmStat.cached || null, at: new Date().toISOString() });
   } catch (e) { meta.sources.push({ id: 'gm', name: '골프몬', ok: false, error: e.message }); log('골프몬 실패', e.message); }
   if (FIRECRAWL) try { log(`골프몬 해외 상품 ${await collectGolfmonAbroad()}개`); } catch (e) { log('골프몬 해외 실패', e.message.slice(0, 80)); }
 } else log('FIRECRAWL_API_KEY 없음 — 골프몬은 저장본만 사용');
@@ -700,7 +758,8 @@ list.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
 const out = {
   v: 2,
   updatedAt: new Date().toISOString(),
-  dates,
+  // 골프몬만 있는 먼 날짜(최대 30일)도 고를 수 있게, 가격이 있는 날을 모두 넣는다
+  dates: [...new Set([...dates, ...list.flatMap((c) => Object.keys(c.days))])].sort(),
   sources: meta.sources,
   drive: meta.drive,
   fx: rate,
