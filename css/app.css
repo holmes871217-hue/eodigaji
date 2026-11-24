@@ -771,3 +771,7 @@ svg { flex: none; }
 .car-eff { position: relative; display: block; }
 .car-eff .input { padding-right: 58px; }
 .car-unit { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--ink-2); pointer-events: none; }
+.golf-head { flex-wrap: nowrap; }
+.golf-filters { display: flex; align-items: center; gap: 6px; margin-left: auto; flex: none; }
+.golf-air-toggle { display: inline-flex; align-items: center; gap: 3px; min-height: 40px; padding: 0 10px; border-radius: 999px; border: 1px solid #d5def2; background: var(--surface); color: var(--ink-2); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; opacity: 0.55; }
+.golf-air-toggle.is-on { opacity: 1; color: var(--ink); border-color: var(--ink); }

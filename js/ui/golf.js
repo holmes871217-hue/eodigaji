@@ -284,7 +284,8 @@ export function abroadFareNeeds(state, data) {
   if (state.ui.tab !== 'golf' || g.mode !== 'abroad' || !data?.courses) return null;
   const trip = abroadTrip(state);
   if (g.kind === 'pack') return { trip, iatas: packRows(state, data, trip).rows.slice(0, g.max || 20).filter((t) => t.flightIncl === 'no').map((t) => t.flight?.iata || t.iata).filter(Boolean) };
-  const { rows } = abroadRows(state, data, trip);
+  const { rows, view } = abroadRows(state, data, trip);
+  if (view === 'golf') return { trip, iatas: [] }; // 1인 골프만 볼 때는 항공권을 조회하지 않는다
   const pickAir = (g.picks || []).map((id) => data.courses.find((c) => c.id === id)?.air?.iata);
   return { trip, iatas: [...rows.slice(0, g.max || 20).map((r) => r.c.air?.iata), ...pickAir].filter(Boolean) };
 }
@@ -299,14 +300,17 @@ function abroadRows(state, data, trip) {
   const cities = country ? [...tree.get(cont).get(country)].sort((a, b) => b[1] - a[1]) : [];
   const city = cities.some(([n]) => n === g.city) ? g.city : '';
   const holes = ['18', '9', 'all'].includes(g.abHoles) ? g.abHoles : '18';
-  const rows = courseList(data.courses, { cont, country, city, holes, costOf: (c) => courseCost(c, trip) });
-  return { rows, conts, cont, countries, country, cities, city, holes };
+  // 가격 보기: 'total' = 1인 골프 비용 + 항공권(기본), 'golf' = 1인 골프 가격(1회)만
+  const view = g.abView === 'golf' ? 'golf' : 'total';
+  const costOf = view === 'golf' ? (c) => ({ golf: c.price || 0, rounds: 1, fare: 0, total: c.price || 0, golfOnly: true }) : (c) => courseCost(c, trip);
+  const rows = courseList(data.courses, { cont, country, city, holes, costOf });
+  return { rows, conts, cont, countries, country, cities, city, holes, view };
 }
 /** 해외 골프장(몽키트래블처럼): 대륙 → 나라 → 도시, 사진 카드, 1인당 가격 */
 function abroadCourses(state, data) {
   const g = state.ui.golf;
   const trip = abroadTrip(state);
-  const { rows, conts, cont, countries, country, cities, city, holes } = abroadRows(state, data, trip);
+  const { rows, conts, cont, countries, country, cities, city, holes, view } = abroadRows(state, data, trip);
   const shown = rows.slice(0, g.max || 20);
   const chip = (act, v, label, on) => `<button type="button" class="chip ${on ? 'is-on' : ''}" data-action="${act}" data-v="${esc(v)}" aria-pressed="${on}">${esc(label)}</button>`;
   return `
@@ -316,6 +320,8 @@ function abroadCourses(state, data) {
     ${cities.length > 1 ? `<div class="chips golf-cities" role="group" aria-label="도시">${chip('golf-city', '', `${country} 전체`, !city)}${cities.map(([n, k]) => chip('golf-city', n, `${n} ${k}`, n === city)).join('')}</div>` : ''}
     <div class="golf-head">
       <h2 class="h2">골프장 · 총 <span data-golf-total>${rows.length}</span>곳</h2>
+      <div class="golf-filters">
+      <button type="button" class="golf-air-toggle ${view === 'total' ? 'is-on' : ''}" data-action="golf-ab-air" aria-pressed="${view === 'total'}" aria-label="네이버 항공권 금액 ${view === 'total' ? '켜짐(누르면 1인 골프 가격만)' : '꺼짐(누르면 항공권 더하기)'}">✈️<span>항공권</span></button>
       <label class="golf-filter"><span class="sr-only">홀 수</span>
         <select class="input sm" data-field="golf-ab-holes">
           <option value="18" ${holes === '18' ? 'selected' : ''}>18홀 이상</option>
@@ -323,8 +329,9 @@ function abroadCourses(state, data) {
           <option value="all" ${holes === 'all' ? 'selected' : ''}>전체</option>
         </select>
       </label>
+      </div>
     </div>
-    <p class="muted">추천순: 1인 골프 비용 + 왕복 항공권 합계가 낮은 순</p>
+    <p class="muted">${view === 'golf' ? '1인 골프 가격(18홀 1회)이 낮은 순 · 항공권은 빼고 봐요' : '추천순: 1인 골프 비용 + 왕복 항공권 합계가 낮은 순'}</p>
     ${rows.length ? `<ol class="list golf-list">${shown.map((r, i) => courseCard(r.c, r.cost, i + 1, (g.picks || []).includes(r.c.id))).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}곳 (남은 ${rows.length - shown.length}곳)</button>` : ''}`
       : '<div class="empty"><b>이 조건의 골프장이 없어요.</b><span>홀 수 필터를 "전체"로 바꿔 보세요.</span></div>'}`;
@@ -341,7 +348,27 @@ export const courseTitle = (c) => {
 };
 const placeText = (c) => [c.city, c.town].filter((x, i, a) => x && a.indexOf(x) === i).join(' · ');
 
+/** 1인 골프만 보기 카드: 큰 숫자 = 1인 골프 가격(1회), 아래 줄 = 현지 통화와 출처 */
+function courseCardGolf(c, rank, picked) {
+  return `
+    <li class="golf-item">
+      <button type="button" class="card golf-card" data-action="golf-course" data-id="${esc(c.id)}" aria-label="${rank}위 ${esc(courseTitle(c))} 상세 보기">
+        <span class="pcard-rank golf-no ${rank === 1 ? 'is-top' : ''}" aria-hidden="true">${rank}</span>
+        <span class="card-body">
+          <span class="card-title" data-fit="shrink">${esc(courseTitle(c))}</span>
+          <span class="card-meta">${[gradeText(c.grade), c.holes ? `${c.holes}홀` : '', c.rating ? `★ ${c.rating} (${Number(c.reviews || 0).toLocaleString('ko-KR')})` : ''].filter(Boolean).map(esc).join(' · ')}</span>
+          <span class="card-meta">${esc(c.air ? `${c.air.name}(${c.air.iata}) 공항${c.air.km ? `에서 약 ${c.air.km}km` : ''}` : placeText(c))}</span>
+          <span class="golf-price" data-fit><b>${c.price ? won(c.price) : '-'}</b> <small>1인 골프(18홀 1회)</small></span>
+        </span>
+        ${thumb(c.photo)}
+        <span class="golf-break" data-fit="shrink">${esc(c.price ? `몽키트래블 1인 가격 · 항공권 제외` : c.agency ? '예약 대행(그린피 별도 안내)' : '가격 정보 없음')}</span>
+      </button>
+      <button type="button" class="heart on-card golf-heart ${picked ? 'is-on' : ''}" data-action="golf-pick" data-id="${esc(c.id)}" aria-pressed="${picked}" aria-label="${picked ? '찜에서 빼기' : '찜하기(여러 골프장 합계 보기)'}">${HEART}</button>
+    </li>`;
+}
+
 function courseCard(c, cost, rank, picked = false) {
+  if (cost.golfOnly) return courseCardGolf(c, rank, picked);
   const fareTxt = cost.loading ? '항공권 조회 중…' : cost.fare ? `항공권 ${won(cost.fare)}(${cost.live ? '네이버 항공권' : '예상'})` : '항공권 확인 불가';
   const golfTxt = c.price ? `골프 ${cost.rounds > 1 ? `${won(c.price)}×${cost.rounds}회` : won(c.price)}(몽키트래블)` : c.agency ? '골프 예약 대행(그린피 별도)' : '골프 가격 없음';
   return `
