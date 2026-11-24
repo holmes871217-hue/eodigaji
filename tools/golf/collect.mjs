@@ -368,13 +368,13 @@ async function collectGolfmon(dates, stat) {
 
 /** 화면 HTML → 해외 목록 해석기가 읽는 글 모양(그림은 ![](주소), 블록은 줄바꿈) */
 function htmlToMdLite(html) {
-  return unescapeHtml(String(html || '')
+  // unescapeHtml 은 줄바꿈을 공백으로 합치므로, 줄을 먼저 나눈 다음 줄마다 푼다
+  return String(html || '')
     .replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, '')
     .replace(/<img[^>]*src="([^"]+)"[^>]*>/gi, '\n![]($1)\n')
     .replace(/<\/?(div|p|li|ul|section|article|h\d|br|a|span)[^>]*>/gi, '\n')
-    .replace(/<[^>]+>/g, ''))
-    .replace(/\[([^\]]+)\]/g, '\\[$1\\]')
-    .split('\n').map((l) => l.trim()).filter(Boolean).join('\n');
+    .replace(/<[^>]+>/g, '')
+    .split('\n').map((l) => unescapeHtml(l).trim().replace(/\[([^\]]+)\]/g, '\\[$1\\]')).filter(Boolean).join('\n');
 }
 
 async function collectGolfmonAbroad() {
