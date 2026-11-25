@@ -1,5 +1,4 @@
-// 지도. 1단계는 열쇠(API 키)가 필요 없는 공개 지도(Leaflet + OpenStreetMap)를 쓴다.
-// 3단계에서 카카오맵으로 교체 예정.
+// 지도. 열쇠(API 키)가 필요 없는 공개 지도(Leaflet + OpenFreeMap 벡터 지도, 지명은 한글)를 쓴다.
 //  - 추천 지도: 검색 위치를 가운데 두고, 화면 가로에 10km가 보이도록 연다.
 //  - 위치 고르기 지도: 지도는 자유롭게 움직이고, 원하는 자리를 한 번 누르면 검색 위치가 그곳으로 옮겨진다.
 
@@ -18,23 +17,60 @@ let pickMap = null;
 let pickMarker = null;
 let favMap = null;
 
-function loadLeaflet() {
-  if (window.L) return Promise.resolve();
-  if (loading) return loading;
-  loading = new Promise((resolve, reject) => {
-    const css = document.createElement('link');
-    css.rel = 'stylesheet';
-    css.href = `${LEAFLET}/leaflet.min.css`;
-    document.head.appendChild(css);
+// 지명 한글 표시: 오픈스트리트맵 자료로 만든 무료 벡터 지도(OpenFreeMap, 열쇠 필요 없음)를 MapLibre 로 그리고,
+// 글자는 한국어 이름(name:ko)이 있으면 그것, 없으면 현지 이름으로 쓴다. 한글은 휴대폰 글꼴로 그린다.
+// 벡터 지도를 못 불러오면 예전처럼 오픈스트리트맵 그림 지도(현지 글자)로 보여 준다.
+const MAPLIBRE = 'https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist';
+const ML_LEAFLET = 'https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js';
+const KO_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
+let koStyle = null; // 한국어로 바꾼 지도 스타일(한 번 받아 둔다)
+
+function addScript(src) {
+  return new Promise((resolve, reject) => {
     const s = document.createElement('script');
-    s.src = `${LEAFLET}/leaflet.min.js`;
+    s.src = src;
     s.onload = () => resolve();
-    s.onerror = () => {
-      loading = null;
-      reject(new Error('지도를 불러오지 못했어요.'));
-    };
+    s.onerror = () => reject(new Error(src));
     document.head.appendChild(s);
   });
+}
+function addCss(href) {
+  const css = document.createElement('link');
+  css.rel = 'stylesheet';
+  css.href = href;
+  document.head.appendChild(css);
+}
+
+/** 글자 칸(text-field)에서 이름을 쓰는 곳을 "한국어 이름 → 없으면 영어·현지 이름"으로 바꾼다 */
+function koreanize(style) {
+  // 한국어 이름 → 없으면 영어 이름 → 로마자 이름 → 현지 이름
+  const KO = ['coalesce', ['get', 'name:ko'], ['get', 'name:en'], ['get', 'name:latin'], ['get', 'name']];
+  for (const l of style.layers || []) {
+    const tf = l.layout?.['text-field'];
+    if (!tf) continue;
+    const s = JSON.stringify(tf);
+    if (/name/.test(s)) l.layout['text-field'] = KO;
+  }
+  return style;
+}
+
+function loadLeaflet() {
+  if (window.L && (koStyle || koStyle === false)) return Promise.resolve();
+  if (loading) return loading;
+  loading = (async () => {
+    addCss(`${LEAFLET}/leaflet.min.css`);
+    try { await addScript(`${LEAFLET}/leaflet.min.js`); } catch (e) { loading = null; throw new Error('지도를 불러오지 못했어요.'); }
+    // 한글 지도 준비(실패해도 지도는 그림 지도로 보여 준다)
+    try {
+      addCss(`${MAPLIBRE}/maplibre-gl.css`);
+      await addScript(`${MAPLIBRE}/maplibre-gl.js`);
+      await addScript(ML_LEAFLET);
+      const r = await fetch(KO_STYLE_URL);
+      koStyle = koreanize(await r.json());
+    } catch (e) {
+      koStyle = false;
+    }
+  })();
   return loading;
 }
 
@@ -46,7 +82,12 @@ function baseMap(el) {
   const L = window.L;
   // zoomSnap: 0 → 확대 단계를 소수점까지 허용해야 "가로 정확히 10km"를 맞출 수 있다.
   const map = L.map(el, { zoomControl: true, attributionControl: true, zoomSnap: 0, zoomDelta: 1 });
-  L.tileLayer(TILE, { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(map);
+  if (koStyle && L.maplibreGL) {
+    L.maplibreGL({ style: koStyle, attribution: '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> © OpenMapTiles © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OSM</a>' }).addTo(map);
+    map.attributionControl.setPrefix(false); // 출처 줄을 짧게(한 줄)
+  } else {
+    L.tileLayer(TILE, { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(map);
+  }
   L.control.scale({ imperial: false, maxWidth: 120 }).addTo(map);
   return map;
 }
