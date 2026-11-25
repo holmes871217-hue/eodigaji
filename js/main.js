@@ -47,7 +47,6 @@ let installEvent = null; // 브라우저가 건네준 "설치 창 띄우기" 손
 const TABS = [
   { v: 'home', label: '추천', full: '추천', icon: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>' },
   { v: 'events', label: '축제', full: '축제·행사', icon: '<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>' },
-  { v: 'favs', label: '찜·코스', full: '찜·코스', icon: '<path d="M12 20.5s-7.5-4.6-7.5-10.3A4.4 4.4 0 0 1 12 7.4a4.4 4.400 0 0 1 7.500 2.800c0 5.700-7.500 10.300-7.500 10.300z"/>' },
   { v: 'deals', label: '특가', full: '특가', icon: '<path d="M3.5 12.5V4.5h8l9 9-8 8z"/><circle cx="8" cy="9" r="1.5"/>' },
   { v: 'golf', label: '골픽', full: '골픽', icon: '<path d="M7 21V3.5l10 4-10 4"/><path d="M4 21h10"/>' },
   { v: 'my', label: '마이', full: '마이페이지', icon: '<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>' },
@@ -100,6 +99,12 @@ function render() {
     : tab === 'my' ? renderMy(state)
     : renderHome(state, c);
 
+  // 찜·코스는 아래 탭에서 빼고 추천 탭 맨 위 "추천 | 찜·코스" 전환으로 들어간다(안쪽 화면 이름은 그대로 'favs')
+  const homeSwitch = tab === 'home' || tab === 'favs' ? `
+    <div class="toggle wide home-switch" role="group" aria-label="추천·찜 코스">
+      <button type="button" class="toggle-btn ${tab === 'home' ? 'is-on' : ''}" data-action="tab" data-v="home" aria-pressed="${tab === 'home'}">추천</button>
+      <button type="button" class="toggle-btn ${tab === 'favs' ? 'is-on' : ''}" data-action="tab" data-v="favs" aria-pressed="${tab === 'favs'}">찜·코스 <span class="tab-count home-switch-count" data-fav-count ${state.favs.length ? '' : 'hidden'}>${state.favs.length}</span></button>
+    </div>` : '';
   const sheetHtml = renderSheet(state, c);
   unmountMaps();
   root.innerHTML = `
@@ -109,15 +114,14 @@ function render() {
         ? `<span class="pill-sample is-live" title="네이버 검색·한국관광공사 데이터">${new Date(liveUpdatedAt).getMonth() + 1}/${new Date(liveUpdatedAt).getDate()} 기준 실제 데이터</span>`
         : '<span class="pill-sample" title="실제 데이터 연결 전입니다">연습용 데이터</span>'}
     </header>
-    <main class="view" id="view" tabindex="-1">${view}</main>
+    <main class="view" id="view" tabindex="-1">${homeSwitch}${view}</main>
     ${sheetHtml}
     <nav class="tabbar" aria-label="화면 이동">
       ${TABS.map(
         (t) => `
-        <button type="button" class="tab ${t.v === tab ? 'is-on' : ''}" data-action="tab" data-v="${t.v}" aria-label="${t.full}" ${t.v === tab ? 'aria-current="page"' : ''}>
+        <button type="button" class="tab ${t.v === tab || (t.v === 'home' && tab === 'favs') ? 'is-on' : ''}" data-action="tab" data-v="${t.v}" aria-label="${t.full}" ${t.v === tab || (t.v === 'home' && tab === 'favs') ? 'aria-current="page"' : ''}>
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${t.icon}</svg>
           <span>${t.label}</span>
-          ${t.v === 'favs' ? `<span class="tab-count" data-fav-count ${state.favs.length ? '' : 'hidden'}>${state.favs.length}</span>` : ''}
         </button>`
       ).join('')}
     </nav>`;
@@ -437,7 +441,7 @@ function favSnapshot(type, id) {
   return null;
 }
 
-/** 아래 탭의 찜 숫자 */
+/** 추천 탭 "찜·코스" 전환 단추의 찜 숫자 */
 function syncFavCount() {
   const el = document.querySelector('[data-fav-count]');
   if (!el) return;
@@ -629,7 +633,7 @@ root.addEventListener('click', (ev) => {
       const snap = had ? {} : favSnapshot(type, id);
       if (!snap) break;
       const result = toggleFav(state, { key, type, id, ...snap });
-      if (result === 'full') { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 찜·코스 탭에서 몇 곳을 빼 주세요.`); break; }
+      if (result === 'full') { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 추천 탭의 찜·코스에서 몇 곳을 빼 주세요.`); break; }
       saveState(state);
       if (state.ui.tab === 'favs' && !state.ui.sheet) { update(() => {}, { persist: false }); break; }
       // 화면 전체를 다시 그리면 상세 창이 맨 위로 올라가 버려서, 하트 모양과 탭의 숫자만 바꾼다.
@@ -704,7 +708,7 @@ root.addEventListener('click', (ev) => {
         if (p.shop) return { key: favKey('shop', p.id), type: 'shop', id: p.id, name: p.name, lat: p.lat, lng: p.lng, sub: p.sub || '', addr: p.addr || '', nq: p.nq || p.name, gid: p.gid || '', kind: p.kind };
         return { key: favKey('place', p.id), type: 'place', id: p.id, ...favSnapshot('place', p.id) };
       });
-      if (placed.length + keep.length > FAV_MAX) { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 찜·코스 탭에서 몇 곳을 빼 주세요.`); break; }
+      if (placed.length + keep.length > FAV_MAX) { window.alert(`찜은 ${FAV_MAX}곳까지 담을 수 있어요. 추천 탭의 찜·코스에서 몇 곳을 빼 주세요.`); break; }
       state.favs = [...placed, ...keep]; // 코스 순서대로 맨 위에, 나머지 찜은 그 아래에 그대로 둔다
       saveState(state);
       sheets = [];
