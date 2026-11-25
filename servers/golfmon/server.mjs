@@ -6,6 +6,7 @@
 //   GET /golfmon?day=YYYY-MM-DD[&regions=9,1]  → { mode, day, results: [{ rid, ok, text | error }] }
 //   GET /golfmon/abroad                        → { mode, ok, text, html }  해외 투어 목록
 //   POST /route-matrix                         → 숙소 → 공항·골프장 차 시간(구글 Routes API)
+//   POST /places-nearby  (토큰)                → 구글 장소 검색(해외 숙소 보강)
 import express from 'express';
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
@@ -255,16 +256,18 @@ app.post('/route-matrix', express.text({ type: '*/*', limit: '50kb' }), async (r
   const n = body.origins.length * body.dests.length;
   if (routeUsed + n > ROUTE_DAILY_CAP) return res.status(429).json({ error: '오늘 구글 길찾기 한도를 다 썼어요' });
   routeUsed += n;
-  const wp = ([lat, lng]) => ({ waypoint: { location: { latLng: { latitude: lat, longitude: lng } } }, routeModifiers: { avoidFerries: true } });
+  // 배 제외(avoidFerries)는 출발지에만 붙일 수 있다(도착지에 붙이면 구글이 400)
+  const wp = ([lat, lng]) => ({ waypoint: { location: { latLng: { latitude: lat, longitude: lng } } } });
+  const org = (p) => ({ ...wp(p), routeModifiers: { avoidFerries: true } });
   try {
     const r = await fetch('https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Goog-FieldMask': 'originIndex,destinationIndex,duration,condition', ...(await googleAuthHeaders()) },
-      body: JSON.stringify({ origins: body.origins.map(wp), destinations: body.dests.map(wp), travelMode: 'DRIVE', routingPreference: 'TRAFFIC_UNAWARE' }),
+      body: JSON.stringify({ origins: body.origins.map(org), destinations: body.dests.map(wp), travelMode: 'DRIVE', routingPreference: 'TRAFFIC_UNAWARE' }),
       signal: AbortSignal.timeout(20000),
     });
     const j = await r.json();
-    if (!r.ok || !Array.isArray(j)) { console.log('route-matrix 실패', r.status, JSON.stringify(j).slice(0, 300)); return res.status(502).json({ error: `구글 ${r.status}` }); }
+    if (!r.ok || !Array.isArray(j)) { console.log('route-matrix 실패', r.status, JSON.stringify(j).slice(0, 300)); return res.status(502).json({ error: `구글 ${r.status}`, detail: String(j?.error?.message || j?.[0]?.error?.message || '').slice(0, 300) }); }
     const sec = body.origins.map(() => body.dests.map(() => null));
     for (const e of j) if (e.condition === 'ROUTE_EXISTS' && e.duration) sec[e.originIndex ?? 0][e.destinationIndex ?? 0] = Number(String(e.duration).replace('s', ''));
     const data = { sec, src: 'google' };
@@ -273,6 +276,28 @@ app.post('/route-matrix', express.text({ type: '*/*', limit: '50kb' }), async (r
   } catch (e) {
     res.status(502).json({ error: e.message });
   }
+});
+
+// POST /places-nearby  (토큰 필요, 본문 {"lat","lng","radius","types":[…]})  → 구글 장소 검색 결과 그대로
+// 해외 골프 숙소 보강(tools/golf/stays-google.mjs)이 GitHub 에서 부른다. 열쇠 없이 이 서버의 서비스 계정으로 부른다.
+app.post('/places-nearby', async (req, res) => {
+  if (!TOKEN || req.get('authorization') !== `Bearer ${TOKEN}`) return res.status(401).json({ error: '토큰 필요' });
+  const { lat, lng, radius, types } = req.body || {};
+  if (![lat, lng, radius].every(Number.isFinite) || radius > 50000) return res.status(400).json({ error: 'lat, lng, radius(≤50000) 필요' });
+  try {
+    const r = await fetch('https://places.googleapis.com/v1/places:searchNearby', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-FieldMask': 'places.id,places.displayName,places.location,places.rating,places.userRatingCount,places.googleMapsUri,places.shortFormattedAddress,places.primaryType',
+        ...(await googleAuthHeaders()),
+      },
+      body: JSON.stringify({ includedTypes: Array.isArray(types) && types.length ? types.slice(0, 5) : ['hotel', 'resort_hotel'], maxResultCount: 20, rankPreference: 'POPULARITY', languageCode: 'ko', locationRestriction: { circle: { center: { latitude: lat, longitude: lng }, radius } } }),
+      signal: AbortSignal.timeout(20000),
+    });
+    const j = await r.json();
+    res.status(r.ok ? 200 : 502).json(r.ok ? j : { error: `구글 ${r.status}`, detail: String(j?.error?.message || '').slice(0, 300) });
+  } catch (e) { res.status(502).json({ error: e.message }); }
 });
 
 // GET /fare?to=BKK&dep=YYYY-MM-DD&ret=YYYY-MM-DD&after=17
