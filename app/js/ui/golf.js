@@ -51,7 +51,7 @@ export const teeList = (g) => (Array.isArray(g.tee) ? g.tee.filter((h) => Number
 /** 티업 시간대 고르기: 무관 또는 1시간 단위 시간대를 여러 개 골라 "설정" */
 export function golfTeeSheet(state) {
   const g = state.ui.golf;
-  const draft = Array.isArray(g.teeDraft) ? g.teeDraft : teeList(g);
+  const draft = teeList(g); // 누르는 즉시 반영(설정 단추 없음)
   // 칸 하나 = 1시간: "5~6시"(5:00~5:59 티업)
   const h12 = (h) => (h % 12) || 12;
   const chip = (h) => `<button type="button" class="chip ${draft.includes(h) ? 'is-on' : ''}" data-action="golf-tee-h" data-v="${h}" aria-pressed="${draft.includes(h)}" aria-label="${h12(h)}시부터 ${h12(h + 1)}시 전까지">${h12(h)}~${h12(h + 1)}시</button>`;
@@ -66,10 +66,7 @@ export function golfTeeSheet(state) {
     <div class="chips chips-wrap golf-tee-chips" role="group" aria-label="오전 시간대">${[5, 6, 7, 8, 9, 10, 11].map(chip).join('')}</div>
     <h3 class="golf-sub">오후</h3>
     <div class="chips chips-wrap golf-tee-chips" role="group" aria-label="오후 시간대">${[12, 13, 14, 15, 16, 17, 18, 19].map(chip).join('')}</div>
-    <div class="wheel-actions">
-      <button type="button" class="btn-secondary" data-action="close-sheet">취소</button>
-      <button type="button" class="btn-dark" data-action="golf-tee-set">설정</button>
-    </div>`;
+    <button type="button" class="btn-secondary wide golf-tee-reset" data-action="golf-tee-h" data-v="">초기화</button>`;
 }
 
 export function renderGolf(state, data) {
@@ -527,6 +524,7 @@ export function golfPicksSheet(state, data) {
         </span>
       </li>`).join('')}
     </ul>
+    <div class="golf-picks-tools"><button type="button" class="link-btn golf-picks-clear" data-action="golf-picks-clear">찜 전부 삭제</button></div>
     ${used !== R ? `<p class="golf-pick-warn">라운딩 횟수 합(${used}번)이 일정(${trip.golfNights ? `${trip.golfNights}박 = ` : ''}${R}번)과 달라요. 횟수를 맞추거나 위에서 박 수를 바꿔 보세요.</p>` : ''}
     <div class="golf-fare">
       <p>골프 합계 <b>${won(golf)}</b> <small>(${used}번 라운딩)</small></p>
@@ -586,7 +584,7 @@ function stayBlock(iata, places, trip, title, { withAir = true } = {}) {
   if (r.state === 'none') return '';
   const who = withAir ? '공항·골프장' : '찜한 골프장';
   if (r.state === 'loading') return `${head}<p class="muted">${who}까지 차 시간을 길찾기로 계산하는 중… (몇 초 걸려요)</p>`;
-  if (r.state !== 'ok') return `${head}<p class="muted">${r.state === 'empty' ? '이 지역은 아직 모아 둔 숙소가 없어요.' : '길찾기 계산을 못 했어요. 잠시 뒤 다시 열어 주세요.'}</p>`;
+  if (r.state !== 'ok') return `${head}<p class="muted">${r.state === 'far' ? `${withAir ? '공항과 골프장이' : '찜한 골프장끼리'} 250km 넘게 떨어져 있어 가운데 숙소를 고를 수 없어요. 가까운 골프장끼리 찜해 보세요.` : r.state === 'empty' ? '이 지역은 아직 모아 둔 숙소가 없어요.' : '길찾기 계산을 못 했어요. 잠시 뒤 다시 열어 주세요.'}</p>`;
   const names = r.points.map((p) => p.short);
   return `${head}
     <p class="muted">${who} 모두 비슷한 차 시간으로 닿는 숙소 중 평점 높은 순 · ${STAY_SRC[r.src]} 기준</p>

@@ -534,23 +534,23 @@ root.addEventListener('click', (ev) => {
       break;
     }
     case 'golf-tee':
-      state.ui.golf.teeDraft = Array.isArray(state.ui.golf.tee) ? [...state.ui.golf.tee] : [];
       openSheet({ type: 'golf-tee' });
       break;
     case 'golf-tee-h': {
-      // 시간대 칸: 누를 때마다 넣고 빼기. "무관"은 모두 지운다.
-      const d = state.ui.golf.teeDraft || [];
+      // 시간대 칸: 누르는 즉시 넣고 빼서 목록에 바로 반영. "무관"·"초기화"는 모두 지운다.
+      const d = Array.isArray(state.ui.golf.tee) ? state.ui.golf.tee : [];
       const h = el.dataset.v === '' ? null : Number(el.dataset.v);
-      update(() => { state.ui.golf.teeDraft = h == null ? [] : d.includes(h) ? d.filter((x) => x !== h) : [...d, h].sort((a, b) => a - b); }, { persist: false });
-      break;
-    }
-    case 'golf-tee-set': {
-      const tee = [...(state.ui.golf.teeDraft || [])];
+      const tee = h == null ? [] : d.includes(h) ? d.filter((x) => x !== h) : [...d, h].sort((a, b) => a - b);
       if (tee.length) loadGolfHours().then(() => update(() => {}, { persist: false }));
-      state.ui.golf.tee = tee; state.ui.golf.max = 20;
-      closeSheet();
+      update(() => { state.ui.golf.tee = tee; state.ui.golf.max = 20; }, { persist: false });
       break;
     }
+    case 'golf-picks-clear':
+      // 해외 찜 전부 빼기(확인 후)
+      if (window.confirm(`찜한 골프장 ${(state.ui.golf.picks || []).length}곳을 모두 뺄까요?`)) {
+        update(() => { state.ui.golf.picks = []; state.ui.golf.pickN = {}; });
+      }
+      break;
     case 'golf-picks':
       openSheet({ type: 'golf-picks' });
       break;
