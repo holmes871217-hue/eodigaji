@@ -74,16 +74,16 @@ export function loadGolfHours() {
   }
   return hoursPromise;
 }
-const hLabel = (h) => (h < 12 ? `오전 ${h || 12}시` : `오후 ${h === 12 ? 12 : h - 12}시`);
-/** 고른 티업 시간대(24시 기준 시 목록) → '무관' / '오전 7시' / '오전 6~8시' / '오전 11시~오후 1시' / '오전 6시 외 2' */
+const ap = (h) => (h < 12 ? '오전' : '오후');
+const h12 = (h) => (h % 12) || 12;
+/** 고른 티업 시간대(24시 기준 시작 시 목록, 칸 하나 = 1시간) → '무관' / '오전 6~7시' / '오전 6~9시' / '오전 11시~오후 1시' / '오전 6~7시 외 2' */
 export function teeLabel(hours) {
   const hs = [...(hours || [])].sort((a, b) => a - b);
   if (!hs.length) return '무관';
-  if (hs.length === 1) return hLabel(hs[0]);
   const run = hs.every((h, i) => !i || h === hs[i - 1] + 1);
-  if (!run) return `${hLabel(hs[0])} 외 ${hs.length - 1}`;
-  const a = hs[0], b = hs[hs.length - 1];
-  return (a < 12) === (b < 12) ? `${hLabel(a).replace(/시$/, '')}~${(b % 12) || 12}시` : `${hLabel(a)}~${hLabel(b)}`;
+  const a = hs[0], b = run ? hs[hs.length - 1] + 1 : a + 1; // 끝 시각 = 마지막 칸 + 1시간
+  const txt = ap(a) === ap(b) || b === 12 ? `${ap(a)} ${h12(a)}~${h12(b)}시` : `${ap(a)} ${h12(a)}시~${ap(b)} ${h12(b)}시`;
+  return run ? txt : `${txt} 외 ${hs.length - 1}`;
 }
 /** 그 골프장·날짜에서 고른 티업 시간대(1시간 단위 여러 개) 중 가장 싼 1인 비용. 없으면 null */
 export function hourCost(c, day, hours) {
