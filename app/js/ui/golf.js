@@ -533,7 +533,7 @@ export function golfPicksSheet(state, data) {
       ${airs.length > 1 ? `<p class="muted">골프장 공항이 서로 달라요(${airs.map(esc).join(', ')}). 항공권은 라운딩이 가장 많은 ${esc(iata)} 기준이고, 다른 지역 이동비는 들어 있지 않아요.</p>` : ''}
       <p class="muted">숙박·현지 이동·카트·캐디 등은 포함하지 않은 예상값이에요.</p>
     </div>
-    ${stayBlock(iata, rows.map(({ c }, i) => ({ lat: c.lat, lng: c.lng, label: courseTitle(c), short: LETTERS[i] })), trip, '숙소 추천 (찜한 골프장 가운데)', { withAir: false })}`;
+    ${stayBlock(iata, rows.map(({ c }, i) => ({ lat: c.lat, lng: c.lng, label: courseTitle(c), short: LETTERS[i] })), trip, rows.length === 1 ? '숙소 추천 (공항과 찜한 골프장 가운데)' : '숙소 추천 (찜한 골프장 가운데)', { withAir: rows.length === 1 })}`;
 }
 
 /** 상세: 고른 라운딩 일정의 항공권(전날 출발 · 마지막 날 저녁 귀국편) */
