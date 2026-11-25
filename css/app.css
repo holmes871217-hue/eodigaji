@@ -748,7 +748,6 @@ svg { flex: none; }
 .golf-tee-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 8px 0 0; padding: 0; overflow: visible; }
 .golf-tee-chips .chip { justify-content: center; background: var(--bg); }
 .golf-tee-chips .chip.is-on, .golf-tee-any.is-on { background: var(--ink); color: #fff; }
-.tee-to { font-size: .78em; font-weight: 700; opacity: .75; margin: 0 1px 0 0; }
 .wheel-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
 .golf-loc-gps { margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .golf-loc-cities { margin-top: 10px; }
