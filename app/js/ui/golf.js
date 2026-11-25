@@ -479,9 +479,9 @@ export function pickPlan(state, data) {
   const trip = abroadTrip(state);
   const list = (g.picks || []).map((id) => data?.courses?.find((c) => c.id === id)).filter(Boolean);
   const R = trip.rounds;
-  return { trip, R, rows: list.map((c, i) => {
-    const auto = list.length >= R ? (i < R ? 1 : 0) : Math.floor(R / list.length) + (i < R % list.length ? 1 : 0);
-    const n = Number.isInteger(g.pickN?.[c.id]) ? g.pickN[c.id] : auto;
+  return { trip, R, rows: list.map((c) => {
+    // 찜 목록에 들어오면 골프장마다 1회로 계산한다(−/+로 바꾼 값이 있으면 그 값)
+    const n = Number.isInteger(g.pickN?.[c.id]) ? g.pickN[c.id] : 1;
     return { c, n };
   }) };
 }
