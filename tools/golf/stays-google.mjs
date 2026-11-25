@@ -4,7 +4,7 @@
 //  - 한 번 찾은 칸은 저장해 두고 다시 찾지 않는다(새 골프장이 생긴 칸만 찾음).
 //  - 비용 보호: 한 번 실행에 최대 STAYS_MAX_CALLS(기본 300)번만 부른다.
 //  - 평점 4.0 이상 · 후기 30개 이상 숙소만 남긴다.
-// 실행: GOOGLE_PLACES_SERVER_KEY=… node tools/golf/stays-google.mjs   → tools/golf/data/hotels-google.json
+// 실행: KR_BROWSER_TOKEN=… node tools/golf/stays-google.mjs   → tools/golf/data/hotels-google.json
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,10 +12,12 @@ import { AIRPORTS, haversineKm } from './lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const OUT = path.join(ROOT, 'tools/golf/data/hotels-google.json');
-const KEY = process.env.GOOGLE_PLACES_SERVER_KEY;
+// 구글 열쇠 대신 서울 서버(서비스 계정)를 거쳐 부른다. 토큰은 GitHub 비밀값 KR_BROWSER_TOKEN
+const SERVER = process.env.KR_BROWSER_URL || 'https://golfmon-collector-351935360699.asia-northeast3.run.app';
+const TOKEN = process.env.KR_BROWSER_TOKEN;
 const MAX = Number(process.env.STAYS_MAX_CALLS || 300);
 const log = (...a) => console.log(...a);
-if (!KEY) { log('GOOGLE_PLACES_SERVER_KEY 없음 → 건너뜀'); process.exit(0); }
+if (!TOKEN) { log('KR_BROWSER_TOKEN 없음 → 건너뜀'); process.exit(0); }
 
 const golf = JSON.parse(fs.readFileSync(path.join(ROOT, 'app/data/golf.json'), 'utf8'));
 const prev = fs.existsSync(OUT) ? JSON.parse(fs.readFileSync(OUT, 'utf8')) : { cells: {}, hotels: {} };
@@ -41,24 +43,14 @@ let calls = 0, added = 0, errors = 0;
 for (const [k, m] of todo.slice(0, MAX)) {
   calls++;
   try {
-    const r = await fetch('https://places.googleapis.com/v1/places:searchNearby', {
+    const r = await fetch(`${SERVER}/places-nearby`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Goog-Api-Key': KEY,
-        'X-Goog-FieldMask': 'places.id,places.displayName,places.location,places.rating,places.userRatingCount,places.googleMapsUri,places.shortFormattedAddress,places.primaryType',
-      },
-      body: JSON.stringify({
-        includedTypes: ['hotel', 'resort_hotel'],
-        maxResultCount: 20,
-        rankPreference: 'POPULARITY',
-        languageCode: 'ko',
-        locationRestriction: { circle: { center: { latitude: m.lat, longitude: m.lng }, radius: m.radius } },
-      }),
-      signal: AbortSignal.timeout(20000),
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` },
+      body: JSON.stringify({ lat: m.lat, lng: m.lng, radius: m.radius, types: ['hotel', 'resort_hotel'] }),
+      signal: AbortSignal.timeout(30000),
     });
     const j = await r.json();
-    if (!r.ok) { errors++; log('구글 장소 실패', k, r.status, JSON.stringify(j).slice(0, 200)); if (r.status === 403 || r.status === 400) break; continue; }
+    if (!r.ok) { errors++; log('구글 장소 실패', k, r.status, JSON.stringify(j).slice(0, 200)); if (r.status === 401 || /구글 40[03]/.test(j.error || '')) break; continue; }
     for (const p of j.places || []) {
       if (!(p.rating >= 4.0) || !(p.userRatingCount >= 30) || !p.location) continue;
       if (!prev.hotels[p.id]) added++;
