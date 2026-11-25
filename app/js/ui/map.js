@@ -55,35 +55,44 @@ function koreanize(style) {
 }
 
 function loadLeaflet() {
-  if (window.L && (koStyle || koStyle === false)) return Promise.resolve();
+  if (window.L) return Promise.resolve();
   if (loading) return loading;
   loading = (async () => {
     addCss(`${LEAFLET}/leaflet.min.css`);
     try { await addScript(`${LEAFLET}/leaflet.min.js`); } catch (e) { loading = null; throw new Error('지도를 불러오지 못했어요.'); }
-    // 한글 지도 준비(실패해도 지도는 그림 지도로 보여 준다)
-    try {
-      addCss(`${MAPLIBRE}/maplibre-gl.css`);
-      await addScript(`${MAPLIBRE}/maplibre-gl.js`);
-      await addScript(ML_LEAFLET);
-      const r = await fetch(KO_STYLE_URL);
-      koStyle = koreanize(await r.json());
-    } catch (e) {
-      koStyle = false;
-    }
   })();
   return loading;
+}
+
+// 한글 지도(골픽 숙소 추천 지도)에서만 MapLibre 를 받는다. 실패하면 그림 지도로 보여 준다.
+let koLoading = null;
+function loadKoMap() {
+  if (!koLoading) {
+    koLoading = (async () => {
+      try {
+        addCss(`${MAPLIBRE}/maplibre-gl.css`);
+        await addScript(`${MAPLIBRE}/maplibre-gl.js`);
+        await addScript(ML_LEAFLET);
+        const r = await fetch(KO_STYLE_URL);
+        koStyle = koreanize(await r.json());
+      } catch (e) {
+        koStyle = false;
+      }
+    })();
+  }
+  return koLoading;
 }
 
 function failed(el) {
   el.innerHTML = '<div class="empty"><b>지도를 불러오지 못했어요.</b><span>인터넷 연결을 확인한 뒤 다시 눌러 주세요.</span></div>';
 }
 
-function baseMap(el, { plain = false } = {}) {
+function baseMap(el, { ko = false } = {}) {
   const L = window.L;
   // zoomSnap: 0 → 확대 단계를 소수점까지 허용해야 "가로 정확히 10km"를 맞출 수 있다.
   const map = L.map(el, { zoomControl: true, attributionControl: true, zoomSnap: 0, zoomDelta: 1 });
-  // plain: 마이 탭 위치 고르기 지도는 예전 오픈스트리트맵 그림 지도를 쓴다(운영자 요청)
-  if (!plain && koStyle && L.maplibreGL) {
+  // ko: 골픽 숙소 추천 지도만 지명 한글 벡터 지도. 나머지 지도는 예전 오픈스트리트맵 그림 지도(운영자 요청)
+  if (ko && koStyle && L.maplibreGL) {
     L.maplibreGL({ style: koStyle, attribution: '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> © OpenMapTiles © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OSM</a>' }).addTo(map);
     map.attributionControl.setPrefix(false); // 출처 줄을 짧게(한 줄)
   } else {
@@ -192,7 +201,7 @@ export async function mountPicker(el, { center, onTap }) {
   if (!el.isConnected) return;
 
   const L = window.L;
-  const map = baseMap(el, { plain: true });
+  const map = baseMap(el);
   pickMap = map;
   map.setView([center.lat, center.lng], zoomForKm(center.lat, PICK_BAR_PX, PICK_KM), { animate: false });
   pickMarker = L.marker([center.lat, center.lng], {
@@ -251,11 +260,11 @@ export async function mountRoute(el, { origin, points, key = 'fav' }) {
 
 /** 해외 골프 숙소 지도: 공항(✈) · 골프장(A·B·C) · 추천 숙소(1·2·3) */
 export async function mountStayMap(el, { points, hotels }) {
-  try { await loadLeaflet(); } catch (e) { failed(el); return; }
+  try { await loadLeaflet(); await loadKoMap(); } catch (e) { failed(el); return; }
   if (!el.isConnected) return;
   const L = window.L;
   if (stayMap) destroy(stayMap);
-  const map = baseMap(el);
+  const map = baseMap(el, { ko: true });
   stayMap = map;
   const add = (lat, lng, cls, text, title, z) => {
     const label = document.createElement('b');
