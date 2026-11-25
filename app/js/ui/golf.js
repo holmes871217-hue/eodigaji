@@ -592,7 +592,7 @@ function stayBlock(iata, places, trip, title) {
     <div class="golf-stay-map" id="stay-map" aria-label="공항, 골프장, 추천 숙소 위치 지도"></div>
     <ul class="golf-stays">${r.list.map(({ h, mins }, i) => `<li><a href="${esc(h.src === 'g' ? h.url : `${h.url}?checkin=${trip.dep}&checkout=${trip.out}&group_adults=2&no_rooms=1`)}" target="_blank" rel="noopener noreferrer">
       <span class="golf-stay-body"><b><span class="golf-stay-no">${i + 1}</span> ${esc(h.n)}</b><small>${h.src === 'g' ? `★ ${Math.round(h.s * 5) / 10}/5 (${Number(h.c).toLocaleString('ko-KR')}) · 구글 지도` : `★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''} · 부킹닷컴`}</small><small class="golf-stay-times">${mins.map((m, k) => `${esc(names[k])} ${formatMin(m)}`).join(' · ')}</small></span>
-      ${h.ph ? `<img src="${esc(h.ph)}" alt="${esc(h.n)} 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'), { className: 'golf-stay-ph' }))">` : '<span class="golf-stay-ph"></span>'}</a></li>`).join('')}</ul>
+      ${h.ph ? `<img src="${esc(h.ph)}" alt="${esc(h.n)} 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'), { className: 'golf-stay-ph' }))">` : '<span class="golf-stay-ph" aria-hidden="true">🏨</span>'}</a></li>`).join('')}</ul>
     <p class="sample-note">부킹닷컴 숙소는 ${md(trip.dep)} 체크인 · ${md(trip.out)} 체크아웃(성인 2명)으로, 구글 숙소는 구글 지도로 열려요. 평점은 구글 5점·부킹닷컴 10점 만점이고, 줄 세울 때는 같은 기준(10점)으로 맞췄어요. 평점·1박 가격은 ${esc(r.checkin ? md(r.checkin) : '')} 1박 기준 조회값이라 고른 날짜와 다를 수 있어요. 차 시간은 막힘 없는 기준이에요.</p>`;
 }
 
