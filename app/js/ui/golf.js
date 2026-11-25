@@ -112,7 +112,7 @@ function domestic(state, data) {
       ${GOLF_TIMES.map((m) => `<button type="button" class="chip ${m === g.maxMin ? 'is-on' : ''}" data-action="golf-time" data-v="${m}" aria-pressed="${m === g.maxMin}">${hm(m)}</button>`).join('')}
     </div>
     <div class="golf-dom-head mt">
-      <h2 class="h2">${esc(dayLabel(day))}${tee.length ? ` · ${esc(teeLabel(tee))}` : ''} · 총 <span data-golf-total>${rows.length}</span>곳</h2>
+      <h2 class="h2">${esc(dayLabel(day))} · 총 <span data-golf-total>${rows.length}</span>곳</h2>
       <button type="button" class="golf-loc-mini" data-action="golf-loc" aria-label="출발 지역 바꾸기, 지금 ${esc(origin.name || '내 위치')}">${PIN}<span>${esc(origin.name || '내 위치')}</span></button>
     </div>
     ${waiting ? '<div class="empty"><b>티업 시간별 가격을 불러오는 중…</b></div>' : rows.length ? `<ol class="list golf-list">${shown.map((r, i) => domCard(r, day, i + 1)).join('')}</ol>
