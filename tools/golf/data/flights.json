@@ -1,6 +1,6 @@
 {
  "source": "네이버 항공권(운영자 네이버 항공권 MCP 서버, 서울) 인천 왕복 최저가. 비행 시간은 구글 항공편 조회값",
- "observedAt": "2026-11-24T20:40:21.601Z",
+ "observedAt": "2026-11-25T01:36:46.317Z",
  "searchDate": "2026-12-10",
  "airports": {
   "KMI": {
@@ -46,17 +46,17 @@
    },
    "fare": {
     "src": "naver",
-    "min": 289200,
+    "min": 298400,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551704471,
+    "at": 1795569490679,
     "url": "https://flight.naver.com/flights/international/ICN-FUK-20261210/FUK-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 289200
+      "min": 298400
      },
      {
       "dep": "2026-12-17",
@@ -64,8 +64,8 @@
       "min": 312200
      }
     ],
-    "rec": 300700,
-    "lo": 289200,
+    "rec": 305300,
+    "lo": 298400,
     "hi": 312200
    }
   },
@@ -112,17 +112,17 @@
    },
    "fare": {
     "src": "naver",
-    "min": 308100,
+    "min": 264800,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551748331,
+    "at": 1795569547513,
     "url": "https://flight.naver.com/flights/international/ICN-KKJ-20261210/KKJ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 308100
+      "min": 264800
      },
      {
       "dep": "2026-12-17",
@@ -130,8 +130,8 @@
       "min": 315400
      }
     ],
-    "rec": 311800,
-    "lo": 308100,
+    "rec": 290100,
+    "lo": 264800,
     "hi": 315400
    }
   },
@@ -152,7 +152,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551764750,
+    "at": 1795569556072,
     "url": "https://flight.naver.com/flights/international/ICN-KMJ-20261210/KMJ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -191,7 +191,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551779032,
+    "at": 1795569569495,
     "url": "https://flight.naver.com/flights/international/ICN-NGS-20261210/NGS-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -225,17 +225,17 @@
    },
    "fare": {
     "src": "naver",
-    "min": 309500,
+    "min": 291100,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551790883,
+    "at": 1795569581008,
     "url": "https://flight.naver.com/flights/international/ICN-KIX-20261210/KIX-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 309500
+      "min": 291100
      },
      {
       "dep": "2026-12-17",
@@ -243,8 +243,8 @@
       "min": 325500
      }
     ],
-    "rec": 317500,
-    "lo": 309500,
+    "rec": 308300,
+    "lo": 291100,
     "hi": 325500
    }
   },
@@ -263,27 +263,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 318381,
+    "min": 315600,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551806788,
+    "at": 1795569598112,
     "url": "https://flight.naver.com/flights/international/ICN-NRT-20261210/NRT-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 318381
+      "min": 315600
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 327601
+      "min": 342089
      }
     ],
-    "rec": 323000,
-    "lo": 318381,
-    "hi": 327601
+    "rec": 328800,
+    "lo": 315600,
+    "hi": 342089
    }
   },
   "HIJ": {
@@ -302,26 +302,21 @@
    },
    "fare": {
     "src": "naver",
-    "min": 456706,
+    "min": 635000,
     "direct": null,
-    "dep": "2026-12-10",
-    "ret": "2026-12-14",
-    "at": 1795551814963,
-    "url": "https://flight.naver.com/flights/international/ICN-HIJ-20261210/HIJ-ICN-20261214?adult=1&fareType=Y",
+    "dep": "2026-12-17",
+    "ret": "2026-12-21",
+    "at": 1795569620336,
+    "url": "https://flight.naver.com/flights/international/ICN-HIJ-20261217/HIJ-ICN-20261221?adult=1&fareType=Y",
     "samples": [
-     {
-      "dep": "2026-12-10",
-      "ret": "2026-12-14",
-      "min": 456706
-     },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
       "min": 635000
      }
     ],
-    "rec": 545900,
-    "lo": 456706,
+    "rec": 635000,
+    "lo": 635000,
     "hi": 635000
    }
   },
@@ -345,7 +340,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551831508,
+    "at": 1795569617393,
     "url": "https://flight.naver.com/flights/international/ICN-MYJ-20261210/MYJ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -386,13 +381,13 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551836313,
+    "at": 1795569638818,
     "url": "https://flight.naver.com/flights/international/ICN-CAN-20261210/CAN-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 425800
+      "min": 416800
      },
      {
       "dep": "2026-12-17",
@@ -400,9 +395,9 @@
       "min": 416800
      }
     ],
-    "rec": 421300,
+    "rec": 416800,
     "lo": 416800,
-    "hi": 425800
+    "hi": 416800
    }
   },
   "YNT": {
@@ -427,7 +422,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551853338,
+    "at": 1795569640720,
     "url": "https://flight.naver.com/flights/international/ICN-YNT-20261210/YNT-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -463,11 +458,11 @@
    },
    "fare": {
     "src": "naver",
-    "min": 493700,
+    "min": 483180,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551857728,
+    "at": 1795569662521,
     "url": "https://flight.naver.com/flights/international/ICN-XMN-20261210/XMN-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -478,11 +473,11 @@
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 493700
+      "min": 483180
      }
     ],
-    "rec": 503800,
-    "lo": 493700,
+    "rec": 498500,
+    "lo": 483180,
     "hi": 513900
    }
   },
@@ -504,7 +499,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551872216,
+    "at": 1795569659028,
     "url": "https://flight.naver.com/flights/international/ICN-GUM-20261210/GUM-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -533,27 +528,22 @@
    },
    "fare": {
     "src": "naver",
-    "min": 468000,
+    "min": 845200,
     "direct": null,
-    "dep": "2026-12-10",
-    "ret": "2026-12-14",
-    "at": 1795551885125,
-    "url": "https://flight.naver.com/flights/international/ICN-SPN-20261210/SPN-ICN-20261214?adult=1&fareType=Y",
+    "dep": "2026-12-17",
+    "ret": "2026-12-21",
+    "at": 1795569688173,
+    "url": "https://flight.naver.com/flights/international/ICN-SPN-20261217/SPN-ICN-20261221?adult=1&fareType=Y",
     "samples": [
-     {
-      "dep": "2026-12-10",
-      "ret": "2026-12-14",
-      "min": 468000
-     },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 808000
+      "min": 845200
      }
     ],
-    "rec": 468000,
-    "lo": 468000,
-    "hi": 808000
+    "rec": 845200,
+    "lo": 845200,
+    "hi": 845200
    },
    "direct": {
     "min": 265,
@@ -582,7 +572,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551896105,
+    "at": 1795569683708,
     "url": "https://flight.naver.com/flights/international/ICN-MDC-20261210/MDC-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -622,7 +612,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551910125,
+    "at": 1795569706494,
     "url": "https://flight.naver.com/flights/international/ICN-MNL-20261210/MNL-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -663,7 +653,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551915414,
+    "at": 1795569707501,
     "url": "https://flight.naver.com/flights/international/ICN-KUL-20261210/KUL-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -702,7 +692,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551937141,
+    "at": 1795569733776,
     "url": "https://flight.naver.com/flights/international/ICN-VTE-20261210/VTE-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -749,27 +739,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 419100,
+    "min": 410732,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551958081,
+    "at": 1795569759628,
     "url": "https://flight.naver.com/flights/international/ICN-DAD-20261210/DAD-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 419100
+      "min": 410732
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 428090
+      "min": 439000
      }
     ],
-    "rec": 423600,
-    "lo": 419100,
-    "hi": 428090
+    "rec": 424900,
+    "lo": 410732,
+    "hi": 439000
    }
   },
   "CNX": {
@@ -791,17 +781,17 @@
    },
    "fare": {
     "src": "naver",
-    "min": 639000,
+    "min": 661460,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551979684,
+    "at": 1795569775310,
     "url": "https://flight.naver.com/flights/international/ICN-CNX-20261210/CNX-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 639000
+      "min": 661460
      },
      {
       "dep": "2026-12-17",
@@ -809,8 +799,8 @@
       "min": 769000
      }
     ],
-    "rec": 704000,
-    "lo": 639000,
+    "rec": 715200,
+    "lo": 661460,
     "hi": 769000
    }
   },
@@ -831,27 +821,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 482800,
+    "min": 440400,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551984920,
+    "at": 1795569783840,
     "url": "https://flight.naver.com/flights/international/ICN-CXR-20261210/CXR-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 500600
+      "min": 440400
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 482800
+      "min": 490245
      }
     ],
-    "rec": 491700,
-    "lo": 482800,
-    "hi": 500600
+    "rec": 465300,
+    "lo": 440400,
+    "hi": 490245
    }
   },
   "HAN": {
@@ -871,27 +861,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 407081,
+    "min": 393004,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795551999616,
+    "at": 1795569796176,
     "url": "https://flight.naver.com/flights/international/ICN-HAN-20261210/HAN-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 459110
+      "min": 418200
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 407081
+      "min": 393004
      }
     ],
-    "rec": 433100,
-    "lo": 407081,
-    "hi": 459110
+    "rec": 405600,
+    "lo": 393004,
+    "hi": 418200
    }
   },
   "KOJ": {
@@ -916,13 +906,13 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552001582,
+    "at": 1795569799888,
     "url": "https://flight.naver.com/flights/international/ICN-KOJ-20261210/KOJ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 371700
+      "min": 367800
      },
      {
       "dep": "2026-12-17",
@@ -930,9 +920,9 @@
       "min": 339800
      }
     ],
-    "rec": 355800,
+    "rec": 353800,
     "lo": 339800,
-    "hi": 371700
+    "hi": 367800
    }
   },
   "BKI": {
@@ -952,27 +942,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 345061,
+    "min": 346900,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552020578,
+    "at": 1795569816938,
     "url": "https://flight.naver.com/flights/international/ICN-BKI-20261210/BKI-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 479698
+      "min": 495994
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 345061
+      "min": 346900
      }
     ],
-    "rec": 412400,
-    "lo": 345061,
-    "hi": 479698
+    "rec": 346900,
+    "lo": 346900,
+    "hi": 495994
    }
   },
   "CEB": {
@@ -996,7 +986,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552023606,
+    "at": 1795569821529,
     "url": "https://flight.naver.com/flights/international/ICN-CEB-20261210/CEB-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1021,17 +1011,17 @@
    "at": 1795433350635,
    "fare": {
     "src": "naver",
-    "min": 660507,
+    "min": 665960,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552045523,
+    "at": 1795569843401,
     "url": "https://flight.naver.com/flights/international/ICN-BKK-20261210/BKK-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 660507
+      "min": 665960
      },
      {
       "dep": "2026-12-17",
@@ -1039,8 +1029,8 @@
       "min": 671800
      }
     ],
-    "rec": 666200,
-    "lo": 660507,
+    "rec": 668900,
+    "lo": 665960,
     "hi": 671800
    },
    "direct": {
@@ -1073,27 +1063,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 448152,
+    "min": 427306,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552047497,
+    "at": 1795569846486,
     "url": "https://flight.naver.com/flights/international/ICN-SGN-20261210/SGN-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 448152
+      "min": 427306
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 578296
+      "min": 569805
      }
     ],
-    "rec": 513200,
-    "lo": 448152,
-    "hi": 578296
+    "rec": 498600,
+    "lo": 427306,
+    "hi": 569805
    }
   },
   "CRK": {
@@ -1116,7 +1106,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552066815,
+    "at": 1795569857179,
     "url": "https://flight.naver.com/flights/international/ICN-CRK-20261210/CRK-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1187,7 +1177,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552086585,
+    "at": 1795569874917,
     "url": "https://flight.naver.com/flights/international/ICN-NKG-20261210/NKG-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1226,7 +1216,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552108509,
+    "at": 1795569902578,
     "url": "https://flight.naver.com/flights/international/ICN-OKA-20261210/OKA-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1237,12 +1227,12 @@
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 421400
+      "min": 430089
      }
     ],
-    "rec": 381700,
+    "rec": 386000,
     "lo": 342000,
-    "hi": 421400
+    "hi": 430089
    }
   },
   "HAK": {
@@ -1270,27 +1260,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 354100,
+    "min": 354500,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552136589,
+    "at": 1795569925606,
     "url": "https://flight.naver.com/flights/international/ICN-HPH-20261210/HPH-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 354100
+      "min": 354500
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 388900
+      "min": 401000
      }
     ],
-    "rec": 371500,
-    "lo": 354100,
-    "hi": 388900
+    "rec": 377800,
+    "lo": 354500,
+    "hi": 401000
    }
   },
   "BTH": {
@@ -1365,17 +1355,17 @@
    },
    "fare": {
     "src": "naver",
-    "min": 327358,
+    "min": 328900,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552224921,
+    "at": 1795570024288,
     "url": "https://flight.naver.com/flights/international/ICN-FOC-20261210/FOC-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 327358
+      "min": 328900
      },
      {
       "dep": "2026-12-17",
@@ -1383,8 +1373,8 @@
       "min": 382200
      }
     ],
-    "rec": 354800,
-    "lo": 327358,
+    "rec": 355600,
+    "lo": 328900,
     "hi": 382200
    }
   },
@@ -1408,7 +1398,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552248110,
+    "at": 1795570046224,
     "url": "https://flight.naver.com/flights/international/ICN-CGK-20261210/CGK-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1419,12 +1409,12 @@
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 926500
+      "min": 839100
      }
     ],
-    "rec": 624400,
+    "rec": 731800,
     "lo": 624400,
-    "hi": 926500
+    "hi": 839100
    }
   },
   "TNA": {
@@ -1444,17 +1434,17 @@
    },
    "fare": {
     "src": "naver",
-    "min": 222765,
+    "min": 225900,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552254118,
+    "at": 1795570049684,
     "url": "https://flight.naver.com/flights/international/ICN-TNA-20261210/TNA-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 222765
+      "min": 225900
      },
      {
       "dep": "2026-12-17",
@@ -1462,8 +1452,8 @@
       "min": 262700
      }
     ],
-    "rec": 242700,
-    "lo": 222765,
+    "rec": 244300,
+    "lo": 225900,
     "hi": 262700
    }
   },
@@ -1511,17 +1501,17 @@
    },
    "fare": {
     "src": "naver",
-    "min": 313200,
+    "min": 316500,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552265683,
+    "at": 1795570064900,
     "url": "https://flight.naver.com/flights/international/ICN-TAK-20261210/TAK-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 313200
+      "min": 317200
      },
      {
       "dep": "2026-12-17",
@@ -1529,9 +1519,9 @@
       "min": 316500
      }
     ],
-    "rec": 314900,
-    "lo": 313200,
-    "hi": 316500
+    "rec": 316900,
+    "lo": 316500,
+    "hi": 317200
    }
   },
   "FSZ": {
@@ -1546,27 +1536,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 299000,
+    "min": 317800,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552284175,
+    "at": 1795570079156,
     "url": "https://flight.naver.com/flights/international/ICN-FSZ-20261210/FSZ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 304200
+      "min": 322100
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 299000
+      "min": 317800
      }
     ],
-    "rec": 301600,
-    "lo": 299000,
-    "hi": 304200
+    "rec": 320000,
+    "lo": 317800,
+    "hi": 322100
    }
   },
   "OIT": {
@@ -1585,17 +1575,17 @@
    },
    "fare": {
     "src": "naver",
-    "min": 422100,
+    "min": 394500,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552310517,
+    "at": 1795570102388,
     "url": "https://flight.naver.com/flights/international/ICN-OIT-20261210/OIT-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 422100
+      "min": 394500
      },
      {
       "dep": "2026-12-17",
@@ -1603,8 +1593,8 @@
       "min": 437600
      }
     ],
-    "rec": 429900,
-    "lo": 422100,
+    "rec": 416100,
+    "lo": 394500,
     "hi": 437600
    }
   },
@@ -1627,7 +1617,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552325114,
+    "at": 1795570119184,
     "url": "https://flight.naver.com/flights/international/ICN-CTS-20261210/CTS-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1666,27 +1656,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 312302,
+    "min": 299307,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552335098,
+    "at": 1795570128154,
     "url": "https://flight.naver.com/flights/international/ICN-TPE-20261210/TPE-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 312302
+      "min": 299307
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 338207
+      "min": 331833
      }
     ],
-    "rec": 325300,
-    "lo": 312302,
-    "hi": 338207
+    "rec": 315600,
+    "lo": 299307,
+    "hi": 331833
    }
   },
   "AKJ": {
@@ -1733,27 +1723,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 556200,
+    "min": 651900,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552362687,
+    "at": 1795570153617,
     "url": "https://flight.naver.com/flights/international/ICN-HKT-20261210/HKT-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 556200
+      "min": 651900
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 1318200
+      "min": 893750
      }
     ],
-    "rec": 556200,
-    "lo": 556200,
-    "hi": 1318200
+    "rec": 772800,
+    "lo": 651900,
+    "hi": 893750
    }
   },
   "SDJ": {
@@ -1776,7 +1766,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552399312,
+    "at": 1795570184606,
     "url": "https://flight.naver.com/flights/international/ICN-SDJ-20261210/SDJ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1800,27 +1790,22 @@
    },
    "fare": {
     "src": "naver",
-    "min": 454800,
+    "min": 381000,
     "direct": null,
-    "dep": "2026-12-10",
-    "ret": "2026-12-14",
-    "at": 1795552398150,
-    "url": "https://flight.naver.com/flights/international/ICN-HKD-20261210/HKD-ICN-20261214?adult=1&fareType=Y",
+    "dep": "2026-12-17",
+    "ret": "2026-12-21",
+    "at": 1795570199303,
+    "url": "https://flight.naver.com/flights/international/ICN-HKD-20261217/HKD-ICN-20261221?adult=1&fareType=Y",
     "samples": [
-     {
-      "dep": "2026-12-10",
-      "ret": "2026-12-14",
-      "min": 541000
-     },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 454800
+      "min": 381000
      }
     ],
-    "rec": 497900,
-    "lo": 454800,
-    "hi": 541000
+    "rec": 381000,
+    "lo": 381000,
+    "hi": 381000
    },
    "direct": {
     "min": 140,
@@ -1850,7 +1835,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552419014,
+    "at": 1795570205902,
     "url": "https://flight.naver.com/flights/international/ICN-KHH-20261210/KHH-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1888,7 +1873,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552423982,
+    "at": 1795570223649,
     "url": "https://flight.naver.com/flights/international/ICN-NGO-20261210/NGO-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1952,11 +1937,11 @@
    },
    "fare": {
     "src": "naver",
-    "min": 291400,
+    "min": 300600,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552445420,
+    "at": 1795570247294,
     "url": "https://flight.naver.com/flights/international/ICN-RMQ-20261210/RMQ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -1967,11 +1952,11 @@
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 291400
+      "min": 300600
      }
     ],
-    "rec": 296000,
-    "lo": 291400,
+    "rec": 300600,
+    "lo": 300600,
     "hi": 300600
    }
   },
@@ -2047,27 +2032,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 493900,
+    "min": 316500,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552521323,
+    "at": 1795570320252,
     "url": "https://flight.naver.com/flights/international/ICN-PQC-20261210/PQC-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 493900
+      "min": 316500
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 517800
+      "min": 514533
      }
     ],
-    "rec": 505900,
-    "lo": 493900,
-    "hi": 517800
+    "rec": 316500,
+    "lo": 316500,
+    "hi": 514533
    }
   },
   "KIJ": {
@@ -2090,7 +2075,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552542283,
+    "at": 1795570327628,
     "url": "https://flight.naver.com/flights/international/ICN-KIJ-20261210/KIJ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -2129,7 +2114,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552544618,
+    "at": 1795570335974,
     "url": "https://flight.naver.com/flights/international/ICN-KMQ-20261210/KMQ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
@@ -2140,12 +2125,12 @@
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 586500
+      "min": 595700
      }
     ],
-    "rec": 507200,
+    "rec": 511800,
     "lo": 427800,
-    "hi": 586500
+    "hi": 595700
    }
   },
   "AOJ": {
@@ -2196,22 +2181,22 @@
    },
    "fare": {
     "src": "naver",
-    "min": 1293310,
+    "min": 1121573,
     "direct": null,
     "dep": "2026-12-17",
     "ret": "2026-12-21",
-    "at": 1795552576450,
+    "at": 1795570367523,
     "url": "https://flight.naver.com/flights/international/ICN-KLO-20261217/KLO-ICN-20261221?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 1293310
+      "min": 1121573
      }
     ],
-    "rec": 1293310,
-    "lo": 1293310,
-    "hi": 1293310
+    "rec": 1121573,
+    "lo": 1121573,
+    "hi": 1121573
    }
   },
   "UIH": {
@@ -2241,27 +2226,27 @@
    },
    "fare": {
     "src": "naver",
-    "min": 571500,
+    "min": 496100,
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552615605,
+    "at": 1795570403897,
     "url": "https://flight.naver.com/flights/international/ICN-HND-20261210/HND-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
       "dep": "2026-12-10",
       "ret": "2026-12-14",
-      "min": 571500
+      "min": 496100
      },
      {
       "dep": "2026-12-17",
       "ret": "2026-12-21",
-      "min": 626400
+      "min": 599400
      }
     ],
-    "rec": 599000,
-    "lo": 571500,
-    "hi": 626400
+    "rec": 547800,
+    "lo": 496100,
+    "hi": 599400
    }
   },
   "IBR": {
@@ -2283,7 +2268,7 @@
     "direct": null,
     "dep": "2026-12-10",
     "ret": "2026-12-14",
-    "at": 1795552664695,
+    "at": 1795570440627,
     "url": "https://flight.naver.com/flights/international/ICN-YGJ-20261210/YGJ-ICN-20261214?adult=1&fareType=Y",
     "samples": [
      {
