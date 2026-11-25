@@ -1,6 +1,11 @@
 /* 디자인: 소프트 플레이 */
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+/* 좌우 흔들림 막기: 화면 밖으로 삐져나온 것이 있어도 가로로 밀리지 않게(세로 스크롤만).
+   clip 은 스크롤 상자를 만들지 않아 위쪽 고정 머리(sticky)가 그대로 동작한다. 오래된 브라우저는 hidden 으로. */
+html, body { max-width: 100%; overflow-x: hidden; overscroll-behavior-x: none; }
+@supports (overflow: clip) { html, body { overflow-x: clip; } }
+img, video, svg, iframe { max-width: 100%; }
 body {
   margin: 0;
   background: var(--bg);
@@ -71,7 +76,7 @@ svg { flex: none; }
 .footnote { font-size: var(--fs-sm); color: var(--ink-2); margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); }
 
 /* 조건 띠 (검색 위치 · 날짜 · 인원) */
-.ctx { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -20px; padding: 2px 20px; }
+.ctx { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; margin: 0 -20px; padding: 2px 20px; }
 .ctx::-webkit-scrollbar { display: none; }
 .ctx-chip {
   flex: none; display: inline-flex; align-items: center; gap: 6px;
@@ -105,7 +110,7 @@ svg { flex: none; }
 .mode-desc { margin-top: 10px; font-size: var(--fs-sm); color: var(--ink-2); }
 
 /* 칩 */
-.chips { display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 4px; scrollbar-width: none; }
+.chips { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; margin: 0 -20px; padding: 0 20px 4px; scrollbar-width: none; }
 .chips::-webkit-scrollbar { display: none; }
 .chips + .chips { margin-top: 8px; }
 .chip {
@@ -786,3 +791,12 @@ svg { flex: none; }
 .golf-air-toggle::first-letter { font-size: 12px; }
 .golf-filters .golf-filter select { min-height: 32px; font-size: 12px; }
 .golf-head { margin-bottom: 10px; }
+
+/* 해외 골프 숙소 추천: 지도 + 숙소마다 공항·골프장까지 차 시간 */
+.golf-stay-map { height: 240px; margin-top: 10px; border-radius: 16px; overflow: hidden; background: var(--surface); }
+.pin-air { background: #1f6feb; font-size: 14px; }
+.pin-course { background: #2e8b57; }
+.pin-stay { background: #f0326b; }
+.golf-stay-no { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-right: 2px; border-radius: 50%; background: #f0326b; color: #fff; font-size: 12px; vertical-align: 1px; }
+.golf-stay-times { color: var(--ink) !important; font-weight: 700; }
+.golf-pick-letter { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-right: 4px; border-radius: 50%; background: #2e8b57; color: #fff; font-size: 12px; vertical-align: 1px; }

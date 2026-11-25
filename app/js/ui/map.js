@@ -64,10 +64,12 @@ function destroy(map) {
 
 let trendMap = null;
 let courseMap = null;
+let stayMap = null;
 
 export function unmountMaps() {
   if (trendMap) { destroy(trendMap); trendMap = null; }
   if (courseMap) { destroy(courseMap); courseMap = null; }
+  if (stayMap) { destroy(stayMap); stayMap = null; }
   if (homeMap) { destroy(homeMap.map); homeMap = null; }
   // 지도를 없앨 때 나오는 마지막 "움직임" 신호가 새로 정한 위치를 옛 핀 위치로 덮어쓰지 않게, 먼저 신호 연결을 끊는다.
   if (pickMap) { pickMap.off(); destroy(pickMap); pickMap = null; pickMarker = null; }
@@ -203,6 +205,25 @@ export async function mountRoute(el, { origin, points, key = 'fav' }) {
   if (line.length > 1) map.fitBounds(line, { padding: [34, 34], animate: false, maxZoom: 15 });
   else if (line.length === 1) map.setView(line[0], zoomForKm(line[0][0], map.getSize().x, START_KM), { animate: false });
   else map.setView([origin.lat, origin.lng], zoomForKm(origin.lat, map.getSize().x, START_KM), { animate: false });
+}
+
+/** 해외 골프 숙소 지도: 공항(✈) · 골프장(A·B·C) · 추천 숙소(1·2·3) */
+export async function mountStayMap(el, { points, hotels }) {
+  try { await loadLeaflet(); } catch (e) { failed(el); return; }
+  if (!el.isConnected) return;
+  const L = window.L;
+  if (stayMap) destroy(stayMap);
+  const map = baseMap(el);
+  stayMap = map;
+  const add = (lat, lng, cls, text, title, z) => {
+    const label = document.createElement('b');
+    label.textContent = title; // 글자로만 넣는다
+    L.marker([lat, lng], { icon: L.divIcon({ className: '', html: `<span class="pin ${cls}">${text}</span>`, iconSize: [30, 30], iconAnchor: [15, 15] }), title, zIndexOffset: z }).addTo(map).bindPopup(label);
+  };
+  for (const p of points) add(p.lat, p.lng, p.kind === 'air' ? 'pin-air' : 'pin-course', p.kind === 'air' ? '✈' : p.short === '골프장' ? '⛳' : p.short, p.label, 900);
+  hotels.forEach((h, i) => add(h.lat, h.lng, 'pin-stay', String(i + 1), `${i + 1}. ${h.n}`, 1000 - i));
+  const all = [...points, ...hotels].map((p) => [p.lat, p.lng]);
+  map.fitBounds(all, { padding: [30, 30], animate: false, maxZoom: 13 });
 }
 
 /** 전국 트렌드 지도: 지역별 점수를 색(파랑→빨강)과 크기로 보여 준다. 자료가 적은 지역(conf l)은 흐리게. */

@@ -5,6 +5,7 @@
 //   GET /golfmon/calendar                      → { mode, cells: [{ rid, date, n }] }  양도 달력(지역·날짜별 매물 수)
 //   GET /golfmon?day=YYYY-MM-DD[&regions=9,1]  → { mode, day, results: [{ rid, ok, text | error }] }
 //   GET /golfmon/abroad                        → { mode, ok, text, html }  해외 투어 목록
+//   POST /route-matrix                         → 숙소 → 공항·골프장 차 시간(구글 Routes API)
 import express from 'express';
 import { chromium } from 'playwright';
 import { spawn } from 'node:child_process';
@@ -222,6 +223,58 @@ app.post('/browse', async (req, res) => {
 });
 
 // ── 골픽 해외 항공권: 앱이 고른 라운딩 일정으로 인천 왕복 최저가를 묻는다(네이버 항공권 MCP 서버, 서울) ─────────
+// POST /route-matrix  (본문: {"origins":[[위도,경도],…],"dests":[[위도,경도],…]})
+//  → { sec: [[출발지 i → 도착지 k 초]], src: 'google' }  골픽 해외 숙소 추천(숙소 → 공항·골프장 차 시간)
+// 구글 Routes API(Compute Route Matrix, 막힘 없는 기준·배 제외)를 쓴다.
+//  - 열쇠: GOOGLE_MAPS_KEY 환경 변수가 있으면 그것, 없으면 이 서버(클라우드 런)의 서비스 계정 토큰
+//  - 비용 보호: 하루 300칸(출발지×도착지)까지만. 넘으면 429 → 앱이 오픈스트리트맵 길찾기로 대신 계산
+//  - 같은 질문은 30일 저장
+// 앱은 미리 묻기(preflight) 없이 부르도록 text/plain 으로 보낸다.
+const ROUTE_DAILY_CAP = Number(process.env.ROUTE_DAILY_CAP || 300);
+const routeCache = new Map();
+let routeDay = '', routeUsed = 0;
+async function googleAuthHeaders() {
+  if (process.env.GOOGLE_MAPS_KEY) return { 'X-Goog-Api-Key': process.env.GOOGLE_MAPS_KEY };
+  const md = (path) => fetch(`http://metadata.google.internal/computeMetadata/v1/${path}`, { headers: { 'Metadata-Flavor': 'Google' } });
+  const tok = await (await md('instance/service-accounts/default/token')).json();
+  const project = process.env.GOOGLE_CLOUD_PROJECT || (await (await md('project/project-id')).text());
+  return { Authorization: `Bearer ${tok.access_token}`, 'X-Goog-User-Project': project };
+}
+app.post('/route-matrix', express.text({ type: '*/*', limit: '50kb' }), async (req, res) => {
+  fareCors(req, res);
+  let body;
+  try { body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body; } catch { return res.status(400).json({ error: '본문 JSON 아님' }); }
+  const ok = (a) => Array.isArray(a) && a.length && a.length <= 25 && a.every((p) => Array.isArray(p) && p.length === 2 && p.every(Number.isFinite) && Math.abs(p[0]) <= 90 && Math.abs(p[1]) <= 180);
+  if (!ok(body?.origins) || !ok(body?.dests)) return res.status(400).json({ error: 'origins, dests 필요(각 25곳 이하)' });
+  const r4 = (p) => p.map((x) => x.toFixed(4)).join(',');
+  const key = `${body.origins.map(r4).join(';')}|${body.dests.map(r4).join(';')}`;
+  const hit = routeCache.get(key);
+  if (hit && Date.now() - hit.at < 30 * 864e5) return res.json({ ...hit.data, cached: true });
+  const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+  if (routeDay !== today) { routeDay = today; routeUsed = 0; }
+  const n = body.origins.length * body.dests.length;
+  if (routeUsed + n > ROUTE_DAILY_CAP) return res.status(429).json({ error: '오늘 구글 길찾기 한도를 다 썼어요' });
+  routeUsed += n;
+  const wp = ([lat, lng]) => ({ waypoint: { location: { latLng: { latitude: lat, longitude: lng } } }, routeModifiers: { avoidFerries: true } });
+  try {
+    const r = await fetch('https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Goog-FieldMask': 'originIndex,destinationIndex,duration,condition', ...(await googleAuthHeaders()) },
+      body: JSON.stringify({ origins: body.origins.map(wp), destinations: body.dests.map(wp), travelMode: 'DRIVE', routingPreference: 'TRAFFIC_UNAWARE' }),
+      signal: AbortSignal.timeout(20000),
+    });
+    const j = await r.json();
+    if (!r.ok || !Array.isArray(j)) { console.log('route-matrix 실패', r.status, JSON.stringify(j).slice(0, 300)); return res.status(502).json({ error: `구글 ${r.status}` }); }
+    const sec = body.origins.map(() => body.dests.map(() => null));
+    for (const e of j) if (e.condition === 'ROUTE_EXISTS' && e.duration) sec[e.originIndex ?? 0][e.destinationIndex ?? 0] = Number(String(e.duration).replace('s', ''));
+    const data = { sec, src: 'google' };
+    routeCache.set(key, { at: Date.now(), data });
+    res.json(data);
+  } catch (e) {
+    res.status(502).json({ error: e.message });
+  }
+});
+
 // GET /fare?to=BKK&dep=YYYY-MM-DD&ret=YYYY-MM-DD&after=17
 //  → 10개 후보 중 "돌아오는 편이 after 시 이후에 출발"하는 가장 싼 편(마지막 날 라운딩 뒤 출발). 없으면 가장 싼 편.
 // 앱(github.io)에서만 부를 수 있게 CORS 를 좁히고, 같은 질문은 6시간 저장해 둔다.
