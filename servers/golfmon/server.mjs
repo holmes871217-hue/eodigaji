@@ -255,16 +255,18 @@ app.post('/route-matrix', express.text({ type: '*/*', limit: '50kb' }), async (r
   const n = body.origins.length * body.dests.length;
   if (routeUsed + n > ROUTE_DAILY_CAP) return res.status(429).json({ error: '오늘 구글 길찾기 한도를 다 썼어요' });
   routeUsed += n;
-  const wp = ([lat, lng]) => ({ waypoint: { location: { latLng: { latitude: lat, longitude: lng } } }, routeModifiers: { avoidFerries: true } });
+  // 배 제외(avoidFerries)는 출발지에만 붙일 수 있다(도착지에 붙이면 구글이 400)
+  const wp = ([lat, lng]) => ({ waypoint: { location: { latLng: { latitude: lat, longitude: lng } } } });
+  const org = (p) => ({ ...wp(p), routeModifiers: { avoidFerries: true } });
   try {
     const r = await fetch('https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Goog-FieldMask': 'originIndex,destinationIndex,duration,condition', ...(await googleAuthHeaders()) },
-      body: JSON.stringify({ origins: body.origins.map(wp), destinations: body.dests.map(wp), travelMode: 'DRIVE', routingPreference: 'TRAFFIC_UNAWARE' }),
+      body: JSON.stringify({ origins: body.origins.map(org), destinations: body.dests.map(wp), travelMode: 'DRIVE', routingPreference: 'TRAFFIC_UNAWARE' }),
       signal: AbortSignal.timeout(20000),
     });
     const j = await r.json();
-    if (!r.ok || !Array.isArray(j)) { console.log('route-matrix 실패', r.status, JSON.stringify(j).slice(0, 300)); return res.status(502).json({ error: `구글 ${r.status}` }); }
+    if (!r.ok || !Array.isArray(j)) { console.log('route-matrix 실패', r.status, JSON.stringify(j).slice(0, 300)); return res.status(502).json({ error: `구글 ${r.status}`, detail: String(j?.error?.message || j?.[0]?.error?.message || '').slice(0, 300) }); }
     const sec = body.origins.map(() => body.dests.map(() => null));
     for (const e of j) if (e.condition === 'ROUTE_EXISTS' && e.duration) sec[e.originIndex ?? 0][e.destinationIndex ?? 0] = Number(String(e.duration).replace('s', ''));
     const data = { sec, src: 'google' };
