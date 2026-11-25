@@ -588,7 +588,7 @@ svg { flex: none; }
 }
 .tab.is-on .tab-count { position: static; }
 /* 추천 탭 맨 위 "추천 | 찜·코스" 전환 */
-.home-switch { margin-bottom: 14px; }
+.home-switch { margin-bottom: 14px; border: 1.5px solid #c9d5ee; } /* 골픽 국내·해외 전환과 같은 테두리 */
 .home-switch .toggle-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .home-switch-count { position: static; display: inline-grid; }
 
