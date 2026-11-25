@@ -745,6 +745,9 @@ svg { flex: none; }
 .golf-loc-mini span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* 티업 시간대 고르기: 칸 4개씩 고르게, 안 고른 칸도 배경이 보이게 */
+.golf-tee-reset { margin-top: 18px; width: 100%; }
+.golf-picks-tools { display: flex; justify-content: flex-end; margin-top: 6px; }
+.golf-picks-clear { color: #d1431f; font-weight: 800; font-size: 13px; }
 .golf-tee-any { margin-top: 12px; width: 100%; justify-content: center; background: var(--bg); }
 .golf-tee-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 8px 0 0; padding: 0; overflow: visible; }
 .golf-tee-chips .chip { justify-content: center; background: var(--bg); }

@@ -117,6 +117,8 @@ export function staysFor(iata, places, onChange, { withAir = true } = {}) {
     const air = withAir ? airportPoint(iata) : null;
     if (withAir && !air) { Object.assign(res, { state: 'empty' }); return; }
     const pts = air ? [air, ...ps] : ps;
+    // 서로 250km 넘게 떨어진 곳이 섞여 있으면 "가운데 숙소"가 의미 없어 고르지 않는다
+    if (pts.some((a) => pts.some((b) => km(a, b) > 250))) { Object.assign(res, { state: 'far' }); return; }
     const cand = candidates(pts, d.hotels);
     if (!cand.length) { Object.assign(res, { state: 'empty' }); return; }
     let m;
