@@ -78,11 +78,12 @@ function failed(el) {
   el.innerHTML = '<div class="empty"><b>지도를 불러오지 못했어요.</b><span>인터넷 연결을 확인한 뒤 다시 눌러 주세요.</span></div>';
 }
 
-function baseMap(el) {
+function baseMap(el, { plain = false } = {}) {
   const L = window.L;
   // zoomSnap: 0 → 확대 단계를 소수점까지 허용해야 "가로 정확히 10km"를 맞출 수 있다.
   const map = L.map(el, { zoomControl: true, attributionControl: true, zoomSnap: 0, zoomDelta: 1 });
-  if (koStyle && L.maplibreGL) {
+  // plain: 마이 탭 위치 고르기 지도는 예전 오픈스트리트맵 그림 지도를 쓴다(운영자 요청)
+  if (!plain && koStyle && L.maplibreGL) {
     L.maplibreGL({ style: koStyle, attribution: '<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> © OpenMapTiles © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OSM</a>' }).addTo(map);
     map.attributionControl.setPrefix(false); // 출처 줄을 짧게(한 줄)
   } else {
@@ -191,7 +192,7 @@ export async function mountPicker(el, { center, onTap }) {
   if (!el.isConnected) return;
 
   const L = window.L;
-  const map = baseMap(el);
+  const map = baseMap(el, { plain: true });
   pickMap = map;
   map.setView([center.lat, center.lng], zoomForKm(center.lat, PICK_BAR_PX, PICK_KM), { animate: false });
   pickMarker = L.marker([center.lat, center.lng], {
