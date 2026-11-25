@@ -40,6 +40,7 @@ const SHELL = [
   'js/ui/deals.js',
   'js/ui/golf.js',
   'js/core/golf.js',
+  'js/core/stays.js',
   'js/ui/mypage.js',
   'js/ui/sheet.js',
   'js/ui/trust.js',
