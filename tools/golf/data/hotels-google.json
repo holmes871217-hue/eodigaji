@@ -299,7 +299,74 @@
   "34.8,138.2": "2026-11-25",
   "42.2,141.1": "2026-11-25",
   "42.3,141.2": "2026-11-25",
-  "42.1,140.9": "2026-11-25"
+  "42.1,140.9": "2026-11-25",
+  "42.4,141.3": "2026-11-25",
+  "42.1,140.8": "2026-11-25",
+  "42.2,140.8": "2026-11-25",
+  "42.5,141.2": "2026-11-25",
+  "41.8,140.7": "2026-11-25",
+  "42.6,141.3": "2026-11-25",
+  "34.0,133.5": "2026-11-25",
+  "34.1,133.6": "2026-11-25",
+  "34.3,134.0": "2026-11-25",
+  "33.7,132.6": "2026-11-25",
+  "34.2,134.0": "2026-11-25",
+  "33.9,133.5": "2026-11-25",
+  "34.1,133.9": "2026-11-25",
+  "33.9,133.8": "2026-11-25",
+  "34.1,134.3": "2026-11-25",
+  "33.9,133.9": "2026-11-25",
+  "34.1,134.2": "2026-11-25",
+  "34.2,134.2": "2026-11-25",
+  "34.2,134.1": "2026-11-25",
+  "35.1,132.9": "2026-11-25",
+  "34.9,138.7": "2026-11-25",
+  "36.7,136.6": "2026-11-25",
+  "34.8,138.6": "2026-11-25",
+  "35.0,139.3": "2026-11-25",
+  "35.0,138.7": "2026-11-25",
+  "37.2,139.6": "2026-11-25",
+  "37.3,138.8": "2026-11-25",
+  "37.2,139.3": "2026-11-25",
+  "38.0,139.9": "2026-11-25",
+  "37.4,139.5": "2026-11-25",
+  "38.9,140.0": "2026-11-25",
+  "36.2,140.4": "2026-11-25",
+  "34.7,135.0": "2026-11-25",
+  "32.7,130.8": "2026-11-25",
+  "34.8,135.0": "2026-11-25",
+  "34.2,135.3": "2026-11-25",
+  "34.5,135.1": "2026-11-25",
+  "34.1,135.3": "2026-11-25",
+  "34.3,135.4": "2026-11-25",
+  "34.7,135.6": "2026-11-25",
+  "34.3,135.2": "2026-11-25",
+  "34.4,135.5": "2026-11-25",
+  "34.9,137.2": "2026-11-25",
+  "34.7,135.4": "2026-11-25",
+  "34.9,137.1": "2026-11-25",
+  "26.4,127.8": "2026-11-25",
+  "26.3,127.8": "2026-11-25",
+  "24.8,125.4": "2026-11-25",
+  "24.8,125.3": "2026-11-25",
+  "32.9,130.7": "2026-11-25",
+  "32.6,130.7": "2026-11-25",
+  "32.9,130.8": "2026-11-25",
+  "32.5,130.8": "2026-11-25",
+  "33.0,130.8": "2026-11-25",
+  "32.3,131.1": "2026-11-25",
+  "32.4,131.2": "2026-11-25",
+  "32.4,131.1": "2026-11-25",
+  "32.3,130.8": "2026-11-25",
+  "33.0,131.3": "2026-11-25",
+  "32.3,130.9": "2026-11-25",
+  "30.1,130.1": "2026-11-25",
+  "32.8,130.4": "2026-11-25",
+  "33.3,130.2": "2026-11-25",
+  "33.7,130.5": "2026-11-25",
+  "33.5,130.6": "2026-11-25",
+  "33.7,131.0": "2026-11-25",
+  "33.7,130.9": "2026-11-25"
  },
  "hotels": {
   "ChIJIQNLA7m0AjERqH8sHvvqADc": {
@@ -15139,7 +15206,7 @@
    "lat": 34.6875451,
    "lng": 135.18791190000002,
    "r": 4.4,
-   "c": 1266,
+   "c": 1267,
    "u": "https://maps.google.com/?cid=7062166605689178001&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
    "loc": "2-chōme-5-1 Sakaemachidōri, Chuo Ward, Kobe"
   },
@@ -15166,7 +15233,7 @@
    "lat": 34.6811313,
    "lng": 135.1798849,
    "r": 4.4,
-   "c": 801,
+   "c": 802,
    "u": "https://maps.google.com/?cid=8771122432507842753&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
    "loc": "1-chōme-1-1 Higashikawasakichō, Chuo Ward, Kobe"
   },
@@ -21199,8 +21266,2078 @@
    "c": 959,
    "u": "https://maps.google.com/?cid=18215009292123987883&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
    "loc": "832-2 Ōfunechō, Hakodate"
+  },
+  "ChIJixHcrKfznl8R_WyY3JnQfQA": {
+   "n": "라 비스타 하코다테 베이",
+   "lat": 41.7675029,
+   "lng": 140.71900540000001,
+   "r": 4.3,
+   "c": 6609,
+   "u": "https://maps.google.com/?cid=35413731338382589&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "12-6 Toyokawachō, Hakodate"
+  },
+  "ChIJr1yLLqHznl8RqAMmb-z1ko0": {
+   "n": "하코다테 고쿠사이 호텔(하코다테 국제 호텔)",
+   "lat": 41.769563999999995,
+   "lng": 140.722278,
+   "r": 4.2,
+   "c": 4963,
+   "u": "https://maps.google.com/?cid=10201486501773444008&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "5-10 Ōtemachi, Hakodate"
+  },
+  "ChIJySvIc6Hznl8RYeFeVgV_FPI": {
+   "n": "Century Marina Hakodate",
+   "lat": 41.7710876,
+   "lng": 140.72288989999998,
+   "r": 4.5,
+   "c": 3374,
+   "u": "https://maps.google.com/?cid=17443706917613396321&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "22-13 Ōtemachi, Hakodate"
+  },
+  "ChIJVbH0r5jznl8RLiXVV06Ajmc": {
+   "n": "JR 인 하코다테",
+   "lat": 41.7737848,
+   "lng": 140.7256675,
+   "r": 4.5,
+   "c": 2269,
+   "u": "https://maps.google.com/?cid=7462042706568881454&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "12-14 Wakamatsuchō, Hakodate"
+  },
+  "ChIJd3UGrnXznl8RH2DJBUvciC4": {
+   "n": "호텔 글로벌 뷰 하코다테",
+   "lat": 41.7698981,
+   "lng": 140.7354565,
+   "r": 4.1,
+   "c": 3276,
+   "u": "https://maps.google.com/?cid=3353172137355075615&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "25-3 Ōmorichō, Hakodate"
+  },
+  "ChIJq9nwV0zznl8RIXMfBfr6J94": {
+   "n": "오모5 하코다테 바이 호시노 리조트",
+   "lat": 41.774138799999996,
+   "lng": 140.7300065,
+   "r": 4.3,
+   "c": 903,
+   "u": "https://maps.google.com/?cid=16008039352246432545&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "24-1 Wakamatsuchō, Hakodate"
+  },
+  "ChIJ____xpX0nl8R2V051YRmnoU": {
+   "n": "Hakodate Yunokawa Onsen Umi to Akari Hewitt Resort",
+   "lat": 41.7751021,
+   "lng": 140.79084129999998,
+   "r": 4.2,
+   "c": 1903,
+   "u": "https://maps.google.com/?cid=9628245774063721945&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "3-chōme-9-20 Yunokawachō, Hakodate"
+  },
+  "ChIJl3TzA4_znl8Rrm-Tzxo4gVE": {
+   "n": "TOKYU STAY Hakodate-Asaichi Akari no Yu",
+   "lat": 41.7721418,
+   "lng": 140.7236671,
+   "r": 4.4,
+   "c": 1345,
+   "u": "https://maps.google.com/?cid=5873037076870688686&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "22-1-1 Ōtemachi, Hakodate"
+  },
+  "ChIJv4XmUJ_znl8RaMRlFXOUj-8": {
+   "n": "프리미어 호텔 캐빈 프레지던트 하코다테",
+   "lat": 41.7726924,
+   "lng": 140.7266334,
+   "r": 4.1,
+   "c": 2303,
+   "u": "https://maps.google.com/?cid=17262179118735541352&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "14-10 Wakamatsuchō, Hakodate"
+  },
+  "ChIJo8XomIfznl8RaWC0jpkih1M": {
+   "n": "라젠트 스테이 하코다테 에키마에",
+   "lat": 41.7745385,
+   "lng": 140.72718240000003,
+   "r": 4.2,
+   "c": 1490,
+   "u": "https://maps.google.com/?cid=6018817469923483753&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "12-8 Wakamatsuchō, Hakodate"
+  },
+  "ChIJn7-pLH_1nl8RlDMkLtXD4HQ": {
+   "n": "스마일 호텔 프리미엄 하코다테 고료카쿠",
+   "lat": 41.7911797,
+   "lng": 140.75160630000002,
+   "r": 4.1,
+   "c": 496,
+   "u": "https://maps.google.com/?cid=8421946623552402324&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "8-15 Honchō, Hakodate"
+  },
+  "ChIJxQv9ocXznl8RQK4Wh5bkhM4": {
+   "n": "호텔 에노에 하코다테",
+   "lat": 41.761999599999996,
+   "lng": 140.72019459999999,
+   "r": 4.5,
+   "c": 347,
+   "u": "https://maps.google.com/?cid=14881270403901599296&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "22-15 Hōraichō, Hakodate"
+  },
+  "ChIJb09OA5f0nl8RKxc6Y4w1E6U": {
+   "n": "유노카와 프린스 호텔 나기사테이",
+   "lat": 41.774474999999995,
+   "lng": 140.78425959999998,
+   "r": 4.2,
+   "c": 1817,
+   "u": "https://maps.google.com/?cid=11894909917892056875&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-2-25 Yunokawachō, Hakodate"
+  },
+  "ChIJSfHwWpH0nl8RZx-ZY7KY3uw": {
+   "n": "Hotel Banso",
+   "lat": 41.7775584,
+   "lng": 140.78429400000002,
+   "r": 4.3,
+   "c": 1853,
+   "u": "https://maps.google.com/?cid=17068247529723338599&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-15-3 Yunokawachō, Hakodate"
+  },
+  "ChIJj6zbBr70nl8Rzqqr_4fNdWw": {
+   "n": "이매진 호텔 & 리조트",
+   "lat": 41.7735382,
+   "lng": 140.7911901,
+   "r": 4.2,
+   "c": 1618,
+   "u": "https://maps.google.com/?cid=7815378712365083342&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "3-chōme-1-17 Yunokawachō, Hakodate"
+  },
+  "ChIJl4hRlqHznl8R53RLfpeFEw8": {
+   "n": "토요코인 홋카이도 하코다테 에키마에 아사이치",
+   "lat": 41.77146,
+   "lng": 140.72466599999998,
+   "r": 4.1,
+   "c": 2161,
+   "u": "https://maps.google.com/?cid=1086358820831851751&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "22-7 Ōtemachi, Hakodate"
+  },
+  "ChIJDUdUdXD0nl8R3GNyQLlEVnw": {
+   "n": "호텔 마이스테이스 하코다테 고료가쿠",
+   "lat": 41.78938900000001,
+   "lng": 140.75323,
+   "r": 4.1,
+   "c": 1170,
+   "u": "https://maps.google.com/?cid=8959424071141057500&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "26-17 Honchō, Hakodate"
+  },
+  "ChIJV_9v0iY7dV8R-6buYiLdq4c": {
+   "n": "Shikotsuko Daiichi Hotel Suizantei",
+   "lat": 42.7748663,
+   "lng": 141.4026462,
+   "r": 4.2,
+   "c": 789,
+   "u": "https://maps.google.com/?cid=9776150555896227579&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "지토세시 시코쓰코온센"
+  },
+  "ChIJQ5uVeNx3UTURDkLeGxQsn-E": {
+   "n": "Urashima Village",
+   "lat": 34.220785299999996,
+   "lng": 133.6131486,
+   "r": 4.7,
+   "c": 82,
+   "u": "https://maps.google.com/?cid=16257761644709298702&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Mitoyo, Takumachō Ōhama, 乙171-2"
+  },
+  "ChIJZy9hjxuDUTURK7DIod7Yl14": {
+   "n": "Hatagoya Sanuki Kanonji",
+   "lat": 34.1248321,
+   "lng": 133.663418,
+   "r": 4.2,
+   "c": 148,
+   "u": "https://maps.google.com/?cid=6816155011757158443&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "5-chōme-1-25 Sakamotochō, Kanonji"
+  },
+  "ChIJrUI__A3BUzURMJc_6ObbcHI": {
+   "n": "THE CHELSEA BREATH",
+   "lat": 34.2532856,
+   "lng": 134.028041,
+   "r": 4.5,
+   "c": 378,
+   "u": "https://maps.google.com/?cid=8246332702500820784&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1878 Kagawachō Kawahigashishimo, Takamatsu"
+  },
+  "ChIJj0A2B4LdUzUR4YhSr8EcOgY": {
+   "n": "Gamuya Inn",
+   "lat": 34.3059569,
+   "lng": 133.9163825,
+   "r": 4.7,
+   "c": 102,
+   "u": "https://maps.google.com/?cid=448702731072473313&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "825 Kamochō, Sakaide"
+  },
+  "ChIJy6xRQCfDUzURYCYcNQSeWvA": {
+   "n": "ALPHA BASE 高松西",
+   "lat": 34.2908849,
+   "lng": 134.0174748,
+   "r": 4.8,
+   "c": 47,
+   "u": "https://maps.google.com/?cid=17319329057914758752&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1508-1 Ichinomiyachō, Takamatsu"
+  },
+  "ChIJU1Iutw6MTzURveh7vIMz25Y": {
+   "n": "Futami Sea Breeze Park",
+   "lat": 33.6804516,
+   "lng": 132.6349601,
+   "r": 4.1,
+   "c": 151,
+   "u": "https://maps.google.com/?cid=10870338766484793533&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "869-2 Futamichō Takagishi, Iyo"
+  },
+  "ChIJqwbsB3_PUzURZYH59K8HPA4": {
+   "n": "Asan Kotonami",
+   "lat": 34.1153267,
+   "lng": 133.9712216,
+   "r": 4.5,
+   "c": 262,
+   "u": "https://maps.google.com/?cid=1025703267444293989&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1 Katsuura, Manno"
+  },
+  "ChIJKSGcIoSJUTURUhmP8kUmmUg": {
+   "n": "선리버 오보케",
+   "lat": 33.9118576,
+   "lng": 133.7585602,
+   "r": 4,
+   "c": 1036,
+   "u": "https://maps.google.com/?cid=5231254524031605074&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyoshi, Yamashirochō Nishiu, 1259-1 1F"
+  },
+  "ChIJSTZ0K0mKUTUR0LH4CPJB_qA": {
+   "n": "Obokekyo Mannaka",
+   "lat": 33.8839593,
+   "lng": 133.7596068,
+   "r": 4.4,
+   "c": 633,
+   "u": "https://maps.google.com/?cid=11600782197941383632&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1644-1 Yamashirochō Nishiu, Miyoshi"
+  },
+  "ChIJZTAEAO4sUjURWlC4jzbx5uo": {
+   "n": "Hatagoya Yoshinogawa SA",
+   "lat": 34.0374026,
+   "lng": 133.8913636,
+   "r": 4.1,
+   "c": 158,
+   "u": "https://maps.google.com/?cid=16926481466160336986&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1603-3 Ashiro, Higashimiyoshi"
+  },
+  "ChIJcRSn_7ktUjURAi3BX1CMDRI": {
+   "n": "Nishi Awa Nest Iya",
+   "lat": 34.033873899999996,
+   "lng": 133.921787,
+   "r": 5,
+   "c": 50,
+   "u": "https://maps.google.com/?cid=1300850144211709186&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Higashimiyoshi, Kamo, 4398-22 4398番地22"
+  },
+  "ChIJm-4Q1qUnUjURY2vUy2wjhIA": {
+   "n": "Hotel Iyaonsen",
+   "lat": 33.9213454,
+   "lng": 133.81737189999998,
+   "r": 4.4,
+   "c": 1577,
+   "u": "https://maps.google.com/?cid=9260565683963718499&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Matsumoto-367-28 Ikedachō Matsuo, Miyoshi"
+  },
+  "ChIJ-eBnrSsnUjURotucH6j5H7w": {
+   "n": "호텔 가즈라바시",
+   "lat": 33.8794538,
+   "lng": 133.8266299,
+   "r": 4.5,
+   "c": 1409,
+   "u": "https://maps.google.com/?cid=13555827903888677794&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "33-1 Nishiiyayamamura Zentoku, Miyoshi"
+  },
+  "ChIJbXygBDcnUjURuT-UjCKjGhk": {
+   "n": "Iya Valley Hot Springs Hotel Hikyō-no-yu",
+   "lat": 33.8898219,
+   "lng": 133.8128985,
+   "r": 4.1,
+   "c": 797,
+   "u": "https://maps.google.com/?cid=1808937569125416889&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyoshi, Nishiiyayamamura Oinouchi, 401番地"
+  },
+  "ChIJy00-2i0nUjURd4LKVbP7BFE": {
+   "n": "이야비진",
+   "lat": 33.883226,
+   "lng": 133.82125,
+   "r": 4.3,
+   "c": 993,
+   "u": "https://maps.google.com/?cid=5838067764636058231&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "9-3 Nishiiyayamamura Zentoku, Miyoshi"
+  },
+  "ChIJeUVq83ooUjUR1otapj72Yd4": {
+   "n": "Matsuogawa Onsen",
+   "lat": 33.9586025,
+   "lng": 133.8207472,
+   "r": 4.5,
+   "c": 772,
+   "u": "https://maps.google.com/?cid=16024359698100292566&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kurokawa-2-1 松尾 池田町 Miyoshi"
+  },
+  "ChIJI5u0vc8mUjURhDRJYmXXEPM": {
+   "n": "Iyanoyado Kazuraya",
+   "lat": 33.878122999999995,
+   "lng": 133.84005399999998,
+   "r": 4.6,
+   "c": 319,
+   "u": "https://maps.google.com/?cid=17514735781284492420&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "78 Nishiiyayamamura Kanjō, Miyoshi"
+  },
+  "ChIJ3ZWSCAgoUjUR2X-pY9lPHk0": {
+   "n": "Haretoke cafe",
+   "lat": 33.9616703,
+   "lng": 133.80066230000003,
+   "r": 4.2,
+   "c": 265,
+   "u": "https://maps.google.com/?cid=5556966785320320985&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyoshi, Ikedachō Ōri, Ōnishi−15 ハレとケ珈琲本店山ノサウナ"
+  },
+  "ChIJMSJon_YpUjURFaZHjFaGFeI": {
+   "n": "Awa Ikeda Station Hotel Eleven",
+   "lat": 34.027338,
+   "lng": 133.805039,
+   "r": 4.6,
+   "c": 123,
+   "u": "https://maps.google.com/?cid=16291074933361452565&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyoshi, 池田町サラダ1835−1"
+  },
+  "ChIJvUap0bopUjURinN1ZkEL89k": {
+   "n": "Business Hotel Awaikeda Eleven 2",
+   "lat": 34.0297479,
+   "lng": 133.79358689999998,
+   "r": 4.5,
+   "c": 51,
+   "u": "https://maps.google.com/?cid=15704908701090804618&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "3159-2 Ikedachō Ueno, Miyoshi"
+  },
+  "ChIJmSEEiW4pUjUR1tUDr_KAwFo": {
+   "n": "4S STAY Awa Ikeda ekimae",
+   "lat": 34.027854999999995,
+   "lng": 133.8053964,
+   "r": 4.4,
+   "c": 92,
+   "u": "https://maps.google.com/?cid=6539368438748665302&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1804-9 Ikedachō Sarada, Miyoshi"
+  },
+  "ChIJScY9o88mUjURjVKTay_t_vI": {
+   "n": "Minshuku Oyamaso",
+   "lat": 33.878215000000004,
+   "lng": 133.84052,
+   "r": 4.1,
+   "c": 50,
+   "u": "https://maps.google.com/?cid=17509693189187129997&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "91-2 Nishiiyayamamura Kanjō, Miyoshi"
+  },
+  "ChIJjdz2fwApUjURLmJH9KLuoow": {
+   "n": "彩り旅宿 4S STAY 阿波池田 池田温泉横",
+   "lat": 34.0284786,
+   "lng": 133.80506309999998,
+   "r": 4.5,
+   "c": 35,
+   "u": "https://maps.google.com/?cid=10133924495187468846&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2178-21 Ikedachō Machi, Miyoshi"
+  },
+  "ChIJQRMamPopUjURig9fcBjoH0E": {
+   "n": "heso camp",
+   "lat": 34.025116,
+   "lng": 133.7998697,
+   "r": 4.3,
+   "c": 44,
+   "u": "https://maps.google.com/?cid=4692724528405483402&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2091-1 Ikedachō Ikeminami, Miyoshi"
+  },
+  "ChIJ7zLg55OlUzURVNLMRIBKAcA": {
+   "n": "Misato no Yu",
+   "lat": 34.036657,
+   "lng": 134.3004206,
+   "r": 4.3,
+   "c": 188,
+   "u": "https://maps.google.com/?cid=13835421445029417556&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Okumaru-75ー1 Misato, Yoshinogawa"
+  },
+  "ChIJ-VtcvzC8UzURbwhwPcpiPnk": {
+   "n": "野田屋 竹屋敷",
+   "lat": 34.1759986,
+   "lng": 134.1855468,
+   "r": 4.1,
+   "c": 184,
+   "u": "https://maps.google.com/?cid=8736528947899009135&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Sanuki, 多和竹屋敷123-1"
+  },
+  "ChIJSW7aKC-6UzURuG-w2n-NKII": {
+   "n": "Loving CAFE",
+   "lat": 34.1089853,
+   "lng": 134.1772052,
+   "r": 4.5,
+   "c": 143,
+   "u": "https://maps.google.com/?cid=9378901804268416952&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Mima, Wakimachi, Higashiakatanimyō−249 母屋"
+  },
+  "ChIJsb08Y1mhUzURqe0TWxLwTHs": {
+   "n": "民宿 越久田屋",
+   "lat": 34.1212235,
+   "lng": 134.3585726,
+   "r": 4.7,
+   "c": 77,
+   "u": "https://maps.google.com/?cid=8884740126523256233&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyanoshita-31-1 Donarichō Miyagawauchi, Awa"
+  },
+  "ChIJWyt_QUu3UzURsCiIJPoGX5g": {
+   "n": "Business Hotel Inadaen",
+   "lat": 34.068413,
+   "lng": 134.170997,
+   "r": 4.2,
+   "c": 134,
+   "u": "https://maps.google.com/?cid=10979502087977052336&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Haibara-1001-1 Wakimachi, Mima"
+  },
+  "ChIJDZ1DIHKlUzURBXYAT9j1xWM": {
+   "n": "Awarakuya",
+   "lat": 34.065540999999996,
+   "lng": 134.3192381,
+   "r": 4.9,
+   "c": 84,
+   "u": "https://maps.google.com/?cid=7189422689554036229&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Yoshinogawa, Kawashimachō Kawashima, 城山178"
+  },
+  "ChIJrRjGrEo2UjURdJ7V92QWHuQ": {
+   "n": "La Foret Tsurugisan",
+   "lat": 33.8732464,
+   "lng": 134.0766241,
+   "r": 4.2,
+   "c": 236,
+   "u": "https://maps.google.com/?cid=16437600312859401844&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Tsuzuro-6198-2 Ichiu, Tsurugi"
+  },
+  "ChIJYQs7TvMbUjURevcX8G_hkPE": {
+   "n": "Riders Inn Oku-Monobe",
+   "lat": 33.693968,
+   "lng": 133.8727013,
+   "r": 4.5,
+   "c": 104,
+   "u": "https://maps.google.com/?cid=17406660430672689018&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "3322 Monobechō Sendō, Kami"
+  },
+  "ChIJ5SPZZA81UjURKYiQ0noKSVA": {
+   "n": "Iwado Hot Spring",
+   "lat": 33.9554383,
+   "lng": 134.067927,
+   "r": 4,
+   "c": 209,
+   "u": "https://maps.google.com/?cid=5785166718969088041&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Akamatsu-6-9 Ichiu, つるぎ町 Tsurugi"
+  },
+  "ChIJReCpxEexUzURy75tgO07s3A": {
+   "n": "Seigetsuyashiki",
+   "lat": 34.0475439,
+   "lng": 134.17635869999998,
+   "r": 4.2,
+   "c": 100,
+   "u": "https://maps.google.com/?cid=8120900444327100107&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Ichinoshimo-100-6 Anabukichō Anabuki, Mima"
+  },
+  "ChIJsc22CaebUzURG1oyo7HUPTw": {
+   "n": "Vessel Oochi-no-Yu",
+   "lat": 34.274812499999996,
+   "lng": 134.29771739999998,
+   "r": 4,
+   "c": 673,
+   "u": "https://maps.google.com/?cid=4340859475267312155&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1200 Umashino, Higashikagawa"
+  },
+  "ChIJR_Ep8VadUzURsFJYaUyCr9Y": {
+   "n": "CRAFT HOTEL Setouchi",
+   "lat": 34.2469197,
+   "lng": 134.3403956,
+   "r": 4.3,
+   "c": 130,
+   "u": "https://maps.google.com/?cid=15469726509737464496&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1880 Sanbonmatsu, Higashikagawa"
+  },
+  "ChIJLVPGdB6bUzURY176z64we6o": {
+   "n": "Quapark Tsuda",
+   "lat": 34.28413,
+   "lng": 134.2589261,
+   "r": 4.2,
+   "c": 242,
+   "u": "https://maps.google.com/?cid=12284465935954894435&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Sanuki, Tsudamachi Tsuda, 松原地内"
+  },
+  "ChIJP6DlBCqUUzURWV58Fn9g7qY": {
+   "n": "結願の宿 ながお路",
+   "lat": 34.266019,
+   "lng": 134.171535,
+   "r": 4.1,
+   "c": 67,
+   "u": "https://maps.google.com/?cid=12028657753707535961&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "982 Nagaonishi, Sanuki"
+  },
+  "ChIJZTYS26PHUzURp_7TcItTOg0": {
+   "n": "하이퍼 리조트 빌라 시오노에",
+   "lat": 34.157591100000005,
+   "lng": 134.0737895,
+   "r": 4,
+   "c": 490,
+   "u": "https://maps.google.com/?cid=953166129500782247&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "688-1 Shionoechō Kaminishiotsu, Takamatsu"
+  },
+  "ChIJxSevwArHUzURbI3wZdpV53k": {
+   "n": "호텔 세컨드 스테이지",
+   "lat": 34.1626094,
+   "lng": 134.07602889999998,
+   "r": 4.2,
+   "c": 351,
+   "u": "https://maps.google.com/?cid=8784083994710936940&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Takamatsu, Shionoechō Kaminishiotsu, 1118-8 ホテル セカンドステージ"
+  },
+  "ChIJFZ5EHCS_UzURj9EdK-WqDxQ": {
+   "n": "Miki里山グランピング",
+   "lat": 34.213045799999996,
+   "lng": 134.1207686,
+   "r": 5,
+   "c": 52,
+   "u": "https://maps.google.com/?cid=1445561906656825743&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miki, Asakura, 字上 乃生2102-2"
+  },
+  "ChIJtSEScm_HUzURB-5f9kQR1OQ": {
+   "n": "いろりの宿 魚虎 INN",
+   "lat": 34.1687436,
+   "lng": 134.0856695,
+   "r": 4.4,
+   "c": 96,
+   "u": "https://maps.google.com/?cid=16488823123599158791&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "442-2 Shionoechō Yasuharakamihigashi, Takamatsu"
+  },
+  "ChIJS2W4jU6pUDURe16WmAIaQkI": {
+   "n": "Sanbeso Onsen Hotel",
+   "lat": 35.115435999999995,
+   "lng": 132.6237798,
+   "r": 4.1,
+   "c": 1099,
+   "u": "https://maps.google.com/?cid=4774407153418395259&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2072-1 Sanbechō Shigaku, Oda"
+  },
+  "ChIJRU92FwA_VzURJ27RW5QMAJc": {
+   "n": "도미 인 익스프레스 이즈모노쿠니 운난",
+   "lat": 35.300097699999995,
+   "lng": 132.8900119,
+   "r": 4.6,
+   "c": 134,
+   "u": "https://maps.google.com/?cid=10880710531062263335&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "73-11 Mitoyachō Mitoya, Unnan"
+  },
+  "ChIJj96I8k89VzURC1vPgjE2_mM": {
+   "n": "Guesthouse IKIRU",
+   "lat": 35.2986504,
+   "lng": 132.97008739999998,
+   "r": 5,
+   "c": 194,
+   "u": "https://maps.google.com/?cid=7205256040115297035&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "417 Daitōchō Higashiayō, Unnan"
+  },
+  "ChIJTcVmMW9OVzURjZwA73L308g": {
+   "n": "須佐温泉 潮の井荘",
+   "lat": 35.2358732,
+   "lng": 132.7353539,
+   "r": 4.3,
+   "c": 57,
+   "u": "https://maps.google.com/?cid=14471182100679662733&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "749-5 Sadachō Susa, Izumo"
+  },
+  "ChIJnXRcS8L5GWARLtDPlhkEq4o": {
+   "n": "Izu Matsuzaki Sou (Izu Matsuzaki Inn)",
+   "lat": 34.7578545,
+   "lng": 138.7769318,
+   "r": 4.2,
+   "c": 637,
+   "u": "https://maps.google.com/?cid=9992084706202472494&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "210 1 Ena, Matsuzaki"
+  },
+  "ChIJczfqciKLGWARu1Sum0DOZTU": {
+   "n": "AWA Nishi-Izu",
+   "lat": 34.970968299999996,
+   "lng": 138.78976079999998,
+   "r": 4.2,
+   "c": 130,
+   "u": "https://maps.google.com/?cid=3847708233543079099&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1480-1 Heda, Numazu"
+  },
+  "ChIJ57UVNKX0GWARV6PuaxCSzq8": {
+   "n": "Suisho-tei",
+   "lat": 34.9119281,
+   "lng": 138.78947689999998,
+   "r": 4.3,
+   "c": 537,
+   "u": "https://maps.google.com/?cid=12668223401067717463&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "415-4 Toi, Izu"
+  },
+  "ChIJwXzIYgn3GWARWRQS2uBjwT4": {
+   "n": "Dogashima Hotel Tenyu",
+   "lat": 34.7876488,
+   "lng": 138.76262699999998,
+   "r": 4.4,
+   "c": 473,
+   "u": "https://maps.google.com/?cid=4522005318239130713&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2962 Nishina, Nishiizu"
+  },
+  "ChIJhUi4--P0GWARWkTqvroA6NE": {
+   "n": "Fugaku Gunjo",
+   "lat": 34.887901299999996,
+   "lng": 138.7642364,
+   "r": 4.4,
+   "c": 498,
+   "u": "https://maps.google.com/?cid=15125340150590751834&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2461-1 Yagisawa, Izu"
+  },
+  "ChIJRzWg1vf1GWARAm1yd3J384Q": {
+   "n": "LOQUAT西伊豆",
+   "lat": 34.9135701,
+   "lng": 138.7906753,
+   "r": 4.4,
+   "c": 290,
+   "u": "https://maps.google.com/?cid=9580132165861141762&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "365 Toi, Izu"
+  },
+  "ChIJ91Ntnegz-F8RGPyXChayZnA": {
+   "n": "온야도노노 가나자와",
+   "lat": 36.570152199999995,
+   "lng": 136.6550586,
+   "r": 4.4,
+   "c": 1704,
+   "u": "https://maps.google.com/?cid=8099356787609173016&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1番1 Shimotsutsumichō, Kanazawa"
+  },
+  "ChIJKbtvCmkz-F8RIAkxa0rWD-s": {
+   "n": "호텔 닛코 가나자와",
+   "lat": 36.57634,
+   "lng": 136.6494328,
+   "r": 4.3,
+   "c": 4339,
+   "u": "https://maps.google.com/?cid=16937992338678024480&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-15-1 Honmachi, Kanazawa"
+  },
+  "ChIJV5pLKH8z-F8RJ34ns14hjiw": {
+   "n": "The Sanraku Hotel Kanazawa",
+   "lat": 36.5705579,
+   "lng": 136.6588879,
+   "r": 4.6,
+   "c": 984,
+   "u": "https://maps.google.com/?cid=3210540274978094631&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-1-1 Owarichō, Kanazawa"
+  },
+  "ChIJ1fsTXR8z-F8RUew6Ti2rV-s": {
+   "n": "미쓰이 가든 호텔 가나자와",
+   "lat": 36.568935499999995,
+   "lng": 136.6546942,
+   "r": 4.5,
+   "c": 1530,
+   "u": "https://maps.google.com/?cid=16958211132961254481&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-22 Kamitsutsumichō, Kanazawa"
+  },
+  "ChIJV5lzUpoz-F8RcuG44YMYg94": {
+   "n": "호텔 포르자 가나자와",
+   "lat": 36.5730323,
+   "lng": 136.65545749999998,
+   "r": 4.5,
+   "c": 1369,
+   "u": "https://maps.google.com/?cid=16033686053075870066&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kanazawa, Yasuechō, ２−10"
+  },
+  "ChIJ5SYw0KA1-F8REH48Gn5F96E": {
+   "n": "Hotel Amanek Kanazawa",
+   "lat": 36.560686,
+   "lng": 136.65065429999999,
+   "r": 4.3,
+   "c": 1162,
+   "u": "https://maps.google.com/?cid=11670873367262297616&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-25-17 Katamachi, Kanazawa"
+  },
+  "ChIJ7UkqBf0z-F8Rf332F5I3XzM": {
+   "n": "Hotel Intergate Kanazawa",
+   "lat": 36.5682402,
+   "lng": 136.6535862,
+   "r": 4.4,
+   "c": 1402,
+   "u": "https://maps.google.com/?cid=3701738519328619903&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-5 Takaokamachi, Kanazawa"
+  },
+  "ChIJa_V0sj0z-F8R10PDkBPJLng": {
+   "n": "Soki Kanazawa",
+   "lat": 36.5721341,
+   "lng": 136.6572075,
+   "r": 4.5,
+   "c": 754,
+   "u": "https://maps.google.com/?cid=8660080219350320087&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "２丁目-2-1 Fukuromachi, Kanazawa"
+  },
+  "ChIJwY45VRgz-F8RZUGzfK0P1-g": {
+   "n": "the square hotel KANAZAWA",
+   "lat": 36.5705515,
+   "lng": 136.655128,
+   "r": 4.3,
+   "c": 1431,
+   "u": "https://maps.google.com/?cid=16777896174587953509&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "10 Shimotsutsumichō, Kanazawa"
+  },
+  "ChIJhTOMDJoz-F8Rfsypz_u6dog": {
+   "n": "KOKO HOTEL Premier Kanazawa Korinbo",
+   "lat": 36.563923599999995,
+   "lng": 136.6539687,
+   "r": 4.3,
+   "c": 707,
+   "u": "https://maps.google.com/?cid=9833252427093625982&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-2-16 Kōrinbō, Kanazawa"
+  },
+  "ChIJCTgrhSo1-F8ROTON2iprQy8": {
+   "n": "OMO5 Kanazawa Katamachi by Hoshino Resorts",
+   "lat": 36.5605258,
+   "lng": 136.6535807,
+   "r": 4.3,
+   "c": 569,
+   "u": "https://maps.google.com/?cid=3405683575021712185&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-4-23 Katamachi, Kanazawa"
+  },
+  "ChIJG38vCEEz-F8R_jlVrJksEfw": {
+   "n": "하얏트 센트릭 가나자와",
+   "lat": 36.5800473,
+   "lng": 136.6478362,
+   "r": 4.4,
+   "c": 1184,
+   "u": "https://maps.google.com/?cid=18163347810694806014&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-5-2 Hirooka, Kanazawa"
+  },
+  "ChIJBz4D938z-F8Rex2MoiQ6ECE": {
+   "n": "가나자와도큐호텔",
+   "lat": 36.5627251,
+   "lng": 136.6531402,
+   "r": 4.3,
+   "c": 2070,
+   "u": "https://maps.google.com/?cid=2382468131899317627&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-1-1 Kōrinbō, Kanazawa"
+  },
+  "ChIJpbL-8UMz-F8RKBDITzPuRMo": {
+   "n": "HOTEL MYSTAYS PREMIER Kanazawa",
+   "lat": 36.5799921,
+   "lng": 136.6435386,
+   "r": 4.3,
+   "c": 2887,
+   "u": "https://maps.google.com/?cid=14575036198227021864&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-13-5 Hirooka, Kanazawa"
+  },
+  "ChIJwUSK3R73GWARmAES7zjispA": {
+   "n": "Mayu Futahari",
+   "lat": 34.7805068,
+   "lng": 138.7685237,
+   "r": 4.5,
+   "c": 305,
+   "u": "https://maps.google.com/?cid=10426644821473100184&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2035 Nishina, Nishiizu"
+  },
+  "ChIJkffSNv70GWAR1rKo0P3GXJw": {
+   "n": "Futaritowani En",
+   "lat": 34.8769944,
+   "lng": 138.7604354,
+   "r": 4.5,
+   "c": 205,
+   "u": "https://maps.google.com/?cid=11267099161203880662&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1341-4 Koshimoda, Izu"
+  },
+  "ChIJf3jxl6_0GWAR-HF2Jga3xzQ": {
+   "n": "Musouan Biwa",
+   "lat": 34.915003999999996,
+   "lng": 138.791315,
+   "r": 4.3,
+   "c": 431,
+   "u": "https://maps.google.com/?cid=3803209647380656632&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "259-1 Toi, Izu"
+  },
+  "ChIJlZ0VrULDGWAREqeWUU4M75A": {
+   "n": "Andanomori Izu Ippekiko",
+   "lat": 34.925041199999995,
+   "lng": 139.1115335,
+   "r": 4.3,
+   "c": 1273,
+   "u": "https://maps.google.com/?cid=10443579591411279634&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "836-2 Yoshida, Itō"
+  },
+  "ChIJx4Zhi6G_GWARq0cYKDEXR4M": {
+   "n": "Ocean Spa Fuua",
+   "lat": 35.0883904,
+   "lng": 139.0796452,
+   "r": 4.3,
+   "c": 2202,
+   "u": "https://maps.google.com/?cid=9459555042208532395&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "10-1 Wadahamaminamichō, Atami"
+  },
+  "ChIJlyfnAQajGWARceoFu25fSJg": {
+   "n": "Hotel Nanpūsō",
+   "lat": 35.2251933,
+   "lng": 139.09154519999998,
+   "r": 4.1,
+   "c": 1614,
+   "u": "https://maps.google.com/?cid=10973125421276981873&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "179 Yumotochaya, Hakone"
+  },
+  "ChIJxzqH8mq-GWARRQyYb2nBvB4": {
+   "n": "Hoshino Resorts RISONARE Atami",
+   "lat": 35.091144299999996,
+   "lng": 139.0627164,
+   "r": 4.2,
+   "c": 1265,
+   "u": "https://maps.google.com/?cid=2214857775347403845&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-13-1 Minaguchichō, Atami"
+  },
+  "ChIJ968CApfcGWARlcW3aJy1TtI": {
+   "n": "Anda Resort Izukogen",
+   "lat": 34.8850358,
+   "lng": 139.1095932,
+   "r": 4.4,
+   "c": 1473,
+   "u": "https://maps.google.com/?cid=15154249479524697493&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1133 Yawatano, Itō"
+  },
+  "ChIJIwgElNvDGWAR68Xdl1z3pB8": {
+   "n": "Tokyu Harvest Club Ito",
+   "lat": 34.968282099999996,
+   "lng": 139.09572749999998,
+   "r": 4.1,
+   "c": 1332,
+   "u": "https://maps.google.com/?cid=2280219288413259243&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-5-14 Takenouchi, Itō"
+  },
+  "ChIJmY8DMYO-GWAR-TJPPX3SuaU": {
+   "n": "Tokyu Harvest Club Atami Izusan & VIALA",
+   "lat": 35.1161528,
+   "lng": 139.0913913,
+   "r": 4.5,
+   "c": 1789,
+   "u": "https://maps.google.com/?cid=11941807322290926329&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "東急ハーヴェストクラブ熱海, 824-5 Izusan, Atami"
+  },
+  "ChIJK2KQaGffGWARQTueQieHiS0": {
+   "n": "Atagawa Ocean Resort",
+   "lat": 34.8171708,
+   "lng": 139.072644,
+   "r": 4.1,
+   "c": 712,
+   "u": "https://maps.google.com/?cid=3281302406207257409&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Higashiizu, Naramoto, 字熱川989-1"
+  },
+  "ChIJRbOtY8XsGWAR2Zlbc9BUTss": {
+   "n": "유메구리노 야도 카츠라가와",
+   "lat": 34.971826,
+   "lng": 138.932569,
+   "r": 4.2,
+   "c": 1450,
+   "u": "https://maps.google.com/?cid=14649739892148115929&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "860 Shuzenji, Izu"
+  },
+  "ChIJBdHaKpebGWAR_vPTSVRSARk": {
+   "n": "Fujisan Mishima Tokyu Hotel",
+   "lat": 35.1258141,
+   "lng": 138.9113578,
+   "r": 4.4,
+   "c": 938,
+   "u": "https://maps.google.com/?cid=1801811847894266878&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "17-1 Ichibanchō, Mishima"
+  },
+  "ChIJd3rGkKydGWARHCaFBNY9J8k": {
+   "n": "REMBRANDT STYLE GOTEMBA-KOMAKADO",
+   "lat": 35.2382473,
+   "lng": 138.9102953,
+   "r": 4,
+   "c": 910,
+   "u": "https://maps.google.com/?cid=14494621915123361308&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1925-170 Kōyama, Gotemba"
+  },
+  "ChIJ42XS5QzmDF8RC6i3cwksVCI": {
+   "n": "도미 인 미시마",
+   "lat": 35.1265117,
+   "lng": 138.91500399999998,
+   "r": 4.2,
+   "c": 1745,
+   "u": "https://maps.google.com/?cid=2473650514440988683&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "3-chōme-18-33 Ōmiyachō, Mishima"
+  },
+  "ChIJJz1JyLqTGWARQody8xw-_-k": {
+   "n": "New Hakkeien",
+   "lat": 35.027104699999995,
+   "lng": 138.9317308,
+   "r": 4,
+   "c": 1415,
+   "u": "https://maps.google.com/?cid=16861263823962801986&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "211 Nagaoka, Izunokuni"
+  },
+  "ChIJjfPKGciTGWAR_xsNFQeO2fo": {
+   "n": "Hotel Sunvalley Izunagaoka",
+   "lat": 35.0352512,
+   "lng": 138.9293088,
+   "r": 4,
+   "c": 1586,
+   "u": "https://maps.google.com/?cid=18075634740497292287&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "659 Nagaoka, Izunokuni"
+  },
+  "ChIJN9pnMUeKH2ARHQPrPhrb4Y8": {
+   "n": "Shiobara Motoyu Onsen Ōidekan",
+   "lat": 36.967392,
+   "lng": 139.7571463,
+   "r": 4.2,
+   "c": 806,
+   "u": "https://maps.google.com/?cid=10367808722954814237&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "102 Yumotoshiobara, Nasushiobara"
+  },
+  "ChIJbcG2cH-9H2ARLZaOhAymH0A": {
+   "n": "혼케 반큐",
+   "lat": 36.9618878,
+   "lng": 139.5905914,
+   "r": 4.4,
+   "c": 626,
+   "u": "https://maps.google.com/?cid=4620594315399173677&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "749 Yunishigawa, Nikko"
+  },
+  "ChIJwSSaBxiRH2ARVBX6gERbdOY": {
+   "n": "Kanon",
+   "lat": 36.9817445,
+   "lng": 139.7933898,
+   "r": 4.5,
+   "c": 251,
+   "u": "https://maps.google.com/?cid=16605998075801638228&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "23 Kamishiobara, Nasushiobara"
+  },
+  "ChIJEQZWMduWH2ARpGWPhfMSYbQ": {
+   "n": "Shibara Motoyu Onsen Gensenkan",
+   "lat": 36.967534400000005,
+   "lng": 139.7580557,
+   "r": 4,
+   "c": 750,
+   "u": "https://maps.google.com/?cid=12997690836695082404&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "101 Yumotoshiobara, Nasushiobara"
+  },
+  "ChIJmT1ABfy4H2ARxYLIWJRcxYI": {
+   "n": "湯西川温泉 上屋敷 平の高房",
+   "lat": 36.9597236,
+   "lng": 139.5740544,
+   "r": 4.3,
+   "c": 399,
+   "u": "https://maps.google.com/?cid=9423039587557081797&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1483 Yunishigawa, Nikko"
+  },
+  "ChIJT3blADh79V8RfJP2zGGBStk": {
+   "n": "Fukasawa Onsen Tokinosato Yurari",
+   "lat": 37.308748699999995,
+   "lng": 139.42585889999998,
+   "r": 4.1,
+   "c": 480,
+   "u": "https://maps.google.com/?cid=15657469311557473148&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Uwadaira-50 Nagahama, Tadami"
+  },
+  "ChIJY7d3emfZH2AR54E2U4XQMNQ": {
+   "n": "Aizu Kogen Hoshi no Sato Hotel",
+   "lat": 37.266732499999996,
+   "lng": 139.5442074,
+   "r": 4.5,
+   "c": 134,
+   "u": "https://maps.google.com/?cid=15289950005968142823&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Yunoiri-278 Sakai, Minamiaizu"
+  },
+  "ChIJq6qqqup3H2AReRCdUmh6_Ek": {
+   "n": "Oyado Yunotoki",
+   "lat": 36.9631262,
+   "lng": 139.58900219999998,
+   "r": 4.3,
+   "c": 243,
+   "u": "https://maps.google.com/?cid=5331270647381037177&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "783 Yunishigawa, Nikko"
+  },
+  "ChIJ8enqssSWH2ARFp7_ssx_xTQ": {
+   "n": "塩原元湯温泉 ゑびすや",
+   "lat": 36.9677974,
+   "lng": 139.75860889999998,
+   "r": 4.3,
+   "c": 382,
+   "u": "https://maps.google.com/?cid=3802585977537404438&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "153 Yumotoshiobara, Nasushiobara"
+  },
+  "ChIJMdrnnSC5H2AR0aVS61ty5AM": {
+   "n": "湯西川白雲の宿山城屋",
+   "lat": 36.96328700000001,
+   "lng": 139.592603,
+   "r": 4,
+   "c": 337,
+   "u": "https://maps.google.com/?cid=280474815919465937&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "715 Yunishigawa, Nikko"
+  },
+  "ChIJr6iiu7pC9V8R21WpdHYKVOQ": {
+   "n": "타마나시온센 에비스야",
+   "lat": 37.421830899999996,
+   "lng": 139.5447192,
+   "r": 4,
+   "c": 257,
+   "u": "https://maps.google.com/?cid=16452786842570937819&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Yokoido-2786-1 Tamanashi, Kaneyama"
+  },
+  "ChIJ1-qC4N-4H2ARW1Q2H0pJQ0k": {
+   "n": "Yunishikawa Onsen Motoyu Yunishikawakan main bld.",
+   "lat": 36.9630116,
+   "lng": 139.5892656,
+   "r": 4.2,
+   "c": 238,
+   "u": "https://maps.google.com/?cid=5279143770908415067&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "783-2 Yunishigawa, Nikko"
+  },
+  "ChIJuf_9Qqdi9V8RgemuwRXXucg": {
+   "n": "Hotel Nango",
+   "lat": 37.2673142,
+   "lng": 139.5414616,
+   "r": 4.1,
+   "c": 151,
+   "u": "https://maps.google.com/?cid=14463828166720809345&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Minamiaizu, Sakai, 猛の下 ノ入454番地"
+  },
+  "ChIJidrNWKr7H2AR8DLq0eAPTRU": {
+   "n": "Kobōshi no Yu: Senshintei",
+   "lat": 37.306234499999995,
+   "lng": 139.897305,
+   "r": 4.1,
+   "c": 195,
+   "u": "https://maps.google.com/?cid=1534900506272084720&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Yorigamiotsu-1614 Takashima, Shimogo"
+  },
+  "ChIJ45ObuA-RH2ARJjVH4faWITs": {
+   "n": "湯宿 梅川荘",
+   "lat": 36.9880871,
+   "lng": 139.8048589,
+   "r": 4.4,
+   "c": 254,
+   "u": "https://maps.google.com/?cid=4260852709554861350&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2004 Nakashiobara, Nasushiobara"
+  },
+  "ChIJlY1Ez0Z09V8R-oHcXoRzEic": {
+   "n": "浅草山荘",
+   "lat": 37.3532063,
+   "lng": 139.177011,
+   "r": 4.1,
+   "c": 69,
+   "u": "https://maps.google.com/?cid=2815439729424368122&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "887-127 Ōshirakawa, Uonuma"
+  },
+  "ChIJKcQP981g9V8RTFf4nFSmsH0": {
+   "n": "Shirakabaso",
+   "lat": 37.355470499999996,
+   "lng": 139.590478,
+   "r": 4,
+   "c": 276,
+   "u": "https://maps.google.com/?cid=9056921732983052108&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Showa, Nojiri, 字廻り戸1178"
+  },
+  "ChIJOdVezv7OH2AR4Z9qe4cJNc0": {
+   "n": "Tokusa Onsen Ryokan Izutsuya",
+   "lat": 37.0596818,
+   "lng": 139.4829687,
+   "r": 4.5,
+   "c": 58,
+   "u": "https://maps.google.com/?cid=14786735429036711905&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Yusaka-1988 Miyasato, Minamiaizu"
+  },
+  "ChIJhy3uzQKJ9V8RgKi7AYL7bTQ": {
+   "n": "10 stories hotel Oze 尾瀬十帖",
+   "lat": 37.136441,
+   "lng": 139.1394976,
+   "r": 4.9,
+   "c": 32,
+   "u": "https://maps.google.com/?cid=3777952198227110016&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1031-2 Shimooritate, Uonuma"
+  },
+  "ChIJaaGupchp9V8RNTXPoLRuud0": {
+   "n": "Tsurukameso",
+   "lat": 37.430475699999995,
+   "lng": 139.4816061,
+   "r": 4.1,
+   "c": 77,
+   "u": "https://maps.google.com/?cid=15976922875144647989&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kaneyama, 大字本名字上ノ坪1942"
+  },
+  "ChIJ-TE3mniP9V8RfrBniRUGDhc": {
+   "n": "湯治の宿 神風館",
+   "lat": 37.185475,
+   "lng": 139.085947,
+   "r": 4.3,
+   "c": 73,
+   "u": "https://maps.google.com/?cid=1661272002115645566&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "우오누마시 가미오리타테"
+  },
+  "ChIJvXUAmXiP9V8R5sHy3HHmcZs": {
+   "n": "HOUGANDOU",
+   "lat": 37.1855885,
+   "lng": 139.08615269999999,
+   "r": 4.7,
+   "c": 72,
+   "u": "https://maps.google.com/?cid=11200987124959724006&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "６０−乙 Kamioritate, Uonuma"
+  },
+  "ChIJIbu8_4PDH2ARFAGfvJuROMM": {
+   "n": "ペンションワインズ",
+   "lat": 37.1127014,
+   "lng": 139.61414109999998,
+   "r": 4.3,
+   "c": 77,
+   "u": "https://maps.google.com/?cid=14067153534162239764&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "518 Takatsuehara, Minamiaizu"
+  },
+  "ChIJ_RRCAgBK9V8RkNK016yKLN4": {
+   "n": "Lotos Inn",
+   "lat": 37.5966014,
+   "lng": 139.6421622,
+   "r": 4,
+   "c": 460,
+   "u": "https://maps.google.com/?cid=16009323250353230480&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Shimoojima-187 Tosejima, Nishiaizu"
+  },
+  "ChIJJb7AURlF9V8Rd2hLOVDJonc": {
+   "n": "Miyashita Onsen Furusatoso",
+   "lat": 37.476951299999996,
+   "lng": 139.64947089999998,
+   "r": 4.1,
+   "c": 165,
+   "u": "https://maps.google.com/?cid=8620673983136360567&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kamiakadani-2437 Nairi, Mishima"
+  },
+  "ChIJ14ocwfJO9V8RQ0CRwN9i8os": {
+   "n": "Kawachi",
+   "lat": 37.5293164,
+   "lng": 139.723313,
+   "r": 4.3,
+   "c": 290,
+   "u": "https://maps.google.com/?cid=10084231228783935555&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Shitadairaotsu-150-1 Yanaizu"
+  },
+  "ChIJLxhEVzU69V8RNnhWlkvQ7fs": {
+   "n": "Mikagura Onsen Beech Inn Koase",
+   "lat": 37.5986257,
+   "lng": 139.4263622,
+   "r": 4.2,
+   "c": 222,
+   "u": "https://maps.google.com/?cid=18153394696063711286&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Otsu-2091-1 Hirotani, Aga"
+  },
+  "ChIJhZGnho1O9V8RWcvSGSrKU90": {
+   "n": "Hana Hotel Takinoya",
+   "lat": 37.5314066,
+   "lng": 139.72593329999998,
+   "r": 4.4,
+   "c": 119,
+   "u": "https://maps.google.com/?cid=15948312987619740505&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Jikemachikō-153, Yanaizu"
+  },
+  "ChIJA40ehB9F9V8RdN3hB81tNmc": {
+   "n": "Miyashita Onsen Eikokan",
+   "lat": 37.4742193,
+   "lng": 139.6501089,
+   "r": 4.3,
+   "c": 146,
+   "u": "https://maps.google.com/?cid=7437252562016918900&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Shiomizu-4113 Miyashita, Mishima"
+  },
+  "ChIJS-a6ZuNa9V8RqbV_mgTcFlw": {
+   "n": "Oizawa Hot Spring Hotel",
+   "lat": 37.449067,
+   "lng": 139.697411,
+   "r": 4.3,
+   "c": 75,
+   "u": "https://maps.google.com/?cid=6635733013307045289&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Oizawa-114 Gojōjiki, Yanaizu"
+  },
+  "ChIJVVeFkeNa9V8RnJWChbK7hQw": {
+   "n": "会津西山温泉 旅館 中の湯",
+   "lat": 37.449687499999996,
+   "lng": 139.69530749999998,
+   "r": 4.3,
+   "c": 124,
+   "u": "https://maps.google.com/?cid=902333675776152988&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Nagakubo-884 Sunakohara, Yanaizu"
+  },
+  "ChIJo_9_GFwajF8RS0abLzL46oo": {
+   "n": "Shonai Hotel Suiden Terrasse",
+   "lat": 38.746198199999995,
+   "lng": 139.8222385,
+   "r": 4.1,
+   "c": 1312,
+   "u": "https://maps.google.com/?cid=10010086016215107147&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Shimotorinosu-23-1 Kitakyōden, Tsuruoka"
+  },
+  "ChIJRxOVroqejl8RCVP90QcTmaE": {
+   "n": "月のホテル",
+   "lat": 38.920874,
+   "lng": 139.8454069,
+   "r": 4,
+   "c": 1100,
+   "u": "https://maps.google.com/?cid=11644359235851866889&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-10-20 Saiwaichō, Sakata"
+  },
+  "ChIJOVKSQ8UZjF8RTR8ZrWwYYyM": {
+   "n": "KAMEYA HOTEL",
+   "lat": 38.7770225,
+   "lng": 139.74970159999998,
+   "r": 4.1,
+   "c": 762,
+   "u": "https://maps.google.com/?cid=2549908669061472077&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-5-50 Yunohama, Tsuruoka"
+  },
+  "ChIJ96XZcoEQjF8RSLOLVqv9fBE": {
+   "n": "Hotel Inn Tsuruoka",
+   "lat": 38.735084799999996,
+   "lng": 139.7969526,
+   "r": 4,
+   "c": 946,
+   "u": "https://maps.google.com/?cid=1260160908090127176&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "33-27 Misakimachi, Tsuruoka"
+  },
+  "ChIJUVilhfQajF8RlIvwAPYDwS0": {
+   "n": "Super Hotel Yamagata Tsuruoka",
+   "lat": 38.7414687,
+   "lng": 139.8315616,
+   "r": 4.1,
+   "c": 583,
+   "u": "https://maps.google.com/?cid=3296920757324516244&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-8-51 Takarada, Tsuruoka"
+  },
+  "ChIJyVoP2pgGjF8RJuYMx620ORE": {
+   "n": "Kyukamura Shonai-Haguro",
+   "lat": 38.690511,
+   "lng": 139.98388,
+   "r": 4,
+   "c": 476,
+   "u": "https://maps.google.com/?cid=1241221830779135526&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Haguroyama-８番地 Haguromachi Touge, Tsuruoka"
+  },
+  "ChIJe-Vna88ZjF8RNl6uKXgBIq8": {
+   "n": "Yūsuitei Isagoya",
+   "lat": 38.779165,
+   "lng": 139.7506104,
+   "r": 4.4,
+   "c": 640,
+   "u": "https://maps.google.com/?cid=12619650721452547638&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1-chōme-8-7 Yunohama, Tsuruoka"
+  },
+  "ChIJdXZ0YqyCAGAR78y8CvaITRY": {
+   "n": "그랜드 닛코 아와지",
+   "lat": 34.5598984,
+   "lng": 135.0083326,
+   "r": 4.3,
+   "c": 2735,
+   "u": "https://maps.google.com/?cid=1607091232364612847&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Awaji, Yumebutai, ２ 2番地"
+  },
+  "ChIJmVw8bhyPAGAR7X1TNwBcU4M": {
+   "n": "SK HOTEL 神戸駅前",
+   "lat": 34.679598299999995,
+   "lng": 135.1758444,
+   "r": 4.2,
+   "c": 422,
+   "u": "https://maps.google.com/?cid=9463008398033518061&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-3-1 Nakamachidōri, Chuo Ward, Kobe"
+  },
+  "ChIJaczQFwePAGAR4NQxr98bYAs": {
+   "n": "고베 하버랜드 온천 만요 클럽",
+   "lat": 34.6797912,
+   "lng": 135.1809848,
+   "r": 4,
+   "c": 1474,
+   "u": "https://maps.google.com/?cid=819685779712365792&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kobe, Chuo Ward, Higashikawasakichō, 1-chōme−8−1 プロメナ神戸"
+  },
+  "ChIJv3sJxvyOAGARXh9jWuurhGw": {
+   "n": "칸데오 호텔 고베 토어 로드",
+   "lat": 34.6905151,
+   "lng": 135.1900378,
+   "r": 4.1,
+   "c": 1189,
+   "u": "https://maps.google.com/?cid=7819563880344133470&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kobe, Chuo Ward, Sannomiyachō, 3-chōme−8−8 フロント １３Ｆ"
+  },
+  "ChIJ__-PrQuPAGARVmje-Ityfyo": {
+   "n": "호텔 선루트 소푸라고베아넷사",
+   "lat": 34.6760424,
+   "lng": 135.170917,
+   "r": 4.1,
+   "c": 1046,
+   "u": "https://maps.google.com/?cid=3062292217136572502&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "4-chōme-1-11 Minatochō, Hyogo Ward, Kobe"
+  },
+  "ChIJI8BjDgGPAGARxNE0o7Y_NmI": {
+   "n": "호텔 라 스위트 고베 하버랜드",
+   "lat": 34.682643,
+   "lng": 135.18408499999998,
+   "r": 4.5,
+   "c": 1628,
+   "u": "https://maps.google.com/?cid=7076913918114058692&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kobe, Chuo Ward, Hatobachō, 7−2 ホテルラ・スイート神戸ハーバーランド 2階"
+  },
+  "ChIJM1Ft7QKPAGARLJB48_NU-is": {
+   "n": "Kobe Plaza Hotel West",
+   "lat": 34.6877409,
+   "lng": 135.1856588,
+   "r": 4.2,
+   "c": 543,
+   "u": "https://maps.google.com/?cid=3168938694547116076&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kobe, Chuo Ward, Motomachidōri, 3-chōme−4−7 神戸プラザホテルウエスト 1階"
+  },
+  "ChIJb1gTE-OOAGARYNO669jvUdY": {
+   "n": "Kobe Sauna & Spa",
+   "lat": 34.692844,
+   "lng": 135.19036699999998,
+   "r": 4.3,
+   "c": 2335,
+   "u": "https://maps.google.com/?cid=15443388312177005408&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kobe, Chuo Ward, Shimoyamatedōri, 2-chōme−2−10 神戸サウナビル １階"
+  },
+  "ChIJLcVmJt_tQDURrbt3HfBJcto": {
+   "n": "Mifune Terrace",
+   "lat": 32.7163822,
+   "lng": 130.7998853,
+   "r": 4,
+   "c": 394,
+   "u": "https://maps.google.com/?cid=15740724943248669613&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1135-1 Kinokura, Mifune"
+  },
+  "ChIJWw4i9qaTQDURv2UTq9uxt0o": {
+   "n": "NIPPONIA 고사 소스이노사토",
+   "lat": 32.6535351,
+   "lng": 130.8089904,
+   "r": 4.7,
+   "c": 50,
+   "u": "https://maps.google.com/?cid=5383967436570846655&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "82 Iwashita, Kosa"
+  },
+  "ChIJhxmH_emyAGARopYMuYmHRv4": {
+   "n": "다이와 로이넷 호텔 와카야마",
+   "lat": 34.2305235,
+   "lng": 135.173213,
+   "r": 4.1,
+   "c": 1699,
+   "u": "https://maps.google.com/?cid=18322481159588320930&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "26-1 Shichibanchō, Wakayama"
+  },
+  "ChIJO-ao1EyzAGARqrOr36N2wEE": {
+   "n": "Hanayama Onsen Yakushi No Yu",
+   "lat": 34.2303764,
+   "lng": 135.21231849999998,
+   "r": 4.3,
+   "c": 2503,
+   "u": "https://maps.google.com/?cid=4737917254198080426&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Wakayama, Narukami, 574 内"
+  },
+  "ChIJMfrXyTWzAGARJ7Mvaal7C_k": {
+   "n": "CANDEO HOTELS Nankai Wakayama",
+   "lat": 34.236473,
+   "lng": 135.1669158,
+   "r": 4.3,
+   "c": 770,
+   "u": "https://maps.google.com/?cid=17945573107732296487&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Wakayama, Higashikuramaechō, 39 キーノ"
+  },
+  "ChIJa7UVviazAGARNqVD03T0WHc": {
+   "n": "호텔 그란비아 와카야마",
+   "lat": 34.232739,
+   "lng": 135.1901536,
+   "r": 4.1,
+   "c": 1178,
+   "u": "https://maps.google.com/?cid=8599892271061771574&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Wakayama, Tomodachō, 5-chōme−18 Hotel Granvia Wakayama"
+  },
+  "ChIJfXW2kCezAGARCAo7awTxwM0": {
+   "n": "도미 인 프리미엄 천연온천 와카야마",
+   "lat": 34.2316046,
+   "lng": 135.1872823,
+   "r": 4.2,
+   "c": 1629,
+   "u": "https://maps.google.com/?cid=14826114974584867336&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Wakayama, Misonochō, 3-chōme−３６"
+  },
+  "ChIJFwBxyiazAGART05ZQX5p7oQ": {
+   "n": "컴포트 호텔 와카야마",
+   "lat": 34.233606099999996,
+   "lng": 135.1898172,
+   "r": 4,
+   "c": 894,
+   "u": "https://maps.google.com/?cid=9578709448446791247&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "5-chōme-34番1号 Tomodachō, Wakayama"
+  },
+  "ChIJFyGDQL-yAGARsSpAUTaygiA": {
+   "n": "Hotel Avalorm Kinokuni",
+   "lat": 34.2239758,
+   "lng": 135.1669269,
+   "r": 4,
+   "c": 992,
+   "u": "https://maps.google.com/?cid=2342630702547217073&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Wakayama, Minatotōrichōkita, 2-chōme−１−2"
+  },
+  "ChIJcU7CVXezAGARDUBiT2S0QT4": {
+   "n": "Hotel Route Inn Grand Wakayama Station East Exit",
+   "lat": 34.2327198,
+   "lng": 135.1951262,
+   "r": 4.2,
+   "c": 209,
+   "u": "https://maps.google.com/?cid=4486065046759292941&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-2-34 Kuroda, Wakayama"
+  },
+  "ChIJUURUAc9NB2AR8-lXGASOjbc": {
+   "n": "와카야마 마리나 시티 호텔",
+   "lat": 34.1551069,
+   "lng": 135.1794482,
+   "r": 4,
+   "c": 1145,
+   "u": "https://maps.google.com/?cid=13226383828896442867&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1517 Kemi, Wakayama"
+  },
+  "ChIJz0GKeIZPB2ARYXghC8p1pWk": {
+   "n": "Hotel Route Inn Grand Kainan Ekimae",
+   "lat": 34.1546991,
+   "lng": 135.2138443,
+   "r": 4.4,
+   "c": 147,
+   "u": "https://maps.google.com/?cid=7612620255770277985&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "51-23 Nataka, Kainan"
+  },
+  "ChIJ2_Lt-A5LB2ARzfIoSerI9ZU": {
+   "n": "Faraway Place",
+   "lat": 34.2184504,
+   "lng": 135.2627226,
+   "r": 4.5,
+   "c": 94,
+   "u": "https://maps.google.com/?cid=10805763789520696013&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "61 Yata, Wakayama"
+  },
+  "ChIJx9Ahd4DLAGAR3-HPEw3zj9o": {
+   "n": "Inunakiyama Onsen Fudouguchikan",
+   "lat": 34.3425358,
+   "lng": 135.37405520000002,
+   "r": 4.2,
+   "c": 898,
+   "u": "https://maps.google.com/?cid=15749073659430429151&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "7番地 Ōgi, Izumisano"
+  },
+  "ChIJS9BHOADJAGAR4yJSvrYJVOk": {
+   "n": "오사카 간사이 에어포트 호텔",
+   "lat": 34.389481599999996,
+   "lng": 135.3299745,
+   "r": 4.4,
+   "c": 286,
+   "u": "https://maps.google.com/?cid=16813073989362655971&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "4066 Hineno, Izumisano"
+  },
+  "ChIJOTU0Sb3JAGAR7HGnLMlbbqo": {
+   "n": "Kansai Airport Pine Villa Hotel",
+   "lat": 34.373359,
+   "lng": 135.327324,
+   "r": 4.5,
+   "c": 152,
+   "u": "https://maps.google.com/?cid=12280854153481646572&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1820-1 Kaminogō, Izumisano"
+  },
+  "ChIJo-aNr2jJAGARtDU9xDVscbk": {
+   "n": "Izumisano Canmore Grand Ping Resort",
+   "lat": 34.375016099999996,
+   "lng": 135.3454167,
+   "r": 4.5,
+   "c": 43,
+   "u": "https://maps.google.com/?cid=13362580547566384564&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "565-2 Hineno, Izumisano"
+  },
+  "ChIJERh0BQAzB2ARoI0jHmYASeU": {
+   "n": "MIKASAKAN HOTEL",
+   "lat": 34.2783496,
+   "lng": 135.4038934,
+   "r": 4.8,
+   "c": 54,
+   "u": "https://maps.google.com/?cid=16521737146577685920&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2086 Kokawa, Kinokawa"
+  },
+  "ChIJtaoO1kizAGAR1yoP1D_Bwqc": {
+   "n": "HOTEL LA SCALA",
+   "lat": 34.233057699999996,
+   "lng": 135.1848382,
+   "r": 4.5,
+   "c": 182,
+   "u": "https://maps.google.com/?cid=12088436829700696791&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Wakayama, Tomodachō, 2-chōme−３３"
+  },
+  "ChIJs_KI9NRMB2ARyEtfyaj8OhE": {
+   "n": "호텔 랜드마크 와카야마",
+   "lat": 34.2184868,
+   "lng": 135.19029229999998,
+   "r": 4.1,
+   "c": 225,
+   "u": "https://maps.google.com/?cid=1241582449157163976&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Wakayama, Tebira, 2-chōme−1−2 県民交流プラザ和歌山ビッグ愛 10F/11F"
+  },
+  "ChIJ7ZiqMPbFAGARlBp5BnCj9H0": {
+   "n": "もしもしピエロ 岸和田店",
+   "lat": 34.454442799999995,
+   "lng": 135.3868785,
+   "r": 4.8,
+   "c": 64,
+   "u": "https://maps.google.com/?cid=9076058850598656660&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "79-1 Kamimatsuchō, Kishiwada"
+  },
+  "ChIJ56csQxLJAGARxjxxEaUKYAg": {
+   "n": "사우나&호텔 오사카야",
+   "lat": 34.429876199999995,
+   "lng": 135.3717266,
+   "r": 4.9,
+   "c": 136,
+   "u": "https://maps.google.com/?cid=603494054146161862&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "298 Asonaka, Kaizuka"
+  },
+  "ChIJQ9GliSGgBGARNCMlyBMKyAI": {
+   "n": "Hotel Route Inn Toyota Motomachi",
+   "lat": 35.0770498,
+   "lng": 137.1409265,
+   "r": 4,
+   "c": 634,
+   "u": "https://maps.google.com/?cid=200421263496520500&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-48-2 Asahigaoka, Toyota"
+  },
+  "ChIJk4aL-a19A2ARrzB7P4e1HAw": {
+   "n": "Route Inn Grantia Tokai Spa & Relaxation",
+   "lat": 35.0271171,
+   "lng": 136.9076696,
+   "r": 4.1,
+   "c": 674,
+   "u": "https://maps.google.com/?cid=872772020293284015&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Marune-1-21 Araomachi, Tokai"
+  },
+  "ChIJDwEkomyKGGAR7Ae-1P3kS-8": {
+   "n": "호텔 니코 알리빌라",
+   "lat": 26.4150328,
+   "lng": 127.7155444,
+   "r": 4.5,
+   "c": 5256,
+   "u": "https://maps.google.com/?cid=17243127377165158380&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "600 Gima, Yomitan"
+  },
+  "ChIJX9FKejYX5TQRpNEknymK4xU": {
+   "n": "그랜드 머큐어 오키나와 잔파미사키 리조트",
+   "lat": 26.4350006,
+   "lng": 127.7182278,
+   "r": 4,
+   "c": 4968,
+   "u": "https://maps.google.com/?cid=1577256205878088100&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Yomitanson, 1575 Uza, Yomitan"
+  },
+  "ChIJe-_p5MQX5TQRr8Bj7SjJ2-s": {
+   "n": "호시노야 오키나와",
+   "lat": 26.4203689,
+   "lng": 127.71480380000001,
+   "r": 4.4,
+   "c": 1021,
+   "u": "https://maps.google.com/?cid=16995398796431311023&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "474 Gima, Yomitan"
+  },
+  "ChIJsahWPp1p5TQR6XDcFzuyQRk": {
+   "n": "HOTEL TORIFITO MIYAKOJIMA RESORT",
+   "lat": 24.778408000000002,
+   "lng": 125.30142559999999,
+   "r": 4.1,
+   "c": 775,
+   "u": "https://maps.google.com/?cid=1819931691307528425&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Shimozato-2422-1 Hirara, Miyakojima"
+  },
+  "ChIJNXlB9T1W9DQRUVgfDTZXubc": {
+   "n": "호텔 브리즈베이 마리나",
+   "lat": 24.7199112,
+   "lng": 125.32530909999998,
+   "r": 4,
+   "c": 2524,
+   "u": "https://maps.google.com/?cid=13238708469292292177&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyaguni-784-1 Ueno, Miyakojima"
+  },
+  "ChIJR3CuHkhW9DQRTVOseoriMOQ": {
+   "n": "시기랴 베이사이드 스위트룸 알라만다",
+   "lat": 24.723245,
+   "lng": 125.33671210000001,
+   "r": 4.3,
+   "c": 1908,
+   "u": "https://maps.google.com/?cid=16442891323921158989&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Arazato-926-25 Ueno, Miyakojima"
+  },
+  "ChIJ8eSRRWlX9DQRjagzvM88at0": {
+   "n": "Hotel Shigira Mirage",
+   "lat": 24.721049299999997,
+   "lng": 125.339126,
+   "r": 4.4,
+   "c": 849,
+   "u": "https://maps.google.com/?cid=15954631492826802317&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Arazato-1405-201 Ueno, Miyakojima"
+  },
+  "ChIJJdH0jcZX9DQRU3X2eFU3ohE": {
+   "n": "Hot Cross Point Santa Monica",
+   "lat": 24.7200288,
+   "lng": 125.33272470000001,
+   "r": 4.2,
+   "c": 506,
+   "u": "https://maps.google.com/?cid=1270638885113066835&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyaguni-974-1 Ueno, Miyakojima"
+  },
+  "ChIJH9px0qVX9DQRc-mp_4V7uzw": {
+   "n": "알라만다 임갸",
+   "lat": 24.7234369,
+   "lng": 125.3551437,
+   "r": 4.3,
+   "c": 793,
+   "u": "https://maps.google.com/?cid=4376227278370761075&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyakojima, Gusukube, Tomori−542 アラマンダ インギャーコーラルヴィレッジ 内"
+  },
+  "ChIJm3Iv7j1W9DQRhQIPwpJXtRc": {
+   "n": "웰니스 빌라 브리사",
+   "lat": 24.716672799999998,
+   "lng": 125.3192596,
+   "r": 4,
+   "c": 852,
+   "u": "https://maps.google.com/?cid=1708367921489576581&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyaguni-746-20 Ueno, Miyakojima"
+  },
+  "ChIJ118URzxR9DQRqDN7d7ZYlAY": {
+   "n": "the rescape",
+   "lat": 24.7887086,
+   "lng": 125.3762012,
+   "r": 4.6,
+   "c": 400,
+   "u": "https://maps.google.com/?cid=474101401492599720&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Nagama-1901-1 Gusukube, Miyakojima"
+  },
+  "ChIJEcB4vfdX9DQRadw4H6m_ql8": {
+   "n": "Hotel Santa Barbara Miyakojima Resort",
+   "lat": 24.773848299999997,
+   "lng": 125.3044444,
+   "r": 4.3,
+   "c": 197,
+   "u": "https://maps.google.com/?cid=6893532912738163817&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyakojima, Hirara, Shimozato−2393-3 2334 お越しの際は下記のマップコードでお越しください。マップコード：310 366 322 23"
+  },
+  "ChIJoVkVk0pW9DQRVUyavRDzk_A": {
+   "n": "시기라베이 골프장",
+   "lat": 24.722274,
+   "lng": 125.344932,
+   "r": 4.1,
+   "c": 801,
+   "u": "https://maps.google.com/?cid=17335466643905203285&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Arazato-1264 Ueno, Miyakojima"
+  },
+  "ChIJsQKj4IhX9DQRORKQxFEtidY": {
+   "n": "ホテル シギラミラージュ ビーチフロント",
+   "lat": 24.7197155,
+   "lng": 125.3397334,
+   "r": 4.7,
+   "c": 195,
+   "u": "https://maps.google.com/?cid=15458937025139315257&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "271 Arazato-1405 Ueno, Miyakojima"
+  },
+  "ChIJ0ZUQAQRX9DQRNwPdIhp_Xxc": {
+   "n": "BiBi Hotel 宮古空港前",
+   "lat": 24.787322699999997,
+   "lng": 125.3082164,
+   "r": 4.3,
+   "c": 100,
+   "u": "https://maps.google.com/?cid=1684204535890641719&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Nishizato-1449-3 Hirara, Miyakojima"
+  },
+  "ChIJ82QXzHBZ9DQR604dgGmDY8k": {
+   "n": "Ocean's Resort Villa Vorla",
+   "lat": 24.744180600000004,
+   "lng": 125.44009390000001,
+   "r": 4,
+   "c": 364,
+   "u": "https://maps.google.com/?cid=14511586913462079211&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Bora-940-1 Gusukube, Miyakojima"
+  },
+  "ChIJeeNEThRW9DQREXSEhH3Dt8k": {
+   "n": "펠리즈 빌라 스위트 미야코지마 우에노",
+   "lat": 24.720182599999998,
+   "lng": 125.3303064,
+   "r": 4.7,
+   "c": 171,
+   "u": "https://maps.google.com/?cid=14535301266223166481&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyaguni-935-8 Ueno, Miyakojima"
+  },
+  "ChIJdzpOCE9R9DQRbeWAjn0L6g4": {
+   "n": "かたあきの里",
+   "lat": 24.7988909,
+   "lng": 125.3163697,
+   "r": 4.9,
+   "c": 355,
+   "u": "https://maps.google.com/?cid=1074684094970914157&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Higashinakasonezoe-1186-1 Hirara, Miyakojima"
+  },
+  "ChIJQ-dr-w1V9DQRG01xLWGl0vU": {
+   "n": "Pine Rent a Car Miyako AP",
+   "lat": 24.7866452,
+   "lng": 125.30786769999999,
+   "r": 4.7,
+   "c": 308,
+   "u": "https://maps.google.com/?cid=17713402121194392859&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Nishizato-1455-3 Hirara, Miyakojima"
+  },
+  "ChIJC1R96DZW9DQRrjoRuY57dik": {
+   "n": "The Shigira",
+   "lat": 24.7189033,
+   "lng": 125.33918879999999,
+   "r": 4.6,
+   "c": 98,
+   "u": "https://maps.google.com/?cid=2987711255727389358&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Arazato-1405-3 Ueno, Miyakojima"
+  },
+  "ChIJ9ZuE-wNX9DQRmW23-Bc24uc": {
+   "n": "CLASS THE FIRST",
+   "lat": 24.762702400000002,
+   "lng": 125.36581129999998,
+   "r": 4.8,
+   "c": 88,
+   "u": "https://maps.google.com/?cid=16708977044082879897&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyakojima, Gusukube, Nishizatosoe−1035 番1"
+  },
+  "ChIJlVlUYx5X9DQRkj7R1XL1atQ": {
+   "n": "그란리프 숙소",
+   "lat": 24.787087,
+   "lng": 125.3083457,
+   "r": 4.4,
+   "c": 65,
+   "u": "https://maps.google.com/?cid=15306316157134388882&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Nishizato-1456-8 Hirara, Miyakojima"
+  },
+  "ChIJN_Qy5NRV9DQRwxzcwuf9Gec": {
+   "n": "힐튼 오키나와 미야코 아일랜드 리조트",
+   "lat": 24.800995399999998,
+   "lng": 125.2593677,
+   "r": 4.3,
+   "c": 1781,
+   "u": "https://maps.google.com/?cid=16652620269027597507&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kugai-550-7 Hirara, Miyakojima"
+  },
+  "ChIJVZQ9_J5V9DQRF4ag4xoRhgM": {
+   "n": "미야코지마 토큐호텔&리조트",
+   "lat": 24.7393425,
+   "lng": 125.26220190000001,
+   "r": 4.5,
+   "c": 2821,
+   "u": "https://maps.google.com/?cid=253909236178781719&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Yonaha-914 Shimoji, Miyakojima"
+  },
+  "ChIJc50kCgZT9DQRQmbr5edxfZA": {
+   "n": "TABINO HOTEL lit MIYAKOJIMA",
+   "lat": 24.801204199999997,
+   "lng": 125.2837587,
+   "r": 4.3,
+   "c": 637,
+   "u": "https://maps.google.com/?cid=10411603154359248450&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Nishizato-596 Hirara, Miyakojima"
+  },
+  "ChIJsXCir4lT9DQRLY76bIpgxLk": {
+   "n": "호텔 로커스",
+   "lat": 24.8046451,
+   "lng": 125.2741651,
+   "r": 4,
+   "c": 923,
+   "u": "https://maps.google.com/?cid=13385930140102069805&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Shimozato-338-40 Hirara, Miyakojima"
+  },
+  "ChIJR4vuXIlT9DQR8s9XdmXUPXA": {
+   "n": "호텔 아톨에메랄드 미야코지마",
+   "lat": 24.8057135,
+   "lng": 125.27505250000002,
+   "r": 4,
+   "c": 1335,
+   "u": "https://maps.google.com/?cid=8087854038069530610&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Shimozato-108-7 Hirara, Miyakojima"
+  },
+  "ChIJKR64QzdV9DQRzUrQckRCLzo": {
+   "n": "seawood Hotel Miyakojima",
+   "lat": 24.729400899999998,
+   "lng": 125.24370900000001,
+   "r": 4.3,
+   "c": 603,
+   "u": "https://maps.google.com/?cid=4192642639856683725&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "미야코지마시 시모지 구리마"
+  },
+  "ChIJ4UYI0nNU9DQR_2wEBwR1MpI": {
+   "n": "호텔 라이징선 미야코지마",
+   "lat": 24.7897416,
+   "lng": 125.280813,
+   "r": 4.3,
+   "c": 1190,
+   "u": "https://maps.google.com/?cid=10534611138531060991&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kugai-1063 Hirara, Miyakojima"
+  },
+  "ChIJUy1FjTJT9DQRtZGqpw1zK1I": {
+   "n": "ホテル カリフォルニア 宮古島リゾート",
+   "lat": 24.8005842,
+   "lng": 125.2985612,
+   "r": 4.3,
+   "c": 197,
+   "u": "https://maps.google.com/?cid=5920952637593391541&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Higashinakasone-903-18 Hirara, Miyakojima"
+  },
+  "ChIJF8oV9_RT9DQRfLrOYHzA4yU": {
+   "n": "Hotel 385",
+   "lat": 24.8025664,
+   "lng": 125.28332180000001,
+   "r": 4.5,
+   "c": 591,
+   "u": "https://maps.google.com/?cid=2730237439549291132&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Miyakojima, Hirara, Nishizato−561 1F"
+  },
+  "ChIJsa7Mj3xT9DQRYDuDiQa7t5A": {
+   "n": "스마일호텔",
+   "lat": 24.8046899,
+   "lng": 125.28105199999997,
+   "r": 4,
+   "c": 118,
+   "u": "https://maps.google.com/?cid=10428009098950949728&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Nishizato-225 Hirara, Miyakojima"
+  },
+  "ChIJ3-dNZ_NT9DQR2HeUJO4sJjQ": {
+   "n": "호텔 피스 아일랜드 미야코지마 시야쿠쇼 토리",
+   "lat": 24.804919599999998,
+   "lng": 125.28222339999999,
+   "r": 4,
+   "c": 583,
+   "u": "https://maps.google.com/?cid=3757740340414805976&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Nishizato-328番地 Hirara, Miyakojima"
+  },
+  "ChIJB7kCgsjwQDURoaiMWP-njZM": {
+   "n": "기쿠난 온센 유벨 호텔",
+   "lat": 32.859705399999996,
+   "lng": 130.72787599999998,
+   "r": 4,
+   "c": 1057,
+   "u": "https://maps.google.com/?cid=10632339010435721377&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kumamoto, Kita Ward, Tsuruhada, 3-chōme−10−1 菊南温泉ユウベルホテル"
+  },
+  "ChIJfcLtp7f7QDURYvVY7pND9YI": {
+   "n": "植木温泉 湯の森ホテル",
+   "lat": 32.956040099999996,
+   "lng": 130.7284089,
+   "r": 4,
+   "c": 47,
+   "u": "https://maps.google.com/?cid=9436522896862803298&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "6 Uekimachi Tasoko, Kita Ward, Kumamoto"
+  },
+  "ChIJHwgQevD7QDUR9NOHo9kt1W4": {
+   "n": "Yunosato Hotel",
+   "lat": 32.954771,
+   "lng": 130.7263519,
+   "r": 4.2,
+   "c": 106,
+   "u": "https://maps.google.com/?cid=7986339926986183668&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "175 Uekimachi Yonetsuka, Kita Ward, Kumamoto"
+  },
+  "ChIJO2jHivr7QDURBHc2gg2_nc8": {
+   "n": "료칸 마쓰노유",
+   "lat": 32.9557856,
+   "lng": 130.7248478,
+   "r": 4.2,
+   "c": 194,
+   "u": "https://maps.google.com/?cid=14960323601934743300&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Kumamoto, Kita Ward, Uekimachi Yonetsuka, 208 旅館松乃湯"
+  },
+  "ChIJJ8KE_uWJQDUR-SHrmqXO1CA": {
+   "n": "HOTEL R9 The Yard 宇城",
+   "lat": 32.622977,
+   "lng": 130.70526089999998,
+   "r": 4.1,
+   "c": 108,
+   "u": "https://maps.google.com/?cid=2365742914940379641&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Takezaki-1321 Matsubasemachi, Uki"
+  },
+  "ChIJD5Qv7YiJQDURiBadCvkU7co": {
+   "n": "Uto Center Hotel",
+   "lat": 32.682947,
+   "lng": 130.6632363,
+   "r": 4,
+   "c": 126,
+   "u": "https://maps.google.com/?cid=14622366624999347848&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Uto, Minamidanbaramachi, 字南7"
+  },
+  "ChIJVWdxwYmJQDURhq2gXHYYtBc": {
+   "n": "하타고 코메야",
+   "lat": 32.685626899999995,
+   "lng": 130.6615544,
+   "r": 4.3,
+   "c": 143,
+   "u": "https://maps.google.com/?cid=1708017055319502214&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "4-chōme-32 Honmachi, Uto"
+  },
+  "ChIJf_UMOHv8QDURzr7sNoPrtN8": {
+   "n": "시치조 온센(온천) 돔",
+   "lat": 32.9618663,
+   "lng": 130.7497921,
+   "r": 4,
+   "c": 1034,
+   "u": "https://maps.google.com/?cid=16119767915060575950&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "962-1 Shichijōmachi Hayashibaru, Kikuchi"
+  },
+  "ChIJwd_hFmL-QDURvORXx5t_EVQ": {
+   "n": "나라노사코 온천 이야시노유",
+   "lat": 33.0107403,
+   "lng": 130.7015442,
+   "r": 4.2,
+   "c": 894,
+   "u": "https://maps.google.com/?cid=6057763280831112380&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-5-9 Kakōdōri, Yamaga"
+  },
+  "ChIJGRFCaaMCQTURlAtctHXlZsw": {
+   "n": "Kafutei - Okuyama no Kakure Yado",
+   "lat": 33.02453130000001,
+   "lng": 130.7807654,
+   "r": 4.5,
+   "c": 437,
+   "u": "https://maps.google.com/?cid=14728711925061651348&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "177 Kikukamachi Ikenaga, Yamaga"
+  },
+  "ChIJKde-iUH9QDURdPUux6dSaWI": {
+   "n": "Hotel R9 The Yard Kikuchi",
+   "lat": 32.970942,
+   "lng": 130.7920021,
+   "r": 4,
+   "c": 64,
+   "u": "https://maps.google.com/?cid=7091289968826316148&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1438-1 Nishidera, Kikuchi"
+  },
+  "ChIJCRE0o7s1QTURS8eE60_EVcs": {
+   "n": "칸노지고쿠 료칸",
+   "lat": 33.1125069,
+   "lng": 131.2268319,
+   "r": 4.4,
+   "c": 389,
+   "u": "https://maps.google.com/?cid=14651832810252584779&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "257 Tano, Kokonoe"
+  },
+  "ChIJ__wDzOowQTURYFsDtypWHbQ": {
+   "n": "후모토 료칸",
+   "lat": 33.0779808,
+   "lng": 131.14048309999998,
+   "r": 4.4,
+   "c": 576,
+   "u": "https://maps.google.com/?cid=12978624442610703200&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "6697 Manganji, Minamioguni"
+  },
+  "ChIJsSfeiwh2PzURPWJ0l48xXOQ": {
+   "n": "Kawasemi",
+   "lat": 32.2420039,
+   "lng": 130.6458451,
+   "r": 4.2,
+   "c": 305,
+   "u": "https://maps.google.com/?cid=16455081631296021053&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Otsu-39-2 Isshōchi, Kuma"
+  },
+  "ChIJpxihfWoNQDURVL3lRSxGnIk": {
+   "n": "Hoshino Resorts KAI Unzen",
+   "lat": 32.741582,
+   "lng": 130.2615576,
+   "r": 4.3,
+   "c": 477,
+   "u": "https://maps.google.com/?cid=9915877635528179028&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "321 Obamachō Unzen, Unzen"
+  },
+  "ChIJLyh77KsNQDURC16a8_F6JC4": {
+   "n": "운젠온천 세이운소",
+   "lat": 32.7313481,
+   "lng": 130.2638078,
+   "r": 4.2,
+   "c": 1320,
+   "u": "https://maps.google.com/?cid=3324917604498955787&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "500-1 Obamachō Unzen, Unzen"
+  },
+  "ChIJ_QO-4qINQDURUjqLzxodHBw": {
+   "n": "아즈마엔",
+   "lat": 32.745786100000004,
+   "lng": 130.25962669999998,
+   "r": 4.2,
+   "c": 547,
+   "u": "https://maps.google.com/?cid=2025525933398243922&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "181 Obamachō Unzen, Unzen"
+  },
+  "ChIJn1ksFaQNQDUR5tyU3jnny5A": {
+   "n": "운젠 미야자키 료칸",
+   "lat": 32.7386214,
+   "lng": 130.26357769999998,
+   "r": 4.4,
+   "c": 701,
+   "u": "https://maps.google.com/?cid=10433687197467335910&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "Unzen, Obamachō Unzen, 320 1階"
+  },
+  "ChIJvUFmExpFQDURcYYgpR56ocg": {
+   "n": "Noasobi Lodge",
+   "lat": 32.993792299999996,
+   "lng": 130.4338653,
+   "r": 4.2,
+   "c": 49,
+   "u": "https://maps.google.com/?cid=14456970550873982577&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "1560-1 Manda, Arao"
+  },
+  "ChIJC3XkaK8NQDUR1hbaxWUr6V8": {
+   "n": "UNZEN Kanko Hotel",
+   "lat": 32.7375314,
+   "lng": 130.2614905,
+   "r": 4.5,
+   "c": 428,
+   "u": "https://maps.google.com/?cid=6911102819287832278&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "320 Obamachō Unzen, Unzen"
+  },
+  "ChIJ5bnQFKQNQDURphi29H0dVxM": {
+   "n": "유야도 운젠신유",
+   "lat": 32.7379665,
+   "lng": 130.2632631,
+   "r": 4.1,
+   "c": 564,
+   "u": "https://maps.google.com/?cid=1393615036508149926&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "320 Obamachō Unzen, Unzen"
+  },
+  "ChIJx_aU9GxFQDUROrqdKAk0c3o": {
+   "n": "HOTEL R9 The Yard 荒尾",
+   "lat": 32.9961659,
+   "lng": 130.437268,
+   "r": 4.2,
+   "c": 64,
+   "u": "https://maps.google.com/?cid=8823453308889709114&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "883-1 Manda, Arao"
+  },
+  "ChIJn4bV1KUNQDURQcoSG8VP1ho": {
+   "n": "Kyushu Hotel",
+   "lat": 32.739999,
+   "lng": 130.262802,
+   "r": 4.6,
+   "c": 511,
+   "u": "https://maps.google.com/?cid=1933820797983574593&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "320 Obamachō Unzen, Unzen"
+  },
+  "ChIJS2Tn1I60QTURseDSaDW8uvQ": {
+   "n": "오카와 리버사이드 호텔",
+   "lat": 33.2067498,
+   "lng": 130.3779022,
+   "r": 4.1,
+   "c": 301,
+   "u": "https://maps.google.com/?cid=17634614228500537521&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "218-1 Enokizu, Okawa"
+  },
+  "ChIJvWkXsZibQTURWExPiPfSGV4": {
+   "n": "Hotel Cultia Dazaifu",
+   "lat": 33.520916299999996,
+   "lng": 130.5337545,
+   "r": 4.7,
+   "c": 354,
+   "u": "https://maps.google.com/?cid=6780682674568645720&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "3-chōme-3-33 Saifu, Dazaifu"
+  },
+  "ChIJbaTZKXmZQTURygFvBlTTj_k": {
+   "n": "Ogiya Inn",
+   "lat": 33.4906584,
+   "lng": 130.5152623,
+   "r": 4,
+   "c": 59,
+   "u": "https://maps.google.com/?cid=17982824194952331722&g_mp=Cilnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaE5lYXJieRACGAQgAA",
+   "loc": "2-chōme-5-7 Yumachi, Chikushino"
   }
  },
  "source": "구글 장소 검색(Places API New, Nearby Search: hotel·resort_hotel, 인기순 20곳, 평점 4.0↑·후기 30↑)",
- "collectedAt": "2026-11-25T01:06:07.069Z"
+ "collectedAt": "2026-11-25T01:11:15.399Z"
 }
