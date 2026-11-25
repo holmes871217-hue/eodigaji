@@ -525,7 +525,6 @@ export function golfPicksSheet(state, data) {
       </li>`).join('')}
     </ul>
     <div class="golf-picks-tools"><button type="button" class="link-btn golf-picks-clear" data-action="golf-picks-clear">찜 전부 삭제</button></div>
-    ${used !== R ? `<p class="golf-pick-warn">라운딩 횟수 합(${used}번)이 일정(${trip.golfNights ? `${trip.golfNights}박 = ` : ''}${R}번)과 달라요. 횟수를 맞추거나 위에서 박 수를 바꿔 보세요.</p>` : ''}
     <div class="golf-fare">
       <p>골프 합계 <b>${won(golf)}</b> <small>(${used}번 라운딩)</small></p>
       <p>왕복 항공권 <b>${live ? '' : '약 '}${won(fare)}</b> <small>(${esc(airC?.air?.name || '')} ${esc(iata || '')}, ${live ? `네이버 항공권 ${md(trip.dep)}~${md(trip.ret)}` : f?.state === 'loading' ? '조회 중…' : '예상'})</small></p>
