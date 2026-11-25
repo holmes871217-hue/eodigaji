@@ -51,7 +51,7 @@ function defaults() {
     ui: {
       tab: 'home', // home | events | favs | deals | golf | my
       maxMin: 120,
-      golf: { mode: 'dom', maxMin: 120, day: null, tee: null, country: '', city: '', max: 20, picks: [], pickN: {} }, // 골프 탭(국내 차 시간 기본 2시간)
+      golf: { mode: 'dom', maxMin: 120, day: null, tee: [], country: '', city: '', max: 20, picks: [], pickN: {} }, // 골프 탭(국내 차 시간 기본 2시간)
       scope: 'all', // near(가까운 소소한 곳) | all(전체) | big(큰 나들이)
       view: 'list', // list | map
       evType: 'all',

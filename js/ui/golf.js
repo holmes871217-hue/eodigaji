@@ -46,27 +46,24 @@ export function golfLocSheet(state) {
 
 const CLOCK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 
-/** 티업 시간 고르기(갤럭시 알람처럼 위아래로 돌리는 두 바퀴: 무관·오전·오후 / 1~12시) */
+export const teeList = (g) => (Array.isArray(g.tee) ? g.tee.filter((h) => Number.isInteger(h) && h >= 0 && h < 24) : []);
+
+/** 티업 시간대 고르기: 무관 또는 1시간 단위 시간대를 여러 개 골라 "설정" */
 export function golfTeeSheet(state) {
-  const tee = Number.isInteger(state.ui.golf.tee) ? state.ui.golf.tee : null;
-  const ap = tee == null ? 0 : tee < 12 ? 1 : 2;
-  const h12 = tee == null ? 7 : tee % 12 || 12;
-  const wheel = (name, items, sel, label) => `
-    <div class="wheel" data-wheel="${name}" data-sel="${sel}" role="listbox" aria-label="${label}" tabindex="0">
-      ${items.map((t, i) => `<div class="wheel-item ${i === sel ? 'is-sel' : ''}" role="option" aria-selected="${i === sel}" data-i="${i}">${t}</div>`).join('')}
-    </div>`;
+  const g = state.ui.golf;
+  const draft = Array.isArray(g.teeDraft) ? g.teeDraft : teeList(g);
+  const chip = (h) => `<button type="button" class="chip ${draft.includes(h) ? 'is-on' : ''}" data-action="golf-tee-h" data-v="${h}" aria-pressed="${draft.includes(h)}">${h < 12 ? h : h === 12 ? 12 : h - 12}시</button>`;
   return `
     <div class="sheet-head">
       <div>
         <h2 class="sheet-title" id="sheet-title">티업 시간</h2>
-        <p class="card-meta">고른 시간대(1시간 단위)의 가장 싼 가격으로 골프장을 보여 줘요</p>
       </div>
     </div>
-    <div class="wheels ${ap === 0 ? 'is-any' : ''}" data-wheels>
-      ${wheel('ap', ['무관', '오전', '오후'], ap, '무관, 오전, 오후')}
-      ${wheel('h', Array.from({ length: 12 }, (_, i) => `${i + 1}시`), h12 - 1, '시')}
-      <div class="wheel-band" aria-hidden="true"></div>
-    </div>
+    <button type="button" class="chip golf-tee-any ${draft.length ? '' : 'is-on'}" data-action="golf-tee-h" data-v="" aria-pressed="${!draft.length}">무관</button>
+    <h3 class="golf-sub">오전</h3>
+    <div class="chips chips-wrap golf-tee-chips" role="group" aria-label="오전 시간대">${[5, 6, 7, 8, 9, 10, 11].map(chip).join('')}</div>
+    <h3 class="golf-sub">오후</h3>
+    <div class="chips chips-wrap golf-tee-chips" role="group" aria-label="오후 시간대">${[12, 13, 14, 15, 16, 17, 18, 19].map(chip).join('')}</div>
     <div class="wheel-actions">
       <button type="button" class="btn-secondary" data-action="close-sheet">취소</button>
       <button type="button" class="btn-dark" data-action="golf-tee-set">설정</button>
@@ -93,8 +90,8 @@ function domestic(state, data) {
   const day = g.day && g.day >= todayISO() ? g.day : state.profile.date;
   const inRange = days.includes(day);
   const origin = state.profile.origin;
-  const tee = Number.isInteger(g.tee) ? g.tee : null;
-  const waiting = tee != null && !golfHoursReady();
+  const tee = teeList(g);
+  const waiting = tee.length > 0 && !golfHoursReady();
   const rows = inRange && !waiting ? golfDomestic(data, { origin, day, maxMin: g.maxMin, car: state.profile.car, tee }) : [];
   const shown = rows.slice(0, g.max || 20);
   return `
@@ -113,12 +110,12 @@ function domestic(state, data) {
       ${GOLF_TIMES.map((m) => `<button type="button" class="chip ${m === g.maxMin ? 'is-on' : ''}" data-action="golf-time" data-v="${m}" aria-pressed="${m === g.maxMin}">${hm(m)}</button>`).join('')}
     </div>
     <div class="golf-dom-head mt">
-      <h2 class="h2">${esc(dayLabel(day))}${tee != null ? ` · ${esc(teeLabel(tee))}` : ''} · 총 <span data-golf-total>${rows.length}</span>곳</h2>
+      <h2 class="h2">${esc(dayLabel(day))}${tee.length ? ` · ${esc(teeLabel(tee))}` : ''} · 총 <span data-golf-total>${rows.length}</span>곳</h2>
       <button type="button" class="golf-loc-mini" data-action="golf-loc" aria-label="출발 지역 바꾸기, 지금 ${esc(origin.name || '내 위치')}">${PIN}<span>${esc(origin.name || '내 위치')}</span></button>
     </div>
     ${waiting ? '<div class="empty"><b>티업 시간별 가격을 불러오는 중…</b></div>' : rows.length ? `<ol class="list golf-list">${shown.map((r, i) => domCard(r, day, i + 1)).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}곳 (남은 ${rows.length - shown.length}곳)</button>` : ''}`
-      : inRange ? `<div class="empty"><b>${hm(g.maxMin)} 안에 이 날${tee != null ? ` ${esc(teeLabel(tee))}대` : ''} 가격이 올라온 골프장이 없어요.</b><span>${tee != null ? '티업 시간을 바꾸거나 "무관"으로 보세요.' : '시간을 늘리거나 다른 날짜를 골라 보세요.'}</span></div>`
+      : inRange ? `<div class="empty"><b>${hm(g.maxMin)} 안에 이 날${tee.length ? ` ${esc(teeLabel(tee))}` : ''} 가격이 올라온 골프장이 없어요.</b><span>${tee.length ? '티업 시간을 바꾸거나 "무관"으로 보세요.' : '시간을 늘리거나 다른 날짜를 골라 보세요.'}</span></div>`
       : `<div class="empty"><b>이 날짜는 아직 가격 자료가 없어요.</b><span>가격은 앞으로 ${days.length}일(${dayLabel(days[0])} ~ ${dayLabel(days[days.length - 1])})치를 매일 모아요.</span></div>`}`;
 }
 
@@ -219,8 +216,8 @@ export function golfSheet(state, data, id) {
   if (!c) return '';
   const g = state.ui.golf;
   const day = g.day && g.day >= todayISO() ? g.day : state.profile.date;
-  const tee = Number.isInteger(g.tee) ? g.tee : null;
-  const cost = (tee != null && hourCost(c, day, tee)) || c.days?.[day];
+  const tee = teeList(g);
+  const cost = (tee.length && hourCost(c, day, tee)) || c.days?.[day];
   const drive = golfDrive(c, state.profile.origin);
   const fuel = transportCost(drive, state.profile.car, data.fuel);
   const offers = cost ? [...cost.offers].sort((a, b) => (a[3] ?? a[1]) - (b[3] ?? b[1])) : [];
@@ -591,10 +588,10 @@ function stayBlock(iata, places, trip, title) {
   return `${head}
     <p class="muted">공항·골프장 모두 비슷한 차 시간으로 닿는 숙소 중 평점 높은 순 · ${STAY_SRC[r.src]} 기준</p>
     <div class="golf-stay-map" id="stay-map" aria-label="공항, 골프장, 추천 숙소 위치 지도"></div>
-    <ul class="golf-stays">${r.list.map(({ h, mins }, i) => `<li><a href="${esc(`${h.url}?checkin=${trip.dep}&checkout=${trip.out}&group_adults=2&no_rooms=1`)}" target="_blank" rel="noopener noreferrer">
-      <span class="golf-stay-body"><b><span class="golf-stay-no">${i + 1}</span> ${esc(h.n)}</b><small>★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''}</small><small class="golf-stay-times">${mins.map((m, k) => `${esc(names[k])} ${formatMin(m)}`).join(' · ')}</small></span>
+    <ul class="golf-stays">${r.list.map(({ h, mins }, i) => `<li><a href="${esc(h.src === 'g' ? h.url : `${h.url}?checkin=${trip.dep}&checkout=${trip.out}&group_adults=2&no_rooms=1`)}" target="_blank" rel="noopener noreferrer">
+      <span class="golf-stay-body"><b><span class="golf-stay-no">${i + 1}</span> ${esc(h.n)}</b><small>${h.src === 'g' ? `★ ${Math.round(h.s * 5) / 10}/5 (${Number(h.c).toLocaleString('ko-KR')}) · 구글 지도` : `★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''} · 부킹닷컴`}</small><small class="golf-stay-times">${mins.map((m, k) => `${esc(names[k])} ${formatMin(m)}`).join(' · ')}</small></span>
       ${h.ph ? `<img src="${esc(h.ph)}" alt="${esc(h.n)} 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'), { className: 'golf-stay-ph' }))">` : '<span class="golf-stay-ph"></span>'}</a></li>`).join('')}</ul>
-    <p class="sample-note">숙소를 누르면 부킹닷컴에서 ${md(trip.dep)} 체크인 · ${md(trip.out)} 체크아웃(성인 2명)으로 열려요. 평점·1박 가격은 ${esc(r.checkin ? md(r.checkin) : '')} 1박 기준 조회값이라 고른 날짜와 다를 수 있어요. 차 시간은 막힘 없는 기준이에요.</p>`;
+    <p class="sample-note">부킹닷컴 숙소는 ${md(trip.dep)} 체크인 · ${md(trip.out)} 체크아웃(성인 2명)으로, 구글 숙소는 구글 지도로 열려요. 평점은 구글 5점·부킹닷컴 10점 만점이고, 줄 세울 때는 같은 기준(10점)으로 맞췄어요. 평점·1박 가격은 ${esc(r.checkin ? md(r.checkin) : '')} 1박 기준 조회값이라 고른 날짜와 다를 수 있어요. 차 시간은 막힘 없는 기준이에요.</p>`;
 }
 
 /** 지도에 찍을 점(main.js 가 지도 그릴 때 씀) */

@@ -24,7 +24,7 @@ export function loadStays() {
       .then((j) => {
         data = {
           ...j,
-          hotels: j.hotels.map(([id, n, lat, lng, s, c, st, p, path, ph, loc]) => ({ id, n, lat, lng, s, c, st, p, url: `https://www.booking.com/hotel/${path}.ko.html`, ph, loc })),
+          hotels: j.hotels.map(([id, n, lat, lng, s, c, st, p, path, ph, loc, src]) => ({ id, n, lat, lng, s, c, st, p, url: src === 'g' ? path : `https://www.booking.com/hotel/${path}.ko.html`, ph, loc, src: src || 'bk' })),
         };
         return data;
       })

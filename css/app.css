@@ -743,15 +743,11 @@ svg { flex: none; }
 .golf-loc-mini svg { flex: none; width: 14px; height: 14px; color: var(--ink-2); }
 .golf-loc-mini span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* 티업 시간 바퀴(갤럭시 알람처럼 위아래로 돌림): 칸 높이 48px, 가운데 칸이 고른 값 */
-.wheels { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 240px; margin: 16px 0 8px; }
-.wheel { height: 240px; overflow-y: auto; scroll-snap-type: y mandatory; overscroll-behavior: contain; scrollbar-width: none; padding: 96px 0; position: relative; z-index: 1;
-  -webkit-mask-image: linear-gradient(transparent, #000 35%, #000 65%, transparent); mask-image: linear-gradient(transparent, #000 35%, #000 65%, transparent); }
-.wheel::-webkit-scrollbar { display: none; }
-.wheel-item { height: 48px; display: grid; place-items: center; scroll-snap-align: center; font-size: 22px; font-weight: 700; color: var(--ink-2); cursor: pointer; transition: color .15s, font-size .15s; }
-.wheel-item.is-sel { color: var(--ink); font-size: 28px; font-weight: 900; }
-.wheel-band { position: absolute; left: 0; right: 0; top: 96px; height: 48px; border-top: 2px solid var(--line, #d9dff0); border-bottom: 2px solid var(--line, #d9dff0); pointer-events: none; }
-.wheels.is-any [data-wheel="h"] { opacity: .3; }
+/* 티업 시간대 고르기: 칸 4개씩 고르게, 안 고른 칸도 배경이 보이게 */
+.golf-tee-any { margin-top: 12px; width: 100%; justify-content: center; background: var(--bg); }
+.golf-tee-chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 8px 0 0; padding: 0; overflow: visible; }
+.golf-tee-chips .chip { justify-content: center; background: var(--bg); }
+.golf-tee-chips .chip.is-on, .golf-tee-any.is-on { background: var(--ink); color: #fff; }
 .wheel-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
 .golf-loc-gps { margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .golf-loc-cities { margin-top: 10px; }

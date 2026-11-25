@@ -74,23 +74,35 @@ export function loadGolfHours() {
   }
   return hoursPromise;
 }
-/** 24시 기준 티업 시간 → '오전 7시' / '오후 1시' */
-export const teeLabel = (h) => (h == null ? '무관' : h < 12 ? `오전 ${h || 12}시` : `오후 ${h === 12 ? 12 : h - 12}시`);
-/** 그 골프장·날짜·티업 시간(1시간 단위)의 가장 싼 1인 비용. 없으면 null */
-export function hourCost(c, day, tee) {
-  const a = hoursData?.courses?.[c.id]?.[day]?.[String(tee).padStart(2, '0')];
+const hLabel = (h) => (h < 12 ? `오전 ${h || 12}시` : `오후 ${h === 12 ? 12 : h - 12}시`);
+/** 고른 티업 시간대(24시 기준 시 목록) → '무관' / '오전 7시' / '오전 6~8시' / '오전 11시~오후 1시' / '오전 6시 외 2' */
+export function teeLabel(hours) {
+  const hs = [...(hours || [])].sort((a, b) => a - b);
+  if (!hs.length) return '무관';
+  if (hs.length === 1) return hLabel(hs[0]);
+  const run = hs.every((h, i) => !i || h === hs[i - 1] + 1);
+  if (!run) return `${hLabel(hs[0])} 외 ${hs.length - 1}`;
+  const a = hs[0], b = hs[hs.length - 1];
+  return (a < 12) === (b < 12) ? `${hLabel(a).replace(/시$/, '')}~${(b % 12) || 12}시` : `${hLabel(a)}~${hLabel(b)}`;
+}
+/** 그 골프장·날짜에서 고른 티업 시간대(1시간 단위 여러 개) 중 가장 싼 1인 비용. 없으면 null */
+export function hourCost(c, day, hours) {
+  const byH = hoursData?.courses?.[c.id]?.[day];
+  if (!byH) return null;
+  let a = null;
+  for (const h of hours) { const x = byH[String(h).padStart(2, '0')]; if (x && (!a || x[1] < a[1])) a = x; }
   if (!a) return null;
   const [src, total, green, cart, caddie, time, flags] = a;
   const base = c.days?.[day] || {};
   const estimated = [(flags & 4) && '카트비', (flags & 8) && '캐디피'].filter(Boolean);
-  return { ...base, src, total, green, cart: cart || null, caddie: caddie || null, noCaddie: flags & 1 ? true : undefined, cartIncluded: flags & 2 ? true : undefined, estimated: estimated.length ? estimated : undefined, time: time || null, deal: src === base.src && time === base.time ? base.deal : null, byHour: tee };
+  return { ...base, src, total, green, cart: cart || null, caddie: caddie || null, noCaddie: flags & 1 ? true : undefined, cartIncluded: flags & 2 ? true : undefined, estimated: estimated.length ? estimated : undefined, time: time || null, deal: src === base.src && time === base.time ? base.deal : null, byHour: true };
 }
 
-export function golfDomestic(data, { origin, day, maxMin, car, tee = null }) {
+export function golfDomestic(data, { origin, day, maxMin, car, tee = [] }) {
   const out = [];
   for (const c of data?.domestic || []) {
     if (isShortCourse(c)) continue; // 18홀이 안 되는 곳(9홀×2, 6홀×3 등)은 뺀다
-    const cost = tee == null ? c.days?.[day] : hourCost(c, day, tee);
+    const cost = !tee.length ? c.days?.[day] : hourCost(c, day, tee);
     if (!cost) continue;
     const drive = golfDrive(c, origin);
     if (drive.min > maxMin) continue;
