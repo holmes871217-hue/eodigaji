@@ -154,24 +154,6 @@ function render() {
     if (el) mountTrendMap(el, { regions: getRegions() });
   }
 
-  // 티업 시간 바퀴: 고른 칸을 가운데로 맞추고, 손을 떼면 가장 가까운 칸에 멈춘 값을 기억한다
-  for (const w of document.querySelectorAll('[data-wheel]')) {
-    const ITEM = 48;
-    w.scrollTop = Number(w.dataset.sel || 0) * ITEM;
-    let t = 0;
-    w.addEventListener('scroll', () => {
-      clearTimeout(t);
-      t = setTimeout(() => {
-        const i = Math.max(0, Math.min(w.children.length - 1, Math.round(w.scrollTop / ITEM)));
-        w.dataset.sel = String(i);
-        [...w.children].forEach((c, k) => { c.classList.toggle('is-sel', k === i); c.setAttribute('aria-selected', String(k === i)); });
-        if (w.dataset.wheel === 'ap') w.closest('[data-wheels]')?.classList.toggle('is-any', i === 0);
-      }, 90);
-    }, { passive: true });
-    // 칸을 누르면 그 칸으로 돌린다
-    w.addEventListener('click', (e) => { const it = e.target.closest('.wheel-item'); if (it) w.scrollTo({ top: Number(it.dataset.i) * ITEM, behavior: 'smooth' }); });
-  }
-
   const stayEl = document.getElementById('stay-map');
   if (stayEl) { const sm = stayMapPoints(); if (sm) mountStayMap(stayEl, sm); }
 
@@ -552,14 +534,19 @@ root.addEventListener('click', (ev) => {
       break;
     }
     case 'golf-tee':
+      state.ui.golf.teeDraft = Array.isArray(state.ui.golf.tee) ? [...state.ui.golf.tee] : [];
       openSheet({ type: 'golf-tee' });
       break;
+    case 'golf-tee-h': {
+      // 시간대 칸: 누를 때마다 넣고 빼기. "무관"은 모두 지운다.
+      const d = state.ui.golf.teeDraft || [];
+      const h = el.dataset.v === '' ? null : Number(el.dataset.v);
+      update(() => { state.ui.golf.teeDraft = h == null ? [] : d.includes(h) ? d.filter((x) => x !== h) : [...d, h].sort((a, b) => a - b); }, { persist: false });
+      break;
+    }
     case 'golf-tee-set': {
-      // 바퀴 두 개에서 고른 값: 무관 → null, 오전/오후 + 1~12시 → 24시 기준(오전 12시 = 0시, 오후 12시 = 12시)
-      const sel = (n) => Number(document.querySelector(`[data-wheel="${n}"]`)?.dataset.sel || 0);
-      const ap = sel('ap'), h = sel('h') + 1;
-      const tee = ap === 0 ? null : ap === 1 ? h % 12 : (h % 12) + 12;
-      if (tee != null) loadGolfHours().then(() => update(() => {}, { persist: false }));
+      const tee = [...(state.ui.golf.teeDraft || [])];
+      if (tee.length) loadGolfHours().then(() => update(() => {}, { persist: false }));
       state.ui.golf.tee = tee; state.ui.golf.max = 20;
       closeSheet();
       break;
