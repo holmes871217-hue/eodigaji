@@ -19,7 +19,9 @@ import { attachSortable } from './ui/sortable.js';
 import { renderHome } from './ui/home.js';
 import { renderEvents } from './ui/events.js';
 import { renderDeals } from './ui/deals.js';
-import { renderGolf, abroadFareNeeds, pickPlan } from './ui/golf.js';
+import { renderGolf, abroadFareNeeds, pickPlan, stayMapPoints } from './ui/golf.js';
+import { onStaysChange } from './core/stays.js';
+import { mountStayMap } from './ui/map.js';
 import { loadGolf, requestFares } from './core/golf.js';
 import { renderMy } from './ui/mypage.js';
 import { renderSheet } from './ui/sheet.js';
@@ -78,6 +80,7 @@ function ensureGolf() {
   loadGolf().then((d) => { golfData = d; state.ui.golfLoading = false; if (state.ui.tab === 'golf' || sheets.some((x) => String(x.type).startsWith('golf'))) update(() => {}, { persist: false }); });
 }
 
+onStaysChange(() => update(() => {}, { persist: false })); // 숙소 길찾기 계산이 끝나면 다시 그린다
 let lastCompute = null;
 let fareRenderTimer = 0;
 function render() {
@@ -150,6 +153,9 @@ function render() {
     const el = document.getElementById('trend-map');
     if (el) mountTrendMap(el, { regions: getRegions() });
   }
+
+  const stayEl = document.getElementById('stay-map');
+  if (stayEl) { const sm = stayMapPoints(); if (sm) mountStayMap(stayEl, sm); }
 
   if (tab === 'favs') {
     const el = document.getElementById('fav-map');

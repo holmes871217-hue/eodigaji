@@ -2,6 +2,7 @@
 import { esc } from './util.js';
 import { courseTree, courseList, fareOf, fuelCost, transportCost, FUEL_LABEL, CONTINENTS, CONTINENT_OF, golfDomestic, golfDrive, golfDays, golfCountries, golfAbroad, won, localPrice, COUNTRY_CUR } from '../core/golf.js';
 import { formatMin } from '../core/geo.js';
+import { staysFor, STAY_SRC } from '../core/stays.js';
 import { todayISO } from '../core/dates.js';
 import { CITIES } from '../core/geo.js';
 
@@ -434,7 +435,7 @@ export function golfCourseSheet(state, data, id) {
       <p class="muted">${a.fareN > 1 ? `${fareSrc(a.fareSrc)}에서 날짜를 바꿔 ${a.fareN}번 조회해 비교했어요(1인 왕복). 두 값이 크게 다르면 싼 쪽을, 비슷하면 평균을 추천가로 썼어요.` : `${fareSrc(a.fareSrc)} 1인 왕복 조회값이에요. 주변 공항끼리 비교해 가장 합리적인 공항을 추천했어요.`} 고른 날짜(${md(trip.dep)} 출발 · ${md(trip.ret)} 귀국)는 아래 버튼으로 확인해 보세요.</p>
     </div>` : ''}
     ${a ? `<div class="golf-fly">${flyLinks(a, trip).map(([n, u]) => `<a class="golf-src" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>`).join('')}</div>` : ''}
-    ${c.stays?.length ? `<button type="button" class="shop-btn golf-stay-btn" data-action="golf-stays" data-id="${esc(c.id)}"><span class="shop-btn-icon" aria-hidden="true">🏨</span><span><b>근처 숙소</b><small>평점 높은 순 ${c.stays.length}곳</small></span></button>` : ''}
+    ${c.air?.iata && Number.isFinite(c.lat) ? `<button type="button" class="shop-btn golf-stay-btn" data-action="golf-stays" data-id="${esc(c.id)}"><span class="shop-btn-icon" aria-hidden="true">🏨</span><span><b>숙소 추천</b><small>공항과 골프장 가운데 · 평점 높은 순 3곳</small></span></button>` : ''}
     <div class="sheet-actions golf-actions">
       <a class="btn-primary" href="${esc(`${c.url}&checkInDate=${trip.round}`)}" target="_blank" rel="noopener noreferrer">예약하러 가기(몽키트래블)</a>
     </div>
@@ -479,9 +480,9 @@ export function golfPicksSheet(state, data) {
   const airs = [...byAir.keys()];
   return `${head}
     <ul class="golf-picks">
-      ${rows.map(({ c, n }) => `<li>
+      ${rows.map(({ c, n }, i) => `<li>
         <span class="golf-pick-ph">${c.photo ? `<img src="${esc(c.photo)}" alt="" referrerpolicy="no-referrer" loading="lazy">` : ''}</span>
-        <span class="golf-pick-body"><b data-fit="shrink">${esc(courseTitle(c))}</b><small>${c.price ? `1회 ${won(c.price)}` : '가격 없음'} · ${esc(c.air ? `${c.air.name}(${c.air.iata})` : '')}</small>
+        <span class="golf-pick-body"><b data-fit="shrink"><span class="golf-pick-letter">${LETTERS[i] || ''}</span>${esc(courseTitle(c))}</b><small>${c.price ? `1회 ${won(c.price)}` : '가격 없음'} · ${esc(c.air ? `${c.air.name}(${c.air.iata})` : '')}</small>
           <span class="golf-pick-ctl">
             <button type="button" class="chip" data-action="golf-pick-n" data-id="${esc(c.id)}" data-v="-1" aria-label="횟수 줄이기">−</button>
             <b>${n}회</b>
@@ -499,7 +500,8 @@ export function golfPicksSheet(state, data) {
       <p class="golf-pick-total">1인 예상 합계 <b>${live ? '' : '약 '}${won(golf + fare)}</b></p>
       ${airs.length > 1 ? `<p class="muted">골프장 공항이 서로 달라요(${airs.map(esc).join(', ')}). 항공권은 라운딩이 가장 많은 ${esc(iata)} 기준이고, 다른 지역 이동비는 들어 있지 않아요.</p>` : ''}
       <p class="muted">숙박·현지 이동·카트·캐디 등은 포함하지 않은 예상값이에요.</p>
-    </div>`;
+    </div>
+    ${stayBlock(iata, rows.map(({ c }, i) => ({ lat: c.lat, lng: c.lng, label: courseTitle(c), short: LETTERS[i] })), trip, '숙소 추천 (공항 · 찜한 골프장 가운데)')}`;
 }
 
 /** 상세: 고른 라운딩 일정의 항공권(전날 출발 · 마지막 날 저녁 귀국편) */
@@ -538,25 +540,48 @@ function flyLinks(a, t) {
   ];
 }
 
+
+const LETTERS = 'ABCDEFGH';
+/** 숙소 추천 묶음: 지도(공항 ✈ · 골프장 A·B·C · 숙소 1·2·3) + 숙소 3곳(곳마다 차 시간) */
+let lastStay = null;
+function stayBlock(iata, places, trip, title) {
+  const r = staysFor(iata, places);
+  lastStay = { iata, places };
+  const md = (iso) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
+  const head = `<h3 class="golf-sub">${title}</h3>`;
+  if (r.state === 'none') return '';
+  if (r.state === 'loading') return `${head}<p class="muted">공항·골프장까지 차 시간을 길찾기로 계산하는 중… (몇 초 걸려요)</p>`;
+  if (r.state !== 'ok') return `${head}<p class="muted">${r.state === 'empty' ? '이 지역은 아직 모아 둔 숙소가 없어요.' : '길찾기 계산을 못 했어요. 잠시 뒤 다시 열어 주세요.'}</p>`;
+  const names = r.points.map((p) => p.short);
+  return `${head}
+    <p class="muted">공항·골프장 모두 비슷한 차 시간으로 닿는 숙소 중 평점 높은 순 · ${STAY_SRC[r.src]} 기준</p>
+    <div class="golf-stay-map" id="stay-map" aria-label="공항, 골프장, 추천 숙소 위치 지도"></div>
+    <ul class="golf-stays">${r.list.map(({ h, mins }, i) => `<li><a href="${esc(`${h.url}?checkin=${trip.dep}&checkout=${trip.out}&group_adults=2&no_rooms=1`)}" target="_blank" rel="noopener noreferrer">
+      <span class="golf-stay-body"><b><span class="golf-stay-no">${i + 1}</span> ${esc(h.n)}</b><small>★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''}</small><small class="golf-stay-times">${mins.map((m, k) => `${esc(names[k])} ${formatMin(m)}`).join(' · ')}</small></span>
+      ${h.ph ? `<img src="${esc(h.ph)}" alt="${esc(h.n)} 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'), { className: 'golf-stay-ph' }))">` : '<span class="golf-stay-ph"></span>'}</a></li>`).join('')}</ul>
+    <p class="sample-note">숙소를 누르면 부킹닷컴에서 ${md(trip.dep)} 체크인 · ${md(trip.out)} 체크아웃(성인 2명)으로 열려요. 평점·1박 가격은 ${esc(r.checkin ? md(r.checkin) : '')} 1박 기준 조회값이라 고른 날짜와 다를 수 있어요. 차 시간은 막힘 없는 기준이에요.</p>`;
+}
+
+/** 지도에 찍을 점(main.js 가 지도 그릴 때 씀) */
+export function stayMapPoints() {
+  if (!lastStay) return null;
+  const r = staysFor(lastStay.iata, lastStay.places);
+  return r.state === 'ok' ? { points: r.points, hotels: r.list.map((x) => x.h) } : null;
+}
+
 /** 근처 숙소 창(추천 탭 맛집처럼 한 단계 안쪽): 부킹닷컴 평점 높은 순 5곳 */
 export function golfStaysSheet(state, data, id) {
   const c = (data?.courses || []).find((x) => x.id === id);
   if (!c) return '';
   const t = abroadTrip(state);
-  const hs = (c.stays || []).map(([hid, km]) => ({ ...(data.hotels || {})[hid], km })).filter((h) => h.n);
-  const md = (iso) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
   return `
     <div class="sheet-head">
       <div>
-        <h2 class="sheet-title" id="sheet-title">${esc(courseTitle(c))} 근처 숙소</h2>
-        <p class="card-meta">평점 높은 순 ${hs.length}곳 · 시내와 가까운 숙소 중 골프장에서 가까운 곳</p>
+        <h2 class="sheet-title" id="sheet-title">${esc(courseTitle(c))} 숙소 추천</h2>
+        <p class="card-meta">${esc(c.air ? `${c.air.name}(${c.air.iata}) 공항` : '공항')}과 골프장 가운데쯤, 평점 높은 순</p>
       </div>
     </div>
-    ${hs.length ? `<ul class="golf-stays">${hs.map((h) => `<li><a href="${esc(`${h.url}?checkin=${t.dep}&checkout=${t.out}&group_adults=2&no_rooms=1`)}" target="_blank" rel="noopener noreferrer">
-      <span class="golf-stay-body"><b>${esc(h.n)}</b><small>★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''} · 골프장에서 ${h.km}km</small><small>${esc(h.loc || '')}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''}</small></span>
-      ${h.ph ? `<img src="${esc(h.ph)}" alt="${esc(h.n)} 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'), { className: 'golf-stay-ph' }))">` : '<span class="golf-stay-ph"></span>'}</a></li>`).join('')}</ul>
-    <p class="sample-note">숙소를 누르면 부킹닷컴에서 ${md(t.dep)} 체크인 · ${md(t.out)} 체크아웃(${t.nights}박, 성인 2명)으로 열려요. 평점·1박 가격은 ${esc(md(data.hotelsCheckin || t.dep))} 1박 기준 조회값이라 고른 날짜와 다를 수 있어요.</p>`
-      : '<div class="empty"><b>이 골프장 근처 숙소 정보가 아직 없어요.</b></div>'}`;
+    ${stayBlock(c.air?.iata, [{ lat: c.lat, lng: c.lng, label: courseTitle(c), short: '골프장' }], t, '추천 숙소 3곳') || '<div class="empty"><b>이 골프장은 위치 정보가 없어 숙소를 고를 수 없어요.</b></div>'}`;
 }
 
 /** 패키지 출발 기간에 고른 날짜가 들어가는지(기간 정보가 없으면 보여 준다) */
