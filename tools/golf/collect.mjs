@@ -2,6 +2,7 @@
 // 결과: app/data/golf.json (앱이 읽는 파일). 캐시: tools/golf/data/*.json
 // 실행: node tools/golf/collect.mjs  (KAKAO_REST_KEY 가 있으면 길찾기·골팡 골프장 위치 찾기까지 한다. 키 값은 출력하지 않는다.)
 import fs from 'node:fs';
+import { buildStays } from './build-stays.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -32,6 +33,13 @@ globalThis.fetch = (u, o = {}) => rawFetch(u, { signal: AbortSignal.timeout(2000
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8')); } catch { return d; } };
 const writeJson = (f, v) => fs.writeFileSync(path.join(DATA, f), JSON.stringify(v, null, 1));
+// 티업 시간(1시간 단위)마다 가장 싼 값: hours["07"] = { p: 그린피, t: '07:22', nc: 노캐디, ci: 카트 포함 }
+function addHour(hours, time, price, nc, ci) {
+  const H = /^(\d{1,2}):/.exec(String(time || ''))?.[1]?.padStart(2, '0');
+  if (!H || !(price > 0)) return;
+  const h = hours[H];
+  if (!h || price < h.p || (price === h.p && time < h.t)) hours[H] = { p: price, t: time, nc, ci };
+}
 const log = (...a) => console.log(...a);
 
 // 앱의 거점 목록(geo.js CITIES)을 그대로 읽는다 — 같은 좌표를 써야 앱과 맞는다.
@@ -110,7 +118,9 @@ async function collectTeescanner(dates, courses, stat) {
           const atMin = tees.filter((t) => t.min_cost === min);
           const best = atMin.find((t) => t.teetime_time === time) || atMin[0];
           const deal = atMin.map(tsDeal).find(Boolean) || '';
-          (co.offers[day] ||= []).push({ src: 'ts', price: best.min_cost, count: tees.length, time, deal, noCaddie: /노캐디|셀프/.test(best.caddie_name || ''), cartIncluded: cartIncludedText(`${best.course_name || ''} ${best.benefit_comment || ''} ${best.condition_text || ''} ${best.product_tag_nm || ''}`) });
+          const hours = {};
+          for (const t of tees) addHour(hours, t.teetime_time, t.min_cost, /노캐디|셀프/.test(t.caddie_name || ''), cartIncludedText(`${t.course_name || ''} ${t.benefit_comment || ''} ${t.condition_text || ''} ${t.product_tag_nm || ''}`));
+          (co.offers[day] ||= []).push({ src: 'ts', price: best.min_cost, count: tees.length, time, deal, hours, noCaddie: /노캐디|셀프/.test(best.caddie_name || ''), cartIncluded: cartIncludedText(`${best.course_name || ''} ${best.benefit_comment || ''} ${best.condition_text || ''} ${best.product_tag_nm || ''}`) });
           stat.offers++;
         } else stat.only9++;
       } catch { stat.errors = (stat.errors || 0) + 1; }
@@ -172,8 +182,9 @@ async function collectGolfpang(dates, stat) {
           if (row.holes && !/18/.test(row.holes)) { stat.not18++; continue; } // 9홀 등은 값이 비교되지 않아 뺀다
           if (isShortCourseName(row.name) || repeatsShortHoles(`${row.incl || ''} ${row.name}`)) { stat.not18++; continue; } // "-퍼9" 처럼 9홀을 두 번 도는 곳
           const k = `${nameKey(row.name)}|${day}`;
-          const a = agg.get(k) || { name: row.name, key: nameKey(row.name), region, day, price: Infinity, count: 0 };
+          const a = agg.get(k) || { name: row.name, key: nameKey(row.name), region, day, price: Infinity, count: 0, hours: {} };
           a.count++;
+          addHour(a.hours, row.time, row.price, /노캐디/.test(row.caddie || ''), /카트/.test(row.incl || ''));
           if (row.price < a.price) { a.price = row.price; a.time = row.time || null; a.noCaddie = /노캐디/.test(row.caddie || ''); a.cartIncluded = /카트/.test(row.incl || ''); }
           else if (row.price === a.price && row.time && (!a.time || row.time < a.time)) a.time = row.time;
           agg.set(k, a);
@@ -236,7 +247,7 @@ async function mergeGolfpang(gpRows, courses, stat, src = 'gp') {
       }
     }
     if (!co) { stat.unplaced.add(g.name); continue; }
-    (co.offers[g.day] ||= []).push({ src, price: g.price, count: g.count, name: g.name, time: g.time || null, noCaddie: g.noCaddie, cartIncluded: g.cartIncluded });
+    (co.offers[g.day] ||= []).push({ src, price: g.price, count: g.count, name: g.name, time: g.time || null, hours: g.hours, noCaddie: g.noCaddie, cartIncluded: g.cartIncluded });
     stat.merged++;
   }
   writeJson('gp-geo.json', geo);
@@ -363,8 +374,9 @@ async function collectGolfmon(dates, stat) {
           if (r.holes && !/18/.test(r.holes)) continue;
           if (isShortCourseName(r.name)) continue;
           const k = `${nameKey(r.name)}|${day}`;
-          const a = agg.get(k) || { name: r.name, key: nameKey(r.name), region, day, price: Infinity, count: 0 };
+          const a = agg.get(k) || { name: r.name, key: nameKey(r.name), region, day, price: Infinity, count: 0, hours: {} };
           a.count++;
+          addHour(a.hours, r.time, r.price, r.noCaddie, false);
           if (r.price < a.price) { a.price = r.price; a.time = r.time || null; a.noCaddie = r.noCaddie || undefined; }
           else if (r.price === a.price && r.time && (!a.time || r.time < a.time)) a.time = r.time;
           agg.set(k, a);
@@ -495,6 +507,8 @@ async function collectTeeupnjoy(dates, courses, stat) {
         const { min, time } = earliestAtMin(list, (t) => Number(t.disPrice) || 0, hm);
         if (min < Infinity) {
           tu.price = min; tu.time = time;
+          tu.hours = {};
+          for (const t of list) addHour(tu.hours, hm(t), Number(t.disPrice) || 0, tu.noCaddie, tu.cartIncluded);
           tu.deal = list.filter((t) => Number(t.disPrice) === min).map(tuDeal).find(Boolean) || '';
           stat.teetimes = (stat.teetimes || 0) + 1;
         }
@@ -922,6 +936,7 @@ function kgFor(co) {
 }
 let par3 = 0;
 const list = [];
+const hoursOut = {}; // 티업 시간별 가격 → app/data/golf-hours.json (티업 시간을 고를 때만 앱이 받는다)
 for (const co of courses.values()) {
   if (isPar3(co.name)) { par3++; continue; }
   if ((co.holes && co.holes < 18) || isShortCourseName(co.name) || (co.meter && co.meter < SHORT_COURSE_METER)) { par3++; continue; } // 9홀·6홀·3홀을 여러 번 도는 곳은 검색에서 뺀다
@@ -933,6 +948,18 @@ for (const co of courses.values()) {
     const priced = offers.map((o) => ({ o, cost: perPersonCost(o.price, co.cartFee, co.caddieFee, { noCaddie: o.noCaddie ?? dayNoCaddie, cartIncluded: o.cartIncluded, ...est }) }));
     const best = priced.reduce((a, b) => (b.cost.total < a.cost.total ? b : a));
     days[day] = { ...best.cost, src: best.o.src, time: best.o.time || null, deal: best.o.deal || null, offers: priced.map(({ o, cost }) => [o.src, o.price, o.count, cost.total]) }; // 링크는 앱이 만든다(파일 크기 줄이기)
+    // 티업 시간별 가장 싼 1인 비용: [출처, 1인 총비용, 그린피, 카트비, 캐디피, 시각, 표시(1 노캐디·2 카트 포함·4 카트비 예상·8 캐디피 예상)]
+    const hrs = {};
+    for (const o of offers) {
+      const hs = o.hours && Object.keys(o.hours).length ? o.hours : o.time ? { [o.time.slice(0, 2)]: { p: o.price, t: o.time, nc: o.noCaddie, ci: o.cartIncluded } } : {};
+      for (const [H, h] of Object.entries(hs)) {
+        const c = perPersonCost(h.p, co.cartFee, co.caddieFee, { noCaddie: h.nc ?? o.noCaddie ?? dayNoCaddie, cartIncluded: h.ci ?? o.cartIncluded, ...est });
+        if (hrs[H] && hrs[H][1] <= c.total) continue;
+        const flags = (c.noCaddie ? 1 : 0) | (c.cartIncluded ? 2 : 0) | (c.estimated?.includes('카트비') ? 4 : 0) | (c.estimated?.includes('캐디피') ? 8 : 0);
+        hrs[H] = [o.src, c.total, c.green, c.cart || 0, c.caddie || 0, h.t || null, flags];
+      }
+    }
+    if (Object.keys(hrs).length) ((hoursOut[co.id] ||= {})[day] = hrs);
   }
   if (!Object.keys(days).length) continue;
   if (co.holes && co.holes < 18) continue; // 9홀 골프장은 18홀 가격과 비교되지 않아 뺀다
@@ -964,6 +991,10 @@ const out = {
   },
 };
 fs.writeFileSync(OUT, JSON.stringify(out));
+const HOURS_OUT = path.join(ROOT, 'app/data/golf-hours.json');
+fs.writeFileSync(HOURS_OUT, JSON.stringify({ v: 1, at: out.updatedAt, courses: hoursOut }));
+log(`티업 시간별 가격: 골프장 ${Object.keys(hoursOut).length}곳 → app/data/golf-hours.json (${Math.round(fs.statSync(HOURS_OUT).size / 1024)}KB)`);
+try { log(`해외 숙소 추천 자료: 숙소 ${buildStays()}곳 → app/data/golf-stays.json`); } catch (e) { log('숙소 자료 실패', e.message); }
 log(`저장: 국내 ${list.length}곳, 해외 상품 ${abroad.list.length}개 → app/data/golf.json (${Math.round(fs.statSync(OUT).size / 1024)}KB)`);
 if (gpStat.unplaced.size) log('골팡 위치 못 찾은 골프장:', [...gpStat.unplaced].slice(0, 40).join(', '));
 process.exit(0);
