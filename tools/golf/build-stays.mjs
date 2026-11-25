@@ -22,7 +22,8 @@ export function buildStays() {
   const near = (a, b) => Math.abs(a[2] - b.lat) < 0.002 && Math.abs(a[3] - b.lng) < 0.002;
   let gAdded = 0;
   for (const [id, h] of Object.entries(goog)) {
-    if (!Number.isFinite(h.lat) || !h.r || h.c < 30) continue;
+    if (!Number.isFinite(h.lat) || !h.r || h.c < 100) continue; // 구글은 후기 100개 이상(작은 게스트하우스 제외)
+    if (/love\s*hotel|motel|hostel|guest\s*house|homestay|nhà\s*nghỉ|러브|모텔|ラブホ|民宿|모텔|여인숙/i.test(h.n)) continue; // 가족 골프 여행 숙소로 맞지 않는 곳
     if (hotels.some((x) => near(x, h))) continue;
     hotels.push([`g:${id}`, h.n, r5(h.lat), r5(h.lng), Math.round(h.r * 20) / 10, h.c, 0, 0, h.u, '', h.loc || '', 'g']);
     gAdded++;
