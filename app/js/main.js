@@ -33,6 +33,12 @@ import { mountMap, mountPicker, unmountMaps, resetMapView, fitMapAll, panPicker,
 
 const root = document.getElementById('app');
 const state = loadState();
+// 당겨서 새로고침해도 보던 탭에 그대로 있게: 지금 탭을 이 창(세션)에만 기억해 둔다(앱을 새로 열면 추천부터)
+const TAB_KEY = 'eodigaji.tab';
+try {
+  const t = sessionStorage.getItem(TAB_KEY);
+  if (['home', 'favs', 'events', 'deals', 'golf', 'my'].includes(t)) state.ui.tab = t;
+} catch (e) { /* 저장소를 못 쓰면 추천부터 */ }
 // 개인 취향·행동 데이터(C 항목): 새 키 eodigaji.taste.v1 에 따로 저장한다. 화면이 읽을 수 있게 state.ui 에 걸어 둔다(state.ui 는 폰에 저장되지 않는다).
 const taste = loadTaste();
 state.ui.taste = taste;
@@ -190,6 +196,7 @@ function update(fn, { keepScroll = true, persist = true } = {}) {
   const y = window.scrollY;
   fn();
   if (persist) saveState(state);
+  try { sessionStorage.setItem(TAB_KEY, state.ui.tab); } catch (e) { /* 무시 */ }
   render();
   window.scrollTo(0, keepScroll ? y : 0);
 }
