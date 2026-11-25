@@ -822,3 +822,12 @@ svg { flex: none; }
 .golf-stay-no { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-right: 2px; border-radius: 50%; background: #f0326b; color: #fff; font-size: 12px; vertical-align: 1px; }
 .golf-stay-times { color: var(--ink) !important; font-weight: 700; }
 .golf-pick-letter { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-right: 4px; border-radius: 50%; background: #2e8b57; color: #fff; font-size: 12px; vertical-align: 1px; }
+
+/* 국내 골프: 목록 머리 오른쪽(교통비 포함 + 출발 지역), 상세 주소 복사·전화 걸기 */
+.golf-dom-tools { flex: none; display: flex; align-items: center; gap: 6px; }
+.golf-dom-tools .golf-air-toggle { min-height: 32px; padding: 0 8px; font-size: 11px; gap: 2px; }
+.golf-copy, .golf-tel { padding: 0; border: 0; background: none; font: inherit; color: var(--ink); text-align: left; cursor: pointer; text-decoration: none; }
+.golf-copy small, .golf-tel small { margin-left: 4px; padding: 1px 6px; border-radius: 999px; background: var(--bg); color: var(--ink-2); font-size: 11px; font-weight: 800; white-space: nowrap; }
+.golf-dom-tools .golf-loc-mini { max-width: 110px; }
+.golf-info .golf-copy, .golf-info .golf-tel { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.golf-info .golf-copy small, .golf-info .golf-tel small { display: inline-block; width: auto; margin-left: 0; }
