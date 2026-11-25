@@ -537,6 +537,21 @@ root.addEventListener('click', (ev) => {
       });
       break;
     }
+    case 'golf-dom-fuel': {
+      // 국내 골프 "🚗 교통비 포함" 켜고 끄기. 차 정보가 없으면 마이 탭에서 넣도록 알려 준다.
+      const turningOn = state.ui.golf.domFuel === false;
+      if (turningOn && !(state.profile.car?.fuel && state.profile.car?.eff)) window.alert('마이 탭 "내 차 연비"에 연료와 연비를 넣으면 교통비가 더해져요.');
+      update(() => { state.ui.golf.domFuel = turningOn; state.ui.golf.max = 20; }, { persist: false });
+      break;
+    }
+    case 'copy-text': {
+      // 누르면 글자 복사(주소 등)
+      const txt = el.dataset.v || '';
+      const done = () => { const sm = el.querySelector('small'); if (sm) { sm.textContent = '복사됨'; setTimeout(() => { sm.textContent = '복사'; }, 1500); } };
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(txt).then(done).catch(() => window.prompt('주소를 길게 눌러 복사하세요', txt));
+      else window.prompt('주소를 길게 눌러 복사하세요', txt);
+      break;
+    }
     case 'golf-tee':
       openSheet({ type: 'golf-tee' });
       break;

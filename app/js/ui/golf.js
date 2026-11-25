@@ -91,7 +91,8 @@ function domestic(state, data) {
   const origin = state.profile.origin;
   const tee = teeList(g);
   const waiting = tee.length > 0 && !golfHoursReady();
-  const rows = inRange && !waiting ? golfDomestic(data, { origin, day, maxMin: g.maxMin, car: state.profile.car, tee }) : [];
+  const withFuel = g.domFuel !== false; // "🚗 교통비 포함"(기본 켜짐). 끄면 교통비 없이 골프 비용만
+  const rows = inRange && !waiting ? golfDomestic(data, { origin, day, maxMin: g.maxMin, car: withFuel ? state.profile.car : null, tee }) : [];
   const shown = rows.slice(0, g.max || 20);
   return `
     <div class="golf-when">
@@ -110,7 +111,10 @@ function domestic(state, data) {
     </div>
     <div class="golf-dom-head mt">
       <h2 class="h2">${esc(dayLabel(day))} · 총 <span data-golf-total>${rows.length}</span>곳</h2>
-      <button type="button" class="golf-loc-mini" data-action="golf-loc" aria-label="출발 지역 바꾸기, 지금 ${esc(origin.name || '내 위치')}">${PIN}<span>${esc(origin.name || '내 위치')}</span></button>
+      <div class="golf-dom-tools">
+        <button type="button" class="golf-air-toggle ${withFuel ? 'is-on' : ''}" data-action="golf-dom-fuel" aria-pressed="${withFuel}" aria-label="교통비 ${withFuel ? '포함 켜짐(누르면 골프 비용만)' : '꺼짐(누르면 교통비 더하기)'}">🚗<span>교통비 포함</span></button>
+        <button type="button" class="golf-loc-mini" data-action="golf-loc" aria-label="출발 지역 바꾸기, 지금 ${esc(origin.name || '내 위치')}">${PIN}<span>${esc(origin.name || '내 위치')}</span></button>
+      </div>
     </div>
     ${waiting ? '<div class="empty"><b>티업 시간별 가격을 불러오는 중…</b></div>' : rows.length ? `<ol class="list golf-list">${shown.map((r, i) => domCard(r, day, i + 1)).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}곳 (남은 ${rows.length - shown.length}곳)</button>` : ''}`
@@ -173,7 +177,7 @@ function domCard({ c, cost, drive, fuel, sum }, day, rank) {
         <span class="card-body">
           <span class="card-title">${esc(c.name)}${cost.deal ? ` <span class="golf-deal">${esc(dealText(cost.deal))}</span>` : ''}</span>
           <span class="card-meta">${esc(c.area.replace('>', '·'))}${c.holes ? ` · ${c.holes}홀` : ''}</span>
-          <span class="card-meta golf-drive ${drive.kind}" data-fit>${esc(driveText(drive))}${fuel ? ` · 교통비 ${esc(won(fuel.perPerson))}` : ''} ${drive.kind === 'kakao' ? '' : '<em>추정</em>'}</span>
+          <span class="card-meta golf-drive ${drive.kind}" data-fit>${esc(driveText(drive))} ${drive.kind === 'kakao' ? '' : '<em>추정</em>'}</span>
           <span class="golf-price" data-fit><b>${won(sum ?? cost.total)}</b> <small>1인 총비용</small>${cost.time ? ` <span class="golf-time">${esc(cost.time)} 티오프</span>` : ''}</span>
         </span>
         ${thumb(c.photo)}
@@ -218,7 +222,7 @@ export function golfSheet(state, data, id) {
   const tee = teeList(g);
   const cost = (tee.length && hourCost(c, day, tee)) || c.days?.[day];
   const drive = golfDrive(c, state.profile.origin);
-  const fuel = transportCost(drive, state.profile.car, data.fuel);
+  const fuel = g.domFuel !== false ? transportCost(drive, state.profile.car, data.fuel) : null;
   const offers = cost ? [...cost.offers].sort((a, b) => (a[3] ?? a[1]) - (b[3] ?? b[1])) : [];
   const q = encodeURIComponent(c.name);
   return `
@@ -242,8 +246,8 @@ export function golfSheet(state, data, id) {
       ${kakaoLink(c, day)}
     </ul>` : ''}
     <ul class="golf-info">
-      ${c.addr ? `<li><b>주소</b> ${esc(c.addr)}</li>` : ''}
-      ${c.tel ? `<li><b>전화</b> ${esc(c.tel)}</li>` : ''}
+      ${c.addr ? `<li><b>주소</b> <button type="button" class="golf-copy" data-action="copy-text" data-v="${esc(c.addr)}" aria-label="주소 복사">${esc(c.addr)} <small>복사</small></button></li>` : ''}
+      ${c.tel ? `<li><b>전화</b> <a class="golf-tel" href="tel:${esc(String(c.tel).replace(/[^\d+]/g, ''))}">${esc(c.tel)} <small>전화 걸기</small></a></li>` : ''}
     </ul>
     <div class="sheet-actions">
       <a class="btn-secondary" href="${esc(naverUrl(c.name))}" target="_blank" rel="noopener noreferrer">네이버에서 찾기</a>
