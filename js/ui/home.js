@@ -90,12 +90,6 @@ export function renderHome(state, c) {
       <h1>이번 나들이,<br>어디로 갈까요?</h1>
     </div>
 
-    ${ui.hint ? `
-      <div class="hint">
-        <span>지금은 예시 가족(나 38세 · 아이 7세)으로 계산했어요. 마이페이지에서 우리 가족으로 바꿔 보세요.</span>
-        <button type="button" class="link" data-action="dismiss-hint">닫기</button>
-      </div>` : ''}
-
     ${modeToggle(profile.mode)}
     <p class="mode-desc">${profile.mode === 'hot'
       ? '요즘 검색이 늘고 있는 곳을 먼저 추천해요.'

@@ -47,7 +47,7 @@ let installEvent = null; // 브라우저가 건네준 "설치 창 띄우기" 손
 const TABS = [
   { v: 'home', label: '추천', full: '추천', icon: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>' },
   { v: 'events', label: '축제', full: '축제·행사', icon: '<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>' },
-  { v: 'deals', label: '특가', full: '특가', icon: '<path d="M3.5 12.5V4.5h8l9 9-8 8z"/><circle cx="8" cy="9" r="1.5"/>' },
+  { v: 'deals', label: 'NOL', full: 'NOL', icon: '<path d="M3.5 12.5V4.5h8l9 9-8 8z"/><circle cx="8" cy="9" r="1.5"/>' },
   { v: 'golf', label: '골픽', full: '골픽', icon: '<path d="M7 21V3.5l10 4-10 4"/><path d="M4 21h10"/>' },
   { v: 'my', label: '마이', full: '마이페이지', icon: '<circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/>' },
 ];

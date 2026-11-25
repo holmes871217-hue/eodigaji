@@ -485,7 +485,7 @@ svg { flex: none; }
   position: fixed; left: 50%; bottom: 0; z-index: 10;
   transform: translateX(-50%);
   width: 100%; max-width: 480px;
-  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; /* 아래 탭 5개(찜·코스는 추천 탭 안으로) */
   padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
   background: var(--surface); border-radius: 28px 28px 0 0;
   box-shadow: 0 -4px 18px rgba(27, 37, 89, 0.08);
