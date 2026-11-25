@@ -103,19 +103,20 @@ async function needsFerry(a, b) {
   } catch { return false; }
 }
 
-/** iata: 공항 코드, places: [{ lat, lng, label, short }] 골프장들. 처음이면 계산을 시작하고 끝나면 onChange() */
-export function staysFor(iata, places, onChange) {
+/** iata: 공항 코드, places: [{ lat, lng, label, short }] 골프장들. withAir=false 면 공항은 빼고 골프장들의 가운데만 본다(찜 목록).
+ *  처음이면 계산을 시작하고 끝나면 onChange() */
+export function staysFor(iata, places, onChange, { withAir = true } = {}) {
   const ps = places.filter((p) => p && Number.isFinite(p.lat) && Number.isFinite(p.lng));
-  if (!iata || !ps.length) return { state: 'none' };
-  const key = `${iata}|${ps.map((p) => `${p.lat.toFixed(3)},${p.lng.toFixed(3)}`).sort().join('|')}`;
+  if ((withAir && !iata) || !ps.length) return { state: 'none' };
+  const key = `${withAir ? iata : 'noair'}|${ps.map((p) => `${p.lat.toFixed(3)},${p.lng.toFixed(3)}`).sort().join('|')}`;
   if (results.has(key)) return results.get(key);
   const res = { state: 'loading' };
   results.set(key, res);
   (async () => {
     const d = await loadStays();
-    const air = airportPoint(iata);
-    if (!air) { Object.assign(res, { state: 'empty' }); return; }
-    const pts = [air, ...ps];
+    const air = withAir ? airportPoint(iata) : null;
+    if (withAir && !air) { Object.assign(res, { state: 'empty' }); return; }
+    const pts = air ? [air, ...ps] : ps;
     const cand = candidates(pts, d.hotels);
     if (!cand.length) { Object.assign(res, { state: 'empty' }); return; }
     let m;
@@ -128,12 +129,14 @@ export function staysFor(iata, places, onChange) {
     }).filter(Boolean);
     if (!rows.length) { Object.assign(res, { state: 'empty' }); return; }
     const best = Math.min(...rows.map((r) => r.max));
-    const ordered = rows.filter((r) => r.max <= best + 15).sort((a, b) => b.h.s - a.h.s || a.max - b.max);
+    // 가장 먼 곳까지 시간이 가장 짧은 숙소 기준 +15분 안을 평점 순으로 먼저, 3곳이 안 되면 +30분, +45분 안에서 평점 순으로 채운다
+    const band = (r) => Math.max(1, Math.ceil((r.max - best) / 15)); // 1: +15분 안, 2: +30분 안, 3: +45분 안
+    const ordered = rows.filter((r) => r.max <= best + 45).sort((a, b) => band(a) - band(b) || b.h.s - a.h.s || a.max - b.max);
     // 배를 타야 닿는 섬 숙소는 뺀다(구글은 서버에서 배 없는 길로 계산, 오픈스트리트맵은 숙소→공항 길에 배가 있는지 확인)
     const pick = [];
     for (const r of ordered) {
       if (pick.length >= 3) break;
-      if (m.src === 'osrm' && (islandAway(r.h, pts) || await needsFerry(r.h, air))) continue;
+      if (m.src === 'osrm' && (islandAway(r.h, pts) || await needsFerry(r.h, air || ps[0]))) continue;
       pick.push(r);
     }
     if (!pick.length) { Object.assign(res, { state: 'empty' }); return; }

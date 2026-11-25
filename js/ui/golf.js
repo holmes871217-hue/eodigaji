@@ -535,7 +535,7 @@ export function golfPicksSheet(state, data) {
       ${airs.length > 1 ? `<p class="muted">골프장 공항이 서로 달라요(${airs.map(esc).join(', ')}). 항공권은 라운딩이 가장 많은 ${esc(iata)} 기준이고, 다른 지역 이동비는 들어 있지 않아요.</p>` : ''}
       <p class="muted">숙박·현지 이동·카트·캐디 등은 포함하지 않은 예상값이에요.</p>
     </div>
-    ${stayBlock(iata, rows.map(({ c }, i) => ({ lat: c.lat, lng: c.lng, label: courseTitle(c), short: LETTERS[i] })), trip, '숙소 추천 (공항 · 찜한 골프장 가운데)')}`;
+    ${stayBlock(iata, rows.map(({ c }, i) => ({ lat: c.lat, lng: c.lng, label: courseTitle(c), short: LETTERS[i] })), trip, '숙소 추천 (찜한 골프장 가운데)', { withAir: false })}`;
 }
 
 /** 상세: 고른 라운딩 일정의 항공권(전날 출발 · 마지막 날 저녁 귀국편) */
@@ -578,18 +578,19 @@ function flyLinks(a, t) {
 const LETTERS = 'ABCDEFGH';
 /** 숙소 추천 묶음: 지도(공항 ✈ · 골프장 A·B·C · 숙소 1·2·3) + 숙소 3곳(곳마다 차 시간) */
 let lastStay = null;
-function stayBlock(iata, places, trip, title) {
-  const r = staysFor(iata, places);
-  lastStay = { iata, places };
+function stayBlock(iata, places, trip, title, { withAir = true } = {}) {
+  const r = staysFor(iata, places, undefined, { withAir });
+  lastStay = { iata, places, withAir };
   const md = (iso) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
   const head = `<h3 class="golf-sub">${title}</h3>`;
   if (r.state === 'none') return '';
-  if (r.state === 'loading') return `${head}<p class="muted">공항·골프장까지 차 시간을 길찾기로 계산하는 중… (몇 초 걸려요)</p>`;
+  const who = withAir ? '공항·골프장' : '찜한 골프장';
+  if (r.state === 'loading') return `${head}<p class="muted">${who}까지 차 시간을 길찾기로 계산하는 중… (몇 초 걸려요)</p>`;
   if (r.state !== 'ok') return `${head}<p class="muted">${r.state === 'empty' ? '이 지역은 아직 모아 둔 숙소가 없어요.' : '길찾기 계산을 못 했어요. 잠시 뒤 다시 열어 주세요.'}</p>`;
   const names = r.points.map((p) => p.short);
   return `${head}
-    <p class="muted">공항·골프장 모두 비슷한 차 시간으로 닿는 숙소 중 평점 높은 순 · ${STAY_SRC[r.src]} 기준</p>
-    <div class="golf-stay-map" id="stay-map" aria-label="공항, 골프장, 추천 숙소 위치 지도"></div>
+    <p class="muted">${who} 모두 비슷한 차 시간으로 닿는 숙소 중 평점 높은 순 · ${STAY_SRC[r.src]} 기준</p>
+    <div class="golf-stay-map" id="stay-map" aria-label="${withAir ? '공항, ' : ''}골프장, 추천 숙소 위치 지도"></div>
     <ul class="golf-stays">${r.list.map(({ h, mins }, i) => `<li><a href="${esc(h.src === 'g' ? h.url : `${h.url}?checkin=${trip.dep}&checkout=${trip.out}&group_adults=2&no_rooms=1`)}" target="_blank" rel="noopener noreferrer">
       <span class="golf-stay-body"><b><span class="golf-stay-no">${i + 1}</span> ${esc(h.n)}</b><small>${h.src === 'g' ? `★ ${Math.round(h.s * 5) / 10}/5 (${Number(h.c).toLocaleString('ko-KR')}) · 구글 지도` : `★ ${h.s}/10 (${Number(h.c).toLocaleString('ko-KR')})${h.st ? ` · ${h.st}성급` : ''}${h.p ? ` · 1박 약 ${won(h.p)}~` : ''} · 부킹닷컴`}</small><small class="golf-stay-times">${mins.map((m, k) => `${esc(names[k])} ${formatMin(m)}`).join(' · ')}</small></span>
       ${h.ph ? `<img src="${esc(h.ph)}" alt="${esc(h.n)} 사진" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'), { className: 'golf-stay-ph' }))">` : '<span class="golf-stay-ph" aria-hidden="true">🏨</span>'}</a></li>`).join('')}</ul>
@@ -599,7 +600,7 @@ function stayBlock(iata, places, trip, title) {
 /** 지도에 찍을 점(main.js 가 지도 그릴 때 씀) */
 export function stayMapPoints() {
   if (!lastStay) return null;
-  const r = staysFor(lastStay.iata, lastStay.places);
+  const r = staysFor(lastStay.iata, lastStay.places, undefined, { withAir: lastStay.withAir });
   return r.state === 'ok' ? { points: r.points, hotels: r.list.map((x) => x.h) } : null;
 }
 
