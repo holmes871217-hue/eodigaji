@@ -1,0 +1,41 @@
+# 해외 골프 숙소 보강: 공항~골프장 가운데 지점 숙소를 구글 장소 검색으로 모은다(tools/golf/stays-google.mjs).
+# 한 번 찾은 지점은 다시 찾지 않는다. 비용 보호로 한 번에 최대 300번만 부른다. 매달 1일 + 손으로 실행.
+# 앱 게시는 04:30 골프 작업이 한다(저장만 한다).
+name: 해외 숙소 보강
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 19 1 * *' # 매달 2일 한국 시간 04:17
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stays
+  cancel-in-progress: false
+
+jobs:
+  stays:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 구글 장소 검색으로 숙소 모으기
+        env:
+          GOOGLE_PLACES_SERVER_KEY: ${{ secrets.GOOGLE_PLACES_SERVER_KEY }}
+        run: node tools/golf/stays-google.mjs
+      - name: 앱용 숙소 자료 만들기
+        run: node tools/golf/build-stays.mjs
+      - name: 저장
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/golf/data/hotels-google.json app/data/golf-stays.json
+          if git diff --cached --quiet; then echo "바뀐 내용 없음"; exit 0; fi
+          git commit -m "해외 숙소 보강 $(TZ=Asia/Seoul date +%F)"
+          git pull --rebase -X theirs origin main
+          git push origin HEAD:main
