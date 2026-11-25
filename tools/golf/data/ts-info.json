@@ -3511,6 +3511,40 @@
   ],
   "meter": 6344
  },
+ "316": {
+  "at": 1795639543426,
+  "addr": "경상남도 김해시 삼방동 산1",
+  "tel": "055-337-0091",
+  "holes": 45,
+  "cart": 100000,
+  "caddie": 150000,
+  "week": 210000,
+  "weekend": 250000,
+  "type": "멤버쉽",
+  "photos": [
+   "https://media.golfzoncounty.com/teescaner/data/base/golf/etc/20180205/201803663709612_1.PNG"
+  ],
+  "meter": 12977
+ },
+ "317": {
+  "at": 1795639543426,
+  "addr": "경상남도 김해시 삼방동 산1",
+  "tel": "055-337-0091",
+  "holes": 9,
+  "cart": 100000,
+  "caddie": 150000,
+  "week": 80000,
+  "weekend": 100000,
+  "type": "퍼블릭",
+  "photos": [
+   "https://media.golfzoncounty.com/teescaner/data/ccphoto/398_00001_13da27b4_38dc_42ef_b5d4_c9628df9e3a6.jpg",
+   "https://media.golfzoncounty.com/teescaner/data/ccphoto/398_00001_1842c59c_121d_4f45_b19b_844572fa2153.jpg",
+   "https://media.golfzoncounty.com/teescaner/data/ccphoto/398_00001_1fc36b93_ae9d_448d_a809_31d48889ed6a.jpg",
+   "https://media.golfzoncounty.com/teescaner/data/ccphoto/398_00001_25fd77e2_9636_4748_a7bc_fcfb664505b4.jpg",
+   "https://media.golfzoncounty.com/teescaner/data/ccphoto/398_00001_277074e0_e95a_437c_96c6_afa01091a9e8.jpg"
+  ],
+  "meter": 12977
+ },
  "318": {
   "at": 1795417786587,
   "addr": "경기 포천시 가산면 금우로 276",
