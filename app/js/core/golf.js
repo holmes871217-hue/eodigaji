@@ -63,11 +63,34 @@ export function fuelCost(km, car, fuel) {
   return { roundKm: Math.round(roundKm), total, perPerson: total, price, unit: car.fuel === 'ev' ? 'kWh' : 'L' }; // 한 사람이 차 한 대를 몰고 가므로 차 1대 왕복 주유비 전부가 1인 몫(2026-11-24 운영자 지시)
 }
 
-export function golfDomestic(data, { origin, day, maxMin, car }) {
+// 티업 시간별 가격(app/data/golf-hours.json): 티업 시간을 고를 때만 받는다
+let hoursData = null;
+let hoursPromise = null;
+export const golfHoursReady = () => Boolean(hoursData);
+export function loadGolfHours() {
+  if (!hoursPromise) {
+    hoursPromise = fetch('data/golf-hours.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      .then((j) => { hoursData = j || { courses: {} }; return hoursData; });
+  }
+  return hoursPromise;
+}
+/** 24시 기준 티업 시간 → '오전 7시' / '오후 1시' */
+export const teeLabel = (h) => (h == null ? '무관' : h < 12 ? `오전 ${h || 12}시` : `오후 ${h === 12 ? 12 : h - 12}시`);
+/** 그 골프장·날짜·티업 시간(1시간 단위)의 가장 싼 1인 비용. 없으면 null */
+export function hourCost(c, day, tee) {
+  const a = hoursData?.courses?.[c.id]?.[day]?.[String(tee).padStart(2, '0')];
+  if (!a) return null;
+  const [src, total, green, cart, caddie, time, flags] = a;
+  const base = c.days?.[day] || {};
+  const estimated = [(flags & 4) && '카트비', (flags & 8) && '캐디피'].filter(Boolean);
+  return { ...base, src, total, green, cart: cart || null, caddie: caddie || null, noCaddie: flags & 1 ? true : undefined, cartIncluded: flags & 2 ? true : undefined, estimated: estimated.length ? estimated : undefined, time: time || null, deal: src === base.src && time === base.time ? base.deal : null, byHour: tee };
+}
+
+export function golfDomestic(data, { origin, day, maxMin, car, tee = null }) {
   const out = [];
   for (const c of data?.domestic || []) {
     if (isShortCourse(c)) continue; // 18홀이 안 되는 곳(9홀×2, 6홀×3 등)은 뺀다
-    const cost = c.days?.[day];
+    const cost = tee == null ? c.days?.[day] : hourCost(c, day, tee);
     if (!cost) continue;
     const drive = golfDrive(c, origin);
     if (drive.min > maxMin) continue;

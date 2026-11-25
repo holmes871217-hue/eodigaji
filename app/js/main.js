@@ -22,7 +22,7 @@ import { renderDeals } from './ui/deals.js';
 import { renderGolf, abroadFareNeeds, pickPlan, stayMapPoints } from './ui/golf.js';
 import { onStaysChange } from './core/stays.js';
 import { mountStayMap } from './ui/map.js';
-import { loadGolf, requestFares } from './core/golf.js';
+import { loadGolf, requestFares, loadGolfHours } from './core/golf.js';
 import { renderMy } from './ui/mypage.js';
 import { renderSheet } from './ui/sheet.js';
 import { mountRoute } from './ui/map.js';
@@ -152,6 +152,24 @@ function render() {
   if (state.ui.sheet?.type === 'trend') {
     const el = document.getElementById('trend-map');
     if (el) mountTrendMap(el, { regions: getRegions() });
+  }
+
+  // 티업 시간 바퀴: 고른 칸을 가운데로 맞추고, 손을 떼면 가장 가까운 칸에 멈춘 값을 기억한다
+  for (const w of document.querySelectorAll('[data-wheel]')) {
+    const ITEM = 48;
+    w.scrollTop = Number(w.dataset.sel || 0) * ITEM;
+    let t = 0;
+    w.addEventListener('scroll', () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        const i = Math.max(0, Math.min(w.children.length - 1, Math.round(w.scrollTop / ITEM)));
+        w.dataset.sel = String(i);
+        [...w.children].forEach((c, k) => { c.classList.toggle('is-sel', k === i); c.setAttribute('aria-selected', String(k === i)); });
+        if (w.dataset.wheel === 'ap') w.closest('[data-wheels]')?.classList.toggle('is-any', i === 0);
+      }, 90);
+    }, { passive: true });
+    // 칸을 누르면 그 칸으로 돌린다
+    w.addEventListener('click', (e) => { const it = e.target.closest('.wheel-item'); if (it) w.scrollTo({ top: Number(it.dataset.i) * ITEM, behavior: 'smooth' }); });
   }
 
   const stayEl = document.getElementById('stay-map');
@@ -531,6 +549,19 @@ root.addEventListener('click', (ev) => {
         g.picks = (g.picks || []).includes(id) ? g.picks.filter((x) => x !== id) : [...(g.picks || []), id].slice(-10);
         if (g.pickN) delete g.pickN[id];
       });
+      break;
+    }
+    case 'golf-tee':
+      openSheet({ type: 'golf-tee' });
+      break;
+    case 'golf-tee-set': {
+      // 바퀴 두 개에서 고른 값: 무관 → null, 오전/오후 + 1~12시 → 24시 기준(오전 12시 = 0시, 오후 12시 = 12시)
+      const sel = (n) => Number(document.querySelector(`[data-wheel="${n}"]`)?.dataset.sel || 0);
+      const ap = sel('ap'), h = sel('h') + 1;
+      const tee = ap === 0 ? null : ap === 1 ? h % 12 : (h % 12) + 12;
+      if (tee != null) loadGolfHours().then(() => update(() => {}, { persist: false }));
+      state.ui.golf.tee = tee; state.ui.golf.max = 20;
+      closeSheet();
       break;
     }
     case 'golf-picks':

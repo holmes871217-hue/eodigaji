@@ -1,6 +1,6 @@
 // 골프 화면: 국내(차로 갈 수 있는 골프장, 1인 총비용 낮은 순) / 해외(나라·도시별 골프 상품, 가격 낮은 순)
 import { esc } from './util.js';
-import { courseTree, courseList, fareOf, fuelCost, transportCost, FUEL_LABEL, CONTINENTS, CONTINENT_OF, golfDomestic, golfDrive, golfDays, golfCountries, golfAbroad, won, localPrice, COUNTRY_CUR } from '../core/golf.js';
+import { teeLabel, golfHoursReady, hourCost, courseTree, courseList, fareOf, fuelCost, transportCost, FUEL_LABEL, CONTINENTS, CONTINENT_OF, golfDomestic, golfDrive, golfDays, golfCountries, golfAbroad, won, localPrice, COUNTRY_CUR } from '../core/golf.js';
 import { formatMin } from '../core/geo.js';
 import { staysFor, STAY_SRC } from '../core/stays.js';
 import { todayISO } from '../core/dates.js';
@@ -44,6 +44,35 @@ export function golfLocSheet(state) {
     </div>`;
 }
 
+const CLOCK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+/** 티업 시간 고르기(갤럭시 알람처럼 위아래로 돌리는 두 바퀴: 무관·오전·오후 / 1~12시) */
+export function golfTeeSheet(state) {
+  const tee = Number.isInteger(state.ui.golf.tee) ? state.ui.golf.tee : null;
+  const ap = tee == null ? 0 : tee < 12 ? 1 : 2;
+  const h12 = tee == null ? 7 : tee % 12 || 12;
+  const wheel = (name, items, sel, label) => `
+    <div class="wheel" data-wheel="${name}" data-sel="${sel}" role="listbox" aria-label="${label}" tabindex="0">
+      ${items.map((t, i) => `<div class="wheel-item ${i === sel ? 'is-sel' : ''}" role="option" aria-selected="${i === sel}" data-i="${i}">${t}</div>`).join('')}
+    </div>`;
+  return `
+    <div class="sheet-head">
+      <div>
+        <h2 class="sheet-title" id="sheet-title">티업 시간</h2>
+        <p class="card-meta">고른 시간대(1시간 단위)의 가장 싼 가격으로 골프장을 보여 줘요</p>
+      </div>
+    </div>
+    <div class="wheels ${ap === 0 ? 'is-any' : ''}" data-wheels>
+      ${wheel('ap', ['무관', '오전', '오후'], ap, '무관, 오전, 오후')}
+      ${wheel('h', Array.from({ length: 12 }, (_, i) => `${i + 1}시`), h12 - 1, '시')}
+      <div class="wheel-band" aria-hidden="true"></div>
+    </div>
+    <div class="wheel-actions">
+      <button type="button" class="btn-secondary" data-action="close-sheet">취소</button>
+      <button type="button" class="btn-dark" data-action="golf-tee-set">설정</button>
+    </div>`;
+}
+
 export function renderGolf(state, data) {
   const g = state.ui.golf;
   const head = `
@@ -64,7 +93,9 @@ function domestic(state, data) {
   const day = g.day && g.day >= todayISO() ? g.day : state.profile.date;
   const inRange = days.includes(day);
   const origin = state.profile.origin;
-  const rows = inRange ? golfDomestic(data, { origin, day, maxMin: g.maxMin, car: state.profile.car }) : [];
+  const tee = Number.isInteger(g.tee) ? g.tee : null;
+  const waiting = tee != null && !golfHoursReady();
+  const rows = inRange && !waiting ? golfDomestic(data, { origin, day, maxMin: g.maxMin, car: state.profile.car, tee }) : [];
   const shown = rows.slice(0, g.max || 20);
   return `
     <div class="golf-when">
@@ -73,18 +104,21 @@ function domestic(state, data) {
         <input type="date" class="input" id="golf-date" value="${esc(day)}" min="${todayISO()}" data-field="golf-date">
       </label>
       <div class="field">
-        <span class="field-label">출발 지역</span>
-        <button type="button" class="input golf-loc-btn" data-action="golf-loc" aria-label="출발 지역 바꾸기, 지금 ${esc(origin.name || '내 위치')}">${PIN}<span>${esc(origin.name || '내 위치')}</span></button>
+        <span class="field-label">티업 시간</span>
+        <button type="button" class="input golf-loc-btn golf-tee-btn" data-action="golf-tee" aria-label="티업 시간 고르기, 지금 ${esc(teeLabel(tee))}">${CLOCK}<span>${esc(teeLabel(tee))}</span></button>
       </div>
     </div>
     <h2 class="h2 mt">차로 몇 시간까지</h2>
     <div class="chips" role="group" aria-label="이동시간">
       ${GOLF_TIMES.map((m) => `<button type="button" class="chip ${m === g.maxMin ? 'is-on' : ''}" data-action="golf-time" data-v="${m}" aria-pressed="${m === g.maxMin}">${hm(m)}</button>`).join('')}
     </div>
-    <h2 class="h2 mt">${esc(dayLabel(day))} · 총 <span data-golf-total>${rows.length}</span>곳</h2>
-    ${rows.length ? `<ol class="list golf-list">${shown.map((r, i) => domCard(r, day, i + 1)).join('')}</ol>
+    <div class="golf-dom-head mt">
+      <h2 class="h2">${esc(dayLabel(day))}${tee != null ? ` · ${esc(teeLabel(tee))}` : ''} · 총 <span data-golf-total>${rows.length}</span>곳</h2>
+      <button type="button" class="golf-loc-mini" data-action="golf-loc" aria-label="출발 지역 바꾸기, 지금 ${esc(origin.name || '내 위치')}">${PIN}<span>${esc(origin.name || '내 위치')}</span></button>
+    </div>
+    ${waiting ? '<div class="empty"><b>티업 시간별 가격을 불러오는 중…</b></div>' : rows.length ? `<ol class="list golf-list">${shown.map((r, i) => domCard(r, day, i + 1)).join('')}</ol>
       ${rows.length > shown.length ? `<button type="button" class="btn-secondary more-btn" data-action="golf-more">더 보기 · 다음 ${Math.min(20, rows.length - shown.length)}곳 (남은 ${rows.length - shown.length}곳)</button>` : ''}`
-      : inRange ? `<div class="empty"><b>${hm(g.maxMin)} 안에 이 날 가격이 올라온 골프장이 없어요.</b><span>시간을 늘리거나 다른 날짜를 골라 보세요.</span></div>`
+      : inRange ? `<div class="empty"><b>${hm(g.maxMin)} 안에 이 날${tee != null ? ` ${esc(teeLabel(tee))}대` : ''} 가격이 올라온 골프장이 없어요.</b><span>${tee != null ? '티업 시간을 바꾸거나 "무관"으로 보세요.' : '시간을 늘리거나 다른 날짜를 골라 보세요.'}</span></div>`
       : `<div class="empty"><b>이 날짜는 아직 가격 자료가 없어요.</b><span>가격은 앞으로 ${days.length}일(${dayLabel(days[0])} ~ ${dayLabel(days[days.length - 1])})치를 매일 모아요.</span></div>`}`;
 }
 
@@ -185,7 +219,8 @@ export function golfSheet(state, data, id) {
   if (!c) return '';
   const g = state.ui.golf;
   const day = g.day && g.day >= todayISO() ? g.day : state.profile.date;
-  const cost = c.days?.[day];
+  const tee = Number.isInteger(g.tee) ? g.tee : null;
+  const cost = (tee != null && hourCost(c, day, tee)) || c.days?.[day];
   const drive = golfDrive(c, state.profile.origin);
   const fuel = transportCost(drive, state.profile.car, data.fuel);
   const offers = cost ? [...cost.offers].sort((a, b) => (a[3] ?? a[1]) - (b[3] ?? b[1])) : [];
