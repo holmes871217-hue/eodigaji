@@ -52,7 +52,9 @@ export const teeList = (g) => (Array.isArray(g.tee) ? g.tee.filter((h) => Number
 export function golfTeeSheet(state) {
   const g = state.ui.golf;
   const draft = Array.isArray(g.teeDraft) ? g.teeDraft : teeList(g);
-  const chip = (h) => `<button type="button" class="chip ${draft.includes(h) ? 'is-on' : ''}" data-action="golf-tee-h" data-v="${h}" aria-pressed="${draft.includes(h)}">${h < 12 ? h : h === 12 ? 12 : h - 12}시</button>`;
+  // 칸 하나 = 1시간: "5~6시"(5:00~5:59 티업). 뒤 시각(~6)은 작게
+  const h12 = (h) => (h % 12) || 12;
+  const chip = (h) => `<button type="button" class="chip ${draft.includes(h) ? 'is-on' : ''}" data-action="golf-tee-h" data-v="${h}" aria-pressed="${draft.includes(h)}" aria-label="${h12(h)}시부터 ${h12(h + 1)}시 전까지">${h12(h)}<small class="tee-to">~${h12(h + 1)}</small>시</button>`;
   return `
     <div class="sheet-head">
       <div>
