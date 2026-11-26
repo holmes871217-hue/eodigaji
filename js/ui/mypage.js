@@ -135,7 +135,7 @@ export function renderMy(state) {
     <button type="button" class="btn-add" data-action="add-member">+ 동행 추가</button>
 
     <h2 class="h2 mt">내 차 연비</h2>
-    <p class="muted" data-fit="shrink">골픽 국내 교통비 계산용 · 왕복 주유비 + 통행료는 자동 합산</p>
+    <p class="muted" data-fit="shrink">골픽 국내 교통비 계산용 · 왕복 주유·충전비 + 통행료 자동 합산(전기차 감면 반영)</p>
     <div class="car-row">
       <div class="toggle car-fuel" role="group" aria-label="연료">
         ${[['gasoline', '휘발유'], ['diesel', '경유'], ['ev', '전기']].map(([v, label]) => `<button type="button" class="toggle-btn ${car.fuel === v ? 'is-on' : ''}" data-action="car-fuel" data-v="${v}" aria-pressed="${car.fuel === v}">${label}</button>`).join('')}
