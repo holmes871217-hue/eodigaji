@@ -47,12 +47,25 @@ export const FUEL_LABEL = { gasoline: '휘발유', diesel: '경유', ev: '전기
  * 교통비(1인) = 주유비 + 왕복 통행료. 연료·연비를 안 적으면 계산하지 않는다(null).
  * 통행료는 카카오 길찾기(거점 도시 출발)가 알려 준 편도 값 × 2. 모르면(지도·GPS 출발, 아직 안 받은 곳) 0으로 두고 tollKnown=false.
  */
-export function transportCost(drive, car, fuel) {
+/**
+ * 전기·수소차 고속도로 통행료 감면율(고속도로 들어가는 날 기준).
+ * 국토교통부·한국도로공사 발표(2024-12): 2025년 40% → 2026년 30% → 2027년 20%, 2027년 말 종료. 2028년부터는 발표된 감면이 없어 0.
+ * 근거: https://www.korea.kr/news/policyNewsView.do?newsId=148936173
+ */
+export function evTollDiscount(day) {
+  const y = Number(String(day || '').slice(0, 4)) || new Date().getFullYear();
+  return { 2025: 0.4, 2026: 0.3, 2027: 0.2 }[y] || 0;
+}
+
+export function transportCost(drive, car, fuel, day) {
   const f = fuelCost(drive.km, car, fuel);
   if (!f) return null;
   const tollKnown = Number.isFinite(drive.toll);
-  const toll = tollKnown ? drive.toll * 2 : 0;
-  return { ...f, fuel: f.total, toll, tollKnown, total: f.total + toll, perPerson: f.total + toll };
+  const full = tollKnown ? drive.toll * 2 : 0;
+  // 전기차는 통행료 감면(카카오 길찾기 통행료는 일반 승용차 요금이라 여기서 깎는다). 10원 단위로 반올림
+  const evRate = car?.fuel === 'ev' ? evTollDiscount(day) : 0;
+  const toll = evRate ? Math.round((full * (1 - evRate)) / 10) * 10 : full;
+  return { ...f, fuel: f.total, toll, tollFull: full, evRate, tollKnown, total: f.total + toll, perPerson: f.total + toll };
 }
 
 export function fuelCost(km, car, fuel) {
@@ -106,7 +119,7 @@ export function golfDomestic(data, { origin, day, maxMin, car, tee = [] }) {
     if (!cost) continue;
     const drive = golfDrive(c, origin);
     if (drive.min > maxMin) continue;
-    const fuel = transportCost(drive, car, data.fuel);
+    const fuel = transportCost(drive, car, data.fuel, day);
     out.push({ c, cost, drive, fuel, sum: cost.total + (fuel?.perPerson || 0) });
   }
   out.sort((a, b) => a.sum - b.sum || a.drive.min - b.drive.min);

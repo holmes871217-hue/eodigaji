@@ -222,7 +222,7 @@ export function golfSheet(state, data, id) {
   const tee = teeList(g);
   const cost = (tee.length && hourCost(c, day, tee)) || c.days?.[day];
   const drive = golfDrive(c, state.profile.origin);
-  const fuel = g.domFuel !== false ? transportCost(drive, state.profile.car, data.fuel) : null;
+  const fuel = g.domFuel !== false ? transportCost(drive, state.profile.car, data.fuel, day) : null;
   const offers = cost ? [...cost.offers].sort((a, b) => (a[3] ?? a[1]) - (b[3] ?? b[1])) : [];
   const q = encodeURIComponent(c.name);
   return `
@@ -239,7 +239,7 @@ export function golfSheet(state, data, id) {
       <div class="stat"><b>${c.grade ? c.grade : '-'}</b><span>평점(티스캐너)</span></div>
     </div>
     ${cost ? `<p class="desc"><b>${esc(dayLabel(day))} 1인 비용${cost.time ? ` · ${esc(cost.time)} 티오프` : ''}</b>${cost.deal ? ` <span class="golf-deal">${esc(dealText(cost.deal))}</span>` : ''}<span class="golf-break-d" data-fit>${esc(costBreak(cost))}${fuel ? `+교통비 ${esc(won(fuel.perPerson))}` : ''}${SRC[cost.src] ? `(${SRC[cost.src]})` : ''}</span></p>
-    ${fuel ? `<p class="muted golf-fuel">교통비 ${won(fuel.total)} = 주유비 ${won(fuel.fuel)}(왕복 ${fuel.roundKm}km ÷ 연비 ${state.profile.car.eff}km/${fuel.unit} × ${FUEL_LABEL[state.profile.car.fuel]} ${won(fuel.price)}/${fuel.unit}) + ${fuel.tollKnown ? `통행료 ${won(fuel.toll)}(왕복, 카카오 길찾기)` : `통행료 ${drive.kind === 'kakao' ? '정보 준비 중' : '모름(지도·현재 위치 출발은 거점 도시 길찾기만 통행료를 알려 줘요)'}`}${data.fuel?.date ? ` (가격 ${esc(data.fuel.date)} ${esc(data.fuel.src || '')})` : ''}</p>` : `<p class="muted golf-fuel">마이 탭 "내 차 연비"에 연료와 연비를 적으면 왕복 교통비(주유비+통행료)도 더해져요.</p>`}` : `<p class="desc">${esc(dayLabel(day))}에는 올라온 가격이 없어요.</p>`}
+    ${fuel ? `<p class="muted golf-fuel">교통비 ${won(fuel.total)} = ${state.profile.car.fuel === 'ev' ? '충전비' : '주유비'} ${won(fuel.fuel)}(왕복 ${fuel.roundKm}km ÷ 연비 ${state.profile.car.eff}km/${fuel.unit} × ${FUEL_LABEL[state.profile.car.fuel]} ${won(fuel.price)}/${fuel.unit}) + ${fuel.tollKnown ? `통행료 ${won(fuel.toll)}(왕복, 카카오 길찾기${fuel.evRate ? ` · 전기차 ${Math.round(fuel.evRate * 100)}% 감면, 원래 ${won(fuel.tollFull)}` : ''})` : `통행료 ${drive.kind === 'kakao' ? '정보 준비 중' : '모름(지도·현재 위치 출발은 거점 도시 길찾기만 통행료를 알려 줘요)'}`}${state.profile.car.fuel === 'ev' ? ' (전기 요금: 기후에너지환경부 공공 완속 충전요금 기준 고정값, 집·민간 충전기는 다를 수 있어요)' : data.fuel?.date ? ` (가격 ${esc(data.fuel.date)} ${esc(data.fuel.src || '')})` : ''}</p>` : `<p class="muted golf-fuel">마이 탭 "내 차 연비"에 연료와 연비를 적으면 왕복 교통비(주유비+통행료)도 더해져요.</p>`}` : `<p class="desc">${esc(dayLabel(day))}에는 올라온 가격이 없어요.</p>`}
     ${offers.length ? `<h3 class="golf-sub">예약하러 가기 · 플랫폼별 가격</h3>
     <ul class="golf-links">
       ${offers.map(([src, price, count, total]) => `<li><a href="${esc(offerUrl(c, src, day))}" target="_blank" rel="noopener noreferrer"><b>${SRC[src] || esc(src)}</b><span>그린피 ${won(price)} · ${count}타임${total ? ` · 1인 ${won(total)}` : ''}</span><i aria-hidden="true">›</i></a></li>`).join('')}
